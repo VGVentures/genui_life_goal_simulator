@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -78,4 +75,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'finance-app-4a537.firebasestorage.app',
     iosBundleId: 'com.example.myApp',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBpRGuFEAmTaiU51Dw1y51oFQY0wslq0bE',
+    appId: '1:283633165905:web:b844c16738bba636cdba70',
+    messagingSenderId: '283633165905',
+    projectId: 'finance-app-4a537',
+    authDomain: 'finance-app-4a537.firebaseapp.com',
+    storageBucket: 'finance-app-4a537.firebasestorage.app',
+    measurementId: 'G-ZXYW441S4L',
+  );
+
 }
