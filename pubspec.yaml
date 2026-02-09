@@ -24,7 +24,7 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.4
   very_good_analysis: ^10.1.0
-  very_good_cli:
+  very_good_cli: ^0.28.0
 
 flutter:
   generate: true
