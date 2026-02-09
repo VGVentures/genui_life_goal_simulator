@@ -45,3 +45,14 @@ jobs:
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
       run_bloc_lint: true
+
+  license_check:
+    name: License Check
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0"
