@@ -2,11 +2,15 @@ import 'package:finance_app/data/mock/mock_scenario.dart';
 import 'package:finance_app/data/models/models.dart';
 
 // ---------------------------------------------------------------------------
-// Persona: Dennis, 56 – distribution center supervisor, divorced, renting after
-// selling the house.  High credit-card utilisation (94.7 %), medical debt
-// on a payment plan, co-signed student loan for his child, savings being
-// drained to cover shortfalls, and bank fees piling up.
+// Older & Struggling — Dennis, 56, distribution center supervisor
 // ---------------------------------------------------------------------------
+
+// ── Account IDs ──────────────────────────────────────────────────────────
+const _checking = 'acc_og_checking';
+const _savings = 'acc_og_savings';
+const _credit = 'acc_og_credit';
+const _auto = 'acc_og_auto';
+const _student = 'acc_og_student';
 
 final olderStrugglingScenario = MockScenario(
   name: 'Older & Struggling',
@@ -18,13 +22,6 @@ final olderStrugglingScenario = MockScenario(
   accounts: _accounts,
   transactions: _transactions,
 );
-
-// ── Account IDs ──────────────────────────────────────────────────────────
-const _checking = 'acc_og_checking';
-const _savings = 'acc_og_savings';
-const _credit = 'acc_og_credit';
-const _auto = 'acc_og_auto';
-const _student = 'acc_og_student';
 
 // ── Accounts ─────────────────────────────────────────────────────────────
 const _accounts = <Account>[
@@ -90,7 +87,7 @@ const _accounts = <Account>[
 
 // ── Transactions (Dec 1 2025 – Feb 5 2026, chronological) ───────────────
 final _transactions = <Transaction>[
-  // ==================== DECEMBER 2025 ====================
+  // ── December 2025 ───────────────────────────────────────────────────
 
   // Dec 1 – Paycheck
   Transaction(
@@ -150,8 +147,17 @@ final _transactions = <Transaction>[
     category: TransactionCategory.transfer,
     paymentChannel: PaymentChannel.other,
   ),
+  Transaction(
+    id: 'txn_og_005b',
+    accountId: _credit,
+    amount: -285,
+    date: DateTime(2025, 12, 4),
+    name: 'Metro Card Payment',
+    category: TransactionCategory.transfer,
+    paymentChannel: PaymentChannel.other,
+  ),
 
-  // Dec 5 – Duke Energy
+  // Dec 5 – Electric bill
   Transaction(
     id: 'txn_og_006',
     accountId: _checking,
@@ -163,7 +169,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Dec 5 – Cricket Wireless
+  // Dec 5 – Phone bill
   Transaction(
     id: 'txn_og_007',
     accountId: _checking,
@@ -175,7 +181,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Dec 6 – Spectrum Internet
+  // Dec 6 – Internet
   Transaction(
     id: 'txn_og_008',
     accountId: _checking,
@@ -187,7 +193,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Dec 6 – Progressive auto insurance (liability-only, cheapest option)
+  // Dec 6 – Auto insurance (liability-only, cheapest option)
   Transaction(
     id: 'txn_og_008b',
     accountId: _checking,
@@ -195,7 +201,7 @@ final _transactions = <Transaction>[
     date: DateTime(2025, 12, 6),
     name: 'SafeRide Insurance',
     merchantName: 'SafeRide',
-    category: TransactionCategory.rentAndUtilities,
+    category: TransactionCategory.transportation,
     paymentChannel: PaymentChannel.online,
   ),
 
@@ -211,7 +217,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 7 – Walmart groceries
+  // Dec 7 – Groceries
   Transaction(
     id: 'txn_og_010',
     accountId: _checking,
@@ -246,7 +252,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 10 – McDonald's
+  // Dec 10 – Fast food
   Transaction(
     id: 'txn_og_013',
     accountId: _checking,
@@ -258,7 +264,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 11 – Dollar General
+  // Dec 11 – Discount store
   Transaction(
     id: 'txn_og_014',
     accountId: _checking,
@@ -270,7 +276,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 12 – Walgreens pharmacy (put on credit card — adding to debt)
+  // Dec 12 – Pharmacy (put on credit card — adding to debt)
   Transaction(
     id: 'txn_og_015',
     accountId: _credit,
@@ -304,7 +310,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 14 – Walmart groceries
+  // Dec 14 – Groceries
   Transaction(
     id: 'txn_og_018',
     accountId: _checking,
@@ -328,7 +334,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 16 – Wendy's
+  // Dec 16 – Fast food
   Transaction(
     id: 'txn_og_020',
     accountId: _checking,
@@ -340,7 +346,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 17 – Aldi groceries
+  // Dec 17 – Discount groceries
   Transaction(
     id: 'txn_og_021',
     accountId: _checking,
@@ -364,7 +370,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 20 – Dollar General
+  // Dec 20 – Discount store
   Transaction(
     id: 'txn_og_023',
     accountId: _checking,
@@ -376,7 +382,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 21 – Walmart groceries
+  // Dec 21 – Groceries
   Transaction(
     id: 'txn_og_024',
     accountId: _checking,
@@ -400,7 +406,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 23 – McDonald's
+  // Dec 23 – Fast food
   Transaction(
     id: 'txn_og_026',
     accountId: _checking,
@@ -412,7 +418,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 26 – Walmart household necessities (non-grocery)
+  // Dec 26 – Household necessities
   Transaction(
     id: 'txn_og_027',
     accountId: _checking,
@@ -424,7 +430,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 28 – Walmart groceries
+  // Dec 28 – Groceries
   Transaction(
     id: 'txn_og_028',
     accountId: _checking,
@@ -436,7 +442,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 29 – Wendy's
+  // Dec 29 – Fast food
   Transaction(
     id: 'txn_og_029',
     accountId: _checking,
@@ -448,7 +454,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // ==================== JANUARY 2026 ====================
+  // ── January 2026 ────────────────────────────────────────────────────
 
   // Jan 1 – Paycheck
   Transaction(
@@ -508,8 +514,17 @@ final _transactions = <Transaction>[
     category: TransactionCategory.transfer,
     paymentChannel: PaymentChannel.other,
   ),
+  Transaction(
+    id: 'txn_og_034b',
+    accountId: _credit,
+    amount: -285,
+    date: DateTime(2026, 1, 4),
+    name: 'Metro Card Payment',
+    category: TransactionCategory.transfer,
+    paymentChannel: PaymentChannel.other,
+  ),
 
-  // Jan 5 – Duke Energy
+  // Jan 5 – Electric bill
   Transaction(
     id: 'txn_og_035',
     accountId: _checking,
@@ -521,7 +536,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 5 – Cricket Wireless
+  // Jan 5 – Phone bill
   Transaction(
     id: 'txn_og_036',
     accountId: _checking,
@@ -533,7 +548,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 6 – Spectrum Internet
+  // Jan 6 – Internet
   Transaction(
     id: 'txn_og_037',
     accountId: _checking,
@@ -545,7 +560,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 6 – Progressive auto insurance
+  // Jan 6 – Auto insurance
   Transaction(
     id: 'txn_og_037b',
     accountId: _checking,
@@ -553,7 +568,7 @@ final _transactions = <Transaction>[
     date: DateTime(2026, 1, 6),
     name: 'SafeRide Insurance',
     merchantName: 'SafeRide',
-    category: TransactionCategory.rentAndUtilities,
+    category: TransactionCategory.transportation,
     paymentChannel: PaymentChannel.online,
   ),
 
@@ -591,7 +606,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Jan 8 – Walmart groceries
+  // Jan 8 – Groceries
   Transaction(
     id: 'txn_og_041',
     accountId: _checking,
@@ -615,7 +630,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 10 – Dollar General
+  // Jan 10 – Discount store
   Transaction(
     id: 'txn_og_043',
     accountId: _checking,
@@ -647,7 +662,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Jan 12 – Walgreens pharmacy
+  // Jan 12 – Pharmacy
   Transaction(
     id: 'txn_og_046',
     accountId: _checking,
@@ -659,7 +674,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 13 – Quest Diagnostics lab work (one-time)
+  // Jan 13 – Lab work (one-time)
   Transaction(
     id: 'txn_og_047',
     accountId: _checking,
@@ -671,7 +686,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 14 – McDonald's
+  // Jan 14 – Fast food
   Transaction(
     id: 'txn_og_048',
     accountId: _checking,
@@ -695,7 +710,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Jan 16 – Walmart groceries
+  // Jan 16 – Groceries
   Transaction(
     id: 'txn_og_050',
     accountId: _checking,
@@ -707,7 +722,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 17 – Aldi groceries
+  // Jan 17 – Discount groceries
   Transaction(
     id: 'txn_og_051',
     accountId: _checking,
@@ -719,7 +734,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 18 – Wendy's
+  // Jan 18 – Fast food
   Transaction(
     id: 'txn_og_052',
     accountId: _checking,
@@ -731,7 +746,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 19 – Jiffy Lube oil change (one-time)
+  // Jan 19 – Oil change (one-time)
   Transaction(
     id: 'txn_og_053',
     accountId: _checking,
@@ -755,7 +770,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 22 – McDonald's
+  // Jan 22 – Fast food
   Transaction(
     id: 'txn_og_055',
     accountId: _checking,
@@ -779,7 +794,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 24 – Dollar General
+  // Jan 24 – Discount store
   Transaction(
     id: 'txn_og_057',
     accountId: _checking,
@@ -791,7 +806,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 25 – Walmart groceries
+  // Jan 25 – Groceries
   Transaction(
     id: 'txn_og_058',
     accountId: _checking,
@@ -803,7 +818,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 28 – Wendy's
+  // Jan 28 – Fast food
   Transaction(
     id: 'txn_og_059',
     accountId: _checking,
@@ -815,7 +830,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // ==================== FEBRUARY 2026 ====================
+  // ── February 2026 ───────────────────────────────────────────────────
 
   // Feb 1 – Paycheck
   Transaction(
@@ -875,8 +890,17 @@ final _transactions = <Transaction>[
     category: TransactionCategory.transfer,
     paymentChannel: PaymentChannel.other,
   ),
+  Transaction(
+    id: 'txn_og_064b',
+    accountId: _credit,
+    amount: -285,
+    date: DateTime(2026, 2, 3),
+    name: 'Metro Card Payment',
+    category: TransactionCategory.transfer,
+    paymentChannel: PaymentChannel.other,
+  ),
 
-  // Feb 4 – Duke Energy
+  // Feb 4 – Electric bill
   Transaction(
     id: 'txn_og_065',
     accountId: _checking,
@@ -888,7 +912,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 4 – Cricket Wireless
+  // Feb 4 – Phone bill
   Transaction(
     id: 'txn_og_066',
     accountId: _checking,
@@ -900,7 +924,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 4 – Progressive auto insurance
+  // Feb 4 – Auto insurance
   Transaction(
     id: 'txn_og_066b',
     accountId: _checking,
@@ -908,11 +932,11 @@ final _transactions = <Transaction>[
     date: DateTime(2026, 2, 4),
     name: 'SafeRide Insurance',
     merchantName: 'SafeRide',
-    category: TransactionCategory.rentAndUtilities,
+    category: TransactionCategory.transportation,
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 4 – Spectrum Internet
+  // Feb 4 – Internet
   Transaction(
     id: 'txn_og_067',
     accountId: _checking,
@@ -924,7 +948,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 5 – Walmart groceries (PENDING)
+  // Feb 5 – Groceries (PENDING)
   Transaction(
     id: 'txn_og_068',
     accountId: _checking,
@@ -937,7 +961,7 @@ final _transactions = <Transaction>[
     pending: true,
   ),
 
-  // Feb 5 – Marathon gas (PENDING, on credit card — adding to debt)
+  // Feb 5 – Gas (PENDING, on credit card — adding to debt)
   Transaction(
     id: 'txn_og_069',
     accountId: _credit,
@@ -950,6 +974,3 @@ final _transactions = <Transaction>[
     pending: true,
   ),
 ];
-
-// ── Scenario Export ──────────────────────────────────────────────────────
-

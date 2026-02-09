@@ -1,8 +1,16 @@
 import 'package:finance_app/data/mock/mock_scenario.dart';
 import 'package:finance_app/data/models/models.dart';
 
+// ---------------------------------------------------------------------------
+// Older & Stable — Margaret, 52, senior marketing director
+// ---------------------------------------------------------------------------
 
-// ---- Scenario Export ------------------------------------------------------
+// ── Account IDs ──────────────────────────────────────────────────────────
+const _checking = 'acc_os_checking';
+const _savings = 'acc_os_savings';
+const _credit = 'acc_os_credit';
+const _fourOhOneK = 'acc_os_401k';
+const _mortgage = 'acc_os_mortgage';
 
 final olderStableScenario = MockScenario(
   name: 'Older & Stable',
@@ -15,16 +23,7 @@ final olderStableScenario = MockScenario(
   transactions: _transactions,
 );
 
-// ---- Account IDs ---------------------------------------------------------
-
-const _checking = 'acc_os_checking';
-const _savings = 'acc_os_savings';
-const _credit = 'acc_os_credit';
-const _fourOhOneK = 'acc_os_401k';
-const _mortgage = 'acc_os_mortgage';
-
-// ---- Accounts ------------------------------------------------------------
-
+// ── Accounts ─────────────────────────────────────────────────────────────
 const _accounts = <Account>[
   Account(
     id: _checking,
@@ -86,15 +85,9 @@ const _accounts = <Account>[
   ),
 ];
 
-// ---- Transactions --------------------------------------------------------
-//
-// Date range: Dec 1, 2025 – Feb 5, 2026
-// Amount sign convention: positive = money out, negative = money in.
-// Credit-card purchases on _credit; most other debits on _checking.
-// Travel, dining out, and Nordstrom go on the credit card for points.
-
+// ── Transactions (Dec 1 2025 – Feb 5 2026) ──────────────────────────────
 final _transactions = <Transaction>[
-  // ======================= December 2025 =======================
+  // ── December 2025 ───────────────────────────────────────────────────
 
   // Dec 1 — Paycheck
   Transaction(
@@ -123,7 +116,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_003',
     accountId: _checking,
-    amount: 1292,
+    amount: 1173,
     date: DateTime(2025, 12),
     name: 'National Retirement 401(k) Contribution',
     category: TransactionCategory.transfer,
@@ -182,7 +175,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_007',
     accountId: _checking,
-    amount: 142.30,
+    amount: 98.30,
     date: DateTime(2025, 12, 4),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -190,7 +183,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 5 — NYT Digital subscription
+  // Dec 5 — News subscription
   Transaction(
     id: 'txn_os_008',
     accountId: _checking,
@@ -202,7 +195,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Dec 5 — The Athletic subscription
+  // Dec 5 — Sports subscription
   Transaction(
     id: 'txn_os_009',
     accountId: _checking,
@@ -238,11 +231,11 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 8 — Costco run
+  // Dec 8 — Wholesale run
   Transaction(
     id: 'txn_os_012',
     accountId: _checking,
-    amount: 215.60,
+    amount: 145.60,
     date: DateTime(2025, 12, 8),
     name: 'BulkMart Wholesale',
     merchantName: 'BulkMart',
@@ -250,7 +243,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 9 — NPR monthly donation
+  // Dec 9 — Public radio donation
   Transaction(
     id: 'txn_os_013',
     accountId: _checking,
@@ -278,7 +271,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_015',
     accountId: _checking,
-    amount: 128.45,
+    amount: 94.45,
     date: DateTime(2025, 12, 11),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -286,7 +279,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 12 — Nordstrom on credit card (points)
+  // Dec 12 — Department store on credit card (points)
   Transaction(
     id: 'txn_os_016',
     accountId: _credit,
@@ -298,7 +291,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 13 — Blue Bottle Coffee
+  // Dec 13 — Coffee
   Transaction(
     id: 'txn_os_017',
     accountId: _checking,
@@ -310,7 +303,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 14 — Amazon order
+  // Dec 14 — Online order
   Transaction(
     id: 'txn_os_018',
     accountId: _checking,
@@ -338,14 +331,14 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_020',
     accountId: _checking,
-    amount: 1292,
+    amount: 1173,
     date: DateTime(2025, 12, 15),
     name: 'National Retirement 401(k) Contribution',
     category: TransactionCategory.transfer,
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 16 — EZ-Pass tolls
+  // Dec 16 — Tolls
   Transaction(
     id: 'txn_os_021',
     accountId: _checking,
@@ -356,7 +349,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Dec 17 — Home Depot
+  // Dec 17 — Hardware store
   Transaction(
     id: 'txn_os_022',
     accountId: _checking,
@@ -384,7 +377,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_024',
     accountId: _checking,
-    amount: 176.20,
+    amount: 112.20,
     date: DateTime(2025, 12, 19),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -404,7 +397,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 21 — CVS pharmacy
+  // Dec 21 — Pharmacy
   Transaction(
     id: 'txn_os_026',
     accountId: _checking,
@@ -416,11 +409,11 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 22 — Costco run
+  // Dec 22 — Wholesale run
   Transaction(
     id: 'txn_os_027',
     accountId: _checking,
-    amount: 187.40,
+    amount: 127.40,
     date: DateTime(2025, 12, 22),
     name: 'BulkMart Wholesale',
     merchantName: 'BulkMart',
@@ -464,7 +457,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Dec 29 — City Harvest year-end donation
+  // Dec 29 — Year-end donation
   Transaction(
     id: 'txn_os_031',
     accountId: _checking,
@@ -487,7 +480,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // ======================= January 2026 =======================
+  // ── January 2026 ────────────────────────────────────────────────────
 
   // Jan 1 — Paycheck
   Transaction(
@@ -516,7 +509,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_035',
     accountId: _checking,
-    amount: 1292,
+    amount: 1173,
     date: DateTime(2026),
     name: 'National Retirement 401(k) Contribution',
     category: TransactionCategory.transfer,
@@ -583,7 +576,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 5 — NYT Digital subscription
+  // Jan 5 — News subscription
   Transaction(
     id: 'txn_os_040',
     accountId: _checking,
@@ -595,7 +588,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 5 — The Athletic subscription
+  // Jan 5 — Sports subscription
   Transaction(
     id: 'txn_os_041',
     accountId: _checking,
@@ -619,7 +612,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 7 — Delta flight booked on credit card (points)
+  // Jan 7 — Flight booked on credit card (points)
   Transaction(
     id: 'txn_os_043',
     accountId: _credit,
@@ -631,7 +624,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 7 — Marriott hotel booked on credit card (points)
+  // Jan 7 — Hotel booked on credit card (points)
   Transaction(
     id: 'txn_os_044',
     accountId: _credit,
@@ -643,7 +636,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 9 — NPR monthly donation
+  // Jan 9 — Public radio donation
   Transaction(
     id: 'txn_os_045',
     accountId: _checking,
@@ -655,11 +648,11 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 10 — Costco
+  // Jan 10 — Wholesale
   Transaction(
     id: 'txn_os_046',
     accountId: _checking,
-    amount: 238.70,
+    amount: 158.70,
     date: DateTime(2026, 1, 10),
     name: 'BulkMart Wholesale',
     merchantName: 'BulkMart',
@@ -671,7 +664,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_047',
     accountId: _checking,
-    amount: 118.35,
+    amount: 96.35,
     date: DateTime(2026, 1, 11),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -691,7 +684,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 13 — Amazon order
+  // Jan 13 — Online order
   Transaction(
     id: 'txn_os_049',
     accountId: _checking,
@@ -731,14 +724,14 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_052',
     accountId: _checking,
-    amount: 1292,
+    amount: 1173,
     date: DateTime(2026, 1, 15),
     name: 'National Retirement 401(k) Contribution',
     category: TransactionCategory.transfer,
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Jan 16 — EZ-Pass tolls
+  // Jan 16 — Tolls
   Transaction(
     id: 'txn_os_053',
     accountId: _checking,
@@ -749,7 +742,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // Jan 17 — Nordstrom on credit card (points)
+  // Jan 17 — Department store on credit card (points)
   Transaction(
     id: 'txn_os_054',
     accountId: _credit,
@@ -765,7 +758,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_055',
     accountId: _checking,
-    amount: 163.90,
+    amount: 105.90,
     date: DateTime(2026, 1, 18),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -797,7 +790,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 21 — Blue Bottle Coffee
+  // Jan 21 — Coffee
   Transaction(
     id: 'txn_os_058',
     accountId: _checking,
@@ -809,7 +802,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 22 — NYU Langone copay
+  // Jan 22 — Medical copay
   Transaction(
     id: 'txn_os_059',
     accountId: _checking,
@@ -821,7 +814,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 23 — Home Depot
+  // Jan 23 — Hardware store
   Transaction(
     id: 'txn_os_060',
     accountId: _checking,
@@ -833,11 +826,11 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 24 — Costco
+  // Jan 24 — Wholesale
   Transaction(
     id: 'txn_os_061',
     accountId: _checking,
-    amount: 195.30,
+    amount: 135.30,
     date: DateTime(2026, 1, 24),
     name: 'BulkMart Wholesale',
     merchantName: 'BulkMart',
@@ -849,7 +842,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_062',
     accountId: _checking,
-    amount: 134.55,
+    amount: 102.55,
     date: DateTime(2026, 1, 25),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -869,7 +862,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Jan 27 — Amazon order
+  // Jan 27 — Online order
   Transaction(
     id: 'txn_os_064',
     accountId: _checking,
@@ -881,7 +874,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Jan 28 — CVS pharmacy
+  // Jan 28 — Pharmacy
   Transaction(
     id: 'txn_os_065',
     accountId: _checking,
@@ -904,7 +897,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.other,
   ),
 
-  // ======================= February 2026 =======================
+  // ── February 2026 ───────────────────────────────────────────────────
 
   // Feb 1 — Paycheck
   Transaction(
@@ -933,7 +926,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_069',
     accountId: _checking,
-    amount: 1292,
+    amount: 1173,
     date: DateTime(2026, 2),
     name: 'National Retirement 401(k) Contribution',
     category: TransactionCategory.transfer,
@@ -992,7 +985,7 @@ final _transactions = <Transaction>[
   Transaction(
     id: 'txn_os_073',
     accountId: _checking,
-    amount: 149.80,
+    amount: 108.80,
     date: DateTime(2026, 2, 3),
     name: 'Green Basket Market',
     merchantName: 'Green Basket',
@@ -1000,7 +993,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.inStore,
   ),
 
-  // Feb 4 — NYT Digital subscription
+  // Feb 4 — News subscription
   Transaction(
     id: 'txn_os_074',
     accountId: _checking,
@@ -1012,7 +1005,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 4 — The Athletic subscription
+  // Feb 4 — Sports subscription
   Transaction(
     id: 'txn_os_075',
     accountId: _checking,
@@ -1024,7 +1017,7 @@ final _transactions = <Transaction>[
     paymentChannel: PaymentChannel.online,
   ),
 
-  // Feb 5 — Pending: Whole Foods (not yet cleared)
+  // Feb 5 — Pending: Groceries (not yet cleared)
   Transaction(
     id: 'txn_os_076',
     accountId: _checking,
