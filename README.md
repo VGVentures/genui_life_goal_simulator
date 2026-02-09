@@ -48,7 +48,7 @@ _\*Finance App works on iOS, Android, Web, and Windows._
 To run all unit and widget tests use the following command:
 
 ```sh
-$ fvm dart pub global run very_good_cli:very_good test --coverage --test-randomize-ordering-seed random
+$ fvm dart run very_good_cli:very_good test --coverage --test-randomize-ordering-seed random
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
