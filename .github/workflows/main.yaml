@@ -20,7 +20,7 @@ jobs:
       flutter_version: ${{ steps.read_fvm.outputs.version }}
       license_check_needed: ${{ steps.changes.outputs.license }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: read_fvm
         name: Extract Version from .fvmrc
         run: |
@@ -60,7 +60,7 @@ jobs:
     if: needs.setup.outputs.license_check_needed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
