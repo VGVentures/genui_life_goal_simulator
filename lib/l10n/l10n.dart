@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
