@@ -67,8 +67,8 @@ jobs:
       - run: flutter pub get
       - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0"
 
-  deploy_production:
-    name: Deploy to Production
+  deploy_development:
+    name: Deploy to Development
     needs: [setup, verify_and_test]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
