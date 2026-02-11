@@ -12,6 +12,14 @@ A Very Good Project created by Very Good CLI.
 
 ## Getting Started 🚀
 
+This project uses [FVM](https://fvm.app/) to manage the Flutter SDK version. The pinned version is defined in `.fvmrc`.
+
+To install the correct Flutter SDK version, run:
+
+```sh
+$ fvm install
+```
+
 This project contains 3 flavors:
 
 - development
@@ -22,13 +30,13 @@ To run the desired flavor either use the launch configuration in VSCode/Android 
 
 ```sh
 # Development
-$ flutter run --flavor development --target lib/main_development.dart
+$ fvm flutter run --flavor development --target lib/main_development.dart
 
 # Staging
-$ flutter run --flavor staging --target lib/main_staging.dart
+$ fvm flutter run --flavor staging --target lib/main_staging.dart
 
 # Production
-$ flutter run --flavor production --target lib/main_production.dart
+$ fvm flutter run --flavor production --target lib/main_production.dart
 ```
 
 _\*Finance App works on iOS, Android, Web, and Windows._
@@ -40,7 +48,7 @@ _\*Finance App works on iOS, Android, Web, and Windows._
 To run all unit and widget tests use the following command:
 
 ```sh
-$ very_good test --coverage --test-randomize-ordering-seed random
+$ fvm dart run very_good_cli:very_good test --coverage --test-randomize-ordering-seed random
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
@@ -62,7 +70,7 @@ This project uses the [bloc_lint](https://pub.dev/packages/bloc_lint) package to
 To validate linter errors, run
 
 ```bash
-dart run bloc_tools:bloc lint .
+fvm dart run bloc_tools:bloc lint .
 ```
 
 You can also validate with VSCode-based IDEs using the [official bloc extension](https://marketplace.visualstudio.com/items?itemName=FelixAngelov.bloc).
@@ -177,10 +185,10 @@ To use the latest translations changes, you will need to generate them:
 1. Generate localizations for the current project:
 
 ```sh
-flutter gen-l10n --arb-dir="lib/l10n/arb"
+fvm flutter gen-l10n --arb-dir="lib/l10n/arb"
 ```
 
-Alternatively, run `flutter run` and code generation will take place automatically.
+Alternatively, run `fvm flutter run` and code generation will take place automatically.
 
 [coverage_badge]: coverage_badge.svg
 [flutter_localizations_link]: https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html

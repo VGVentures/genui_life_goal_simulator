@@ -20,7 +20,6 @@ migrate_working_dir/
 .classpath
 .project
 .settings/
-.vscode/*
 
 # packages file containing multi-root paths
 .packages.generated
@@ -82,6 +81,12 @@ unlinked_spec.ds
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS-specific generated files
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/Generated.xcconfig
+**/macos/Flutter/flutter_export_environment.sh
+**/macos/Flutter/ephemeral/
 
 # Coverage
 coverage/
