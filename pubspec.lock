@@ -69,10 +69,10 @@ packages:
     dependency: "direct dev"
     description:
       name: bloc_tools
-      sha256: e0cd37321a4dbfaaeee291a3d25d8e3dda11b90ab0655ad3660334ce7dc29c66
+      sha256: "2372e2f8065742c628f7eae5e6b9f601ebf50a4a46d136e78f5f5701f05c1e0e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0-dev.20"
+    version: "0.1.0-dev.22"
   boolean_selector:
     dependency: transitive
     description:
