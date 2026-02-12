@@ -1,1 +1,49 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"finance-app-4a537","appId":"1:283633165905:android:ae52554bdcf77adecdba70","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"finance-app-4a537","appId":"1:283633165905:ios:25f14e9d75ad4d0fcdba70","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"finance-app-4a537","appId":"1:283633165905:ios:168ed056e706831bcdba70","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"finance-app-4a537","configurations":{"android":"1:283633165905:android:ae52554bdcf77adecdba70","ios":"1:283633165905:ios:25f14e9d75ad4d0fcdba70","macos":"1:283633165905:ios:168ed056e706831bcdba70","web":"1:283633165905:web:667605658ae76af9cdba70","windows":"1:283633165905:web:b844c16738bba636cdba70"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "finance-app-4a537",
+          "appId": "1:283633165905:android:ae52554bdcf77adecdba70",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "finance-app-4a537",
+          "appId": "1:283633165905:ios:25f14e9d75ad4d0fcdba70",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "finance-app-4a537",
+          "appId": "1:283633165905:ios:168ed056e706831bcdba70",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "finance-app-4a537",
+          "configurations": {
+            "android": "1:283633165905:android:ae52554bdcf77adecdba70",
+            "ios": "1:283633165905:ios:25f14e9d75ad4d0fcdba70",
+            "macos": "1:283633165905:ios:168ed056e706831bcdba70",
+            "web": "1:283633165905:web:667605658ae76af9cdba70",
+            "windows": "1:283633165905:web:b844c16738bba636cdba70"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
