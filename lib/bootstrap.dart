@@ -38,6 +38,13 @@ Future<void> bootstrap({
   required AnalyticsRepository analyticsRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+<<<<<<< HEAD
+=======
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await errorReportingRepository.init();
+>>>>>>> dc36b54 (feat: add template for persona selector and chat page with a simple example of interaction)
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

@@ -1,0 +1,23 @@
+{
+    "@@locale": "es",
+    "@appName": {
+        "description": "El nombre para mostrar de la aplicación."
+    },
+    "appName": "Aplicación Financiera",
+    "homeAppBarTitle": "Asesor Financiero",
+    "@homeAppBarTitle": {
+        "description": "Texto mostrado en la barra de aplicaciones de la página de inicio"
+    },
+    "chatAppBarTitle": "Chat",
+    "@chatAppBarTitle": {
+        "description": "Texto mostrado en la barra de aplicaciones de la página de chat"
+    },
+    "chatInputBarHint": "Pregunta sobre tus finanzas...",
+    "@chatInputBarHint": {
+        "description": "Texto de sugerencia mostrado en la barra de entrada del chat"
+    },
+    "startChattingLabel": "Envía un mensaje para comenzar!",
+    "@startChattingLabel": {
+        "description": "Texto mostrado cuando no hay mensajes en el chat"
+    }
+}
