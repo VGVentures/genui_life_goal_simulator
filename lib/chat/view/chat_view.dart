@@ -51,7 +51,7 @@ class ChatView extends StatelessWidget {
               if (state.isLoading) {
                 return const Padding(
                   // TODO(juanRodriguez17): Uses spacing class when gets merged
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: CircularProgressIndicator(),
                 );
               }

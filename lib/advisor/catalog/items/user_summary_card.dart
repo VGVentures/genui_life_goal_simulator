@@ -13,9 +13,9 @@ final _schema = S.object(
   required: ['name', 'recommendation'],
 );
 
-/// CatalogItem that renders an account overview card.
+/// CatalogItem that renders an user summary overview card.
 final userSummaryCardItem = CatalogItem(
-  name: 'SummaryCard',
+  name: 'UserSummaryCard',
   dataSchema: _schema,
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
@@ -24,12 +24,14 @@ final userSummaryCardItem = CatalogItem(
     final context = ctx.buildContext;
 
     return Card(
+      color: Theme.of(context).colorScheme.inversePrimary,
+      // TODO(juanRodriguez17): Use spacing class when gets merged
+      elevation: 10,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          // TODO(juanRodriguez17): Use spacing class when gets merged
           spacing: 12,
           children: [
             Text(

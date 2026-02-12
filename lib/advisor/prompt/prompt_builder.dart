@@ -16,10 +16,9 @@ RULES:
 2. Be encouraging but honest about financial concerns.
 3. Use the UserSummaryCard widget to show a recommendation.
 4. Tailor your tone to the person's situation.
-5. Provide conversational text alongside widgets.
-6. All monetary values are in USD.
-7. Today is February 12, 2026. Transactions marked pending are not yet finalized.
-8. Positive amounts = money leaving the account; negative = money entering (Plaid convention).
+5. All monetary values are in USD.
+6. Today is February 12, 2026. Transactions marked pending are not yet finalized.
+7. Positive amounts = money leaving the account; negative = money entering (Plaid convention).
 
 FINANCIAL DATA:
 ${scenario.name} + ${scenario.description} + ${scenario.accounts.first} 

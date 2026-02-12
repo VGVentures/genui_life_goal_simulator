@@ -15,6 +15,7 @@ class ChatMessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (message) {
       UserMessage(:final text) => _UserBubble(text: text),
+      // TODO(juanRodriguez17): Just to see the hole model response
       AiTextMessage(:final text) => _AssistantTextBubble(text: text),
       AiUiMessage(:final surfaceId) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
