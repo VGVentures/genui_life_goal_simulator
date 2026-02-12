@@ -1,3 +1,7 @@
 {
-    "@@locale": "en"
+    "@@locale": "en",
+    "@appName": {
+        "description": "The display name of the application."
+    },
+    "appName": "Finance App"
 }
