@@ -16,6 +16,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  firebase_analytics: ^12.1.2
+  wiredash: ^2.2.1
 
 dev_dependencies:
   bloc_lint: ^0.3.7
