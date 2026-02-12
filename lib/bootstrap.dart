@@ -5,9 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:finance_app/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
 
