@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart.dart';
+import 'package:finance_app/core/analytics_repository/src/analytics_repository.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template DevAnalyticsRepository}

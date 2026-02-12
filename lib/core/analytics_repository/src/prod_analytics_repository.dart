@@ -1,4 +1,4 @@
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart.dart';
+import 'package:finance_app/core/analytics_repository/src/analytics_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wiredash/wiredash.dart';
