@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
@@ -19,7 +21,20 @@ class App extends StatelessWidget {
         ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(),
+        home: Builder(
+          builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(context.l10n.appName),
+              ),
+              body: const Placeholder(),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => unawaited(Wiredash.of(context).show()),
+                child: const Icon(Icons.camera),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
