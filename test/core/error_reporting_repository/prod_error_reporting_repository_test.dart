@@ -27,24 +27,29 @@ void main() {
       final error = Exception('Test error');
       final stackTrace = StackTrace.current;
 
-      when(mockHub.captureException(
-        any,
-        stackTrace: anyNamed('stackTrace'),
-        hint: anyNamed('hint'),
-      )).thenAnswer((_) async => SentryId.newId());
+      when(
+        mockHub.captureException(
+          any,
+          stackTrace: anyNamed('stackTrace'),
+          hint: anyNamed('hint'),
+        ),
+      ).thenAnswer((_) async => SentryId.newId());
 
       await repository.recordError(error, stackTrace);
 
-      verify(mockHub.captureException(
-        error,
-        stackTrace: stackTrace,
-        hint: anyNamed('hint'),
-      )).called(1);
+      verify(
+        mockHub.captureException(
+          error,
+          stackTrace: stackTrace,
+          hint: anyNamed('hint'),
+        ),
+      ).called(1);
     });
 
     test('setUserIdentifier sets user in Sentry', () async {
       when(mockHub.configureScope(any)).thenAnswer((invocation) {
-        final callback = invocation.positionalArguments[0] as void Function(Scope);
+        final callback =
+            invocation.positionalArguments[0] as void Function(Scope);
         callback(Scope(SentryOptions()));
       });
 

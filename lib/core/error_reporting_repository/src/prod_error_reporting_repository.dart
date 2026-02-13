@@ -18,11 +18,10 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
   /// Report error to crash service
   @override
   Future<void> recordError(
-    dynamic error, 
+    dynamic error,
     StackTrace? stackTrace, {
-      String? reason,
-      Map<String, dynamic>? extra,
-
+    String? reason,
+    Map<String, dynamic>? extra,
   }) async {
     if (kDebugMode) {
       debugPrint('🔴 Error: $error');
@@ -66,7 +65,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
       _sentryHub.configureScope((scope) {
         scope.setUser(SentryUser(id: identifier));
       });
-      
+
       if (kDebugMode) {
         debugPrint('👤 User identifier set: $identifier');
       }

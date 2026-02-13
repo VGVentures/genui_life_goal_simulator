@@ -8,7 +8,6 @@ import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 
-
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
 
@@ -37,7 +36,7 @@ Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
-  
+
   final appInitializer = AppInitializer(errorReportingRepository);
   await appInitializer.init();
 

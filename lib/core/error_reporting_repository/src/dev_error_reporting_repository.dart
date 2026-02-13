@@ -20,27 +20,27 @@ class DevErrorReportingRepository extends ErrorReportingRepository {
     String? reason,
     Map<String, dynamic>? extra,
   }) async {
-        debugPrint('');
+    debugPrint('');
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     debugPrint('ERROR Reported');
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     debugPrint('Error: $error');
-    
+
     if (reason != null) {
       debugPrint('Reason: $reason');
     }
-    
+
     if (stackTrace != null) {
       debugPrint('');
       debugPrint('Stack Trace:');
       debugPrint('$stackTrace');
     }
-    
+
     if (_userIdentifier != null) {
       debugPrint('');
       debugPrint('User Identifier: $_userIdentifier');
     }
-    
+
     if (extra != null && extra.isNotEmpty) {
       debugPrint('');
       debugPrint('Extra Data:');
@@ -48,11 +48,10 @@ class DevErrorReportingRepository extends ErrorReportingRepository {
         debugPrint('  $key: $value');
       });
     }
-    
+
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     debugPrint('');
   }
-
 
   @override
   Future<void> setUserIdentifier(String? identifier) async {
