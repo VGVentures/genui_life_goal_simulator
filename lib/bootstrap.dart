@@ -33,7 +33,7 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required FutureOr<Widget> Function(AnalyticsRepository analyticsRepository)
-      builder,
+  builder,
   required ErrorReportingRepository errorReportingRepository,
   required AnalyticsRepository analyticsRepository,
 }) async {
