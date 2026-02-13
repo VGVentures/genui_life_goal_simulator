@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 /// MaterialColor shades use standard increments (50–900) where
 /// 50 is the lightest tint and 900 is the darkest shade.
 /// The primary swatch value is always at shade 500.
-abstract class AppColors {
+///
+/// Access from widgets via:
+/// ```dart
+/// Theme.of(context).extension<AppColors>()?.primary.shade100
+/// ```
+abstract class AppColors extends ThemeExtension<AppColors> {
   Brightness get brightness;
 
   /// The surface / background color for this theme.
@@ -52,6 +57,12 @@ abstract class AppColors {
 }
 
 class LightThemeColors extends AppColors {
+  @override
+  AppColors copyWith() => LightThemeColors();
+
+  @override
+  AppColors lerp(AppColors? other, double t) => t < 0.5 ? this : other ?? this;
+
   @override
   Brightness get brightness => Brightness.light;
 
@@ -147,6 +158,12 @@ class LightThemeColors extends AppColors {
 }
 
 class DarkThemeColors extends AppColors {
+  @override
+  AppColors copyWith() => DarkThemeColors();
+
+  @override
+  AppColors lerp(AppColors? other, double t) => t < 0.5 ? this : other ?? this;
+
   @override
   Brightness get brightness => Brightness.dark;
 

@@ -1,11 +1,11 @@
 import 'package:finance_app/app/presentation.dart';
 
 class AppThemes {
-  static Theme get light => LightTheme();
+  static AppThemeMode get light => LightTheme();
 
-  static Theme get dark => DarkTheme();
+  static AppThemeMode get dark => DarkTheme();
 
-  static Theme getAppTheme(ThemeType themeType) {
+  static AppThemeMode getAppTheme(ThemeType themeType) {
     return switch (themeType) {
       ThemeType.light => light,
       ThemeType.dark => dark,
@@ -13,7 +13,7 @@ class AppThemes {
   }
 }
 
-class LightTheme extends Theme {
+class LightTheme extends AppThemeMode {
   LightTheme()
     : super(
         themeData: AppTheme(
@@ -22,7 +22,7 @@ class LightTheme extends Theme {
       );
 }
 
-class DarkTheme extends Theme {
+class DarkTheme extends AppThemeMode {
   DarkTheme()
     : super(
         themeData: AppTheme(

@@ -1,8 +1,8 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
-abstract class Theme {
-  Theme({required this.themeData}) {
+abstract class AppThemeMode {
+  AppThemeMode({required this.themeData}) {
     colors = themeData.colorScheme;
   }
 
@@ -47,6 +47,7 @@ class AppTheme {
           labelSmall: AppTextStyles.titleSmall,
         ),
       ).copyWith(
+        extensions: [colors],
         appBarTheme: AppBarTheme(
           backgroundColor: colorScheme.primary,
           centerTitle: true,
