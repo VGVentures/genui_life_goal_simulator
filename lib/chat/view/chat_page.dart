@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({required this.scenario, super.key});
+  const ChatPage({required this.scenario, this.chatBloc, super.key});
 
   final MockScenario scenario;
+  final ChatBloc? chatBloc;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChatBloc()..add(ChatStarted(scenario)),
+      create: (_) => (chatBloc ?? ChatBloc())..add(ChatStarted(scenario)),
       child: const ChatView(),
     );
   }
