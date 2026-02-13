@@ -10,23 +10,49 @@ class DevErrorReportingRepository extends ErrorReportingRepository {
   @override
   Future<void> init() async {
     debugPrint('ErrorReportingRepository Initialized in development mode');
+    debugPrint('   All errors will be logged to console only');
   }
 
   @override
-  void recordError(
-    Object error, {
-    StackTrace? stackTrace,
-    bool fatal = false,
-  }) {
-    final severity = fatal ? 'FATAL' : 'ERROR';
-    debugPrint('[$severity] $error');
+  Future<void> recordError(
+    dynamic error,
+    StackTrace? stackTrace, {
+    String? reason,
+    Map<String, dynamic>? extra,
+  }) async {
+        debugPrint('');
+    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    debugPrint('ERROR Reported');
+    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    debugPrint('Error: $error');
+    
+    if (reason != null) {
+      debugPrint('Reason: $reason');
+    }
+    
     if (stackTrace != null) {
-      debugPrint('[STACKTRACE] $stackTrace');
+      debugPrint('');
+      debugPrint('Stack Trace:');
+      debugPrint('$stackTrace');
     }
+    
     if (_userIdentifier != null) {
-      debugPrint('[USER] $_userIdentifier');
+      debugPrint('');
+      debugPrint('User Identifier: $_userIdentifier');
     }
+    
+    if (extra != null && extra.isNotEmpty) {
+      debugPrint('');
+      debugPrint('Extra Data:');
+      extra.forEach((key, value) {
+        debugPrint('  $key: $value');
+      });
+    }
+    
+    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    debugPrint('');
   }
+
 
   @override
   Future<void> setUserIdentifier(String? identifier) async {

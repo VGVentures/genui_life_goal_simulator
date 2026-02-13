@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:finance_app/core/app_initializer.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
@@ -25,7 +27,7 @@ class AppBlocObserver extends BlocObserver {
     StackTrace stackTrace,
   ) {
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
-    errorReportingRepository.recordError(error, stackTrace: stackTrace);
+    errorReportingRepository.recordError(error, stackTrace);
     super.onError(bloc, error, stackTrace);
   }
 }
@@ -35,15 +37,34 @@ Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
-  await errorReportingRepository.init();
+  
+  final appInitializer = AppInitializer(errorReportingRepository);
+  await appInitializer.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FlutterError.onError = errorReportingRepository.handleFlutterError;
-  binding.platformDispatcher.onError =
-      errorReportingRepository.handlePlatformError;
+  FlutterError.onError = (details) {
+    errorReportingRepository.recordError(
+      details.exception,
+      details.stack,
+      reason: 'Flutter framework error',
+      extra: {
+        'library': details.library,
+        'context': details.context?.toString(),
+      },
+    );
+  };
+
+  binding.platformDispatcher.onError = (error, stackTrace) {
+    errorReportingRepository.recordError(
+      error,
+      stackTrace,
+      reason: 'Unhandled platform error',
+    );
+    return true;
+  };
   Bloc.observer = AppBlocObserver(
     errorReportingRepository: errorReportingRepository,
   );
