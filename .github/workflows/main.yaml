@@ -53,6 +53,7 @@ jobs:
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
       run_bloc_lint: true
+      min_coverage: 85
 
   license_check:
     name: License Check
@@ -65,4 +66,41 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0"
+      - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0,AAL"
+
+  deploy_production:
+    name: Deploy to Production
+    needs: [setup, verify_and_test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - run: flutter pub get
+      - run: flutter build web --wasm --target lib/main_production.dart
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: finance-app-4a537
+
+  deploy_preview:
+    name: Deploy Preview
+    needs: [setup, verify_and_test]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - run: flutter pub get
+      - run: flutter build web --wasm --target lib/main_development.dart
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: finance-app-4a537

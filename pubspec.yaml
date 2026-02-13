@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
+  firebase_ai: ^3.8.0
   firebase_core: ^4.4.0
   flutter:
     sdk: flutter
@@ -16,6 +17,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  wiredash: ^2.6.0
 
 dev_dependencies:
   bloc_lint: ^0.3.7
