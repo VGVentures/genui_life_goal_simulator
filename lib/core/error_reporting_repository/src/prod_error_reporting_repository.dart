@@ -24,7 +24,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
       error,
       stackTrace: stackTrace,
       hint: Hint.withMap({
-        ?'reason': reason,
+        'reason': ?reason,
         ...?extra,
       }),
     );
