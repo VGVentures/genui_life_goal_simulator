@@ -10,7 +10,6 @@ Future<void> main() async {
   if (kDebugMode) {
     // Debug mode: Use console logging, skip Sentry initialization
     await bootstrap(
-      builder: () => const App(),
       errorReportingRepository: DevErrorReportingRepository(),
       analyticsRepository: ProdAnalyticsRepository(
         firebaseAnalytics: FirebaseAnalytics.instance,
@@ -27,7 +26,6 @@ Future<void> main() async {
           ..environment = 'production';
       },
       appRunner: () => bootstrap(
-        builder: () => const App(),
         errorReportingRepository: ProdErrorReportingRepository(HubAdapter()),
         analyticsRepository: ProdAnalyticsRepository(
           firebaseAnalytics: FirebaseAnalytics.instance,
