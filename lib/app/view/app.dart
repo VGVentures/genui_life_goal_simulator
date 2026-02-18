@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({
+    required this.navigatorObservers,
+    super.key,
+  });
+
+  final List<NavigatorObserver> navigatorObservers;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +24,7 @@ class App extends StatelessWidget {
         themeMode: ThemeMode.light,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        navigatorObservers: navigatorObservers,
         home: Builder(
           builder: (context) {
             return Scaffold(
