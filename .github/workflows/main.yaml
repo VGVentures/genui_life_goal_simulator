@@ -104,3 +104,51 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: finance-app-4a537
+
+  distribute_android:
+    name: Distribute Android APK
+    needs: [setup, verify_and_test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+
+      - run: flutter pub get
+
+      - name: Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$GITHUB_WORKSPACE/release.jks"
+
+      - name: Build release APK
+        run: flutter build apk --release --flavor production --target lib/main_production.dart
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Upload to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute \
+            build/app/outputs/flutter-apk/app-production-release.apk \
+            --app "1:283633165905:android:ae52554bdcf77adecdba70" \
+            --release-notes "${{ github.event.head_commit.message }}" \
+            --project "finance-app-4a537"
