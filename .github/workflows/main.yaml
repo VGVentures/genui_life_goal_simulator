@@ -49,17 +49,41 @@ jobs:
   verify_and_test:
     name: Verify and Test
     needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - .
+          - packages/feature_flags_repository
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      working_directory: ${{ matrix.package }}
       run_bloc_lint: true
       min_coverage: 85
+
+  build:
+    needs: [verify_and_test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - if: needs.verify_and_test.result != 'success'
+        run: exit 1
 
   license_check:
     name: License Check
     needs: setup
     if: needs.setup.outputs.license_check_needed == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - .
+          - packages/feature_flags_repository
+    defaults:
+      run:
+        working-directory: ${{ matrix.package }}
     steps:
       - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
