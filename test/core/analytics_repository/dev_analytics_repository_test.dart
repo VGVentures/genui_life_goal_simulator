@@ -7,19 +7,9 @@ void main() {
     late DevAnalyticsRepository repository;
     late List<String> logMessages;
 
-    void captureLog(String message) {
-      logMessages.add(message);
-    }
-
     setUp(() {
       logMessages = [];
-      repository = DevAnalyticsRepository(log: captureLog);
-    });
-
-    test('init logs initialization message', () async {
-      await repository.init();
-
-      expect(logMessages, contains(DevAnalyticsRepository.initLogMessage));
+      repository = DevAnalyticsRepository(log: logMessages.add);
     });
 
     test('trackEvent logs event name and parameters', () async {
@@ -46,26 +36,8 @@ void main() {
       );
     });
 
-    test('setUserId logs the correct userId', () async {
-      await repository.setUserId('user123');
-
-      expect(
-        logMessages,
-        contains('${DevAnalyticsRepository.setUserIdLogMessage} user123'),
-      );
-    });
-
-    test('setUserId logs null when userId is null', () async {
-      await repository.setUserId(null);
-
-      expect(
-        logMessages,
-        contains('${DevAnalyticsRepository.setUserIdLogMessage} null'),
-      );
-    });
-
-    test('navigationObserver returns a NavigatorObserver', () {
-      expect(repository.navigationObserver, isA<NavigatorObserver>());
+    test('navigatorObserver returns a NavigatorObserver', () {
+      expect(repository.navigatorObserver, isA<NavigatorObserver>());
     });
   });
 }

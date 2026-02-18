@@ -32,12 +32,6 @@ void main() {
       ).thenAnswer((_) async {});
     }
 
-    void stubFirebaseSetUserId() {
-      when(
-        () => mockFirebaseAnalytics.setUserId(id: any(named: 'id')),
-      ).thenAnswer((_) async {});
-    }
-
     setUp(() {
       mockFirebaseAnalytics = MockFirebaseAnalytics();
       mockWiredashAnalytics = MockWiredashAnalytics();
@@ -46,12 +40,6 @@ void main() {
         firebaseAnalytics: mockFirebaseAnalytics,
         wiredashAnalytics: mockWiredashAnalytics,
       );
-    });
-
-    test('init creates FirebaseAnalyticsObserver', () async {
-      await repository.init();
-
-      expect(repository.navigationObserver, isA<FirebaseAnalyticsObserver>());
     });
 
     group('trackEvent', () {
@@ -88,24 +76,6 @@ void main() {
         verify(
           () => mockWiredashAnalytics.trackEvent('test_event'),
         ).called(1);
-      });
-    });
-
-    group('setUserId', () {
-      setUp(stubFirebaseSetUserId);
-
-      test('delegates to FirebaseAnalytics', () async {
-        await repository.setUserId('user123');
-
-        verify(
-          () => mockFirebaseAnalytics.setUserId(id: 'user123'),
-        ).called(1);
-      });
-
-      test('delegates null userId to FirebaseAnalytics', () async {
-        await repository.setUserId(null);
-
-        verify(() => mockFirebaseAnalytics.setUserId()).called(1);
       });
     });
   });

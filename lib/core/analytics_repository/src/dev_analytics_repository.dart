@@ -16,14 +16,7 @@ class DevAnalyticsRepository extends AnalyticsRepository {
 
   final LogFunction _log;
 
-  static const initLogMessage = 'DevAnalyticsRepository initialized';
   static const trackEventLogMessage = 'Analytics Event:';
-  static const setUserIdLogMessage = 'Analytics User ID set:';
-
-  @override
-  Future<void> init() async {
-    _log(initLogMessage);
-  }
 
   @override
   Future<void> trackEvent(
@@ -34,12 +27,7 @@ class DevAnalyticsRepository extends AnalyticsRepository {
   }
 
   @override
-  Future<void> setUserId(String? userId) async {
-    _log('$setUserIdLogMessage $userId');
-  }
-
-  @override
-  NavigatorObserver get navigationObserver => _NoOpNavigatorObserver();
+  NavigatorObserver get navigatorObserver => _NoOpNavigatorObserver();
 }
 
 class _NoOpNavigatorObserver extends NavigatorObserver {}

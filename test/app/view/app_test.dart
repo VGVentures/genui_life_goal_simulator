@@ -7,9 +7,10 @@ void main() {
   group('App', () {
     testWidgets('renders Scaffold', (tester) async {
       final analyticsRepository = DevAnalyticsRepository();
-      await analyticsRepository.init();
       await tester.pumpWidget(
-        App(analyticsRepository: analyticsRepository),
+        App(
+          navigatorObservers: [analyticsRepository.navigatorObserver],
+        ),
       );
       expect(find.byType(Scaffold), findsOneWidget);
     });

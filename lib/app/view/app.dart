@@ -1,15 +1,14 @@
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
 
 class App extends StatelessWidget {
   const App({
-    required this.analyticsRepository,
+    required this.navigatorObservers,
     super.key,
   });
 
-  final AnalyticsRepository analyticsRepository;
+  final List<NavigatorObserver> navigatorObservers;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class App extends StatelessWidget {
         ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        navigatorObservers: [analyticsRepository.navigationObserver],
+        navigatorObservers: navigatorObservers,
         home: const Scaffold(),
       ),
     );

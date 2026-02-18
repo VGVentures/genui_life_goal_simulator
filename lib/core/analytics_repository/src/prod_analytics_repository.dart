@@ -13,19 +13,13 @@ class ProdAnalyticsRepository extends AnalyticsRepository {
     required FirebaseAnalytics firebaseAnalytics,
     required WiredashAnalytics wiredashAnalytics,
   }) : _firebaseAnalytics = firebaseAnalytics,
-       _wiredashAnalytics = wiredashAnalytics;
-
+       _wiredashAnalytics = wiredashAnalytics,
+       _navigatorObserver = FirebaseAnalyticsObserver(
+         analytics: firebaseAnalytics,
+       );
   final FirebaseAnalytics _firebaseAnalytics;
   final WiredashAnalytics _wiredashAnalytics;
-
-  late final FirebaseAnalyticsObserver _navigationObserver;
-
-  @override
-  Future<void> init() async {
-    _navigationObserver = FirebaseAnalyticsObserver(
-      analytics: _firebaseAnalytics,
-    );
-  }
+  final FirebaseAnalyticsObserver _navigatorObserver;
 
   @override
   Future<void> trackEvent(
@@ -40,10 +34,5 @@ class ProdAnalyticsRepository extends AnalyticsRepository {
   }
 
   @override
-  Future<void> setUserId(String? userId) async {
-    await _firebaseAnalytics.setUserId(id: userId);
-  }
-
-  @override
-  NavigatorObserver get navigationObserver => _navigationObserver;
+  NavigatorObserver get navigatorObserver => _navigatorObserver;
 }
