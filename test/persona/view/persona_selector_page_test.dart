@@ -1,5 +1,4 @@
 import 'package:finance_app/chat/chat.dart';
-import 'package:finance_app/l10n/gen/app_localizations_en.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
