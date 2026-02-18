@@ -172,7 +172,7 @@ void main() {
         ).called(1);
       });
 
-      test('throws ArgumentError for unknown flag ID', () {
+      test('throws FeatureFlagNotFoundException for unknown flag ID', () {
         final repository = FeatureFlagsRepository(
           streamingSharedPreferences: mockPreferences,
           featureFlags: [testFlag],
@@ -180,7 +180,7 @@ void main() {
 
         expect(
           () => repository.toggleFeatureFlag('unknown'),
-          throwsArgumentError,
+          throwsA(isA<FeatureFlagNotFoundException>()),
         );
       });
     });
@@ -295,7 +295,7 @@ void main() {
         await future;
       });
 
-      test('throws ArgumentError for unknown flag ID', () {
+      test('throws FeatureFlagNotFoundException for unknown flag ID', () {
         final repository = FeatureFlagsRepository(
           streamingSharedPreferences: mockPreferences,
           featureFlags: [testFlag],
@@ -303,7 +303,7 @@ void main() {
 
         expect(
           () => repository.watchFeatureFlag('unknown'),
-          throwsArgumentError,
+          throwsA(isA<FeatureFlagNotFoundException>()),
         );
       });
     });

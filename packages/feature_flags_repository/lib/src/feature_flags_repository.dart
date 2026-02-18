@@ -1,3 +1,4 @@
+import 'package:feature_flags_repository/src/exceptions/feature_flags_exception.dart';
 import 'package:feature_flags_repository/src/feature_flag.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
@@ -27,7 +28,7 @@ class FeatureFlagsRepository {
   FeatureFlag _findFlag(String id) {
     return _featureFlags.firstWhere(
       (flag) => flag.id == id,
-      orElse: () => throw ArgumentError('Unknown feature flag id: $id'),
+      orElse: () => throw FeatureFlagNotFoundException(id),
     );
   }
 
