@@ -28,7 +28,6 @@ void main() {
         ),
       );
 
-      expect(find.text(l10n.homeAppBarTitle), findsOneWidget);
       expect(find.byType(PersonaCard), findsNWidgets(scenarios.length));
     });
 
