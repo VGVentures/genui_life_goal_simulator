@@ -1,12 +1,17 @@
 import 'dart:async';
 
-import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
+import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 
 /// {@template DevErrorReportingRepository}
 /// Development implementation of [ErrorReportingRepository].
 /// {@endtemplate}
 class DevErrorReportingRepository extends ErrorReportingRepository {
+  DevErrorReportingRepository({void Function(String message)? log})
+    : _log = log ?? debugPrint;
+
+  final void Function(String message) _log;
+
   @override
   Future<void> recordError(
     dynamic error,
@@ -14,8 +19,8 @@ class DevErrorReportingRepository extends ErrorReportingRepository {
     String? reason,
     Map<String, dynamic>? extra,
   }) async {
-    debugPrint('$error');
-    debugPrint('$stackTrace');
+    _log('$error');
+    _log('$stackTrace');
   }
 
   @override

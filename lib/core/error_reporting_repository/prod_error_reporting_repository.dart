@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
+import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 

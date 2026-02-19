@@ -1,4 +1,4 @@
-import 'package:finance_app/core/error_reporting_repository/src/prod_error_reporting_repository.dart';
+import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

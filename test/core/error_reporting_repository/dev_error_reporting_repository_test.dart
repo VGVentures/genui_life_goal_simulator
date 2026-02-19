@@ -1,18 +1,19 @@
-import 'package:finance_app/core/error_reporting_repository/src/dev_error_reporting_repository.dart';
+import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late DevErrorReportingRepository repository;
+  late List<String> logs;
 
   setUp(() {
-    repository = DevErrorReportingRepository();
+    logs = [];
+    repository = DevErrorReportingRepository(log: logs.add);
   });
 
   group('DevErrorReportingRepository', () {
     test('recordError logs error without throwing', () async {
-      final error = Exception('Test error');
-      final stackTrace = StackTrace.current;
-
+      const error = 'ERROR';
+      final stackTrace = StackTrace.fromString('STACK TRACE');
       await expectLater(
         repository.recordError(
           error,
@@ -22,6 +23,10 @@ void main() {
         ),
         completes,
       );
+      expect(logs, [
+        'ERROR',
+        'STACK TRACE',
+      ]);
     });
   });
 }

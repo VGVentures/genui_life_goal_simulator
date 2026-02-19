@@ -9,13 +9,7 @@ import 'package:wiredash/wiredash.dart';
 Future<void> main() async {
   if (kDebugMode) {
     // Debug mode: Use console logging, skip Sentry initialization
-    await bootstrap(
-      errorReportingRepository: DevErrorReportingRepository(),
-      analyticsRepository: ProdAnalyticsRepository(
-        firebaseAnalytics: FirebaseAnalytics.instance,
-        wiredashAnalytics: WiredashAnalytics(),
-      ),
-    );
+    await _bootstrap(DevErrorReportingRepository());
   } else {
     await SentryFlutter.init(
       (options) {
@@ -25,13 +19,17 @@ Future<void> main() async {
           ..tracesSampleRate = 1.0
           ..environment = 'production';
       },
-      appRunner: () => bootstrap(
-        errorReportingRepository: ProdErrorReportingRepository(HubAdapter()),
-        analyticsRepository: ProdAnalyticsRepository(
-          firebaseAnalytics: FirebaseAnalytics.instance,
-          wiredashAnalytics: WiredashAnalytics(),
-        ),
-      ),
+      appRunner: () => _bootstrap(ProdErrorReportingRepository(HubAdapter())),
     );
   }
+}
+
+Future<void> _bootstrap(ErrorReportingRepository errorReportingRepository) {
+  return bootstrap(
+    errorReportingRepository: errorReportingRepository,
+    analyticsRepository: ProdAnalyticsRepository(
+      firebaseAnalytics: FirebaseAnalytics.instance,
+      wiredashAnalytics: WiredashAnalytics(),
+    ),
+  );
 }
