@@ -18,6 +18,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  provider: ^6.1.2
   wiredash: ^2.6.0
 
 dev_dependencies:
