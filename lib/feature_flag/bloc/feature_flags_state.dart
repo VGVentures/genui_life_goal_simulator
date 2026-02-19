@@ -19,7 +19,6 @@ class FeatureFlagsState {
   String? error;
 
   FeatureFlagsState copyWith({
-    // TODO(juanRodriguez17): Use the class that is on FeatureFlagRepository PR
     String? featureFlagId,
     List<FeatureFlagState>? featureFlags,
     bool? isLoading,
@@ -27,8 +26,7 @@ class FeatureFlagsState {
   }) {
     if (featureFlagId != null) {
       final index = this.featureFlags.indexWhere(
-        // TODO(juanRodriguez17): element.featureFlag.id == featureFlagId
-        (element) => element.featureFlag == featureFlagId,
+        (element) => element.featureFlag.id == featureFlagId,
       );
 
       if (index >= 0) {
@@ -39,7 +37,6 @@ class FeatureFlagsState {
       }
     }
 
-    // TODO(juanRodriguez17): Modify featureFlags operations when gets integrated
     return FeatureFlagsState(
       featureFlags: featureFlags ?? this.featureFlags,
       isLoading: isLoading ?? this.isLoading,
@@ -54,8 +51,6 @@ class FeatureFlagState {
     this.isEnabled = false,
   });
 
-  // TODO(juanRodriguez17): Use the class that is on FeatureFlagRepository PR
-  // final FeatureFlag featureFlag;
-  final String featureFlag;
+  final FeatureFlag featureFlag;
   final bool isEnabled;
 }

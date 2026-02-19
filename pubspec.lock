@@ -305,6 +305,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.3"
+  feature_flags_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/feature_flags_repository"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   ffi:
     dependency: transitive
     description:
@@ -1114,6 +1121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  streaming_shared_preferences:
+    dependency: transitive
+    description:
+      name: streaming_shared_preferences
+      sha256: "015a7999d8cf6e87a685635e0614910116ee187c885ae0f630da276f8435e457"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   string_scanner:
     dependency: transitive
     description:

@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:feature_flags_repository/feature_flags_repository.dart';
 
 part 'feature_flags_state.dart';
 
 class FeatureFlagsCubit extends Cubit<FeatureFlagsState> {
   FeatureFlagsCubit() : super(FeatureFlagsState.initial());
 
-  // TODO(juanRodriguez17): This will be change when the FeatureFlag
-  //class gets integrated
-  void onToggleFeatureFlag(String featureFlagId) {
-    emit(state.copyWith(featureFlagId: featureFlagId));
+  /// Toggles the feature flag with the given [id] on or off.
+  void onToggleFeatureFlag(String id) {
+    emit(state.copyWith(featureFlagId: id));
   }
 }
