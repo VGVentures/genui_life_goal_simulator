@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
-import 'package:wiredash/wiredash.dart';
 
 class App extends StatelessWidget {
   const App({
