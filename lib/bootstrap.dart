@@ -38,6 +38,9 @@ Future<void> bootstrap({
   required AnalyticsRepository analyticsRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

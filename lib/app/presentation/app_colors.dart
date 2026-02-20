@@ -130,7 +130,7 @@ class LightThemeColors extends AppColors {
 
   @override
   MaterialColor get neutral => const MaterialColor(0xFFFFFFFF, {
-    50: Color(0xFFFFFFFF),
+    50: Color(0xFF4CAF50),
     100: Color(0xFFFFFFFF),
     200: Color(0xFFFFFFFF),
     300: Color(0xFFFFFFFF),

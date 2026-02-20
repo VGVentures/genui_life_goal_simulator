@@ -3,5 +3,21 @@
     "@appName": {
         "description": "The display name of the application."
     },
-    "appName": "Finance App"
+    "appName": "Finance App",
+    "homeAppBarTitle": "Financial Advisor",
+    "@homeAppBarTitle": {
+        "description": "Text shown in the AppBar of the Home Page"
+    },
+    "chatAppBarTitle": "Chat",
+    "@chatAppBarTitle": {
+        "description": "Text shown in the AppBar of the Chat Page"
+    },
+    "chatInputBarHint": "Ask about your finances...",
+    "@chatInputBarHint": {
+        "description": "Hint text shown in the chat input bar"
+    },
+    "startChattingLabel": "Send a message to get started!",
+    "@startChattingLabel": {
+        "description": "Text shown when there are no messages in the chat"
+    }
 }
