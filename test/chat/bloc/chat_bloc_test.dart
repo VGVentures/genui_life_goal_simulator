@@ -100,19 +100,19 @@ void main() {
       expect(event.text, 'hello');
     });
 
-    test('$ConversationUpdated holds messages', () {
+    test('$ChatConversationUpdated holds messages', () {
       final msgs = <ChatMessage>[UserMessage.text('a')];
-      final event = ConversationUpdated(msgs);
+      final event = ChatConversationUpdated(msgs);
       expect(event.messages, msgs);
     });
 
-    test('$Loading holds isLoading', () {
-      const event = Loading(isLoading: true);
+    test('$ChatLoading holds isLoading', () {
+      const event = ChatLoading(isLoading: true);
       expect(event.isLoading, isTrue);
     });
 
-    test('$ErrorOccurred holds message', () {
-      const event = ErrorOccurred('fail');
+    test('$ChatErrorOccurred holds message', () {
+      const event = ChatErrorOccurred('fail');
       expect(event.message, 'fail');
     });
   });
@@ -158,27 +158,28 @@ void main() {
     );
 
     blocTest<ChatBloc, ChatState>(
-      '$ConversationUpdated emits state with new messages',
+      '$ChatConversationUpdated emits state with new messages',
       build: _buildBloc,
-      act: (bloc) => bloc.add(ConversationUpdated([UserMessage.text('msg')])),
+      act: (bloc) =>
+          bloc.add(ChatConversationUpdated([UserMessage.text('msg')])),
       expect: () => [
         isA<ChatState>().having((s) => s.messages, 'messages', hasLength(1)),
       ],
     );
 
     blocTest<ChatBloc, ChatState>(
-      '$Loading emits state with isLoading',
+      '$ChatLoading emits state with isLoading',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const Loading(isLoading: true)),
+      act: (bloc) => bloc.add(const ChatLoading(isLoading: true)),
       expect: () => [
         isA<ChatState>().having((s) => s.isLoading, 'isLoading', isTrue),
       ],
     );
 
     blocTest<ChatBloc, ChatState>(
-      '$ErrorOccurred emits error status with message',
+      '$ChatErrorOccurred emits error status with message',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const ErrorOccurred('something failed')),
+      act: (bloc) => bloc.add(const ChatErrorOccurred('something failed')),
       expect: () => [
         isA<ChatState>()
             .having((s) => s.status, 'status', ChatStatus.error)
@@ -199,7 +200,7 @@ void main() {
     });
 
     test(
-      'onError callback from content generator fires $ErrorOccurred',
+      'onError callback from content generator fires $ChatErrorOccurred',
       () async {
         final bloc = _buildBloc()..add(ChatStarted(_scenario));
         await Future<void>.delayed(Duration.zero);
@@ -213,7 +214,7 @@ void main() {
       },
     );
 
-    test('processing listener fires $Loading event', () async {
+    test('processing listener fires $ChatLoading event', () async {
       final bloc = _buildBloc()..add(ChatStarted(_scenario));
       await Future<void>.delayed(Duration.zero);
 

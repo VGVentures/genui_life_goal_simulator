@@ -12,9 +12,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc() : super(const ChatState()) {
     on<ChatStarted>(_onStarted);
     on<ChatMessageSent>(_onMessageSent);
-    on<ConversationUpdated>(_onConversationUpdated);
-    on<Loading>(_onLoading);
-    on<ErrorOccurred>(_onErrorOccurred);
+    on<ChatConversationUpdated>(_onConversationUpdated);
+    on<ChatLoading>(_onLoading);
+    on<ChatErrorOccurred>(_onErrorOccurred);
   }
 
   GenUiConversation? _conversation;
@@ -39,7 +39,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       contentGenerator: contentGenerator,
       a2uiMessageProcessor: processor,
       onError: (error) {
-        if (!isClosed) add(ErrorOccurred(error.error.toString()));
+        if (!isClosed) add(ChatErrorOccurred(error.error.toString()));
       },
     );
 
@@ -56,25 +56,25 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onConversationChanged() {
     if (!isClosed) {
-      add(ConversationUpdated(_conversation!.conversation.value));
+      add(ChatConversationUpdated(_conversation!.conversation.value));
     }
   }
 
   void _onProcessingChanged() {
     if (!isClosed) {
-      add(Loading(isLoading: _conversation!.isProcessing.value));
+      add(ChatLoading(isLoading: _conversation!.isProcessing.value));
     }
   }
 
   void _onConversationUpdated(
-    ConversationUpdated event,
+    ChatConversationUpdated event,
     Emitter<ChatState> emit,
   ) {
     emit(state.copyWith(messages: event.messages));
   }
 
   void _onLoading(
-    Loading event,
+    ChatLoading event,
     Emitter<ChatState> emit,
   ) {
     emit(state.copyWith(isLoading: event.isLoading));
@@ -88,7 +88,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onErrorOccurred(
-    ErrorOccurred event,
+    ChatErrorOccurred event,
     Emitter<ChatState> emit,
   ) {
     emit(state.copyWith(status: ChatStatus.error, error: event.message));

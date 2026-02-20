@@ -22,22 +22,22 @@ final class ChatMessageSent extends ChatEvent {
 }
 
 /// Conversation messages changed
-final class ConversationUpdated extends ChatEvent {
-  const ConversationUpdated(this.messages);
+final class ChatConversationUpdated extends ChatEvent {
+  const ChatConversationUpdated(this.messages);
 
   final List<ChatMessage> messages;
 }
 
 /// Loading state when LLM is processing a request
-final class Loading extends ChatEvent {
-  const Loading({required this.isLoading});
+final class ChatLoading extends ChatEvent {
+  const ChatLoading({required this.isLoading});
 
   final bool isLoading;
 }
 
 /// An error occurred in the content generator
-final class ErrorOccurred extends ChatEvent {
-  const ErrorOccurred(this.message);
+final class ChatErrorOccurred extends ChatEvent {
+  const ChatErrorOccurred(this.message);
 
   final String message;
 }
