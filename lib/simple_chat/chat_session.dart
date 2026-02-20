@@ -12,6 +12,7 @@ import 'ai_client.dart';
 import 'catalog/bar_chart.dart';
 import 'catalog/compact_hero.dart';
 import 'catalog/compact_info_card.dart';
+import 'catalog/container_item.dart';
 import 'catalog/dashboard.dart';
 import 'catalog/stat_column.dart';
 import 'catalog/stat_row.dart';
@@ -51,6 +52,7 @@ class ChatSession extends ChangeNotifier {
           barChart,
           compactHero,
           compactInfoCard,
+          containerItem,
           dashboard,
           statColumn,
           statRow,
@@ -113,6 +115,12 @@ When presenting data alongside controls, use the Dashboard component.
 It combines a visualization (like a BarChart) with interactive controls
 (like Sliders or ChoicePickers) in a responsive layout that adapts to
 the device type automatically.
+
+## Container
+Use the Container component to visually group related widgets with a
+styled box. It supports background colors, borders, border radius, and
+padding. Place child widget IDs inside childIds. Containers can be nested
+to create complex layouts with distinct visual sections.
 ''',
     );
 
