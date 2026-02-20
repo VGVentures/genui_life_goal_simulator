@@ -19,6 +19,22 @@ void main() {
       defaultValue: false,
     );
 
+    const flag1On = FeatureFlag(
+      id: 'flag_1',
+      name: 'Flag 1',
+      description: 'Description',
+      value: true,
+      defaultValue: false,
+    );
+
+    const flag1Off = FeatureFlag(
+      id: 'flag_1',
+      name: 'Flag 1',
+      description: 'Description',
+      value: false,
+      defaultValue: false,
+    );
+
     setUp(() {
       repository = _MockFeatureFlagsRepository();
     });
@@ -33,17 +49,25 @@ void main() {
       'init emits [$FeatureFlagsInProgress, $FeatureFlagsSuccess]'
       ' when stream emits flags',
       setUp: () {
-        when(() => repository.getFeatureFlagIds()).thenReturn([flag.id]);
+        when(
+          () => repository.getFeatureFlagIds(),
+        ).thenReturn([flag.id]);
         when(
           () => repository.watchFeatureFlag(flag.id),
-        ).thenAnswer((_) => Stream.value(flag));
+        ).thenAnswer((_) => Stream.fromIterable([flag1On, flag1Off]));
       },
       build: () => FeatureFlagsCubit(featureFlagsRepository: repository),
       act: (cubit) => cubit.init(),
       expect: () => [
         const FeatureFlagsInProgress(),
-        const FeatureFlagsSuccess(featureFlags: [flag]),
+        const FeatureFlagsSuccess(featureFlags: [flag1On]),
+        const FeatureFlagsSuccess(featureFlags: [flag1Off]),
       ],
+      verify: (_) {
+        verify(() => repository.getFeatureFlagIds()).called(1);
+        verify(() => repository.watchFeatureFlag(flag.id)).called(1);
+        verifyNoMoreInteractions(repository);
+      },
     );
 
     blocTest<FeatureFlagsCubit, FeatureFlagsState>(
