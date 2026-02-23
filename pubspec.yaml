@@ -39,7 +39,7 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.4
   very_good_analysis: ^10.2.0
-  very_good_cli: ^0.28.0
+  very_good_cli: ^1.0.0
   mockito: ^5.4.0
   build_runner: ^2.4.0
   

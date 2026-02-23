@@ -241,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  dart_mcp:
+    dependency: transitive
+    description:
+      name: dart_mcp
+      sha256: dda8a8a8ef613b63a6c4b6a8e00163a5b3360195ae6247946985f78fbd0779e4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   dart_style:
     dependency: transitive
     description:
@@ -784,10 +792,10 @@ packages:
     dependency: transitive
     description:
       name: pana
-      sha256: bbad5a3e085fcc2475f08fe1240041e25d74482da80d9af00bc17cce99989e29
+      sha256: d7bd85f18a14909f0baab69a13895dc4ff163be51c9884f73a506982adeac57d
       url: "https://pub.dev"
     source: hosted
-    version: "0.22.24"
+    version: "0.23.10"
   path:
     dependency: transitive
     description:
@@ -1137,14 +1145,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  tar:
-    dependency: transitive
-    description:
-      name: tar
-      sha256: b338bacfd24dae6cf527acb4242003a71fc88ce183a9002376fabbc4ebda30c9
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
   term_glyph:
     dependency: transitive
     description:
@@ -1221,10 +1221,10 @@ packages:
     dependency: "direct dev"
     description:
       name: very_good_cli
-      sha256: "7337241a349728a46d48cba060550a976e9a3c3da8ce27a43214c3cbee1b077f"
+      sha256: "108cb53fc6743471048baa10b2c094d9e805e41e7d9443e3c5318ede9c707e02"
       url: "https://pub.dev"
     source: hosted
-    version: "0.28.0"
+    version: "1.0.0"
   very_good_test_runner:
     dependency: transitive
     description:
