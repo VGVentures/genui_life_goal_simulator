@@ -10,6 +10,12 @@
 
 <!--- Describe your changes in detail -->
 
+Resolves #
+
+## Preview
+
+<!--- Add screenshots or videos of your change -->
+
 ## Type of Change
 
 <!--- Put an `x` in all the boxes that apply: -->
@@ -22,3 +28,15 @@
 - [ ] 📝 Documentation
 - [ ] 🗑️ Chore
 - [ ] 🧪 Test
+
+## Readiness Checklist
+
+<!--- Put an `x` in all the boxes that apply: -->
+
+- [ ] Linked to a Story issue (`Resolves #...`)
+- [ ] Story goals are addressed
+- [ ] Acceptance criteria are met (or clearly called out as partial)
+- [ ] Designs are implemented as approved, or design deviations are documented
+- [ ] Analytics requirements are implemented, or marked as not applicable
+- [ ] Tests were added/updated, or justification provided if not needed
+- [ ] Documentation was updated when needed
