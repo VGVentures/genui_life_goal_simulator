@@ -125,7 +125,7 @@ void main() {
             child: SizedBox(
               width: Breakpoints.mobile - 200,
               height: 800,
-              child: const ResponsiveScaffold(
+              child: ResponsiveScaffold(
                 mobile: SizedBox(key: mobileKey),
                 desktop: SizedBox(key: desktopKey),
               ),
