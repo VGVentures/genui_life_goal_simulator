@@ -1,0 +1,91 @@
+name: Story
+description: Plan and scope a story
+title: ""
+labels:
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this lightweight template to define work clearly.
+
+  - type: dropdown
+    id: conventional-commit-type
+    attributes:
+      label: Conventional Commit Type
+      description: Select the likely commit type for this story.
+      options:
+        - feat
+        - fix
+        - docs
+        - style
+        - refactor
+        - perf
+        - test
+        - build
+        - ci
+        - chore
+        - revert
+    validations:
+      required: true
+
+  - type: textarea
+    id: goals
+    attributes:
+      label: Goals
+      description: What customer or business outcomes should this work achieve?
+      placeholder: |
+        - Improve...
+        - Reduce...
+        - Increase...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Define specific, testable criteria.
+      placeholder: |
+        - [ ] Given..., when..., then...
+        - [ ] Given..., when..., then...
+    validations:
+      required: true
+
+  - type: textarea
+    id: designs
+    attributes:
+      label: Designs
+      description: Link mocks, prototypes, screenshots, or design docs.
+      placeholder: |
+        Figma:
+        UX spec:
+        Screenshots:
+    validations:
+      required: false
+
+  - type: textarea
+    id: analytics
+    attributes:
+      label: Analytics
+      description: Define events, properties, dashboards, and success metrics.
+      placeholder: |
+        Events:
+        Properties:
+        Dashboard / report link:
+        Success metric target:
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Optional extra context (scope, dependencies, risks, open questions).
+      placeholder: |
+        Scope:
+        Dependencies:
+        Risks:
+        Open questions:
+    validations:
+      required: false
