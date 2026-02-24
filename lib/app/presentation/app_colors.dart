@@ -54,6 +54,14 @@ abstract class AppColors extends ThemeExtension<AppColors> {
   /// 400: outline
   /// 200: outlineVariant
   MaterialColor get neutralVariant;
+
+  /// Accent color for gradients and highlights.
+  /// 500: accent (blue)
+  /// 300: accentLight (used for gradient end)
+  MaterialColor get accent;
+
+  /// Primary button background color.
+  Color get buttonPrimary;
 }
 
 class LightThemeColors extends AppColors {
@@ -155,6 +163,23 @@ class LightThemeColors extends AppColors {
     800: Color(0xFF49454F),
     900: Color(0xFF000000),
   });
+
+  @override
+  MaterialColor get accent => const MaterialColor(0xFF5B8DEF, {
+    50: Color(0xFFE8F0FD),
+    100: Color(0xFFD1E1FB),
+    200: Color(0xFFB9D2F9),
+    300: Color(0xFFB19EF5),
+    400: Color(0xFF7BA6F3),
+    500: Color(0xFF5B8DEF),
+    600: Color(0xFF4A71BF),
+    700: Color(0xFF38558F),
+    800: Color(0xFF273A60),
+    900: Color(0xFF151E30),
+  });
+
+  @override
+  Color get buttonPrimary => const Color(0xFF6D92F5);
 }
 
 class DarkThemeColors extends AppColors {
@@ -256,4 +281,21 @@ class DarkThemeColors extends AppColors {
     800: Color(0xFF1D1A22),
     900: Color(0xFF000000),
   });
+
+  @override
+  MaterialColor get accent => const MaterialColor(0xFF5B8DEF, {
+    50: Color(0xFFE8F0FD),
+    100: Color(0xFFD1E1FB),
+    200: Color(0xFFB9D2F9),
+    300: Color(0xFFB19EF5),
+    400: Color(0xFF7BA6F3),
+    500: Color(0xFF5B8DEF),
+    600: Color(0xFF4A71BF),
+    700: Color(0xFF38558F),
+    800: Color(0xFF273A60),
+    900: Color(0xFF151E30),
+  });
+
+  @override
+  Color get buttonPrimary => const Color(0xFF6D92F5);
 }
