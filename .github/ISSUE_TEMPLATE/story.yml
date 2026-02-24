@@ -1,6 +1,5 @@
 name: Story
 description: Plan and scope a story
-title: ""
 labels:
   - needs-triage
 body:
