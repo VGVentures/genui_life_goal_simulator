@@ -30,12 +30,21 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get editPencil =>
       const AssetGenImage('assets/images/onboarding/edit_pencil.png');
 
+  /// File path: assets/images/onboarding/right_arrow.png
+  AssetGenImage get rightArrow =>
+      const AssetGenImage('assets/images/onboarding/right_arrow.png');
+
   /// File path: assets/images/onboarding/soft_star.png
   AssetGenImage get softStar =>
       const AssetGenImage('assets/images/onboarding/soft_star.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [checkedOption, editPencil, softStar];
+  List<AssetGenImage> get values => [
+    checkedOption,
+    editPencil,
+    rightArrow,
+    softStar,
+  ];
 }
 
 class Assets {

@@ -20,6 +20,9 @@ abstract class AppColors extends ThemeExtension<AppColors> {
   /// The on-surface / foreground color for this theme.
   Color get onSurface;
 
+  /// The transparent color for this theme.
+  Color get transparent;
+
   /// 500: primary
   /// 900: onPrimary
   /// 50: primaryContainer
@@ -73,6 +76,9 @@ class LightThemeColors extends AppColors {
   Color get onSurface => const Color(0xFFFFFFFF);
 
   @override
+  Color get transparent => const Color(0x00000000);
+
+  @override
   MaterialColor get primary => const MaterialColor(0xFF4714E0, {
     50: Color(0xB2F0F0F0),
     100: Color(0xFFF0524D),
@@ -95,7 +101,7 @@ class LightThemeColors extends AppColors {
     400: Color(0xFFD4C6FB),
     500: Color(0xFF2461EB),
     600: Color(0xFF6D92F5),
-    700: Color(0xFFF0524D),
+    700: Color(0xFF2C64F1),
     800: Color(0xFF1D192B),
     900: Color(0xFF000000),
   });
@@ -172,6 +178,9 @@ class DarkThemeColors extends AppColors {
 
   @override
   Color get onSurface => const Color(0xFFE6E1E5);
+
+  @override
+  Color get transparent => const Color(0x00000000);
 
   @override
   MaterialColor get primary => const MaterialColor(0xFF4714E0, {

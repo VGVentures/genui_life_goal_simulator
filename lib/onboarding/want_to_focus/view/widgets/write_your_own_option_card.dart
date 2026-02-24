@@ -100,21 +100,25 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     widget.onChanged?.call(value);
                   },
                   onChanged: (value) {
-                    setState(() {});
+                    // setState(() {});
                     widget.onChanged?.call(value);
                   },
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      _hasText ? _controller.text : widget.label,
-                      style: textTheme.bodyLarge?.copyWith(
-                        fontSize: Spacing.xxxl,
-                        fontWeight: _hasText
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                        color: colorScheme.primary,
+                    Flexible(
+                      child: Text(
+                        _hasText ? _controller.text : widget.label,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontSize: Spacing.xxxl,
+                          fontWeight: _hasText
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          color: colorScheme.primary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (!_hasText) ...[
