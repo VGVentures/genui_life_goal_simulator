@@ -28,7 +28,10 @@ dependencies:
   rxdart: ^0.28.0
   sentry_flutter: ^8.0.0
   shared_preferences: ^2.2.0
-  wiredash: ^2.6.0
+  wiredash:
+    git:
+      url: https://github.com/brianegan/wiredash-sdk.git
+      ref: dc5595a500b7e8419b2efe4889b5fc745582b493
 
 
 dev_dependencies:

@@ -27,7 +27,7 @@ Future<void> main() async {
 Future<void> _bootstrap(ErrorReportingRepository errorReportingRepository) {
   return bootstrap(
     errorReportingRepository: errorReportingRepository,
-    analyticsRepository: ProdAnalyticsRepository(
+    analyticsRepositoryFactory: () => ProdAnalyticsRepository(
       firebaseAnalytics: FirebaseAnalytics.instance,
       wiredashAnalytics: WiredashAnalytics(),
     ),
