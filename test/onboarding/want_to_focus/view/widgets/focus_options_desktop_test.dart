@@ -9,10 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> _pump(WidgetTester tester) {
   return tester.pumpWidget(
     MaterialApp(
-      localizationsDelegates:
-          AppLocalizations.localizationsDelegates,
-      supportedLocales:
-          AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme(LightThemeColors()).themeData,
       home: BlocProvider(
         create: (_) => WantToFocusCubit(),
