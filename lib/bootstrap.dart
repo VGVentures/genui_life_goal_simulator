@@ -85,12 +85,12 @@ Future<void> bootstrap({
         Provider<AnalyticsRepository>.value(
           value: analyticsRepository,
         ),
-      ],
-      child: Provider<FeatureFlagsRepository>.value(
-        value: featureFlagsRepository,
-        child: App(
-          navigatorObservers: [analyticsRepository.navigatorObserver],
+        Provider<FeatureFlagsRepository>.value(
+          value: featureFlagsRepository,
         ),
+      ],
+      child: App(
+        navigatorObservers: [analyticsRepository.navigatorObserver],
       ),
     ),
   );
