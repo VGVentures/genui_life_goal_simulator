@@ -35,12 +35,17 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
-  required AnalyticsRepository analyticsRepository,
+  required AnalyticsRepository Function() analyticsRepositoryFactory,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Ensure the analytics repository is initialized after Firebase is
+  // initialized, since it relies on Firebase Analytics.
+  final analyticsRepository = analyticsRepositoryFactory();
 
   FlutterError.onError = errorReportingRepository.handleFlutterError;
   binding.platformDispatcher.onError =
@@ -56,9 +61,7 @@ Future<void> bootstrap({
         Provider<ErrorReportingRepository>.value(
           value: errorReportingRepository,
         ),
-        Provider<AnalyticsRepository>.value(
-          value: analyticsRepository,
-        ),
+        Provider<AnalyticsRepository>.value(value: analyticsRepository),
       ],
       child: App(navigatorObservers: [analyticsRepository.navigatorObserver]),
     ),
