@@ -1,5 +1,6 @@
 import 'package:finance_app/intro/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// {@template intro_desktop_view}
 /// Desktop layout for the intro screen.
@@ -11,69 +12,258 @@ class IntroDesktopView extends StatelessWidget {
   /// Called when the "Get started" button is pressed.
   final VoidCallback? onGetStarted;
 
-  static const _backgroundColor = Color(0xFF0D1537);
+  static const _backgroundColor = Color(0xFF020F30);
+
+  static const _vgvGradient = LinearGradient(
+    colors: [Color(0xFF93A0F5), Color(0xFFBBB7F9)],
+  );
+
+  static const _titleStyle = TextStyle(
+    fontFamily: 'Poppins',
+    color: Colors.white,
+    fontSize: 116,
+    fontWeight: FontWeight.w700,
+    height: 1,
+    letterSpacing: -2,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _backgroundColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const IntroBadge(),
-            const SizedBox(height: 40),
-            RichText(
-              textAlign: TextAlign.center,
-              text: const TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Gen UI x ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 80,
-                      fontWeight: FontWeight.w800,
-                      height: 1.1,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'VGV',
-                    style: TextStyle(
-                      color: Color(0xFFA89FE8),
-                      fontSize: 80,
-                      fontWeight: FontWeight.w800,
-                      height: 1.1,
-                    ),
-                  ),
-                ],
-              ),
+      body: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: -56,
+            top: 0,
+            bottom: 0,
+            child: SvgPicture.asset(
+              'assets/intro/wavelines1.svg',
+              fit: BoxFit.fitHeight,
             ),
-            const SizedBox(height: 24),
-            const SizedBox(
-              width: 720,
-              child: Text(
-                'This demo shows how Generative UI transforms financial '
-                'products from static dashboards into adaptive experiences. '
-                'The UI reshapes itself based on goals, behavior, and context.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  height: 1.5,
+          ),
+          Positioned(
+            right: -35,
+            top: 0,
+            bottom: 0,
+            child: SvgPicture.asset(
+              'assets/intro/wavelines2.svg',
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Positioned(
+            left: 80,
+            top: 200,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 180,
+            top: 220,
+            child: SvgPicture.asset(
+              'assets/intro/star8.svg',
+              width: 24,
+              height: 25,
+            ),
+          ),
+          Positioned(
+            left: 180,
+            top: 320,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 170,
+            top: 590,
+            child: SvgPicture.asset(
+              'assets/intro/star6.svg',
+              width: 23,
+              height: 23,
+            ),
+          ),
+          Positioned(
+            left: 90,
+            top: 830,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 400,
+            top: 830,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 820,
+            top: 900,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 1100,
+            top: 820,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            left: 1300,
+            top: 850,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 790,
+            top: 80,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 580,
+            top: 140,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 250,
+            top: 140,
+            child: SvgPicture.asset(
+              'assets/intro/star7.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+          Positioned(
+            right: 290,
+            top: 500,
+            child: SvgPicture.asset(
+              'assets/intro/softstar.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+          Positioned(
+            right: 150,
+            top: 700,
+            child: SvgPicture.asset(
+              'assets/intro/star9.svg',
+              width: 15,
+              height: 15,
+            ),
+          ),
+          Positioned(
+            right: 80,
+            top: 50,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 230,
+            top: 320,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 120,
+            top: 500,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 100,
+            top: 900,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const IntroBadge(),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Gen UI x ', style: _titleStyle),
+                    ShaderMask(
+                      shaderCallback: (bounds) => _vgvGradient.createShader(
+                        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                      ),
+                      child: const Text('VGV', style: _titleStyle),
+                    ),
+                  ],
                 ),
-              ),
+                const SizedBox(height: 24),
+                const SizedBox(
+                  width: 960,
+                  child: Text(
+                    'This demo shows how Generative UI transforms financial '
+                    'products from static dashboards into adaptive '
+                    'experiences. The UI reshapes itself based on goals, '
+                    'behavior, and context.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Color(0xB3FFFFFF),
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
+                SizedBox(
+                  width: 400,
+                  child: GetStartedButton(
+                    onPressed: onGetStarted,
+                    label: 'GET STARTED',
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 48),
-            SizedBox(
-              width: 280,
-              child: GetStartedButton(
-                onPressed: onGetStarted,
-                label: 'GET STARTED',
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

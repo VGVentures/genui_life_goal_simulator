@@ -1,58 +1,87 @@
+import 'dart:math' show pi;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// {@template intro_badge}
-/// The "2026 ✦ Gen UI" pill badge shown on the intro screen.
+/// The "2026 ✦ Gen UI" overlapping pill badges shown on the intro screen.
 /// {@endtemplate}
 class IntroBadge extends StatelessWidget {
   /// {@macro intro_badge}
   const IntroBadge({super.key});
 
+  static const double _yearAngle = -15 * pi / 180;
+  static const double _genUiAngle = 12.91 * pi / 180;
+
+  static const _yearOffset = Offset(-45, 0);
+  static const _genUiOffset = Offset(28, 0);
+
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Transform.translate(
+          offset: _yearOffset,
+          child: Transform.rotate(
+            angle: _yearAngle,
+            child: _buildYearPill(),
+          ),
+        ),
+        Transform.translate(
+          offset: _genUiOffset,
+          child: Transform.rotate(
+            angle: _genUiAngle,
+            child: _buildGenUiPill(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildYearPill() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: const BoxDecoration(
-        color: Color(0xFFB5A8F0),
-        borderRadius: BorderRadius.all(Radius.circular(100)),
+        color: Color(0xFF9DB6F8),
+        borderRadius: BorderRadius.all(Radius.circular(150)),
+      ),
+      child: const Text(
+        '2026',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          color: Color(0xCC000000),
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenUiPill() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(150)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 10, 12, 10),
-            child: Text(
-              '2026',
-              style: TextStyle(
-                color: Color(0xFF1A1040),
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          SvgPicture.asset(
+            'assets/intro/softstargradient.svg',
+            width: 18,
+            height: 18,
           ),
-          Container(
-            margin: const EdgeInsets.all(4),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(100)),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.auto_awesome,
-                  size: 14,
-                  color: Color(0xFF5B52D8),
-                ),
-                SizedBox(width: 4),
-                Text(
-                  'Gen UI',
-                  style: TextStyle(
-                    color: Color(0xFF1A1040),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+          const SizedBox(width: 6),
+          const Text(
+            'Gen UI',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              color: Color(0xCC000000),
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

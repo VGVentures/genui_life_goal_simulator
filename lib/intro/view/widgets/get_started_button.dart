@@ -20,7 +20,7 @@ class GetStartedButton extends StatelessWidget {
   final String label;
 
   static const _gradient = LinearGradient(
-    colors: [Color(0xFF6B5CE7), Color(0xFFB5A8F0)],
+    colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
   );
 
   @override
@@ -37,15 +37,16 @@ class GetStartedButton extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: onPressed,
           child: SizedBox(
-            height: 56,
+            height: 80,
             child: Center(
               child: Text(
                 label,
                 style: const TextStyle(
+                  fontFamily: 'Poppins',
                   color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  height: 1.5,
                 ),
               ),
             ),
