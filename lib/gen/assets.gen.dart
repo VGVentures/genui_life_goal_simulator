@@ -11,6 +11,64 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsIconsKickOffGen {
+  const $AssetsIconsKickOffGen();
+
+  /// File path: assets/icons_kick_off/Ellipse 139.png
+  AssetGenImage get ellipse139 =>
+      const AssetGenImage('assets/icons_kick_off/Ellipse 139.png');
+
+  /// File path: assets/icons_kick_off/Soft Star.png
+  AssetGenImage get softStar =>
+      const AssetGenImage('assets/icons_kick_off/Soft Star.png');
+
+  /// File path: assets/icons_kick_off/Star 10.png
+  AssetGenImage get star10 =>
+      const AssetGenImage('assets/icons_kick_off/Star 10.png');
+
+  /// File path: assets/icons_kick_off/Star 11.png
+  AssetGenImage get star11 =>
+      const AssetGenImage('assets/icons_kick_off/Star 11.png');
+
+  /// File path: assets/icons_kick_off/Star 5.png
+  AssetGenImage get star5 =>
+      const AssetGenImage('assets/icons_kick_off/Star 5.png');
+
+  /// File path: assets/icons_kick_off/Star 7.png
+  AssetGenImage get star7 =>
+      const AssetGenImage('assets/icons_kick_off/Star 7.png');
+
+  /// File path: assets/icons_kick_off/Star 9.png
+  AssetGenImage get star9 =>
+      const AssetGenImage('assets/icons_kick_off/Star 9.png');
+
+  /// File path: assets/icons_kick_off/activity_zone.png
+  AssetGenImage get activityZone =>
+      const AssetGenImage('assets/icons_kick_off/activity_zone.png');
+
+  /// File path: assets/icons_kick_off/check_icon.png
+  AssetGenImage get checkIcon =>
+      const AssetGenImage('assets/icons_kick_off/check_icon.png');
+
+  /// File path: assets/icons_kick_off/flare.png
+  AssetGenImage get flare =>
+      const AssetGenImage('assets/icons_kick_off/flare.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    ellipse139,
+    softStar,
+    star10,
+    star11,
+    star5,
+    star7,
+    star9,
+    activityZone,
+    checkIcon,
+    flare,
+  ];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -34,22 +92,14 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get rightArrow =>
       const AssetGenImage('assets/images/onboarding/right_arrow.png');
 
-  /// File path: assets/images/onboarding/soft_star.png
-  AssetGenImage get softStar =>
-      const AssetGenImage('assets/images/onboarding/soft_star.png');
-
   /// List of all assets
-  List<AssetGenImage> get values => [
-    checkedOption,
-    editPencil,
-    rightArrow,
-    softStar,
-  ];
+  List<AssetGenImage> get values => [checkedOption, editPencil, rightArrow];
 }
 
 class Assets {
   const Assets._();
 
+  static const $AssetsIconsKickOffGen iconsKickOff = $AssetsIconsKickOffGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 

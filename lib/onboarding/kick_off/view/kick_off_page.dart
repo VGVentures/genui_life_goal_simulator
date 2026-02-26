@@ -1,13 +1,20 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/view/widgets/trust_badge.dart';
+import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
+import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});
 
-  void _onNextPressed() {
-    // TO-DO: navigate to next page
+  void _onNextPressed(BuildContext context) {
+    // Navigator.of(context).push(
+    //   MaterialPageRoute<void>(
+    //     builder: (_) => const PickProfilePage(),
+    //   ),
+    // );
+
+    // Must be changed for correct route when pick profile is pushed
   }
 
   @override
@@ -94,7 +101,7 @@ class KickOffPage extends StatelessWidget {
 
     // Base button without padding
     final baseButton = OutlinedButton(
-      onPressed: _onNextPressed,
+      onPressed: () => _onNextPressed(context),
       style: OutlinedButton.styleFrom(
         shape: const CircleBorder(),
         side: const BorderSide(color: Colors.white, width: 1.1),
