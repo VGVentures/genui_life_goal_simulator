@@ -30,70 +30,127 @@ void main() {
     });
   });
 
+  group('responsiveValue', () {
+    testWidgets('returns mobile value when screen width is below threshold', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(Breakpoints.mobile - 1, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTeardownToResetView(tester);
+
+      late String result;
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Builder(
+            builder: (context) {
+              result = responsiveValue(
+                context,
+                mobile: 'mobile',
+                desktop: 'desktop',
+              );
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(result, 'mobile');
+    });
+
+    testWidgets(
+      'returns desktop value when screen width is at or above threshold',
+      (tester) async {
+        tester.view.physicalSize = const Size(Breakpoints.desktop, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTeardownToResetView(tester);
+
+        late String result;
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Builder(
+              builder: (context) {
+                result = responsiveValue(
+                  context,
+                  mobile: 'mobile',
+                  desktop: 'desktop',
+                );
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        expect(result, 'desktop');
+      },
+    );
+  });
+
   group(ResponsiveScaffold, () {
     const mobileKey = Key('mobile');
     const desktopKey = Key('desktop');
 
-    Widget buildTestWidget({required double width}) {
-      return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Center(
-          child: SizedBox(
-            width: width,
-            height: 800,
-            child: const ResponsiveScaffold(
-              mobile: SizedBox(key: mobileKey),
-              desktop: SizedBox(key: desktopKey),
-            ),
-          ),
-        ),
-      );
-    }
+    const scaffold = ResponsiveScaffold(
+      mobile: SizedBox(key: mobileKey),
+      desktop: SizedBox(key: desktopKey),
+    );
 
-    testWidgets('renders mobile widget when width is below threshold', (
+    testWidgets('renders mobile widget when screen width is below threshold', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(Breakpoints.mobile - 1, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTeardownToResetView(tester);
+
       await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.mobile - 1),
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: scaffold,
+        ),
       );
 
       expect(find.byKey(mobileKey), findsOneWidget);
       expect(find.byKey(desktopKey), findsNothing);
     });
 
-    testWidgets('renders desktop widget when width is at or above threshold', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.desktop),
-      );
+    testWidgets(
+      'renders desktop widget when screen width is at or above threshold',
+      (tester) async {
+        tester.view.physicalSize = const Size(Breakpoints.desktop, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTeardownToResetView(tester);
 
-      expect(find.byKey(desktopKey), findsOneWidget);
-      expect(find.byKey(mobileKey), findsNothing);
-    });
+        await tester.pumpWidget(
+          const Directionality(
+            textDirection: TextDirection.ltr,
+            child: scaffold,
+          ),
+        );
 
-    testWidgets('renders desktop widget at exact boundary', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.desktop),
-      );
-
-      expect(find.byKey(desktopKey), findsOneWidget);
-      expect(find.byKey(mobileKey), findsNothing);
-    });
+        expect(find.byKey(desktopKey), findsOneWidget);
+        expect(find.byKey(mobileKey), findsNothing);
+      },
+    );
 
     testWidgets('responds to dynamic resize from mobile to desktop', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(Breakpoints.mobile - 100, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTeardownToResetView(tester);
+
       await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.mobile - 100),
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: scaffold,
+        ),
       );
       expect(find.byKey(mobileKey), findsOneWidget);
 
-      await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.desktop + 200),
-      );
+      tester.view.physicalSize = const Size(Breakpoints.desktop + 200, 800);
+      await tester.pump();
+
       expect(find.byKey(desktopKey), findsOneWidget);
       expect(find.byKey(mobileKey), findsNothing);
     });
@@ -101,45 +158,54 @@ void main() {
     testWidgets('responds to dynamic resize from desktop to mobile', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(Breakpoints.desktop + 200, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTeardownToResetView(tester);
+
       await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.desktop + 200),
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: scaffold,
+        ),
       );
       expect(find.byKey(desktopKey), findsOneWidget);
 
-      await tester.pumpWidget(
-        buildTestWidget(width: Breakpoints.mobile - 100),
-      );
+      tester.view.physicalSize = const Size(Breakpoints.mobile - 100, 800);
+      await tester.pump();
+
       expect(find.byKey(mobileKey), findsOneWidget);
       expect(find.byKey(desktopKey), findsNothing);
     });
 
-    testWidgets('uses parent constraints not screen size', (tester) async {
-      // Set a large screen size but constrain the widget to mobile width
+    testWidgets('uses screen size not parent constraints', (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);
       tester.view.devicePixelRatio = 1.0;
+      addTeardownToResetView(tester);
 
       await tester.pumpWidget(
         const Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
             child: SizedBox(
-              width: Breakpoints.mobile - 200,
+              width: 200,
               height: 800,
-              child: ResponsiveScaffold(
-                mobile: SizedBox(key: mobileKey),
-                desktop: SizedBox(key: desktopKey),
-              ),
+              child: scaffold,
             ),
           ),
         ),
       );
 
-      // Should render mobile even though screen is large
-      expect(find.byKey(mobileKey), findsOneWidget);
-      expect(find.byKey(desktopKey), findsNothing);
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+      // Should render desktop because screen is large,
+      // even though parent SizedBox is narrow
+      expect(find.byKey(desktopKey), findsOneWidget);
+      expect(find.byKey(mobileKey), findsNothing);
     });
+  });
+}
+
+void addTeardownToResetView(WidgetTester tester) {
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
   });
 }

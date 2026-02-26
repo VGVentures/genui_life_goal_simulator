@@ -19,5 +19,41 @@
     "startChattingLabel": "Envía un mensaje para comenzar!",
     "@startChattingLabel": {
         "description": "Texto mostrado cuando no hay mensajes en el chat"
+    },
+    "whatDoYouWantToFocusLabel": "¿En qué quieres enfocarte?",
+    "@whatDoYouWantToFocusLabel": {
+        "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
+    },
+    "whatWouldYouLikeToFocusLabel": "En que te gustaría enfocarte?",
+    "@whatWouldYouLikeToFocusLabel": {
+        "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
+    },
+    "genUILabel": "Gen UI",
+    "@genUILabel": {
+        "description": "Etiqueta para el texto Gen UI"
+    },
+    "everydaySpendingLabel": "Gastos cotidianos",
+    "@everydaySpendingLabel": {
+        "description": "Etiqueta de opción para enfoque en gastos cotidianos"
+    },
+    "housingAndFixedCostsLabel": "Vivienda y costos fijos",
+    "@housingAndFixedCostsLabel": {
+        "description": "Etiqueta de opción para enfoque en vivienda y costos fijos"
+    },
+    "saveForRetirementLabel": "Ahorrar para la jubilación",
+    "@saveForRetirementLabel": {
+        "description": "Etiqueta de opción para enfoque en ahorro para la jubilación"
+    },
+    "healthcareAndInsuranceLabel": "Salud y seguros",
+    "@healthcareAndInsuranceLabel": {
+        "description": "Etiqueta de opción para enfoque en salud y seguros"
+    },
+    "mortgageLabel": "Hipoteca",
+    "@mortgageLabel": {
+        "description": "Etiqueta de opción para enfoque en hipoteca"
+    },
+    "writeYourOwnLabel": "Escribe el tuyo...",
+    "@writeYourOwnLabel": {
+        "description": "Etiqueta de opción para un enfoque personalizado ingresado por el usuario"
     }
 }

@@ -1,3 +1,4 @@
+import 'package:finance_app/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 /// Text styles used in the app
@@ -5,56 +6,54 @@ import 'package:flutter/material.dart';
 //system of the app, for now they are just placeholders.
 abstract class AppTextStyles {
   static TextStyle? get titleLarge => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 32,
-    height: 1.3,
     fontWeight: FontWeight.w700,
   );
 
   static TextStyle? get titleMedium => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 28,
-    height: 1.3,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
   );
 
   static TextStyle? get titleSmall => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 24,
-    height: 1.3,
     fontWeight: FontWeight.w500,
   );
 
   static TextStyle? get bodyLarge => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 20,
-    fontWeight: FontWeight.w400,
-    letterSpacing: -0.14,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle? get bodyMedium => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    letterSpacing: -0.14,
   );
 
   static TextStyle? get bodySmall => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    letterSpacing: -0.14,
   );
 
   static TextStyle? get labelLarge => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 16,
-    height: 1.2,
-    letterSpacing: 1,
   );
 
   static TextStyle? get labelMedium => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 12,
-    height: 1.2,
-    letterSpacing: 1,
   );
 
   static TextStyle? get labelSmall => const TextStyle(
+    fontFamily: FontFamily.poppins,
     fontSize: 8,
-    height: 1.2,
     letterSpacing: 1,
   );
 }
