@@ -19,5 +19,41 @@
     "startChattingLabel": "Send a message to get started!",
     "@startChattingLabel": {
         "description": "Text shown when there are no messages in the chat"
+    },
+    "whatDoYouWantToFocusLabel": "What do you want to focus on?",
+    "@whatDoYouWantToFocusLabel": {
+        "description": "Label for the dropdown to select the focus of the financial advice"
+    },
+    "whatWouldYouLikeToFocusLabel": "What would you like to focus on?",
+    "@whatWouldYouLikeToFocusLabel": {
+        "description": "Label for the dropdown to select the focus of the financial advice"
+    },
+    "genUILabel": "Gen UI",
+    "@genUILabel": {
+        "description": "Label for the Gen UI text"
+    },
+    "everydaySpendingLabel": "Everyday spending",
+    "@everydaySpendingLabel": {
+        "description": "Option label for everyday spending focus"
+    },
+    "housingAndFixedCostsLabel": "Housing & Fixed Costs",
+    "@housingAndFixedCostsLabel": {
+        "description": "Option label for housing and fixed costs focus"
+    },
+    "saveForRetirementLabel": "Save for retirement",
+    "@saveForRetirementLabel": {
+        "description": "Option label for saving for retirement focus"
+    },
+    "healthcareAndInsuranceLabel": "Healthcare & insurance",
+    "@healthcareAndInsuranceLabel": {
+        "description": "Option label for healthcare and insurance focus"
+    },
+    "mortgageLabel": "Mortgage",
+    "@mortgageLabel": {
+        "description": "Option label for mortgage focus"
+    },
+    "writeYourOwnLabel": "Write your own...",
+    "@writeYourOwnLabel": {
+        "description": "Option label for a custom user-entered focus"
     }
 }

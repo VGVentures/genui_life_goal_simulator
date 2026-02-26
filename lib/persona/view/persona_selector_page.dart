@@ -1,6 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/chat/chat.dart';
 import 'package:finance_app/financials/mock/mock.dart';
+import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class PersonaSelectorPage extends StatelessWidget {
           scenario: scenario,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => ChatPage(scenario: scenario),
+              builder: (_) => const WantToFocusPage(),
             ),
           ),
         );
