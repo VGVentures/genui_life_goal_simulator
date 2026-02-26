@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// {@template intro_badge}
-/// The "2026 ✦ Gen UI" overlapping pill badges shown on the intro screen.
+/// The "2026 ✦ Gen UI" overlapping badges shown on the intro screen.
 /// {@endtemplate}
 class IntroBadge extends StatelessWidget {
   /// {@macro intro_badge}
