@@ -1,5 +1,6 @@
 import 'dart:math' show pi;
 
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -33,7 +34,7 @@ class IntroBadge extends StatelessWidget {
           offset: _genUiOffset,
           child: Transform.rotate(
             angle: _genUiAngle,
-            child: _buildGenUiPill(),
+            child: _buildGenUiPill(context),
           ),
         ),
       ],
@@ -59,7 +60,7 @@ class IntroBadge extends StatelessWidget {
     );
   }
 
-  Widget _buildGenUiPill() {
+  Widget _buildGenUiPill(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
       decoration: const BoxDecoration(
@@ -75,9 +76,9 @@ class IntroBadge extends StatelessWidget {
             height: 22,
           ),
           const SizedBox(width: 6),
-          const Text(
-            'Gen UI',
-            style: TextStyle(
+          Text(
+            context.l10n.genUILabel,
+            style: const TextStyle(
               fontFamily: 'Poppins',
               color: Color(0xCC000000),
               fontSize: 18,

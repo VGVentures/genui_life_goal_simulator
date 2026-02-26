@@ -56,9 +56,7 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
-    - assets/images/
-    - assets/images/intro/
-    - assets/images/onboarding/
+    - assets/images
   fonts:
     - family: Poppins
       fonts:

@@ -1,4 +1,5 @@
 import 'package:finance_app/intro/view/widgets/widgets.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,6 +30,7 @@ class IntroMobileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: _backgroundColor,
       body: Stack(
@@ -125,7 +127,7 @@ class IntroMobileView extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Gen UI x ', style: _titleStyle),
+                    Text(l10n.introTitlePrefix, style: _titleStyle),
                     ShaderMask(
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
@@ -135,14 +137,12 @@ class IntroMobileView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
-                    'This demo shows how Generative UI transforms financial '
-                    'products from static dashboards into adaptive experiences. '
-                    'The UI reshapes itself based on goals, behavior, and context',
+                    l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       color: Color(0xCCFFFFFF),
                       fontSize: 18,
@@ -157,6 +157,7 @@ class IntroMobileView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: GetStartedButton(
                     onPressed: onGetStarted,
+                    label: l10n.introGetStartedLabel,
                     height: 56,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,

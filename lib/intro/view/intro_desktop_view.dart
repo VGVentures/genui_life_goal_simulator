@@ -1,4 +1,5 @@
 import 'package:finance_app/intro/view/widgets/widgets.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,6 +30,7 @@ class IntroDesktopView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: _backgroundColor,
       body: Stack(
@@ -224,7 +226,7 @@ class IntroDesktopView extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Gen UI x ', style: _titleStyle),
+                    Text(l10n.introTitlePrefix, style: _titleStyle),
                     ShaderMask(
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
@@ -234,15 +236,12 @@ class IntroDesktopView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-                const SizedBox(
+                SizedBox(
                   width: 960,
                   child: Text(
-                    'This demo shows how Generative UI transforms financial '
-                    'products from static dashboards into adaptive '
-                    'experiences. The UI reshapes itself based on goals, '
-                    'behavior, and context.',
+                    l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       color: Color(0xB3FFFFFF),
                       fontSize: 32,
@@ -257,7 +256,7 @@ class IntroDesktopView extends StatelessWidget {
                   width: 400,
                   child: GetStartedButton(
                     onPressed: onGetStarted,
-                    label: 'GET STARTED',
+                    label: l10n.introGetStartedLabel.toUpperCase(),
                   ),
                 ),
               ],
