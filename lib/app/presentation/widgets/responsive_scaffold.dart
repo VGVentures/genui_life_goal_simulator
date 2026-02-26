@@ -2,11 +2,11 @@ import 'package:finance_app/app/presentation/breakpoints.dart';
 import 'package:flutter/widgets.dart';
 
 /// A scaffold that conditionally renders mobile or desktop layouts
-/// based on parent constraints.
+/// based on screen width.
 ///
-/// Uses [LayoutBuilder] to respond to parent constraints rather than
-/// screen size, enabling proper behavior when embedded in other widgets
-/// or during window resizing.
+/// Uses [MediaQuery] to respond to total screen width, ensuring
+/// consistent behavior across all widgets regardless of parent
+/// constraints.
 class ResponsiveScaffold extends StatelessWidget {
   const ResponsiveScaffold({
     required this.mobile,
@@ -19,13 +19,6 @@ class ResponsiveScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (Breakpoints.isMobile(constraints.maxWidth)) {
-          return mobile;
-        }
-        return desktop;
-      },
-    );
+    return responsiveValue(context, mobile: mobile, desktop: desktop);
   }
 }

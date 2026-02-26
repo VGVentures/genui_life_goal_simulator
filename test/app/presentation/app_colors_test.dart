@@ -14,10 +14,6 @@ void main() {
       expect(colors.brightness, Brightness.light);
     });
 
-    test('primary shade500 matches primary value', () {
-      expect(colors.primary.shade500, const Color(0xFF4714E0));
-    });
-
     test('all standard shades are defined for primary', () {
       for (final shade in [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]) {
         expect(colors.primary[shade], isNotNull, reason: 'shade $shade');

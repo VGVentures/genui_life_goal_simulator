@@ -74,12 +74,12 @@ class LightThemeColors extends AppColors {
 
   @override
   MaterialColor get primary => const MaterialColor(0xFF4714E0, {
-    50: Color(0xFFEADDFF),
+    50: Color(0xB2F0F0F0),
     100: Color(0xFFF0524D),
     200: Color(0xFFF0524D),
     300: Color(0xFFF0524D),
     400: Color(0xFFF0524D),
-    500: Color(0xFF4714E0),
+    500: Color(0xCC000000),
     600: Color(0xFFF0524D),
     700: Color(0xFFF0524D),
     800: Color(0xFF21005D),
@@ -88,14 +88,14 @@ class LightThemeColors extends AppColors {
 
   @override
   MaterialColor get secondary => const MaterialColor(0xFF625B71, {
-    50: Color(0xFFE8DEF8),
+    50: Color(0xFFD2D5DD),
     100: Color(0xFFF0524D),
-    200: Color(0xFFF0524D),
-    300: Color(0xFFF0524D),
-    400: Color(0xFFF0524D),
-    500: Color(0xFF625B71),
-    600: Color(0xFFF0524D),
-    700: Color(0xFFF0524D),
+    200: Color(0xFFE2E8F9),
+    300: Color(0x1A6D92F5),
+    400: Color(0xFFD4C6FB),
+    500: Color(0xFF2461EB),
+    600: Color(0xFF6D92F5),
+    700: Color(0xFF2C64F1),
     800: Color(0xFF1D192B),
     900: Color(0xFF000000),
   });

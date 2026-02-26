@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
+import 'package:feature_flags_repository/feature_flags_repository.dart';
 import 'package:finance_app/app/view/app.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
+import 'package:finance_app/feature_flag/active_feature_flags.dart';
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
@@ -35,15 +38,20 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
-  required AnalyticsRepository analyticsRepository,
+  required AnalyticsRepository Function() analyticsRepositoryFactory,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  final analyticsRepository = analyticsRepositoryFactory();
+
+  final streamingPrefs = await StreamingSharedPreferences.instance;
+  final featureFlagsRepository = FeatureFlagsRepository(
+    streamingSharedPreferences: streamingPrefs,
+    featureFlags: activeFeatureFlags,
   );
 
   FlutterError.onError = errorReportingRepository.handleFlutterError;
@@ -63,8 +71,13 @@ Future<void> bootstrap({
         Provider<AnalyticsRepository>.value(
           value: analyticsRepository,
         ),
+        Provider<FeatureFlagsRepository>.value(
+          value: featureFlagsRepository,
+        ),
       ],
-      child: App(navigatorObservers: [analyticsRepository.navigatorObserver]),
+      child: App(
+        navigatorObservers: [analyticsRepository.navigatorObserver],
+      ),
     ),
   );
 }

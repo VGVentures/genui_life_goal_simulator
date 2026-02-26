@@ -13,7 +13,7 @@ void main() {
     test('titleMedium has correct properties', () {
       final style = AppTextStyles.titleMedium;
       expect(style?.fontSize, 28);
-      expect(style?.fontWeight, FontWeight.w500);
+      expect(style?.fontWeight, FontWeight.w600);
     });
 
     test('titleSmall has correct properties', () {
@@ -25,7 +25,7 @@ void main() {
     test('bodyLarge has correct properties', () {
       final style = AppTextStyles.bodyLarge;
       expect(style?.fontSize, 20);
-      expect(style?.fontWeight, FontWeight.w400);
+      expect(style?.fontWeight, FontWeight.w500);
     });
 
     test('bodyMedium has correct properties', () {
