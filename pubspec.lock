@@ -1104,10 +1104,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: cbc40be9be1c5af4dab4d6e0de4d5d3729e6f3d65b89d21e1815d57705644a6f
+      sha256: "8374d6200ab33ac99031a852eba4c8eb2170c4bf20778b3e2c9eccb45384fb41"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.20"
+    version: "2.4.21"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -1242,7 +1242,7 @@ packages:
     source: hosted
     version: "2.1.1"
   streaming_shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: streaming_shared_preferences
       sha256: "015a7999d8cf6e87a685635e0614910116ee187c885ae0f630da276f8435e457"
@@ -1317,10 +1317,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: a11b666489b1954e01d992f3d601b1804a33937b5a8fe677bd26b8a9f96f96e8
+      sha256: "1fef9e8e11e2991bb773070d4656b7bd5d850967a2456cfc83cf47925ba79489"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.2"
+    version: "4.5.3"
   vector_graphics_codec:
     dependency: transitive
     description:
