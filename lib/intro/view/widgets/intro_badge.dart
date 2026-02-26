@@ -13,8 +13,8 @@ class IntroBadge extends StatelessWidget {
   static const double _yearAngle = -15 * pi / 180;
   static const double _genUiAngle = 12.91 * pi / 180;
 
-  static const _yearOffset = Offset(-45, 0);
-  static const _genUiOffset = Offset(28, 0);
+  static const _yearOffset = Offset(-50, 0);
+  static const _genUiOffset = Offset(35, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class IntroBadge extends StatelessWidget {
 
   Widget _buildYearPill() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 11),
       decoration: const BoxDecoration(
         color: Color(0xFF9DB6F8),
         borderRadius: BorderRadius.all(Radius.circular(150)),
@@ -52,8 +52,8 @@ class IntroBadge extends StatelessWidget {
         style: TextStyle(
           fontFamily: 'Poppins',
           color: Color(0xCC000000),
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -61,7 +61,7 @@ class IntroBadge extends StatelessWidget {
 
   Widget _buildGenUiPill() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(150)),
@@ -71,8 +71,8 @@ class IntroBadge extends StatelessWidget {
         children: [
           SvgPicture.asset(
             'assets/intro/softstargradient.svg',
-            width: 18,
-            height: 18,
+            width: 22,
+            height: 22,
           ),
           const SizedBox(width: 6),
           const Text(
@@ -80,8 +80,8 @@ class IntroBadge extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Poppins',
               color: Color(0xCC000000),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
