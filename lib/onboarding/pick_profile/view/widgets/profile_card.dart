@@ -39,12 +39,12 @@ class ProfileCard extends StatelessWidget {
         child: Container(
           constraints: isMobile
               ? const BoxConstraints(minHeight: 250)
-              : const BoxConstraints(minHeight: 550),
+              : const BoxConstraints(minHeight: 400),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isSelected ? titleColor : Colors.transparent,
+              color: isSelected ? _kBeginnerColor : Colors.transparent,
               width: 2,
             ),
             boxShadow: [
@@ -114,8 +114,8 @@ extension on ProfileType {
   };
 }
 
-const _kBeginnerColor = Color(0xFF6B5CE7);
-const _kOptimizerColor = Color(0xFFD966A8);
+const _kBeginnerColor = Color(0xFF6D92F5);
+const _kOptimizerColor = Color(0xFFFFB1EE);
 const _kTextColor = Color(0xFF1A1A2E);
 
 abstract final class _Dimensions {
@@ -123,10 +123,10 @@ abstract final class _Dimensions {
   static const double mobilePadding = 16;
   static const double iconSize = 120;
   static const double mobileIconSize = 60;
-  static const double iconTitleSpacing = 180;
+  static const double iconTitleSpacing = 100;
   static const double mobileIconTitleSpacing = 24;
-  static const double titleFontSize = 30;
-  static const double mobileTitleFontSize = 24;
-  static const double descFontSize = 26;
+  static const double titleFontSize = 40;
+  static const double mobileTitleFontSize = 25.34;
+  static const double descFontSize = 32;
   static const double mobileDescFontSize = 18;
 }
