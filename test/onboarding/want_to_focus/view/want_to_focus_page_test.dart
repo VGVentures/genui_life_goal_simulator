@@ -61,7 +61,7 @@ void main() {
     );
 
     testWidgets(
-      'Floating Action Button onPressed reads cubit state',
+      'FAB tap does not throw',
       (tester) async {
         await _pump(tester);
         await tester.pumpAndSettle();

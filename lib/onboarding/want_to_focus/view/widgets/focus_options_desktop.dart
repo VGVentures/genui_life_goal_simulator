@@ -23,28 +23,28 @@ class FocusOptionsDesktop extends StatelessWidget {
                   SelectableOptionCard(
                     label: l10n.everydaySpendingLabel,
                     isSelected: state.selectedOptions.contains(
-                      l10n.everydaySpendingLabel,
+                      FocusOption.everydaySpending,
                     ),
                     onTap: () => context.read<WantToFocusCubit>().toggleOption(
-                      l10n.everydaySpendingLabel,
+                      FocusOption.everydaySpending,
                     ),
                   ),
                   SelectableOptionCard(
                     label: l10n.saveForRetirementLabel,
                     isSelected: state.selectedOptions.contains(
-                      l10n.saveForRetirementLabel,
+                      FocusOption.saveForRetirement,
                     ),
                     onTap: () => context.read<WantToFocusCubit>().toggleOption(
-                      l10n.saveForRetirementLabel,
+                      FocusOption.saveForRetirement,
                     ),
                   ),
                   SelectableOptionCard(
                     label: l10n.mortgageLabel,
                     isSelected: state.selectedOptions.contains(
-                      l10n.mortgageLabel,
+                      FocusOption.mortgage,
                     ),
                     onTap: () => context.read<WantToFocusCubit>().toggleOption(
-                      l10n.mortgageLabel,
+                      FocusOption.mortgage,
                     ),
                   ),
                 ],
@@ -57,19 +57,19 @@ class FocusOptionsDesktop extends StatelessWidget {
                   SelectableOptionCard(
                     label: l10n.housingAndFixedCostsLabel,
                     isSelected: state.selectedOptions.contains(
-                      l10n.housingAndFixedCostsLabel,
+                      FocusOption.housingAndFixedCosts,
                     ),
                     onTap: () => context.read<WantToFocusCubit>().toggleOption(
-                      l10n.housingAndFixedCostsLabel,
+                      FocusOption.housingAndFixedCosts,
                     ),
                   ),
                   SelectableOptionCard(
                     label: l10n.healthcareAndInsuranceLabel,
                     isSelected: state.selectedOptions.contains(
-                      l10n.healthcareAndInsuranceLabel,
+                      FocusOption.healthcareAndInsurance,
                     ),
                     onTap: () => context.read<WantToFocusCubit>().toggleOption(
-                      l10n.healthcareAndInsuranceLabel,
+                      FocusOption.healthcareAndInsurance,
                     ),
                   ),
                   WriteYourOwnOptionCard(

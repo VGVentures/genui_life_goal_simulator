@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:finance_app/onboarding/want_to_focus/bloc/want_to_focus_cubit.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -14,9 +15,11 @@ void main() {
     blocTest<WantToFocusCubit, WantToFocusState>(
       'toggleOption adds option when it was not selected',
       build: WantToFocusCubit.new,
-      act: (cubit) => cubit.toggleOption('option1'),
+      act: (cubit) => cubit.toggleOption(FocusOption.everydaySpending),
       expect: () => [
-        const WantToFocusState(selectedOptions: {'option1'}),
+        const WantToFocusState(
+          selectedOptions: {FocusOption.everydaySpending},
+        ),
       ],
     );
 
@@ -24,10 +27,12 @@ void main() {
       'toggleOption removes option when it was already selected',
       build: WantToFocusCubit.new,
       act: (cubit) => cubit
-        ..toggleOption('option1')
-        ..toggleOption('option1'),
+        ..toggleOption(FocusOption.everydaySpending)
+        ..toggleOption(FocusOption.everydaySpending),
       expect: () => [
-        const WantToFocusState(selectedOptions: {'option1'}),
+        const WantToFocusState(
+          selectedOptions: {FocusOption.everydaySpending},
+        ),
         const WantToFocusState(),
       ],
     );
@@ -46,16 +51,16 @@ void main() {
     test('copyWith with new values returns updated state', () {
       const initial = WantToFocusState();
       final updated = initial.copyWith(
-        selectedOptions: {'option1'},
+        selectedOptions: {FocusOption.mortgage},
         customOption: 'custom',
       );
-      expect(updated.selectedOptions, {'option1'});
+      expect(updated.selectedOptions, {FocusOption.mortgage});
       expect(updated.customOption, 'custom');
     });
 
     test('copyWith without arguments preserves existing values', () {
       const state = WantToFocusState(
-        selectedOptions: {'option1'},
+        selectedOptions: {FocusOption.mortgage},
         customOption: 'custom',
       );
       expect(state.copyWith(), state);

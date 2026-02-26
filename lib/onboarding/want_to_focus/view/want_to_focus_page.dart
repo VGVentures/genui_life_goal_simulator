@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
@@ -12,7 +10,16 @@ class WantToFocusPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final isMobile = Breakpoints.isMobile(MediaQuery.of(context).size.width);
+    final fabSize = responsiveValue(
+      context,
+      mobile: _Dimensions.mobileFabSize,
+      desktop: _Dimensions.fabSize,
+    );
+    final fabIconSize = responsiveValue(
+      context,
+      mobile: _Dimensions.mobileFabIconSize,
+      desktop: _Dimensions.fabIconSize,
+    );
 
     return BlocProvider(
       create: (_) => WantToFocusCubit(),
@@ -21,10 +28,16 @@ class WantToFocusPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile
-                  ? Spacing.xxl
-                  : _Dimensions.horizontalPadding,
-              vertical: isMobile ? Spacing.md : _Dimensions.verticalPadding,
+              horizontal: responsiveValue(
+                context,
+                mobile: Spacing.xxl,
+                desktop: _Dimensions.horizontalPadding,
+              ),
+              vertical: responsiveValue(
+                context,
+                mobile: Spacing.md,
+                desktop: _Dimensions.verticalPadding,
+              ),
             ),
             child: const WantToFocusView(),
           ),
@@ -32,37 +45,27 @@ class WantToFocusPage extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Builder(
           builder: (context) => SizedBox(
-            width: isMobile ? _Dimensions.mobileFabSize : _Dimensions.fabSize,
-            height: isMobile ? _Dimensions.mobileFabSize : _Dimensions.fabSize,
+            width: fabSize,
+            height: fabSize,
             child: FloatingActionButton(
               onPressed: () {
                 // TODO(juanRodriguez17): Add navigation to the next screen
-                //when gets merged
-                final bloc = context.read<WantToFocusCubit>();
-                final focusOptions = bloc.state.selectedOptions.toList()
-                  ..add(bloc.state.customOption);
-                log('Focus Options($focusOptions)');
+                // when gets merged
               },
-              backgroundColor:
-                  colorExtensions?.transparent ?? Colors.transparent,
+              backgroundColor: Colors.transparent,
               hoverColor: colorExtensions?.secondary.shade200,
               elevation: 0,
               shape: CircleBorder(
                 side: BorderSide(
                   color:
                       colorExtensions?.secondary.shade700 ??
-                      colorExtensions?.transparent ??
                       Colors.transparent,
                 ),
               ),
               child: Assets.images.onboarding.rightArrow.image(
                 color: colorExtensions?.secondary.shade700,
-                width: isMobile
-                    ? _Dimensions.mobileFabIconSize
-                    : _Dimensions.fabIconSize,
-                height: isMobile
-                    ? _Dimensions.mobileFabIconSize
-                    : _Dimensions.fabIconSize,
+                width: fabIconSize,
+                height: fabIconSize,
               ),
             ),
           ),

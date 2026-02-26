@@ -30,7 +30,7 @@ void main() {
         expect(find.byType(Image), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w600);
-        expect(text.style?.fontSize, Spacing.xxxl);
+        expect(text.style?.fontSize, 32);
       },
     );
 
@@ -50,21 +50,27 @@ void main() {
         expect(find.byType(Image), findsNothing);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w400);
-        expect(text.style?.fontSize, Spacing.xxxl);
+        expect(text.style?.fontSize, 32);
       },
     );
 
     testWidgets(
       'applies mobile font size and shows check icon '
-      'when isMobile and selected',
+      'when screen width is below threshold',
       (tester) async {
+        tester.view.physicalSize = const Size(400, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
         await _pumpCard(
           tester,
           SelectableOptionCard(
             label: 'Option 1',
             isSelected: true,
             onTap: () {},
-            isMobile: true,
           ),
         );
 

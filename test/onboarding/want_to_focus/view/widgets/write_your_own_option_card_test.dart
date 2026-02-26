@@ -99,13 +99,19 @@ void main() {
     );
 
     testWidgets(
-      'applies mobile dimensions in both modes',
+      'applies mobile dimensions when screen width is below threshold',
       (tester) async {
+        tester.view.physicalSize = const Size(400, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
         await _pumpCard(
           tester,
           const WriteYourOwnOptionCard(
             label: 'Write your own...',
-            isMobile: true,
           ),
         );
 

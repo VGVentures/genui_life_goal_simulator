@@ -2,9 +2,7 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
 import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';
-import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WantToFocusView extends StatelessWidget {
   const WantToFocusView({super.key});
@@ -15,7 +13,6 @@ class WantToFocusView extends StatelessWidget {
     final themeOf = Theme.of(context);
     final textTheme = themeOf.textTheme;
     final colorScheme = themeOf.colorScheme;
-    final isDesktop = Breakpoints.isDesktop(MediaQuery.of(context).size.width);
 
     return Center(
       child: Column(
@@ -23,22 +20,24 @@ class WantToFocusView extends StatelessWidget {
         spacing: Spacing.xxxl,
         children: [
           Text(
-            isDesktop
-                ? l10n.whatDoYouWantToFocusLabel
-                : l10n.whatWouldYouLikeToFocusLabel,
+            responsiveValue(
+              context,
+              mobile: l10n.whatWouldYouLikeToFocusLabel,
+              desktop: l10n.whatDoYouWantToFocusLabel,
+            ),
             style: textTheme.displayLarge?.copyWith(
-              fontSize: isDesktop ? _Dimensions.titleSize : Spacing.xxl,
+              fontSize: responsiveValue(
+                context,
+                mobile: _Dimensions.mobileTitleSize,
+                desktop: _Dimensions.titleSize,
+              ),
               color: colorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
-          BlocBuilder<WantToFocusCubit, WantToFocusState>(
-            builder: (context, state) {
-              return const ResponsiveScaffold(
-                desktop: FocusOptionsDesktop(),
-                mobile: FocusOptionsMobile(),
-              );
-            },
+          const ResponsiveScaffold(
+            desktop: FocusOptionsDesktop(),
+            mobile: FocusOptionsMobile(),
           ),
         ],
       ),
@@ -46,6 +45,7 @@ class WantToFocusView extends StatelessWidget {
   }
 }
 
-abstract class _Dimensions {
+abstract final class _Dimensions {
   static const double titleSize = 48;
+  static const double mobileTitleSize = 28;
 }

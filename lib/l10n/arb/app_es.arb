@@ -20,11 +20,11 @@
     "@startChattingLabel": {
         "description": "Texto mostrado cuando no hay mensajes en el chat"
     },
-    "whatDoYouWantToFocusLabel": "¿En qué quieres \nenfocarte?",
+    "whatDoYouWantToFocusLabel": "¿En qué quieres enfocarte?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
     },
-    "whatWouldYouLikeToFocusLabel": "En que te gustaría \nenfocarte?",
+    "whatWouldYouLikeToFocusLabel": "En que te gustaría enfocarte?",
     "@whatWouldYouLikeToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
     },

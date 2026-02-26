@@ -6,11 +6,11 @@ final class WantToFocusState extends Equatable {
     this.customOption = '',
   });
 
-  final Set<String> selectedOptions;
+  final Set<FocusOption> selectedOptions;
   final String customOption;
 
   WantToFocusState copyWith({
-    Set<String>? selectedOptions,
+    Set<FocusOption>? selectedOptions,
     String? customOption,
   }) {
     return WantToFocusState(
