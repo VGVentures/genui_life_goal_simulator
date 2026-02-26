@@ -81,8 +81,9 @@ class SelectableOptionCard extends StatelessWidget {
                     label,
                     style: textTheme.bodyLarge?.copyWith(
                       fontSize: textSize,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                       color: colorScheme.primary,
                     ),
                     maxLines: 1,
