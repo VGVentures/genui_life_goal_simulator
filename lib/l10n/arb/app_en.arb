@@ -39,6 +39,7 @@
     "profileOptimizerDescription": "Established career, real assets, competing priorities. Doesn't need education — needs intelligence. Every decision is a trade-off.",
     "@profileOptimizerDescription": {
         "description": "Description for the optimizer profile type"
+    },
     "whatDoYouWantToFocusLabel": "What do you want to focus on?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"

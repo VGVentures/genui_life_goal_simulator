@@ -39,6 +39,7 @@
     "profileOptimizerDescription": "Carrera establecida, activos reales, prioridades en competencia. No necesita educación — necesita inteligencia. Cada decisión es un compromiso.",
     "@profileOptimizerDescription": {
         "description": "Descripción para el tipo de perfil optimizador"
+    },
     "whatDoYouWantToFocusLabel": "¿En qué quieres enfocarte?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
