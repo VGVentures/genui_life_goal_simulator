@@ -10,6 +10,9 @@ class GetStartedButton extends StatelessWidget {
   const GetStartedButton({
     required this.onPressed,
     this.label = 'Get started',
+    this.height = 80,
+    this.fontSize = 24,
+    this.fontWeight = FontWeight.w600,
     super.key,
   });
 
@@ -18,6 +21,15 @@ class GetStartedButton extends StatelessWidget {
 
   /// Button label text. Defaults to `'Get started'`.
   final String label;
+
+  /// Button height. Defaults to `80`.
+  final double height;
+
+  /// Font size. Defaults to `24`.
+  final double fontSize;
+
+  /// Font weight. Defaults to [FontWeight.w600].
+  final FontWeight fontWeight;
 
   static const _gradient = LinearGradient(
     colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
@@ -37,15 +49,15 @@ class GetStartedButton extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: onPressed,
           child: SizedBox(
-            height: 80,
+            height: height,
             child: Center(
               child: Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Poppins',
                   color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
                   height: 1.5,
                 ),
               ),

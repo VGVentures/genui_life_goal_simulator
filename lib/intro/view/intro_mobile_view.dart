@@ -34,7 +34,7 @@ class IntroMobileView extends StatelessWidget {
       body: Stack(
         children: [
           Positioned(
-            top: 0,
+            top: MediaQuery.of(context).padding.top,
             left: 0,
             right: 0,
             child: SvgPicture.asset(
@@ -42,50 +42,129 @@ class IntroMobileView extends StatelessWidget {
               fit: BoxFit.fitWidth,
             ),
           ),
+          // Left side: two star8
+          Positioned(
+            left: 18,
+            top: 90,
+            child: SvgPicture.asset(
+              'assets/intro/star8.svg',
+              width: 18,
+              height: 18,
+            ),
+          ),
+          Positioned(
+            left: 30,
+            top: 200,
+            child: SvgPicture.asset(
+              'assets/intro/star8.svg',
+              width: 14,
+              height: 14,
+            ),
+          ),
+          // Middle: two circles and star7
+          Positioned(
+            left: 175,
+            top: 55,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 8,
+              height: 8,
+            ),
+          ),
+          Positioned(
+            left: 185,
+            top: 130,
+            child: SvgPicture.asset(
+              'assets/intro/star7.svg',
+              width: 16,
+              height: 16,
+            ),
+          ),
+          Positioned(
+            left: 165,
+            top: 210,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 8,
+              height: 8,
+            ),
+          ),
+          Positioned(
+            right: 30,
+            top: 350,
+            child: SvgPicture.asset(
+              'assets/intro/softstar.svg',
+              width: 25,
+              height: 25,
+            ),
+          ),
+          Positioned(
+            right: 40,
+            top: 220,
+            child: SvgPicture.asset(
+              'assets/intro/circles.svg',
+              width: 10,
+              height: 10,
+            ),
+          ),
+          Positioned(
+            right: 120,
+            top: 350,
+            child: SvgPicture.asset(
+              'assets/intro/star7.svg',
+              width: 12,
+              height: 12,
+            ),
+          ),
           SafeArea(
             child: Column(
               children: [
-            const Spacer(),
-            const IntroBadge(),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Gen UI x ', style: _titleStyle),
-                ShaderMask(
-                  shaderCallback: (bounds) => _vgvGradient.createShader(
-                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                  ),
-                  child: const Text('VGV', style: _titleStyle),
+                const Spacer(flex: 3),
+                const IntroBadge(),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Gen UI x ', style: _titleStyle),
+                    ShaderMask(
+                      shaderCallback: (bounds) => _vgvGradient.createShader(
+                        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                      ),
+                      child: const Text('VGV', style: _titleStyle),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    'This demo shows how Generative UI transforms financial '
+                    'products from static dashboards into adaptive experiences. '
+                    'The UI reshapes itself based on goals, behavior, and context',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Color(0xCCFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: GetStartedButton(
+                    onPressed: onGetStarted,
+                    height: 56,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 32),
               ],
             ),
-            const SizedBox(height: 16),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                'This demo shows how Generative UI transforms financial '
-                'products from static dashboards into adaptive experiences. '
-                'The UI reshapes itself based on goals, behavior, and context',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Color(0xB3FFFFFF),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  height: 1.5,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: GetStartedButton(onPressed: onGetStarted),
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
           ),
         ],
       ),
