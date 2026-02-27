@@ -31,21 +31,13 @@ class AppTheme {
   );
 
   /// Default `ThemeData` for App UI.
+  /// Note: Uses desktop text theme by default.
+  /// For responsive typography, use AppTextStyles.getResponsiveTextTheme().
   ThemeData get themeData =>
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
-        textTheme: TextTheme(
-          displayLarge: AppTextStyles.titleLarge,
-          displayMedium: AppTextStyles.titleMedium,
-          displaySmall: AppTextStyles.titleSmall,
-          bodyLarge: AppTextStyles.bodyLarge,
-          bodyMedium: AppTextStyles.bodyMedium,
-          bodySmall: AppTextStyles.bodySmall,
-          labelLarge: AppTextStyles.titleLarge,
-          labelMedium: AppTextStyles.titleMedium,
-          labelSmall: AppTextStyles.titleSmall,
-        ),
+        textTheme: AppTextStyles.desktopTextTheme,
       ).copyWith(
         extensions: [colors],
         appBarTheme: AppBarTheme(
