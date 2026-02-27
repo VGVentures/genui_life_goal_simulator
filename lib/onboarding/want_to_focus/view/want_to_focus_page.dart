@@ -57,8 +57,7 @@ class WantToFocusPage extends StatelessWidget {
               elevation: 0,
               shape: CircleBorder(
                 side: BorderSide(
-                  color:
-                      colorExtensions?.primary ?? Colors.transparent,
+                  color: colorExtensions?.primary ?? Colors.transparent,
                 ),
               ),
               child: Assets.images.onboarding.rightArrow.image(

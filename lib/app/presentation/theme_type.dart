@@ -1,6 +1,7 @@
 enum ThemeType {
   light,
-  dark;
+  dark
+  ;
 
   String toName() => name;
 

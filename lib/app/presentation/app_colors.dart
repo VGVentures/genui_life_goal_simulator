@@ -109,8 +109,7 @@ class LightThemeColors extends AppColors {
   AppColors copyWith() => LightThemeColors();
 
   @override
-  AppColors lerp(AppColors? other, double t) =>
-      t < 0.5 ? this : other ?? this;
+  AppColors lerp(AppColors? other, double t) => t < 0.5 ? this : other ?? this;
 
   @override
   Brightness get brightness => Brightness.light;

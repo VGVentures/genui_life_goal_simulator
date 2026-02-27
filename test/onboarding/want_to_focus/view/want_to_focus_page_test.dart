@@ -18,8 +18,7 @@ Future<void> _pump(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: theme ??
-          AppTheme(LightThemeColors()).themeData,
+      theme: theme ?? AppTheme(LightThemeColors()).themeData,
       home: const WantToFocusPage(),
     ),
   );
