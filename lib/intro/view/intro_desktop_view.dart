@@ -38,21 +38,23 @@ class IntroDesktopView extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            left: -56,
+            left: 0,
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/images/intro/wavelines1.svg',
+              'assets/images/intro/waveline1.svg',
               fit: BoxFit.fitHeight,
+              alignment: Alignment.centerLeft,
             ),
           ),
           Positioned(
-            right: -35,
+            right: 0,
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/images/intro/wavelines2.svg',
+              'assets/images/intro/waveline2.svg',
               fit: BoxFit.fitHeight,
+              alignment: Alignment.centerRight,
             ),
           ),
           Positioned(
@@ -237,7 +239,7 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 960,
+                  width: 1000,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
@@ -246,8 +248,6 @@ class IntroDesktopView extends StatelessWidget {
                       color: Color(0xB3FFFFFF),
                       fontSize: 32,
                       fontWeight: FontWeight.w400,
-                      height: 1.5,
-                      letterSpacing: -0.5,
                     ),
                   ),
                 ),
