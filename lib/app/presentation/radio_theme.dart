@@ -34,11 +34,8 @@ abstract final class RadioColors {
   /// Primary selected/unselected color: #6d92f5
   static const Color primary = Color(0xFF6D92F5);
 
-  /// Primary container for hover background: #f3f6ff
-  static const Color primaryContainer = Color(0xFFF3F6FF);
-
-  /// Primary hovered overlay (8% opacity)
-  static const Color primaryHovered = Color(0x146D92F5);
+  /// Primary hovered background: #f3f6ff (primary-container from Figma)
+  static const Color primaryHovered = Color(0xFFF3F6FF);
 
   /// Primary focused overlay (12% opacity)
   static const Color primaryFocused = Color(0x1F6D92F5);

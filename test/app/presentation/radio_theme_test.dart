@@ -126,10 +126,6 @@ void main() {
       expect(RadioColors.primary, const Color(0xFF6D92F5));
     });
 
-    test('primaryContainer color is #f3f6ff', () {
-      expect(RadioColors.primaryContainer, const Color(0xFFF3F6FF));
-    });
-
     test('error color is #BB1B1B', () {
       expect(RadioColors.error, const Color(0xFFBB1B1B));
     });
@@ -138,9 +134,8 @@ void main() {
       expect(RadioColors.disabled, const Color(0xFFAAABAB));
     });
 
-    test('primaryHovered has 8% opacity', () {
-      final alpha = (RadioColors.primaryHovered.a * 255.0).round();
-      expect(alpha, closeTo(255 * 0.08, 1));
+    test('primaryHovered color is #f3f6ff', () {
+      expect(RadioColors.primaryHovered, const Color(0xFFF3F6FF));
     });
 
     test('primaryFocused has 12% opacity', () {
