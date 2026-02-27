@@ -28,6 +28,5 @@ void main() {
 
       expect(find.text('Gen UI'), findsOneWidget);
     });
-
   });
 }
