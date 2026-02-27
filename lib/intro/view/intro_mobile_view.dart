@@ -55,40 +55,40 @@ class IntroMobileView extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 30,
-            top: 200,
+            left: 25,
+            top: 250,
             child: SvgPicture.asset(
               'assets/images/intro/star8.svg',
-              width: 14,
-              height: 14,
+              width: 15,
+              height: 15,
             ),
           ),
           // Middle: two circles and star7
           Positioned(
-            left: 175,
-            top: 55,
+            left: 100,
+            top: 380,
             child: SvgPicture.asset(
               'assets/images/intro/circles.svg',
-              width: 8,
-              height: 8,
+              width: 10,
+              height: 10,
             ),
           ),
           Positioned(
-            left: 185,
-            top: 130,
+            right: 50,
+            top: 100,
             child: SvgPicture.asset(
-              'assets/images/intro/star7.svg',
+              'assets/images/intro/star8.svg',
               width: 16,
               height: 16,
             ),
           ),
           Positioned(
-            left: 165,
+            left: 160,
             top: 210,
             child: SvgPicture.asset(
               'assets/images/intro/circles.svg',
-              width: 8,
-              height: 8,
+              width: 10,
+              height: 10,
             ),
           ),
           Positioned(
@@ -101,8 +101,8 @@ class IntroMobileView extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 40,
-            top: 220,
+            right: 50,
+            top: 200,
             child: SvgPicture.asset(
               'assets/images/intro/circles.svg',
               width: 10,
