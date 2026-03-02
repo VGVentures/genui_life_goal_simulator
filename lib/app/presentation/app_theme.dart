@@ -33,7 +33,8 @@ class AppTheme {
   /// Default `ThemeData` for App UI with responsive typography.
   /// Requires a [BuildContext] to determine the appropriate text theme
   /// based on screen size.
-  ThemeData getThemeData(BuildContext context) => ThemeData.from(
+  ThemeData getThemeData(BuildContext context) =>
+      ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
         textTheme: AppTextStyles.getResponsiveTextTheme(context),
