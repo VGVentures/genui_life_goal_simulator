@@ -20,6 +20,26 @@
     "@startChattingLabel": {
         "description": "Texto mostrado cuando no hay mensajes en el chat"
     },
+    "pickProfileTitle": "Elige un perfil",
+    "@pickProfileTitle": {
+        "description": "Título mostrado en la página de selección de perfil"
+    },
+    "profileBeginnerTitle": "El Principiante",
+    "@profileBeginnerTitle": {
+        "description": "Título para el tipo de perfil principiante"
+    },
+    "profileBeginnerDescription": "Recién empezando. Gana dinero, lo ve desaparecer, y quiere finalmente entender por qué. Necesita claridad, no complejidad.",
+    "@profileBeginnerDescription": {
+        "description": "Descripción para el tipo de perfil principiante"
+    },
+    "profileOptimizerTitle": "El Optimizador",
+    "@profileOptimizerTitle": {
+        "description": "Título para el tipo de perfil optimizador"
+    },
+    "profileOptimizerDescription": "Carrera establecida, activos reales, prioridades en competencia. No necesita educación — necesita inteligencia. Cada decisión es un compromiso.",
+    "@profileOptimizerDescription": {
+        "description": "Descripción para el tipo de perfil optimizador"
+    },
     "whatDoYouWantToFocusLabel": "¿En qué quieres enfocarte?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
@@ -31,6 +51,18 @@
     "genUILabel": "Gen UI",
     "@genUILabel": {
         "description": "Etiqueta para el texto Gen UI"
+    },
+    "introTitlePrefix": "Gen UI x ",
+    "@introTitlePrefix": {
+        "description": "Prefijo del título de la pantalla de introducción (antes del texto VGV con degradado)"
+    },
+    "introDescription": "Esta demo muestra cómo la UI Generativa transforma los productos financieros de paneles estáticos en experiencias adaptativas. La UI se adapta según objetivos, comportamiento y contexto.",
+    "@introDescription": {
+        "description": "Texto de descripción en la pantalla de introducción"
+    },
+    "introGetStartedLabel": "Comenzar",
+    "@introGetStartedLabel": {
+        "description": "Etiqueta del botón para comenzar en la pantalla de introducción"
     },
     "everydaySpendingLabel": "Gastos cotidianos",
     "@everydaySpendingLabel": {

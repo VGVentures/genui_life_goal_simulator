@@ -14,13 +14,72 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// Directory path: assets/images/intro
+  $AssetsImagesIntroGen get intro => const $AssetsImagesIntroGen();
+
   /// Directory path: assets/images/onboarding
   $AssetsImagesOnboardingGen get onboarding =>
       const $AssetsImagesOnboardingGen();
 }
 
+class $AssetsImagesIntroGen {
+  const $AssetsImagesIntroGen();
+
+  /// File path: assets/images/intro/circles.svg
+  String get circles => 'assets/images/intro/circles.svg';
+
+  /// File path: assets/images/intro/softstar.svg
+  String get softstar => 'assets/images/intro/softstar.svg';
+
+  /// File path: assets/images/intro/softstargradient.svg
+  String get softstargradient => 'assets/images/intro/softstargradient.svg';
+
+  /// File path: assets/images/intro/star6.svg
+  String get star6 => 'assets/images/intro/star6.svg';
+
+  /// File path: assets/images/intro/star7.svg
+  String get star7 => 'assets/images/intro/star7.svg';
+
+  /// File path: assets/images/intro/star8.svg
+  String get star8 => 'assets/images/intro/star8.svg';
+
+  /// File path: assets/images/intro/star9.svg
+  String get star9 => 'assets/images/intro/star9.svg';
+
+  /// File path: assets/images/intro/waveline1.svg
+  String get waveline1 => 'assets/images/intro/waveline1.svg';
+
+  /// File path: assets/images/intro/waveline2.svg
+  String get waveline2 => 'assets/images/intro/waveline2.svg';
+
+  /// File path: assets/images/intro/waveline3.svg
+  String get waveline3 => 'assets/images/intro/waveline3.svg';
+
+  /// List of all assets
+  List<String> get values => [
+    circles,
+    softstar,
+    softstargradient,
+    star6,
+    star7,
+    star8,
+    star9,
+    waveline1,
+    waveline2,
+    waveline3,
+  ];
+}
+
 class $AssetsImagesOnboardingGen {
   const $AssetsImagesOnboardingGen();
+
+  /// File path: assets/images/onboarding/StarBegginer.png
+  AssetGenImage get starBegginer =>
+      const AssetGenImage('assets/images/onboarding/StarBegginer.png');
+
+  /// File path: assets/images/onboarding/StarOptimizer.png
+  AssetGenImage get starOptimizer =>
+      const AssetGenImage('assets/images/onboarding/StarOptimizer.png');
 
   /// File path: assets/images/onboarding/checked_option.png
   AssetGenImage get checkedOption =>
@@ -34,16 +93,13 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get rightArrow =>
       const AssetGenImage('assets/images/onboarding/right_arrow.png');
 
-  /// File path: assets/images/onboarding/soft_star.png
-  AssetGenImage get softStar =>
-      const AssetGenImage('assets/images/onboarding/soft_star.png');
-
   /// List of all assets
   List<AssetGenImage> get values => [
+    starBegginer,
+    starOptimizer,
     checkedOption,
     editPencil,
     rightArrow,
-    softStar,
   ];
 }
 

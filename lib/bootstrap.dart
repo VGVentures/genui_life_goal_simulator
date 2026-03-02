@@ -3,11 +3,14 @@ import 'dart:developer';
 
 import 'package:feature_flags_repository/feature_flags_repository.dart';
 import 'package:finance_app/app/view/app.dart';
+import 'package:finance_app/app_check_debug.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:finance_app/feature_flag/active_feature_flags.dart';
 import 'package:finance_app/firebase_options.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +47,19 @@ Future<void> bootstrap({
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  if (kDebugMode) {
+    const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
+    if (debugToken.isNotEmpty) {
+      setAppCheckDebugToken(debugToken);
+    }
+  }
+
+  await FirebaseAppCheck.instance.activate(
+    providerWeb: ReCaptchaV3Provider(
+      '6Le_tnksAAAAAHBEuYty5MRoUWQfhVCsPfdPgIs6',
+    ),
   );
 
   final analyticsRepository = analyticsRepositoryFactory();
