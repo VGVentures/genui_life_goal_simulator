@@ -35,7 +35,7 @@ class TrustBadge extends StatelessWidget {
           ],
           Text(
             text,
-            style: TextStyle(
+            style: AppTextStyles.bodySmall?.copyWith(
               color: textColor,
               fontSize: 14,
               fontWeight: FontWeight.w500,

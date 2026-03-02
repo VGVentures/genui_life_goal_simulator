@@ -11,6 +11,64 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsIconsKickOffGen {
+  const $AssetsIconsKickOffGen();
+
+  /// File path: assets/icons_kick_off/activity_zone.png
+  AssetGenImage get activityZone =>
+      const AssetGenImage('assets/icons_kick_off/activity_zone.png');
+
+  /// File path: assets/icons_kick_off/check_icon.png
+  AssetGenImage get checkIcon =>
+      const AssetGenImage('assets/icons_kick_off/check_icon.png');
+
+  /// File path: assets/icons_kick_off/ellipse_139.png
+  AssetGenImage get ellipse139 =>
+      const AssetGenImage('assets/icons_kick_off/ellipse_139.png');
+
+  /// File path: assets/icons_kick_off/flare.png
+  AssetGenImage get flare =>
+      const AssetGenImage('assets/icons_kick_off/flare.png');
+
+  /// File path: assets/icons_kick_off/soft_star.png
+  AssetGenImage get softStar =>
+      const AssetGenImage('assets/icons_kick_off/soft_star.png');
+
+  /// File path: assets/icons_kick_off/star_10.png
+  AssetGenImage get star10 =>
+      const AssetGenImage('assets/icons_kick_off/star_10.png');
+
+  /// File path: assets/icons_kick_off/star_11.png
+  AssetGenImage get star11 =>
+      const AssetGenImage('assets/icons_kick_off/star_11.png');
+
+  /// File path: assets/icons_kick_off/star_5.png
+  AssetGenImage get star5 =>
+      const AssetGenImage('assets/icons_kick_off/star_5.png');
+
+  /// File path: assets/icons_kick_off/star_7.png
+  AssetGenImage get star7 =>
+      const AssetGenImage('assets/icons_kick_off/star_7.png');
+
+  /// File path: assets/icons_kick_off/star_9.png
+  AssetGenImage get star9 =>
+      const AssetGenImage('assets/icons_kick_off/star_9.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    activityZone,
+    checkIcon,
+    ellipse139,
+    flare,
+    softStar,
+    star10,
+    star11,
+    star5,
+    star7,
+    star9,
+  ];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -106,6 +164,7 @@ class $AssetsImagesOnboardingGen {
 class Assets {
   const Assets._();
 
+  static const $AssetsIconsKickOffGen iconsKickOff = $AssetsIconsKickOffGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
