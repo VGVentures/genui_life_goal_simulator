@@ -13,7 +13,8 @@
         "--flavor",
         "development",
         "--target",
-        "lib/main_development.dart"
+        "lib/main_development.dart",
+        "--dart-define=APP_CHECK_DEBUG_TOKEN=${env:APP_CHECK_DEBUG_TOKEN}"
       ]
     },
     {
@@ -27,6 +28,6 @@
         "--target",
         "lib/main_production.dart"
       ]
-    }
+    },
   ]
 }
