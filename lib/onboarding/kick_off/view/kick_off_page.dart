@@ -4,19 +4,18 @@ import 'package:finance_app/onboarding/kick_off/view/desktop_kick_off_view.dart'
 import 'package:finance_app/onboarding/kick_off/view/kick_off_values.dart';
 import 'package:finance_app/onboarding/kick_off/view/mobile_kick_off_view.dart';
 import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
+import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});
 
   void _onNextPressed(BuildContext context) {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute<void>(
-    //     builder: (_) => const PickProfilePage(),
-    //   ),
-    // );
-
-    // Must be changed for correct route when pick profile is pushed
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const PickProfilePage(),
+      ),
+    );
   }
 
   @override
