@@ -30,14 +30,22 @@ class AppTheme {
     onSurface: colors.onSurface,
   );
 
-  /// Default `ThemeData` for App UI with responsive typography.
-  /// Requires a [BuildContext] to determine the appropriate text theme
-  /// based on screen size.
+  /// Default `ThemeData` for App UI.
+  /// Uses desktop text theme. For responsive typography, use
+  /// [getThemeData] with a [BuildContext].
+  ThemeData get themeData => _buildThemeData(AppTextStyles.desktopTextTheme);
+
+  /// Responsive `ThemeData` for App UI.
+  /// Uses [AppTextStyles.getResponsiveTextTheme] to determine the appropriate
+  /// text theme based on screen size.
   ThemeData getThemeData(BuildContext context) =>
+      _buildThemeData(AppTextStyles.getResponsiveTextTheme(context));
+
+  ThemeData _buildThemeData(TextTheme textTheme) =>
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
-        textTheme: AppTextStyles.getResponsiveTextTheme(context),
+        textTheme: textTheme,
       ).copyWith(
         extensions: [colors],
         appBarTheme: AppBarTheme(
