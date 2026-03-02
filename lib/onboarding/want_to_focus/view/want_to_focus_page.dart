@@ -1,11 +1,14 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WantToFocusPage extends StatelessWidget {
-  const WantToFocusPage({super.key});
+  const WantToFocusPage({required this.profileType, super.key});
+
+  final ProfileType profileType;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +51,7 @@ class WantToFocusPage extends StatelessWidget {
             width: fabSize,
             height: fabSize,
             child: FloatingActionButton(
-              onPressed: () {
-                // TODO(juanRodriguez17): Add navigation to the next screen
-                // when gets merged
-              },
+              onPressed: () {},
               backgroundColor: Colors.transparent,
               hoverColor: colorExtensions?.secondary.shade200,
               elevation: 0,

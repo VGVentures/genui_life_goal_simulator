@@ -1,6 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
+import 'package:finance_app/onboarding/want_to_focus/view/want_to_focus_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,30 +41,41 @@ class PickProfilePage extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Builder(
-          builder: (context) => SizedBox(
-            width: fabSize,
-            height: fabSize,
-            child: FloatingActionButton(
-              onPressed: () {
-                // TODO(paulinacrespi): Add navigation to next screen.
-              },
-              backgroundColor: Colors.transparent,
-              hoverColor: colorExtensions?.secondary.shade200,
-              elevation: 0,
-              shape: CircleBorder(
-                side: BorderSide(
-                  color:
-                      colorExtensions?.secondary.shade700 ?? Colors.transparent,
+        floatingActionButton: BlocBuilder<PickProfileCubit, PickProfileState>(
+          builder: (context, state) {
+            return SizedBox(
+              width: fabSize,
+              height: fabSize,
+              child: FloatingActionButton(
+                onPressed: state.selectedProfile != null
+                    ? () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute<void>(
+                            builder: (_) => WantToFocusPage(
+                              profileType: state.selectedProfile!,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+                backgroundColor: Colors.transparent,
+                hoverColor: colorExtensions?.secondary.shade200,
+                elevation: 0,
+                shape: CircleBorder(
+                  side: BorderSide(
+                    color:
+                        colorExtensions?.secondary.shade700 ??
+                        Colors.transparent,
+                  ),
+                ),
+                child: Assets.images.onboarding.rightArrow.image(
+                  color: colorExtensions?.secondary.shade700,
+                  width: fabIconSize,
+                  height: fabIconSize,
                 ),
               ),
-              child: Assets.images.onboarding.rightArrow.image(
-                color: colorExtensions?.secondary.shade700,
-                width: fabIconSize,
-                height: fabIconSize,
-              ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
