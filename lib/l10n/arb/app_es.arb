@@ -52,6 +52,18 @@
     "@genUILabel": {
         "description": "Etiqueta para el texto Gen UI"
     },
+    "introTitlePrefix": "Gen UI x ",
+    "@introTitlePrefix": {
+        "description": "Prefijo del título de la pantalla de introducción (antes del texto VGV con degradado)"
+    },
+    "introDescription": "Esta demo muestra cómo la UI Generativa transforma los productos financieros de paneles estáticos en experiencias adaptativas. La UI se adapta según objetivos, comportamiento y contexto.",
+    "@introDescription": {
+        "description": "Texto de descripción en la pantalla de introducción"
+    },
+    "introGetStartedLabel": "Comenzar",
+    "@introGetStartedLabel": {
+        "description": "Etiqueta del botón para comenzar en la pantalla de introducción"
+    },
     "everydaySpendingLabel": "Gastos cotidianos",
     "@everydaySpendingLabel": {
         "description": "Etiqueta de opción para enfoque en gastos cotidianos"
