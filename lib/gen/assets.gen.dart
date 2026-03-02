@@ -73,6 +73,14 @@ class $AssetsImagesIntroGen {
 class $AssetsImagesOnboardingGen {
   const $AssetsImagesOnboardingGen();
 
+  /// File path: assets/images/onboarding/StarBegginer.png
+  AssetGenImage get starBegginer =>
+      const AssetGenImage('assets/images/onboarding/StarBegginer.png');
+
+  /// File path: assets/images/onboarding/StarOptimizer.png
+  AssetGenImage get starOptimizer =>
+      const AssetGenImage('assets/images/onboarding/StarOptimizer.png');
+
   /// File path: assets/images/onboarding/checked_option.png
   AssetGenImage get checkedOption =>
       const AssetGenImage('assets/images/onboarding/checked_option.png');
@@ -86,7 +94,13 @@ class $AssetsImagesOnboardingGen {
       const AssetGenImage('assets/images/onboarding/right_arrow.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [checkedOption, editPencil, rightArrow];
+  List<AssetGenImage> get values => [
+    starBegginer,
+    starOptimizer,
+    checkedOption,
+    editPencil,
+    rightArrow,
+  ];
 }
 
 class Assets {
