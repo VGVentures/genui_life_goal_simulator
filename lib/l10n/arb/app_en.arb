@@ -20,6 +20,26 @@
     "@startChattingLabel": {
         "description": "Text shown when there are no messages in the chat"
     },
+    "pickProfileTitle": "Pick a profile",
+    "@pickProfileTitle": {
+        "description": "Title shown on the profile selection page"
+    },
+    "profileBeginnerTitle": "The Beginner",
+    "@profileBeginnerTitle": {
+        "description": "Title for the beginner profile type"
+    },
+    "profileBeginnerDescription": "Just getting started. Earns money, watches it disappear, and wants to finally understand why. Needs clarity, not complexity.",
+    "@profileBeginnerDescription": {
+        "description": "Description for the beginner profile type"
+    },
+    "profileOptimizerTitle": "The Optimizer",
+    "@profileOptimizerTitle": {
+        "description": "Title for the optimizer profile type"
+    },
+    "profileOptimizerDescription": "Established career, real assets, competing priorities. Doesn't need education — needs intelligence. Every decision is a trade-off.",
+    "@profileOptimizerDescription": {
+        "description": "Description for the optimizer profile type"
+    },
     "whatDoYouWantToFocusLabel": "What do you want to focus on?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
