@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/feature_flag/feature_flag.dart';
+import 'package:finance_app/intro/intro.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,21 @@ class App extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         navigatorObservers: navigatorObservers,
-        home: const _HomePage(),
+        home: const _IntroPage(),
+      ),
+    );
+  }
+}
+
+class _IntroPage extends StatelessWidget {
+  const _IntroPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return IntroPage(
+      // TODO(dev): migrate to go_router
+      onGetStarted: () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(builder: (_) => const _HomePage()),
       ),
     );
   }
