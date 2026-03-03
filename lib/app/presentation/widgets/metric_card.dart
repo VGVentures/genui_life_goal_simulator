@@ -130,21 +130,18 @@ class _MetricCardContent extends StatelessWidget {
         ? (colors?.secondary.shade300 ?? _MetricCardColors.selectedBackground)
         : _MetricCardColors.background;
 
-    final borderColor = isSelected
-        ? (colors?.secondary.shade600 ?? _MetricCardColors.selectedBorder)
-        : _MetricCardColors.border;
-
     return Container(
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-        border: Border.all(
-          color: borderColor,
-          width: isSelected
-              ? _Dimensions.selectedBorderWidth
-              : _Dimensions.borderWidth,
-        ),
+        border: isSelected
+            ? Border.all(
+                color: colors?.secondary.shade600 ??
+                    _MetricCardColors.selectedBorder,
+                width: _Dimensions.selectedBorderWidth,
+              )
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +325,6 @@ class _MobileMetricCardLayout extends StatelessWidget {
 
 abstract final class _Dimensions {
   static const double borderRadius = 8;
-  static const double borderWidth = 1;
   static const double selectedBorderWidth = 2;
   static const double labelFontSize = 12;
   static const double valueFontSize = 24;
@@ -341,7 +337,6 @@ abstract final class _Dimensions {
 
 abstract final class _MetricCardColors {
   static const Color background = Colors.white;
-  static const Color border = Color(0xFFE0E0E0);
   static const Color selectedBackground = Color(0x1A6D92F5);
   static const Color selectedBorder = Color(0xFF6D92F5);
   static const Color label = Color(0xFF666666);
