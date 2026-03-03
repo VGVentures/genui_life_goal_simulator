@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /Users/juanrodriguez/Documents/Repositorios/gcn26/test -name \"*_test.dart\" -exec wc -l {} +)",
-      "Bash(grep -l \"pumpApp\" /Users/juanrodriguez/Documents/Repositorios/gcn26/test/**/*_test.dart)"
-    ]
-  }
-}
