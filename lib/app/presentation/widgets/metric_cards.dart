@@ -22,7 +22,7 @@ enum MetricDeltaDirection {
 ///   comparison text (e.g. "+$40 above 3mo avg").
 /// - **Selected** – any of the above with [isSelected] set to `true`.
 ///
-/// Use [MetricCardLayout] to display a collection of cards with a responsive
+/// Use [MetricCardsLayout] to display a collection of cards with a responsive
 /// horizontal-row (desktop) or 2-column grid (mobile) arrangement.
 class MetricCard extends StatelessWidget {
   /// Creates a [MetricCard].
@@ -95,10 +95,10 @@ class MetricCard extends StatelessWidget {
   Color _deltaColor(AppColors? colors) {
     return switch (deltaDirection) {
       MetricDeltaDirection.positive =>
-        colors?.neutral.shade50 ?? _MetricCardColors.positive,
+        colors?.success ?? _MetricCardColors.positive,
       MetricDeltaDirection.negative =>
-        colors?.primary.shade100 ?? _MetricCardColors.negative,
-      null => _MetricCardColors.subtitle,
+        colors?.error ?? _MetricCardColors.negative,
+      null => colors?.onSurfaceMuted ?? _MetricCardColors.subtitle,
     };
   }
 }
@@ -127,8 +127,8 @@ class _MetricCardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final backgroundColor = isSelected
-        ? (colors?.secondary.shade300 ?? _MetricCardColors.selectedBackground)
-        : _MetricCardColors.background;
+        ? (colors?.primaryContainer ?? _MetricCardColors.selectedBackground)
+        : (colors?.surface ?? _MetricCardColors.background);
 
     return Container(
       padding: const EdgeInsets.all(Spacing.md),
@@ -137,8 +137,7 @@ class _MetricCardContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
         border: isSelected
             ? Border.all(
-                color: colors?.secondary.shade600 ??
-                    _MetricCardColors.selectedBorder,
+                color: colors?.primary ?? _MetricCardColors.selectedBorder,
                 width: _Dimensions.selectedBorderWidth,
               )
             : null,
@@ -147,17 +146,22 @@ class _MetricCardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _MetricLabel(label: label, textTheme: textTheme),
+          _MetricLabel(label: label, textTheme: textTheme, colors: colors),
           const SizedBox(height: Spacing.xs),
           _MetricValueRow(
             value: value,
             delta: delta,
             deltaColor: deltaColor,
             textTheme: textTheme,
+            colors: colors,
           ),
           if (subtitle != null) ...[
             const SizedBox(height: _Dimensions.subtitleTopSpacing),
-            _MetricSubtitle(subtitle: subtitle!, textTheme: textTheme),
+            _MetricSubtitle(
+              subtitle: subtitle!,
+              textTheme: textTheme,
+              colors: colors,
+            ),
           ],
         ],
       ),
@@ -169,19 +173,19 @@ class _MetricLabel extends StatelessWidget {
   const _MetricLabel({
     required this.label,
     required this.textTheme,
+    required this.colors,
   });
 
   final String label;
   final TextTheme textTheme;
+  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: textTheme.bodySmall?.copyWith(
-        fontSize: _Dimensions.labelFontSize,
-        fontWeight: FontWeight.w400,
-        color: _MetricCardColors.label,
+      style: textTheme.bodyMedium?.copyWith(
+        color: colors?.onSurfaceVariant ?? _MetricCardColors.label,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -195,12 +199,14 @@ class _MetricValueRow extends StatelessWidget {
     required this.delta,
     required this.deltaColor,
     required this.textTheme,
+    required this.colors,
   });
 
   final String value;
   final String? delta;
   final Color deltaColor;
   final TextTheme textTheme;
+  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
@@ -212,10 +218,9 @@ class _MetricValueRow extends StatelessWidget {
         Flexible(
           child: Text(
             value,
-            style: textTheme.bodyLarge?.copyWith(
-              fontSize: _Dimensions.valueFontSize,
-              fontWeight: FontWeight.w700,
-              color: _MetricCardColors.value,
+            style: textTheme.headlineLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colors?.onSurface ?? _MetricCardColors.value,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -225,9 +230,7 @@ class _MetricValueRow extends StatelessWidget {
           const SizedBox(width: _Dimensions.deltaSpacing),
           Text(
             delta!,
-            style: textTheme.bodySmall?.copyWith(
-              fontSize: _Dimensions.deltaFontSize,
-              fontWeight: FontWeight.w600,
+            style: textTheme.labelLarge?.copyWith(
               color: deltaColor,
             ),
           ),
@@ -241,19 +244,19 @@ class _MetricSubtitle extends StatelessWidget {
   const _MetricSubtitle({
     required this.subtitle,
     required this.textTheme,
+    required this.colors,
   });
 
   final String subtitle;
   final TextTheme textTheme;
+  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       subtitle,
-      style: textTheme.bodySmall?.copyWith(
-        fontSize: _Dimensions.subtitleFontSize,
-        fontWeight: FontWeight.w400,
-        color: _MetricCardColors.subtitle,
+      style: textTheme.labelMedium?.copyWith(
+        color: colors?.onSurfaceMuted ?? _MetricCardColors.subtitle,
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
@@ -266,9 +269,9 @@ class _MetricSubtitle extends StatelessWidget {
 /// - **Desktop** (screen width ≥ 600 px): cards in a single horizontal row,
 ///   each taking equal width via [Expanded].
 /// - **Mobile** (screen width < 600 px): cards in a 2-column grid.
-class MetricCardLayout extends StatelessWidget {
-  /// Creates a [MetricCardLayout].
-  const MetricCardLayout({required this.cards, super.key});
+class MetricCardsLayout extends StatelessWidget {
+  /// Creates a [MetricCardsLayout].
+  const MetricCardsLayout({required this.cards, super.key});
 
   /// Cards to display.
   final List<MetricCard> cards;
@@ -277,14 +280,14 @@ class MetricCardLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return responsiveValue(
       context,
-      mobile: _MobileMetricCardLayout(cards: cards),
-      desktop: _DesktopMetricCardLayout(cards: cards),
+      mobile: _MobileMetricCardsLayout(cards: cards),
+      desktop: _DesktopMetricCardsLayout(cards: cards),
     );
   }
 }
 
-class _DesktopMetricCardLayout extends StatelessWidget {
-  const _DesktopMetricCardLayout({required this.cards});
+class _DesktopMetricCardsLayout extends StatelessWidget {
+  const _DesktopMetricCardsLayout({required this.cards});
 
   final List<MetricCard> cards;
 
@@ -301,8 +304,8 @@ class _DesktopMetricCardLayout extends StatelessWidget {
   }
 }
 
-class _MobileMetricCardLayout extends StatelessWidget {
-  const _MobileMetricCardLayout({required this.cards});
+class _MobileMetricCardsLayout extends StatelessWidget {
+  const _MobileMetricCardsLayout({required this.cards});
 
   final List<MetricCard> cards;
 
@@ -326,22 +329,18 @@ class _MobileMetricCardLayout extends StatelessWidget {
 abstract final class _Dimensions {
   static const double borderRadius = 8;
   static const double selectedBorderWidth = 2;
-  static const double labelFontSize = 12;
-  static const double valueFontSize = 24;
-  static const double deltaFontSize = 13;
   static const double deltaSpacing = 4;
-  static const double subtitleFontSize = 11;
   static const double subtitleTopSpacing = 2;
   static const double mobileCardHeight = 132;
 }
 
 abstract final class _MetricCardColors {
-  static const Color background = Colors.white;
-  static const Color selectedBackground = Color(0x1A6D92F5);
-  static const Color selectedBorder = Color(0xFF6D92F5);
-  static const Color label = Color(0xFF666666);
-  static const Color value = Color(0xFF1A1A1A);
-  static const Color subtitle = Color(0xFF888888);
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color selectedBackground = Color(0xFFE3F2FD);
+  static const Color selectedBorder = Color(0xFF2196F3);
+  static const Color label = Color(0xFF616161);
+  static const Color value = Color(0xFF212121);
+  static const Color subtitle = Color(0xFF757575);
   static const Color positive = Color(0xFF4CAF50);
-  static const Color negative = Color(0xFFF0524D);
+  static const Color negative = Color(0xFFF44336);
 }
