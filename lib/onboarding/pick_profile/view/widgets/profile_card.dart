@@ -18,8 +18,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final beginnerColor =
-        colorExtensions?.secondary.shade600 ?? const Color(0xFF6D92F5);
+    final beginnerColor = colorExtensions?.primary ?? const Color(0xFF6D92F5);
     final l10n = context.l10n;
     final isOptimizer = profileType == ProfileType.optimizer;
     final titleColor = isOptimizer ? _kOptimizerColor : beginnerColor;
@@ -44,7 +43,12 @@ class ProfileCard extends StatelessWidget {
               ? const BoxConstraints(minHeight: 250)
               : const BoxConstraints(minHeight: 400),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isSelected
+                ? Color.alphaBlend(
+                    beginnerColor.withValues(alpha: 0.1),
+                    Colors.white,
+                  )
+                : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected ? beginnerColor : Colors.transparent,

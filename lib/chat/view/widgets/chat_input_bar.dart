@@ -52,7 +52,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: colorExtension?.secondary.shade500 ?? Colors.grey,
+                      color: colorExtension?.onSurfaceVariant ?? Colors.grey,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -61,11 +61,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   ),
                   hintText: l10n.chatInputBarHint,
                   hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorExtension?.secondary.shade500,
+                    color: colorExtension?.onSurfaceVariant,
                   ),
                 ),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorExtension?.primary.shade900,
+                  color: colorExtension?.onSurface,
                 ),
               ),
             ),
@@ -74,7 +74,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               onPressed: widget.enabled ? _submit : null,
               icon: Icon(
                 Icons.send,
-                color: colorExtension?.neutral.shade500,
+                color: colorExtension?.onPrimary,
               ),
             ),
           ],

@@ -24,7 +24,7 @@ class WantToFocusPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => WantToFocusCubit(),
       child: Scaffold(
-        backgroundColor: colorExtensions?.secondary.shade200,
+        backgroundColor: colorExtensions?.primarySurface,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -53,16 +53,15 @@ class WantToFocusPage extends StatelessWidget {
                 // when gets merged
               },
               backgroundColor: Colors.transparent,
-              hoverColor: colorExtensions?.secondary.shade200,
+              hoverColor: colorExtensions?.primaryContainer,
               elevation: 0,
               shape: CircleBorder(
                 side: BorderSide(
-                  color:
-                      colorExtensions?.secondary.shade700 ?? Colors.transparent,
+                  color: colorExtensions?.primary ?? Colors.transparent,
                 ),
               ),
               child: Assets.images.onboarding.rightArrow.image(
-                color: colorExtensions?.secondary.shade700,
+                color: colorExtensions?.primary,
                 width: fabIconSize,
                 height: fabIconSize,
               ),

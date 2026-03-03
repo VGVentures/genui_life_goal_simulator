@@ -4,7 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group(ThemeType, () {
     test('has light and dark values', () {
-      expect(ThemeType.values, containsAll([ThemeType.light, ThemeType.dark]));
+      expect(
+        ThemeType.values,
+        containsAll([ThemeType.light, ThemeType.dark]),
+      );
     });
 
     test('toName returns the enum name', () {
@@ -18,7 +21,10 @@ void main() {
     });
 
     test('fromName throws on invalid name', () {
-      expect(() => ThemeType.fromName('invalid'), throwsArgumentError);
+      expect(
+        () => ThemeType.fromName('invalid'),
+        throwsArgumentError,
+      );
     });
   });
 }
