@@ -16,8 +16,8 @@ class _MetricCardCatalogPageState extends State<MetricCardCatalogPage> {
   final _selected = <int>{};
 
   void _toggle(int index) => setState(() {
-        if (!_selected.remove(index)) _selected.add(index);
-      });
+    if (!_selected.remove(index)) _selected.add(index);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,4 +73,3 @@ class _MetricCardCatalogPageState extends State<MetricCardCatalogPage> {
     );
   }
 }
-

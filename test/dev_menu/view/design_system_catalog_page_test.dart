@@ -22,8 +22,9 @@ void main() {
       expect(find.text('MetricCard'), findsOneWidget);
     });
 
-    testWidgets('tapping MetricCard navigates to MetricCardCatalogPage',
-        (tester) async {
+    testWidgets('tapping MetricCard navigates to MetricCardCatalogPage', (
+      tester,
+    ) async {
       await _pumpPage(tester);
 
       await tester.tap(find.text('MetricCard'));
