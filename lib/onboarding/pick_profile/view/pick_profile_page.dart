@@ -29,7 +29,7 @@ class PickProfilePage extends StatelessWidget {
       create: (_) => PickProfileCubit(),
       child: Scaffold(
         backgroundColor:
-            colorExtensions?.secondary.shade200 ?? Colors.grey.shade200,
+            colorExtensions?.primarySurface ?? Colors.grey.shade200,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -49,16 +49,15 @@ class PickProfilePage extends StatelessWidget {
                 // TODO(paulinacrespi): Add navigation to next screen.
               },
               backgroundColor: Colors.transparent,
-              hoverColor: colorExtensions?.secondary.shade200,
+              hoverColor: colorExtensions?.primarySurface,
               elevation: 0,
               shape: CircleBorder(
                 side: BorderSide(
-                  color:
-                      colorExtensions?.secondary.shade700 ?? Colors.transparent,
+                  color: colorExtensions?.primary ?? Colors.transparent,
                 ),
               ),
               child: Assets.images.onboarding.rightArrow.image(
-                color: colorExtensions?.secondary.shade700,
+                color: colorExtensions?.primary,
                 width: fabIconSize,
                 height: fabIconSize,
               ),

@@ -73,15 +73,13 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
         child: Ink(
           decoration: BoxDecoration(
             color: isActive
-                ? colorExtension?.secondary.shade300
-                : colorScheme.surface,
+                ? colorExtension?.primaryContainer
+                : colorExtension?.surfaceVariant,
             borderRadius: BorderRadius.circular(Spacing.lg),
             border: Border.all(
-              color:
-                  (isActive
-                      ? colorExtension?.secondary.shade600
-                      : colorExtension?.secondary.shade50) ??
-                  colorScheme.primary,
+              color: isActive
+                  ? colorExtension?.primary ?? colorScheme.primary
+                  : Colors.transparent,
               width: _Dimensions.borderWidth,
             ),
           ),
@@ -107,14 +105,14 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     style: textTheme.bodyLarge?.copyWith(
                       fontSize: textSize,
                       fontWeight: FontWeight.w600,
-                      color: colorScheme.primary,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                     decoration: InputDecoration.collapsed(
                       hintText: widget.label,
                       hintStyle: textTheme.bodyLarge?.copyWith(
                         fontSize: textSize,
                         fontWeight: FontWeight.w400,
-                        color: colorExtension?.secondary.shade600,
+                        color: colorExtension?.onSurfaceMuted,
                       ),
                     ),
                     onSubmitted: (value) {
@@ -136,7 +134,7 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                             fontWeight: _hasText
                                 ? FontWeight.w600
                                 : FontWeight.w400,
-                            color: colorScheme.primary,
+                            color: colorScheme.onPrimaryContainer,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

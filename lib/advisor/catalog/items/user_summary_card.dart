@@ -71,8 +71,8 @@ final userSummaryCardItem = CatalogItem(
     final colorExtension = theme.extension<AppColors>();
     final healthColor = _healthColor(healthScore);
     final netWorthColor = netWorth >= 0
-        ? colorExtension?.neutral.shade50
-        : colorExtension?.error.shade500;
+        ? colorExtension?.success
+        : colorExtension?.error;
 
     return Card(
       elevation: Spacing.xxs,
@@ -92,7 +92,7 @@ final userSummaryCardItem = CatalogItem(
                   child: Text(
                     name,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      color: colorExtension?.primary.shade900,
+                      color: colorExtension?.onSurface,
                     ),
                   ),
                 ),
@@ -118,13 +118,13 @@ final userSummaryCardItem = CatalogItem(
             ),
             Divider(
               height: 2,
-              color: colorExtension?.primary.shade900,
+              color: colorExtension?.onSurface,
             ),
             // Net Worth
             Text(
               'Net Worth',
               style: theme.textTheme.labelSmall?.copyWith(
-                color: colorExtension?.primary.shade900,
+                color: colorExtension?.onSurface,
               ),
             ),
             Text(
@@ -138,27 +138,27 @@ final userSummaryCardItem = CatalogItem(
                 Text(
                   'Assets: ${_currencyFormat.format(totalAssets)}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorExtension?.primary.shade900,
+                    color: colorExtension?.onSurface,
                   ),
                 ),
                 const SizedBox(width: Spacing.md),
                 Text(
                   'Debt: ${_currencyFormat.format(totalDebt)}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorExtension?.primary.shade900,
+                    color: colorExtension?.onSurface,
                   ),
                 ),
               ],
             ),
             Divider(
               height: 2,
-              color: colorExtension?.primary.shade900,
+              color: colorExtension?.onSurface,
             ),
             // Monthly Cash Flow
             Text(
               'Monthly Cash Flow (Jan 2026)',
               style: theme.textTheme.labelSmall?.copyWith(
-                color: colorExtension?.primary.shade900,
+                color: colorExtension?.onSurface,
               ),
             ),
             Row(
@@ -167,27 +167,27 @@ final userSummaryCardItem = CatalogItem(
                   child: Text(
                     'Income: ${_currencyFormat.format(monthlyIncome)}',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorExtension?.primary.shade900,
+                      color: colorExtension?.onSurface,
                     ),
                   ),
                 ),
                 Text(
                   'Expenses: ${_currencyFormat.format(monthlyExpenses)}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorExtension?.primary.shade900,
+                    color: colorExtension?.onSurface,
                   ),
                 ),
               ],
             ),
             Divider(
               height: 2,
-              color: colorExtension?.primary.shade900,
+              color: colorExtension?.onSurface,
             ),
             // Recommendation
             Text(
               recommendation,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorExtension?.primary.shade900,
+                color: colorExtension?.onSurface,
                 fontStyle: FontStyle.italic,
               ),
             ),

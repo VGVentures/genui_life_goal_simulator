@@ -16,17 +16,14 @@ class AppThemes {
 class LightTheme extends AppThemeMode {
   LightTheme()
     : super(
-        themeData: AppTheme(
-          LightThemeColors(),
-        ),
+        themeData: AppTheme(LightThemeColors()),
       );
 }
 
 class DarkTheme extends AppThemeMode {
+  // TODO(dev): Replace LightThemeColors with DarkThemeColors when available.
   DarkTheme()
     : super(
-        themeData: AppTheme(
-          DarkThemeColors(),
-        ),
+        themeData: AppTheme(LightThemeColors()),
       );
 }

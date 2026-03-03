@@ -18,16 +18,25 @@ class AppTheme {
 
   ColorScheme get colorScheme => ColorScheme(
     brightness: colors.brightness,
-    primary: colors.primary.shade500,
-    onPrimary: colors.primary.shade900,
-    secondary: colors.secondary.shade500,
-    onSecondary: colors.secondary.shade900,
-    tertiary: colors.tertiary.shade500,
-    onTertiary: colors.tertiary.shade900,
-    error: colors.error.shade500,
-    onError: colors.error.shade900,
+    primary: colors.primary,
+    onPrimary: colors.onPrimary,
+    primaryContainer: colors.primaryContainer,
+    onPrimaryContainer: colors.onPrimaryContainer,
+    secondary: colors.primary,
+    onSecondary: colors.onPrimary,
+    tertiary: colors.success,
+    onTertiary: colors.onSuccess,
+    error: colors.error,
+    onError: colors.onError,
+    errorContainer: colors.errorContainer,
+    onErrorContainer: colors.onErrorContainer,
     surface: colors.surface,
     onSurface: colors.onSurface,
+    surfaceContainerHighest: colors.surfaceContainerHighest,
+    outline: colors.outline,
+    outlineVariant: colors.outlineVariant,
+    inverseSurface: colors.inverseSurface,
+    onInverseSurface: colors.onInverseSurface,
   );
 
   /// Default `ThemeData` for App UI.
