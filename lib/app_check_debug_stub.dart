@@ -1,0 +1,1 @@
+void setAppCheckDebugToken(String token) {}
