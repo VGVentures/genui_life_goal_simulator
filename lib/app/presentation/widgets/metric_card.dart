@@ -1,0 +1,352 @@
+import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/material.dart';
+
+/// Direction of a metric delta indicator relative to its context.
+enum MetricDeltaDirection {
+  /// Delta is favorable; displayed in green.
+  positive,
+
+  /// Delta is unfavorable; displayed in red.
+  negative,
+}
+
+/// A card molecule that displays a key financial metric with an optional
+/// delta indicator and subtitle.
+///
+/// Supports five visual variants depending on the parameters provided:
+///
+/// - **Plain** – [label], [value], and optional [subtitle]; no delta.
+/// - **Delta+** – adds a green [delta] via [MetricDeltaDirection.positive].
+/// - **Delta-** – adds a red [delta] via [MetricDeltaDirection.negative].
+/// - **Delta+Text** – like Delta+, but [subtitle] contains extended
+///   comparison text (e.g. "+$40 above 3mo avg").
+/// - **Selected** – any of the above with [isSelected] set to `true`.
+///
+/// Use [MetricCardLayout] to display a collection of cards with a responsive
+/// horizontal-row (desktop) or 2-column grid (mobile) arrangement.
+class MetricCard extends StatelessWidget {
+  /// Creates a [MetricCard].
+  const MetricCard({
+    required this.label,
+    required this.value,
+    this.subtitle,
+    this.delta,
+    this.deltaDirection,
+    this.isSelected = false,
+    this.onTap,
+    super.key,
+  });
+
+  /// Short label describing the metric (e.g. "Fixed costs").
+  final String label;
+
+  /// Primary metric value displayed prominently (e.g. "\$4,319").
+  final String value;
+
+  /// Optional context line shown below [value] (e.g. "vs last month").
+  final String? subtitle;
+
+  /// Optional delta shown inline next to [value] (e.g. "+1.2%").
+  ///
+  /// Set [deltaDirection] to control the indicator colour.
+  final String? delta;
+
+  /// Colour direction of [delta]: green for positive, red for negative.
+  ///
+  /// Has no visual effect when [delta] is null.
+  final MetricDeltaDirection? deltaDirection;
+
+  /// Whether this card renders in the selected/active state.
+  final bool isSelected;
+
+  /// Optional tap callback. When `null` the card is non-interactive.
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = Theme.of(context).textTheme;
+
+    final content = _MetricCardContent(
+      label: label,
+      value: value,
+      subtitle: subtitle,
+      delta: delta,
+      deltaColor: _deltaColor(colors),
+      isSelected: isSelected,
+      textTheme: textTheme,
+      colors: colors,
+    );
+
+    if (onTap == null) return content;
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        child: content,
+      ),
+    );
+  }
+
+  Color _deltaColor(AppColors? colors) {
+    return switch (deltaDirection) {
+      MetricDeltaDirection.positive =>
+        colors?.neutral.shade50 ?? _MetricCardColors.positive,
+      MetricDeltaDirection.negative =>
+        colors?.primary.shade100 ?? _MetricCardColors.negative,
+      null => _MetricCardColors.subtitle,
+    };
+  }
+}
+
+class _MetricCardContent extends StatelessWidget {
+  const _MetricCardContent({
+    required this.label,
+    required this.value,
+    required this.subtitle,
+    required this.delta,
+    required this.deltaColor,
+    required this.isSelected,
+    required this.textTheme,
+    required this.colors,
+  });
+
+  final String label;
+  final String value;
+  final String? subtitle;
+  final String? delta;
+  final Color deltaColor;
+  final bool isSelected;
+  final TextTheme textTheme;
+  final AppColors? colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final backgroundColor = isSelected
+        ? (colors?.secondary.shade300 ?? _MetricCardColors.selectedBackground)
+        : _MetricCardColors.background;
+
+    final borderColor = isSelected
+        ? (colors?.secondary.shade600 ?? _MetricCardColors.selectedBorder)
+        : _MetricCardColors.border;
+
+    return Container(
+      padding: const EdgeInsets.all(Spacing.md),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        border: Border.all(
+          color: borderColor,
+          width: isSelected
+              ? _Dimensions.selectedBorderWidth
+              : _Dimensions.borderWidth,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _MetricLabel(label: label, textTheme: textTheme),
+          const SizedBox(height: Spacing.xs),
+          _MetricValueRow(
+            value: value,
+            delta: delta,
+            deltaColor: deltaColor,
+            textTheme: textTheme,
+          ),
+          if (subtitle != null) ...[
+            const SizedBox(height: _Dimensions.subtitleTopSpacing),
+            _MetricSubtitle(subtitle: subtitle!, textTheme: textTheme),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricLabel extends StatelessWidget {
+  const _MetricLabel({
+    required this.label,
+    required this.textTheme,
+  });
+
+  final String label;
+  final TextTheme textTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: textTheme.bodySmall?.copyWith(
+        fontSize: _Dimensions.labelFontSize,
+        fontWeight: FontWeight.w400,
+        color: _MetricCardColors.label,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+}
+
+class _MetricValueRow extends StatelessWidget {
+  const _MetricValueRow({
+    required this.value,
+    required this.delta,
+    required this.deltaColor,
+    required this.textTheme,
+  });
+
+  final String value;
+  final String? delta;
+  final Color deltaColor;
+  final TextTheme textTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Flexible(
+          child: Text(
+            value,
+            style: textTheme.bodyLarge?.copyWith(
+              fontSize: _Dimensions.valueFontSize,
+              fontWeight: FontWeight.w700,
+              color: _MetricCardColors.value,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (delta != null) ...[
+          const SizedBox(width: _Dimensions.deltaSpacing),
+          Text(
+            delta!,
+            style: textTheme.bodySmall?.copyWith(
+              fontSize: _Dimensions.deltaFontSize,
+              fontWeight: FontWeight.w600,
+              color: deltaColor,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _MetricSubtitle extends StatelessWidget {
+  const _MetricSubtitle({
+    required this.subtitle,
+    required this.textTheme,
+  });
+
+  final String subtitle;
+  final TextTheme textTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      subtitle,
+      style: textTheme.bodySmall?.copyWith(
+        fontSize: _Dimensions.subtitleFontSize,
+        fontWeight: FontWeight.w400,
+        color: _MetricCardColors.subtitle,
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+}
+
+/// Responsive layout for a collection of [MetricCard] widgets.
+///
+/// - **Desktop** (screen width ≥ 600 px): cards in a single horizontal row,
+///   each taking equal width via [Expanded].
+/// - **Mobile** (screen width < 600 px): cards in a 2-column grid.
+class MetricCardLayout extends StatelessWidget {
+  /// Creates a [MetricCardLayout].
+  const MetricCardLayout({required this.cards, super.key});
+
+  /// Cards to display.
+  final List<MetricCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return responsiveValue(
+      context,
+      mobile: _MobileMetricCardLayout(cards: cards),
+      desktop: _DesktopMetricCardLayout(cards: cards),
+    );
+  }
+}
+
+class _DesktopMetricCardLayout extends StatelessWidget {
+  const _DesktopMetricCardLayout({required this.cards});
+
+  final List<MetricCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          Expanded(child: cards[i]),
+          if (i < cards.length - 1) const SizedBox(width: Spacing.md),
+        ],
+      ],
+    );
+  }
+}
+
+class _MobileMetricCardLayout extends StatelessWidget {
+  const _MobileMetricCardLayout({required this.cards});
+
+  final List<MetricCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: Spacing.md,
+        mainAxisSpacing: Spacing.md,
+        mainAxisExtent: _Dimensions.mobileCardHeight,
+      ),
+      itemCount: cards.length,
+      itemBuilder: (context, index) => cards[index],
+    );
+  }
+}
+
+abstract final class _Dimensions {
+  static const double borderRadius = 8;
+  static const double borderWidth = 1;
+  static const double selectedBorderWidth = 2;
+  static const double labelFontSize = 12;
+  static const double valueFontSize = 24;
+  static const double deltaFontSize = 13;
+  static const double deltaSpacing = 4;
+  static const double subtitleFontSize = 11;
+  static const double subtitleTopSpacing = 2;
+  static const double mobileCardHeight = 132;
+}
+
+abstract final class _MetricCardColors {
+  static const Color background = Colors.white;
+  static const Color border = Color(0xFFE0E0E0);
+  static const Color selectedBackground = Color(0x1A6D92F5);
+  static const Color selectedBorder = Color(0xFF6D92F5);
+  static const Color label = Color(0xFF666666);
+  static const Color value = Color(0xFF1A1A1A);
+  static const Color subtitle = Color(0xFF888888);
+  static const Color positive = Color(0xFF4CAF50);
+  static const Color negative = Color(0xFFF0524D);
+}
