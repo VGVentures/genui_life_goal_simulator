@@ -40,11 +40,6 @@ final _schema = S.object(
   ],
 );
 
-/// CatalogItem that renders a horizontal progress bar with budget comparison.
-///
-/// Supports two visual variants based on [comparisonValue]:
-/// - Negative (over budget): comparison text shown in red.
-/// - Positive (under budget): comparison text shown in green.
 final horizontalBarItem = CatalogItem(
   name: 'HorizontalBar',
   dataSchema: _schema,
@@ -64,8 +59,7 @@ final horizontalBarItem = CatalogItem(
 
     final isPositive = comparisonValue >= 0;
 
-    // Green for positive, red for negative.
-    final positiveColor = colors?.neutral.shade50 ?? Colors.green;
+    final positiveColor = colors?.success ?? Colors.green;
     final negativeColor = colors?.error ?? Colors.red;
     final comparisonColor = isPositive ? positiveColor : negativeColor;
 
@@ -73,55 +67,48 @@ final horizontalBarItem = CatalogItem(
     final suffix = isPercentage ? '%' : '';
     final comparisonText = '$sign${comparisonValue.toStringAsFixed(0)}$suffix';
 
-    // Bar fill: solid blue → light purple gradient.
-    final barFillStart = colors?.secondary.shade500 ?? const Color(0xFF2461EB);
-    final barFillEnd = colors?.secondary.shade400 ?? const Color(0xFFD4C6FB);
+    final barGradient =
+        colors?.geniusGradient ??
+        const LinearGradient(colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)]);
 
-    // Bar track: very light blue-grey.
-    final trackColor = colors?.secondary.shade200 ?? const Color(0xFFE2E8F9);
+    final trackColor = colors?.outlineVariant ?? const Color(0xFFE2E8F9);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: Spacing.xxs,
       children: [
-        // Top row: category + amount.
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               category,
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: colors?.primary.shade900,
+                color: colors?.onSurface,
               ),
             ),
             Text(
               _currencyFormat.format(amount),
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: colors?.surface,
+                color: colors?.onSurface,
               ),
             ),
           ],
         ),
-
-        // Gradient progress bar.
         _HorizontalProgressBar(
           progress: progress,
-          fillStart: barFillStart,
-          fillEnd: barFillEnd,
+          gradient: barGradient,
           trackColor: trackColor,
         ),
-
-        // Bottom row: comparison label + colored delta value.
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               comparisonLabel,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors?.primary.shade500,
+                color: colors?.onSurfaceMuted,
               ),
             ),
             Text(
@@ -141,14 +128,12 @@ final horizontalBarItem = CatalogItem(
 class _HorizontalProgressBar extends StatelessWidget {
   const _HorizontalProgressBar({
     required this.progress,
-    required this.fillStart,
-    required this.fillEnd,
+    required this.gradient,
     required this.trackColor,
   });
 
   final double progress;
-  final Color fillStart;
-  final Color fillEnd;
+  final LinearGradient gradient;
   final Color trackColor;
 
   @override
@@ -157,21 +142,17 @@ class _HorizontalProgressBar extends StatelessWidget {
       height: 8,
       child: Stack(
         children: [
-          // Track (full width, light background).
           Container(
             decoration: BoxDecoration(
               color: trackColor,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          // Fill (proportional width, gradient).
           FractionallySizedBox(
             widthFactor: progress,
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [fillStart, fillEnd],
-                ),
+                gradient: gradient,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
