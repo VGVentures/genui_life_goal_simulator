@@ -22,9 +22,13 @@ class App extends StatelessWidget {
       projectId: 'gcn26-finance-app-j9k7f4b',
       secret: 'p_iCQvLnrp18LEacxg6JYRtV5g-FbvfA',
       child: MaterialApp(
-        theme: AppThemes.light.themeData.themeData,
-        darkTheme: AppThemes.dark.themeData.themeData,
         themeMode: ThemeMode.light,
+        builder: (context, child) {
+          return Theme(
+            data: AppThemes.light.themeData.getThemeData(context),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         navigatorObservers: navigatorObservers,
