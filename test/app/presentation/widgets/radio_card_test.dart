@@ -101,10 +101,10 @@ void main() {
           final decoration = ink.decoration! as BoxDecoration;
           final colors = LightThemeColors();
 
-          expect(decoration.color, colors.secondary.shade800);
+          expect(decoration.color, colors.primaryContainer);
           expect(
             (decoration.border! as Border).top.color,
-            colors.secondary.shade600,
+            colors.primary,
           );
         },
       );
@@ -126,7 +126,7 @@ void main() {
           final decoration = ink.decoration! as BoxDecoration;
           final colors = LightThemeColors();
 
-          expect(decoration.color, colors.secondary.shade100);
+          expect(decoration.color, colors.surface);
           expect(
             (decoration.border! as Border).top.color,
             Colors.transparent,
@@ -146,7 +146,7 @@ void main() {
 
         final text = tester.widget<Text>(find.text('Styled'));
         final colors = LightThemeColors();
-        expect(text.style?.color, colors.primary.shade500);
+        expect(text.style?.color, colors.onSurface);
       });
     });
 

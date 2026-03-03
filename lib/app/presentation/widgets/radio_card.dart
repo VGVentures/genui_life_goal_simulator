@@ -46,12 +46,12 @@ class RadioCard extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             color: isSelected
-                ? colorExtension?.secondary.shade800
-                : colorExtension?.secondary.shade100,
+                ? colorExtension?.primaryContainer
+                : colorExtension?.surface,
             borderRadius: BorderRadius.circular(Spacing.xs),
             border: Border.all(
               color: isSelected
-                  ? colorExtension?.secondary.shade600 ?? Colors.transparent
+                  ? colorExtension?.primary ?? Colors.transparent
                   : Colors.transparent,
             ),
           ),
@@ -66,7 +66,7 @@ class RadioCard extends StatelessWidget {
                 Text(
                   label,
                   style: textTheme.labelLarge?.copyWith(
-                    color: colorExtension?.primary.shade500,
+                    color: colorExtension?.onSurface,
                   ),
                 ),
                 const SizedBox(height: Spacing.md),

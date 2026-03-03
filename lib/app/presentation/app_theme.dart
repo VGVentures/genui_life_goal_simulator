@@ -54,21 +54,7 @@ class AppTheme {
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
-<<<<<<< HEAD
         textTheme: textTheme,
-=======
-        textTheme: TextTheme(
-          displayLarge: AppTextStyles.titleLarge,
-          displayMedium: AppTextStyles.titleMedium,
-          displaySmall: AppTextStyles.titleSmall,
-          bodyLarge: AppTextStyles.bodyLarge,
-          bodyMedium: AppTextStyles.bodyMedium,
-          bodySmall: AppTextStyles.bodySmall,
-          labelLarge: AppTextStyles.labelLarge,
-          labelMedium: AppTextStyles.labelMedium,
-          labelSmall: AppTextStyles.labelSmall,
-        ),
->>>>>>> 9afe431 (feat: add RadioCard widget)
       ).copyWith(
         extensions: [colors],
         appBarTheme: AppBarTheme(
