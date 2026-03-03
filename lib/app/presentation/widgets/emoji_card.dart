@@ -1,0 +1,195 @@
+import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/material.dart';
+
+/// A card molecule that displays a category or item with an emoji identifier
+/// and a text label.
+///
+/// Supports two visual variants:
+///
+/// - **Default** – [emoji] and [label] on a surface-coloured card.
+/// - **Selected** – highlighted with a primary-container background and
+///   primary border when [isSelected] is `true`.
+///
+/// Use [EmojiCardLayout] to display a collection of cards with a responsive
+/// horizontal-row (desktop) or 2-column grid (mobile) arrangement.
+class EmojiCard extends StatelessWidget {
+  /// Creates an [EmojiCard].
+  const EmojiCard({
+    required this.emoji,
+    required this.label,
+    this.isSelected = false,
+    this.onTap,
+    super.key,
+  });
+
+  /// The emoji character to display (e.g. '📊').
+  final String emoji;
+
+  /// Short label shown below the emoji (e.g. 'Fixed costs').
+  final String label;
+
+  /// Whether this card renders in the selected/active state.
+  final bool isSelected;
+
+  /// Optional tap callback. When `null` the card is non-interactive.
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final content = _EmojiCardContent(
+      emoji: emoji,
+      label: label,
+      isSelected: isSelected,
+    );
+
+    if (onTap == null) return content;
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        child: content,
+      ),
+    );
+  }
+}
+
+class _EmojiCardContent extends StatelessWidget {
+  const _EmojiCardContent({
+    required this.emoji,
+    required this.label,
+    required this.isSelected,
+  });
+
+  final String emoji;
+  final String label;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = Theme.of(context).textTheme;
+
+    final backgroundColor = isSelected
+        ? (colors?.primaryContainer ?? _EmojiCardColors.selectedBackground)
+        : (colors?.surface ?? _EmojiCardColors.background);
+
+    final borderColor = isSelected
+        ? (colors?.primary ?? _EmojiCardColors.selectedBorder)
+        : _EmojiCardColors.border;
+
+    return Container(
+      padding: const EdgeInsets.all(Spacing.md),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        border: Border.all(
+          color: borderColor,
+          width: isSelected
+              ? _Dimensions.selectedBorderWidth
+              : _Dimensions.borderWidth,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: _Dimensions.emojiSize),
+          ),
+          const SizedBox(height: Spacing.xs),
+          Text(
+            label,
+            style: textTheme.labelLarge?.copyWith(
+              color: colors?.onSurface ?? _EmojiCardColors.label,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Responsive layout for a collection of [EmojiCard] widgets.
+///
+/// - **Desktop** (screen width ≥ 600 px): cards in a single horizontal row,
+///   each taking equal width via [Expanded].
+/// - **Mobile** (screen width < 600 px): cards in a 2-column grid.
+class EmojiCardLayout extends StatelessWidget {
+  /// Creates an [EmojiCardLayout].
+  const EmojiCardLayout({required this.cards, super.key});
+
+  /// Cards to display.
+  final List<EmojiCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return responsiveValue(
+      context,
+      mobile: _MobileEmojiCardLayout(cards: cards),
+      desktop: _DesktopEmojiCardLayout(cards: cards),
+    );
+  }
+}
+
+class _DesktopEmojiCardLayout extends StatelessWidget {
+  const _DesktopEmojiCardLayout({required this.cards});
+
+  final List<EmojiCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          Expanded(child: cards[i]),
+          if (i < cards.length - 1) const SizedBox(width: Spacing.md),
+        ],
+      ],
+    );
+  }
+}
+
+class _MobileEmojiCardLayout extends StatelessWidget {
+  const _MobileEmojiCardLayout({required this.cards});
+
+  final List<EmojiCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: Spacing.md,
+        mainAxisSpacing: Spacing.md,
+        mainAxisExtent: _Dimensions.mobileCardHeight,
+      ),
+      itemCount: cards.length,
+      itemBuilder: (context, index) => cards[index],
+    );
+  }
+}
+
+abstract final class _Dimensions {
+  static const double borderRadius = 8;
+  static const double borderWidth = 1;
+  static const double selectedBorderWidth = 2;
+  static const double emojiSize = 32;
+  static const double mobileCardHeight = 108;
+}
+
+abstract final class _EmojiCardColors {
+  static const Color background = Color(0xFFF7F6F7);
+  static const Color border = Colors.transparent;
+  static const Color selectedBackground = Color(0xFFF3F6FF);
+  static const Color selectedBorder = Color(0xFF6D92F5);
+  static const Color label = Color(0xFF1A1C1C);
+}
