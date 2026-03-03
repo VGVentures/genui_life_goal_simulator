@@ -5,5 +5,6 @@ import 'package:genui/genui.dart';
 Catalog buildFinanceCatalog() {
   return CoreCatalogItems.asCatalog().copyWith([
     userSummaryCardItem,
+    horizontalBarItem,
   ]);
 }
