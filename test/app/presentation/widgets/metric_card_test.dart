@@ -302,7 +302,7 @@ void main() {
 
     Widget buildLayout() => MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
-      home: Scaffold(body: MetricCardLayout(cards: cards)),
+      home: Scaffold(body: MetricCardsLayout(cards: cards)),
     );
 
     testWidgets('renders all card labels on desktop', (tester) async {
