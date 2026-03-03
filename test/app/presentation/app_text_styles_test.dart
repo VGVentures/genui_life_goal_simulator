@@ -3,56 +3,131 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group(AppTextStyles, () {
-    test('titleLarge has correct properties', () {
-      final style = AppTextStyles.titleLarge;
-      expect(style?.fontSize, 32);
-      expect(style?.fontWeight, FontWeight.w700);
+  group('AppTextStyles Desktop', () {
+    test('displayLargeDesktop has correct properties', () {
+      const style = AppTextStyles.displayLargeDesktop;
+      expect(style.fontSize, 48);
+      expect(style.fontWeight, FontWeight.w700);
+      expect(style.letterSpacing, -2);
     });
 
-    test('titleMedium has correct properties', () {
-      final style = AppTextStyles.titleMedium;
-      expect(style?.fontSize, 28);
-      expect(style?.fontWeight, FontWeight.w600);
+    test('displayMediumDesktop has correct properties', () {
+      const style = AppTextStyles.displayMediumDesktop;
+      expect(style.fontSize, 40);
+      expect(style.fontWeight, FontWeight.w700);
+      expect(style.letterSpacing, -1.5);
     });
 
-    test('titleSmall has correct properties', () {
-      final style = AppTextStyles.titleSmall;
-      expect(style?.fontSize, 24);
-      expect(style?.fontWeight, FontWeight.w500);
+    test('headlineLargeDesktop has correct properties', () {
+      const style = AppTextStyles.headlineLargeDesktop;
+      expect(style.fontSize, 32);
+      expect(style.fontWeight, FontWeight.w600);
+      expect(style.letterSpacing, -1.5);
     });
 
-    test('bodyLarge has correct properties', () {
-      final style = AppTextStyles.bodyLarge;
-      expect(style?.fontSize, 20);
-      expect(style?.fontWeight, FontWeight.w500);
+    test('titleLargeDesktop has correct properties', () {
+      const style = AppTextStyles.titleLargeDesktop;
+      expect(style.fontSize, 24);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.5);
     });
 
-    test('bodyMedium has correct properties', () {
-      final style = AppTextStyles.bodyMedium;
-      expect(style?.fontSize, 16);
-      expect(style?.fontWeight, FontWeight.w400);
+    test('bodyLargeDesktop has correct properties', () {
+      const style = AppTextStyles.bodyLargeDesktop;
+      expect(style.fontSize, 16);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.15);
     });
 
-    test('bodySmall has correct properties', () {
-      final style = AppTextStyles.bodySmall;
-      expect(style?.fontSize, 12);
-      expect(style?.fontWeight, FontWeight.w400);
+    test('labelLargeDesktop has correct properties', () {
+      const style = AppTextStyles.labelLargeDesktop;
+      expect(style.fontSize, 16);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.15);
+    });
+  });
+
+  group('AppTextStyles Mobile', () {
+    test('displayLargeMobile has correct properties', () {
+      const style = AppTextStyles.displayLargeMobile;
+      expect(style.fontSize, 36);
+      expect(style.fontWeight, FontWeight.w700);
+      expect(style.letterSpacing, -1.5);
     });
 
-    test('labelLarge has correct properties', () {
-      final style = AppTextStyles.labelLarge;
-      expect(style?.fontSize, 16);
+    test('displayMediumMobile has correct properties', () {
+      const style = AppTextStyles.displayMediumMobile;
+      expect(style.fontSize, 32);
+      expect(style.fontWeight, FontWeight.w700);
+      expect(style.letterSpacing, -1);
     });
 
-    test('labelMedium has correct properties', () {
-      final style = AppTextStyles.labelMedium;
-      expect(style?.fontSize, 12);
+    test('headlineLargeMobile has correct properties', () {
+      const style = AppTextStyles.headlineLargeMobile;
+      expect(style.fontSize, 28);
+      expect(style.fontWeight, FontWeight.w600);
+      expect(style.letterSpacing, -1);
     });
 
-    test('labelSmall has correct properties', () {
-      final style = AppTextStyles.labelSmall;
-      expect(style?.fontSize, 8);
+    test('titleLargeMobile has correct properties', () {
+      const style = AppTextStyles.titleLargeMobile;
+      expect(style.fontSize, 20);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.25);
+    });
+
+    test('bodyLargeMobile has correct properties', () {
+      const style = AppTextStyles.bodyLargeMobile;
+      expect(style.fontSize, 14);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.15);
+    });
+
+    test('labelLargeMobile has correct properties', () {
+      const style = AppTextStyles.labelLargeMobile;
+      expect(style.fontSize, 16);
+      expect(style.fontWeight, FontWeight.w500);
+      expect(style.letterSpacing, -0.15);
+    });
+  });
+
+  group('AppTextStyles TextTheme', () {
+    test('desktopTextTheme contains all styles', () {
+      final theme = AppTextStyles.desktopTextTheme;
+      expect(theme.displayLarge, isNotNull);
+      expect(theme.displayMedium, isNotNull);
+      expect(theme.displaySmall, isNotNull);
+      expect(theme.headlineLarge, isNotNull);
+      expect(theme.headlineMedium, isNotNull);
+      expect(theme.headlineSmall, isNotNull);
+      expect(theme.titleLarge, isNotNull);
+      expect(theme.titleMedium, isNotNull);
+      expect(theme.titleSmall, isNotNull);
+      expect(theme.bodyLarge, isNotNull);
+      expect(theme.bodyMedium, isNotNull);
+      expect(theme.bodySmall, isNotNull);
+      expect(theme.labelLarge, isNotNull);
+      expect(theme.labelMedium, isNotNull);
+      expect(theme.labelSmall, isNotNull);
+    });
+
+    test('mobileTextTheme contains all styles', () {
+      final theme = AppTextStyles.mobileTextTheme;
+      expect(theme.displayLarge, isNotNull);
+      expect(theme.displayMedium, isNotNull);
+      expect(theme.displaySmall, isNotNull);
+      expect(theme.headlineLarge, isNotNull);
+      expect(theme.headlineMedium, isNotNull);
+      expect(theme.headlineSmall, isNotNull);
+      expect(theme.titleLarge, isNotNull);
+      expect(theme.titleMedium, isNotNull);
+      expect(theme.titleSmall, isNotNull);
+      expect(theme.bodyLarge, isNotNull);
+      expect(theme.bodyMedium, isNotNull);
+      expect(theme.bodySmall, isNotNull);
+      expect(theme.labelLarge, isNotNull);
+      expect(theme.labelMedium, isNotNull);
+      expect(theme.labelSmall, isNotNull);
     });
   });
 }

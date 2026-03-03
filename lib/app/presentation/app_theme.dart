@@ -18,34 +18,43 @@ class AppTheme {
 
   ColorScheme get colorScheme => ColorScheme(
     brightness: colors.brightness,
-    primary: colors.primary.shade500,
-    onPrimary: colors.primary.shade900,
-    secondary: colors.secondary.shade500,
-    onSecondary: colors.secondary.shade900,
-    tertiary: colors.tertiary.shade500,
-    onTertiary: colors.tertiary.shade900,
-    error: colors.error.shade500,
-    onError: colors.error.shade900,
+    primary: colors.primary,
+    onPrimary: colors.onPrimary,
+    primaryContainer: colors.primaryContainer,
+    onPrimaryContainer: colors.onPrimaryContainer,
+    secondary: colors.primary,
+    onSecondary: colors.onPrimary,
+    tertiary: colors.success,
+    onTertiary: colors.onSuccess,
+    error: colors.error,
+    onError: colors.onError,
+    errorContainer: colors.errorContainer,
+    onErrorContainer: colors.onErrorContainer,
     surface: colors.surface,
     onSurface: colors.onSurface,
+    surfaceContainerHighest: colors.surfaceContainerHighest,
+    outline: colors.outline,
+    outlineVariant: colors.outlineVariant,
+    inverseSurface: colors.inverseSurface,
+    onInverseSurface: colors.onInverseSurface,
   );
 
   /// Default `ThemeData` for App UI.
-  ThemeData get themeData =>
+  /// Uses desktop text theme. For responsive typography, use
+  /// [getThemeData] with a [BuildContext].
+  ThemeData get themeData => _buildThemeData(AppTextStyles.desktopTextTheme);
+
+  /// Responsive `ThemeData` for App UI.
+  /// Uses [AppTextStyles.getResponsiveTextTheme] to determine the appropriate
+  /// text theme based on screen size.
+  ThemeData getThemeData(BuildContext context) =>
+      _buildThemeData(AppTextStyles.getResponsiveTextTheme(context));
+
+  ThemeData _buildThemeData(TextTheme textTheme) =>
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
-        textTheme: TextTheme(
-          displayLarge: AppTextStyles.titleLarge,
-          displayMedium: AppTextStyles.titleMedium,
-          displaySmall: AppTextStyles.titleSmall,
-          bodyLarge: AppTextStyles.bodyLarge,
-          bodyMedium: AppTextStyles.bodyMedium,
-          bodySmall: AppTextStyles.bodySmall,
-          labelLarge: AppTextStyles.titleLarge,
-          labelMedium: AppTextStyles.titleMedium,
-          labelSmall: AppTextStyles.titleSmall,
-        ),
+        textTheme: textTheme,
       ).copyWith(
         extensions: [colors],
         appBarTheme: AppBarTheme(

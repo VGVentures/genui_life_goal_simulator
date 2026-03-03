@@ -31,7 +31,7 @@ class WantToFocusView extends StatelessWidget {
                 mobile: _Dimensions.mobileTitleSize,
                 desktop: _Dimensions.titleSize,
               ),
-              color: colorScheme.primary,
+              color: colorScheme.onPrimaryContainer,
             ),
             textAlign: TextAlign.center,
           ),

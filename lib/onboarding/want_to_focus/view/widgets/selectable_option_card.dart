@@ -41,15 +41,13 @@ class SelectableOptionCard extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             color: isSelected
-                ? colorExtension?.secondary.shade300
-                : colorScheme.surface,
+                ? colorExtension?.primaryContainer
+                : colorExtension?.surfaceVariant,
             borderRadius: BorderRadius.circular(Spacing.lg),
             border: Border.all(
-              color:
-                  (isSelected
-                      ? colorExtension?.secondary.shade600
-                      : colorExtension?.secondary.shade50) ??
-                  colorScheme.primary,
+              color: isSelected
+                  ? colorExtension?.primary ?? colorScheme.primary
+                  : Colors.transparent,
               width: _Dimensions.borderWidth,
             ),
           ),
@@ -73,6 +71,7 @@ class SelectableOptionCard extends StatelessWidget {
                   Assets.images.onboarding.checkedOption.image(
                     width: iconSize,
                     height: iconSize,
+                    color: colorExtension?.primary.withValues(alpha: 0.4),
                   ),
                   const SizedBox(width: Spacing.md),
                 ],
@@ -84,7 +83,7 @@ class SelectableOptionCard extends StatelessWidget {
                       fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
-                      color: colorScheme.primary,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

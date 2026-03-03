@@ -14,20 +14,66 @@ void main() {
       expect(colors.brightness, Brightness.light);
     });
 
-    test('all standard shades are defined for primary', () {
-      for (final shade in [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]) {
-        expect(colors.primary[shade], isNotNull, reason: 'shade $shade');
-      }
+    test('primary colors are defined', () {
+      expect(colors.primary, isA<Color>());
+      expect(colors.onPrimary, isA<Color>());
+      expect(colors.primaryContainer, isA<Color>());
+      expect(colors.onPrimaryContainer, isA<Color>());
     });
 
-    test('surface and onSurface are defined', () {
+    test('surface colors are defined', () {
       expect(colors.surface, isA<Color>());
+      expect(colors.surfaceVariant, isA<Color>());
+      expect(colors.surfaceContainer, isA<Color>());
+      expect(colors.surfaceContainerHigh, isA<Color>());
+      expect(colors.surfaceContainerHighest, isA<Color>());
       expect(colors.onSurface, isA<Color>());
+      expect(colors.onSurfaceVariant, isA<Color>());
+      expect(colors.onSurfaceMuted, isA<Color>());
+      expect(colors.onSurfaceDisabled, isA<Color>());
+      expect(colors.inverseSurface, isA<Color>());
+      expect(colors.onInverseSurface, isA<Color>());
     });
 
-    test('neutral and neutralVariant are defined', () {
-      expect(colors.neutral, isA<MaterialColor>());
-      expect(colors.neutralVariant, isA<MaterialColor>());
+    test('outline colors are defined', () {
+      expect(colors.outline, isA<Color>());
+      expect(colors.outlineVariant, isA<Color>());
+      expect(colors.outlineStrong, isA<Color>());
+    });
+
+    test('error colors are defined', () {
+      expect(colors.error, isA<Color>());
+      expect(colors.onError, isA<Color>());
+      expect(colors.errorContainer, isA<Color>());
+      expect(colors.onErrorContainer, isA<Color>());
+    });
+
+    test('success colors are defined', () {
+      expect(colors.success, isA<Color>());
+      expect(colors.onSuccess, isA<Color>());
+      expect(colors.successContainer, isA<Color>());
+      expect(colors.onSuccessContainer, isA<Color>());
+    });
+
+    test('warning colors are defined', () {
+      expect(colors.warning, isA<Color>());
+      expect(colors.onWarning, isA<Color>());
+      expect(colors.warningContainer, isA<Color>());
+      expect(colors.onWarningContainer, isA<Color>());
+    });
+
+    test('genius gradient is defined', () {
+      expect(colors.geniusGradient, isA<LinearGradient>());
+      expect(colors.geniusGradient.colors, hasLength(2));
+    });
+
+    test('extended colors are defined', () {
+      expect(colors.emeraldColor, isA<Color>());
+      expect(colors.emeraldSurface, isA<Color>());
+      expect(colors.emeraldContainer, isA<Color>());
+      expect(colors.pinkColor, isA<Color>());
+      expect(colors.pinkSurface, isA<Color>());
+      expect(colors.pinkContainer, isA<Color>());
     });
 
     test('copyWith returns a $LightThemeColors', () {
@@ -35,68 +81,19 @@ void main() {
     });
 
     test('lerp returns this when t < 0.5', () {
-      final other = DarkThemeColors();
+      final other = LightThemeColors();
       expect(colors.lerp(other, 0), same(colors));
       expect(colors.lerp(other, 0.4), same(colors));
     });
 
     test('lerp returns other when t >= 0.5', () {
-      final other = DarkThemeColors();
+      final other = LightThemeColors();
       expect(colors.lerp(other, 0.5), same(other));
       expect(colors.lerp(other, 1), same(other));
     });
 
     test('lerp returns this when other is null and t >= 0.5', () {
       expect(colors.lerp(null, 1), same(colors));
-    });
-  });
-
-  group(DarkThemeColors, () {
-    late DarkThemeColors colors;
-
-    setUp(() {
-      colors = DarkThemeColors();
-    });
-
-    test('brightness is dark', () {
-      expect(colors.brightness, Brightness.dark);
-    });
-
-    test('primary shade500 matches swatch primary value', () {
-      expect(colors.primary.shade500, const Color(0xFF4714E0));
-    });
-
-    test('all standard shades are defined for primary', () {
-      for (final shade in [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]) {
-        expect(colors.primary[shade], isNotNull, reason: 'shade $shade');
-      }
-    });
-
-    test('surface is dark', () {
-      expect(colors.surface, const Color(0xFF1C1B1F));
-    });
-
-    test('onSurface is light', () {
-      expect(colors.onSurface, const Color(0xFFE6E1E5));
-    });
-
-    test('neutral and neutralVariant are defined', () {
-      expect(colors.neutral, isA<MaterialColor>());
-      expect(colors.neutralVariant, isA<MaterialColor>());
-    });
-
-    test('copyWith returns a DarkThemeColors', () {
-      expect(colors.copyWith(), isA<DarkThemeColors>());
-    });
-
-    test('lerp returns this when t < 0.5', () {
-      final other = LightThemeColors();
-      expect(colors.lerp(other, 0), same(colors));
-    });
-
-    test('lerp returns other when t >= 0.5', () {
-      final other = LightThemeColors();
-      expect(colors.lerp(other, 0.5), same(other));
     });
   });
 }

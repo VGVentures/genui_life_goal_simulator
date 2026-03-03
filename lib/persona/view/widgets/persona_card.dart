@@ -31,7 +31,7 @@ class PersonaCard extends StatelessWidget {
         title: Text(
           scenario.name,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: colorExtension?.primary.shade900,
+            color: colorExtension?.onSurface,
           ),
         ),
         subtitle: Text(
@@ -39,7 +39,7 @@ class PersonaCard extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorExtension?.secondary.shade500,
+            color: colorExtension?.onSurfaceVariant,
           ),
         ),
         trailing: const Icon(Icons.chevron_right),

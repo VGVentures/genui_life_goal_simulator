@@ -14,12 +14,14 @@ dependencies:
     path: packages/feature_flags_repository
   firebase_ai: ^3.8.0
   firebase_analytics: ^12.1.2
+  firebase_app_check: ^0.4.1+4
   firebase_core: ^4.4.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
+  flutter_svg: ^2.2.3
   genui: ^0.7.0
   genui_firebase_ai: ^0.7.0
   intl: ^0.20.2
@@ -56,6 +58,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/intro/
     - assets/images/onboarding/
   fonts:
     - family: Poppins

@@ -58,7 +58,7 @@ class _UserBubble extends StatelessWidget {
         child: Text(
           text,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorExtension?.secondary.shade50,
+            color: colorExtension?.onPrimary,
           ),
         ),
       ),
@@ -91,7 +91,7 @@ class _AssistantTextBubble extends StatelessWidget {
           maxWidth: MediaQuery.sizeOf(context).width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: colorExtension?.secondary.shade500,
+          color: colorExtension?.surfaceContainer,
           borderRadius: BorderRadius.circular(Spacing.md),
         ),
         child: Text(text, style: theme.textTheme.bodyMedium),
