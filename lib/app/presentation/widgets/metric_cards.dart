@@ -135,12 +135,12 @@ class _MetricCardContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-        border: isSelected
-            ? Border.all(
-                color: colors?.primary ?? _MetricCardColors.selectedBorder,
-                width: _Dimensions.selectedBorderWidth,
-              )
-            : null,
+        border: Border.all(
+          color: isSelected
+              ? (colors?.primary ?? _MetricCardColors.selectedBorder)
+              : Colors.transparent,
+          width: _Dimensions.selectedBorderWidth,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +268,8 @@ class _MetricSubtitle extends StatelessWidget {
 ///
 /// - **Desktop** (screen width ≥ 600 px): cards in a single horizontal row,
 ///   each taking equal width via [Expanded].
-/// - **Mobile** (screen width < 600 px): cards in a 2-column grid.
+/// - **Mobile** (screen width < 600 px): cards stacked vertically, each
+///   stretching to full width.
 class MetricCardsLayout extends StatelessWidget {
   /// Creates a [MetricCardsLayout].
   const MetricCardsLayout({required this.cards, super.key});
@@ -311,27 +312,23 @@ class _MobileMetricCardsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: Spacing.md,
-        mainAxisSpacing: Spacing.md,
-        mainAxisExtent: _Dimensions.mobileCardHeight,
-      ),
-      itemCount: cards.length,
-      itemBuilder: (context, index) => cards[index],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          cards[i],
+          if (i < cards.length - 1) const SizedBox(height: Spacing.md),
+        ],
+      ],
     );
   }
 }
 
 abstract final class _Dimensions {
   static const double borderRadius = 8;
-  static const double selectedBorderWidth = 2;
+  static const double selectedBorderWidth = 1.5;
   static const double deltaSpacing = 4;
   static const double subtitleTopSpacing = 2;
-  static const double mobileCardHeight = 132;
 }
 
 abstract final class _MetricCardColors {
