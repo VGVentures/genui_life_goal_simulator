@@ -1,13 +1,15 @@
-import 'package:finance_app/app/presentation/filter_chip_palette.dart';
+import 'package:finance_app/app/presentation/app_colors.dart';
 import 'package:finance_app/app/presentation/widgets/category_filter_chip.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  final colors = LightThemeColors();
+
   Future<void> pump(
     WidgetTester tester, {
-    FilterChipColor color = FilterChipColor.grey,
+    FilterChipColor color = FilterChipColor.pink,
     bool? isSelected,
     bool isEnabled = true,
     VoidCallback? onTap,
@@ -15,6 +17,9 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(
+          extensions: [colors],
+        ),
         home: Scaffold(
           body: CategoryFilterChip(
             color: color,
@@ -48,51 +53,25 @@ void main() {
       expect(find.text('Category 1'), findsOneWidget);
     });
 
-    group('default state (isSelected: null)', () {
-      testWidgets('shows white background', (tester) async {
-        await pump(tester);
-        expect(getDecoration(tester).color, equals(Colors.white));
-      });
-
-      testWidgets('shows base color border', (tester) async {
-        await pump(tester, color: FilterChipColor.pink);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
-        final border = getDecoration(tester).border! as Border;
-        expect(border.top.color, equals(base));
-      });
-
-      testWidgets('shows dark text', (tester) async {
-        await pump(tester);
-        expect(
-          getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFF5D5F5F)),
-        );
-      });
-    });
-
     group('unselected state (isSelected: false)', () {
-      testWidgets('shows 15% tint background', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: false);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
-        expect(
-          getDecoration(tester).color,
-          equals(base.withValues(alpha: 0.15)),
-        );
+      testWidgets('shows white background when not hovered', (tester) async {
+        await pump(tester, isSelected: false);
+        expect(getDecoration(tester).color, equals(colors.surfaceVariant));
       });
 
       testWidgets('shows 1px solid color border', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: false);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
+        await pump(tester, isSelected: false);
+        final base = colors.pinkColor;
         final border = getDecoration(tester).border! as Border;
         expect(border.top.color, equals(base));
         expect(border.top.width, equals(1.0));
       });
 
       testWidgets('shows dark text', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: false);
+        await pump(tester, isSelected: false);
         expect(
           getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFF5D5F5F)),
+          equals(colors.onSurfaceVariant),
         );
       });
     });
@@ -101,23 +80,23 @@ void main() {
       testWidgets('shows solid base color background with no border', (
         tester,
       ) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: true);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
+        await pump(tester, isSelected: true);
+        final base = colors.pinkColor;
         final decoration = getDecoration(tester);
         expect(decoration.color, equals(base));
         expect(decoration.border, isNull);
       });
 
       testWidgets('shows white text for standard colors', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: true);
-        expect(getTextColor(tester, 'Category 1'), equals(Colors.white));
+        await pump(tester, isSelected: true);
+        expect(getTextColor(tester, 'Category 1'), equals(colors.onPrimary));
       });
 
       testWidgets('shows dark text for aqua variant', (tester) async {
         await pump(tester, color: FilterChipColor.aqua, isSelected: true);
         expect(
           getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFF5D5F5F)),
+          equals(colors.onSurfaceVariant),
         );
       });
 
@@ -125,7 +104,7 @@ void main() {
         await pump(tester, color: FilterChipColor.lightOlive, isSelected: true);
         expect(
           getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFF5D5F5F)),
+          equals(colors.onSurfaceVariant),
         );
       });
     });
@@ -133,20 +112,20 @@ void main() {
     group('disabled unselected state', () {
       testWidgets('shows grey background', (tester) async {
         await pump(tester, isSelected: false, isEnabled: false);
-        expect(getDecoration(tester).color, equals(const Color(0xFFF0F1F1)));
+        expect(getDecoration(tester).color, equals(colors.surfaceContainer));
       });
 
       testWidgets('shows grey border', (tester) async {
         await pump(tester, isSelected: false, isEnabled: false);
         final border = getDecoration(tester).border! as Border;
-        expect(border.top.color, equals(const Color(0xFFE2E2E2)));
+        expect(border.top.color, equals(colors.outlineVariant));
       });
 
       testWidgets('shows muted text', (tester) async {
         await pump(tester, isSelected: false, isEnabled: false);
         expect(
           getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFFAAABAB)),
+          equals(colors.onSurfaceDisabled),
         );
       });
 
@@ -164,7 +143,7 @@ void main() {
       ) async {
         await pump(tester, isSelected: true, isEnabled: false);
         final decoration = getDecoration(tester);
-        expect(decoration.color, equals(const Color(0xFFC6C6C7)));
+        expect(decoration.color, equals(colors.surfaceContainerHigh));
         expect(decoration.border, isNull);
       });
 
@@ -172,7 +151,7 @@ void main() {
         await pump(tester, isSelected: true, isEnabled: false);
         expect(
           getTextColor(tester, 'Category 1'),
-          equals(const Color(0xFFAAABAB)),
+          equals(colors.onSurfaceDisabled),
         );
       });
     });
@@ -185,9 +164,9 @@ void main() {
         expect(tapped, isTrue);
       });
 
-      testWidgets('shows 20% tint on hover', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: false);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
+      testWidgets('shows 15% tint on hover when unselected', (tester) async {
+        await pump(tester, isSelected: false);
+        final base = colors.pinkColor;
 
         final gesture = await tester.createGesture(
           kind: PointerDeviceKind.mouse,
@@ -201,13 +180,14 @@ void main() {
 
         expect(
           getDecoration(tester).color,
-          equals(base.withValues(alpha: 0.20)),
+          equals(base.withValues(alpha: 0.15)),
         );
       });
 
-      testWidgets('reverts to 15% tint when mouse exits', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: false);
-        final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
+      testWidgets('reverts to white background when mouse exits', (
+        tester,
+      ) async {
+        await pump(tester, isSelected: false);
 
         final gesture = await tester.createGesture(
           kind: PointerDeviceKind.mouse,
@@ -223,7 +203,7 @@ void main() {
 
         expect(
           getDecoration(tester).color,
-          equals(base.withValues(alpha: 0.15)),
+          equals(colors.surfaceVariant),
         );
       });
     });
@@ -239,18 +219,22 @@ void main() {
     });
 
     group('color variants sampling', () {
-      for (final color in [
-        FilterChipColor.grey,
-        FilterChipColor.mustard,
-        FilterChipColor.deepRed,
-        FilterChipColor.lightBlue,
-        FilterChipColor.emerald,
-      ]) {
-        testWidgets('$color selected shows palette base color', (tester) async {
-          await pump(tester, color: color, isSelected: true);
+      final colorToAppColor = {
+        FilterChipColor.pink: colors.pinkColor,
+        FilterChipColor.mustard: colors.mustardColor,
+        FilterChipColor.deepRed: colors.deepRedColor,
+        FilterChipColor.lightBlue: colors.lightBlueColor,
+        FilterChipColor.emerald: colors.emeraldColor,
+      };
+
+      for (final entry in colorToAppColor.entries) {
+        testWidgets('${entry.key} selected shows correct color', (
+          tester,
+        ) async {
+          await pump(tester, color: entry.key, isSelected: true);
           expect(
             getDecoration(tester).color,
-            equals(FilterChipPalette.baseColors[color]),
+            equals(entry.value),
           );
         });
       }

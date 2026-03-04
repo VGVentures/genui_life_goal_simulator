@@ -1,5 +1,6 @@
+import 'package:finance_app/app/presentation/app_colors.dart';
+import 'package:finance_app/app/presentation/app_text_styles.dart';
 import 'package:finance_app/app/presentation/filter_chip_color.dart';
-import 'package:finance_app/app/presentation/filter_chip_palette.dart';
 import 'package:flutter/material.dart';
 
 export 'package:finance_app/app/presentation/filter_chip_color.dart';
@@ -31,7 +32,8 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = FilterChipPalette.baseColors[widget.color]!;
+    final colors = Theme.of(context).extension<AppColors>()!;
+    final baseColor = widget.color.toColor(colors);
     final isDisabled = !widget.isEnabled;
 
     final Color backgroundColor;
@@ -40,40 +42,36 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
 
     if (isDisabled) {
       if (widget.isSelected == true) {
-        backgroundColor = _Colors.disabledSelectedBackground;
+        backgroundColor = colors.surfaceContainerHigh;
         border = null;
       } else {
-        backgroundColor = _Colors.disabledUnselectedBackground;
+        backgroundColor = colors.surfaceContainer;
         border = Border.all(
-          color: _Colors.disabledBorder,
+          color: colors.outlineVariant,
         );
       }
-      textColor = _Colors.disabledText;
-    } else if (widget.isSelected == null) {
-      backgroundColor = _Colors.defaultBackground;
-      border = Border.all(
-        color: baseColor,
-      );
-      textColor = _Colors.darkText;
+      textColor = colors.onSurfaceDisabled;
     } else if (widget.isSelected == true) {
       backgroundColor = baseColor;
       border = null;
       textColor = widget.color.useDarkTextWhenSelected
-          ? _Colors.darkText
-          : Colors.white;
+          ? colors.onSurfaceVariant
+          : colors.onPrimary;
     } else {
-      final opacity = _isHovered
-          ? _Dimensions.hoveredOpacity
-          : _Dimensions.defaultOpacity;
-      backgroundColor = baseColor.withValues(alpha: opacity);
+      if (_isHovered) {
+        backgroundColor = baseColor.withValues(
+          alpha: _Dimensions.hoveredOpacity,
+        );
+      } else {
+        backgroundColor = colors.surfaceVariant;
+      }
       border = Border.all(color: baseColor);
-      textColor = _Colors.darkText;
+      textColor = colors.onSurfaceVariant;
     }
 
     return MouseRegion(
       onEnter: isDisabled ? null : (_) => setState(() => _isHovered = true),
       onExit: isDisabled ? null : (_) => setState(() => _isHovered = false),
-      cursor: isDisabled ? SystemMouseCursors.basic : SystemMouseCursors.click,
       child: GestureDetector(
         onTap: isDisabled ? null : widget.onTap,
         child: Container(
@@ -89,14 +87,9 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
           ),
           child: Text(
             widget.label,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
-              fontSize: _Dimensions.fontSize,
-              height: _Dimensions.lineHeight / _Dimensions.fontSize,
-              letterSpacing: _Dimensions.letterSpacing,
-              leadingDistribution: TextLeadingDistribution.even,
+            style: AppTextStyles.labelLargeDesktop.copyWith(
               color: textColor,
+              leadingDistribution: TextLeadingDistribution.even,
             ),
           ),
         ),
@@ -105,23 +98,10 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
   }
 }
 
-abstract final class _Colors {
-  static const Color darkText = Color(0xFF5D5F5F);
-  static const Color disabledText = Color(0xFFAAABAB);
-  static const Color defaultBackground = Colors.white;
-  static const Color disabledUnselectedBackground = Color(0xFFF0F1F1);
-  static const Color disabledBorder = Color(0xFFE2E2E2);
-  static const Color disabledSelectedBackground = Color(0xFFC6C6C7);
-}
-
 abstract final class _Dimensions {
   static const double minWidth = 116;
   static const double borderRadius = 32;
   static const double horizontalPadding = 16;
   static const double verticalPadding = 8;
-  static const double fontSize = 16;
-  static const double lineHeight = 20;
-  static const double letterSpacing = -0.15;
-  static const double defaultOpacity = 0.15;
-  static const double hoveredOpacity = 0.20;
+  static const double hoveredOpacity = 0.15;
 }

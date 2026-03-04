@@ -1,5 +1,7 @@
+import 'package:finance_app/app/presentation/app_colors.dart';
+import 'package:flutter/material.dart';
+
 enum FilterChipColor {
-  grey,
   pink,
   mustard,
   orange,
@@ -18,4 +20,18 @@ extension FilterChipColorX on FilterChipColor {
   /// when selected.
   bool get useDarkTextWhenSelected =>
       this == FilterChipColor.aqua || this == FilterChipColor.lightOlive;
+
+  Color toColor(AppColors colors) => switch (this) {
+    FilterChipColor.pink => colors.pinkColor,
+    FilterChipColor.mustard => colors.mustardColor,
+    FilterChipColor.orange => colors.orangeColor,
+    FilterChipColor.brightOrange => colors.brightOrangeColor,
+    FilterChipColor.deepRed => colors.deepRedColor,
+    FilterChipColor.plum => colors.plumColor,
+    FilterChipColor.aqua => colors.aquaColor,
+    FilterChipColor.lightBlue => colors.lightBlueColor,
+    FilterChipColor.lightOlive => colors.lightOliveColor,
+    FilterChipColor.darkOlive => colors.darkOliveColor,
+    FilterChipColor.emerald => colors.emeraldColor,
+  };
 }
