@@ -1,4 +1,3 @@
-import 'package:finance_app/dev_menu/view/action_item_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
@@ -22,22 +21,6 @@ class DesignSystemCatalogPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Design System')),
       body: ListView(
         children: [
-          ListTile(
-            title: const Text(
-              'ActionItem',
-              style: TextStyle(color: Colors.black),
-            ),
-            subtitle: const Text(
-              'Task/recommendation row with primary, secondary, and no-button variants',
-              style: TextStyle(color: Colors.black),
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const ActionItemCatalogPage(),
-              ),
-            ),
-          ),
           ListTile(
             title: const Text(
               'AiButton',
