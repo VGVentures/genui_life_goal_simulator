@@ -16,7 +16,6 @@ class HorizontalBarCatalogPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(Spacing.md),
         children: const [
-          _SectionLabel('Negative variant'),
           SizedBox(height: Spacing.xs),
           HorizontalBar(
             category: 'Dining',
@@ -26,7 +25,6 @@ class HorizontalBarCatalogPage extends StatelessWidget {
             comparisonValue: '-5%',
           ),
           SizedBox(height: Spacing.md),
-          _SectionLabel('Positive variant'),
           SizedBox(height: Spacing.xs),
           HorizontalBar(
             category: 'Dining',
@@ -36,22 +34,6 @@ class HorizontalBarCatalogPage extends StatelessWidget {
             comparisonValue: '+10%',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-        color: Colors.black54,
       ),
     );
   }

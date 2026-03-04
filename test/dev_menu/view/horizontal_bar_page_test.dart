@@ -19,13 +19,6 @@ void main() {
       expect(find.text('HorizontalBar'), findsOneWidget);
     });
 
-    testWidgets('renders negative and positive section labels', (tester) async {
-      await _pump(tester);
-
-      expect(find.text('Negative variant'), findsOneWidget);
-      expect(find.text('Positive variant'), findsOneWidget);
-    });
-
     testWidgets('renders two HorizontalBar widgets', (tester) async {
       await _pump(tester);
 
