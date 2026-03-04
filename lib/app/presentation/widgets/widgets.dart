@@ -1,4 +1,5 @@
 export 'ai_button.dart';
+export 'header_selector.dart';
 export 'horizontal_bar.dart';
 export 'metric_cards.dart';
 export 'radio_card.dart';
