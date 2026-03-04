@@ -313,12 +313,9 @@ class _MobileMetricCardsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var i = 0; i < cards.length; i++) ...[
-          cards[i],
-          if (i < cards.length - 1) const SizedBox(height: Spacing.md),
-        ],
-      ],
+      children:
+          cards.expand((c) => [c, const SizedBox(height: Spacing.md)]).toList()
+            ..removeLast(),
     );
   }
 }
