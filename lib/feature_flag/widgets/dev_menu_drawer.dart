@@ -1,5 +1,5 @@
 import 'package:feature_flags_repository/feature_flags_repository.dart';
-import 'package:finance_app/dev_menu/view/design_system_catalog_page.dart';
+import 'package:finance_app/dev_menu/dev_menu.dart';
 import 'package:finance_app/feature_flag/bloc/feature_flags_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
