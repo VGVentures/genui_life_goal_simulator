@@ -52,8 +52,9 @@ void main() {
     });
 
     group('applies', () {
-      testWidgets('primary background and white text to selected chip',
-          (tester) async {
+      testWidgets('primary background and white text to selected chip', (
+        tester,
+      ) async {
         await _pumpSelector(
           tester,
           HeaderSelector(
@@ -79,31 +80,33 @@ void main() {
       });
 
       testWidgets(
-          'surface background and outlineVariant border to default chip',
-          (tester) async {
-        await _pumpSelector(
-          tester,
-          HeaderSelector(
-            options: options,
-            selectedIndex: 0,
-            onChanged: (_) {},
-          ),
-        );
+        'surface background and outlineVariant border to default chip',
+        (tester) async {
+          await _pumpSelector(
+            tester,
+            HeaderSelector(
+              options: options,
+              selectedIndex: 0,
+              onChanged: (_) {},
+            ),
+          );
 
-        final colors = LightThemeColors();
+          final colors = LightThemeColors();
 
-        // The second Ink widget corresponds to the unselected '3M' chip.
-        final inks = tester.widgetList<Ink>(find.byType(Ink)).toList();
-        final decoration = inks[1].decoration! as BoxDecoration;
-        expect(decoration.color, colors.surface);
-        expect(
-          (decoration.border! as Border).top.color,
-          colors.outlineVariant,
-        );
-      });
+          // The second Ink widget corresponds to the unselected '3M' chip.
+          final inks = tester.widgetList<Ink>(find.byType(Ink)).toList();
+          final decoration = inks[1].decoration! as BoxDecoration;
+          expect(decoration.color, colors.surface);
+          expect(
+            (decoration.border! as Border).top.color,
+            colors.outlineVariant,
+          );
+        },
+      );
 
-      testWidgets('onSurfaceVariant text color to unselected chip',
-          (tester) async {
+      testWidgets('onSurfaceVariant text color to unselected chip', (
+        tester,
+      ) async {
         await _pumpSelector(
           tester,
           HeaderSelector(
@@ -136,8 +139,9 @@ void main() {
     });
 
     group('interaction', () {
-      testWidgets('calls onChanged with correct index when chip is tapped',
-          (tester) async {
+      testWidgets('calls onChanged with correct index when chip is tapped', (
+        tester,
+      ) async {
         var tappedIndex = -1;
 
         await _pumpSelector(
@@ -153,8 +157,9 @@ void main() {
         expect(tappedIndex, 1);
       });
 
-      testWidgets('calls onChanged with index 0 when first chip is tapped',
-          (tester) async {
+      testWidgets('calls onChanged with index 0 when first chip is tapped', (
+        tester,
+      ) async {
         var tappedIndex = -1;
 
         await _pumpSelector(
@@ -170,8 +175,9 @@ void main() {
         expect(tappedIndex, 0);
       });
 
-      testWidgets('calls onChanged with last index when last chip is tapped',
-          (tester) async {
+      testWidgets('calls onChanged with last index when last chip is tapped', (
+        tester,
+      ) async {
         var tappedIndex = -1;
 
         await _pumpSelector(
@@ -187,8 +193,9 @@ void main() {
         expect(tappedIndex, 2);
       });
 
-      testWidgets('updates selected chip when selectedIndex changes',
-          (tester) async {
+      testWidgets('updates selected chip when selectedIndex changes', (
+        tester,
+      ) async {
         var selectedIndex = 0;
 
         await tester.pumpWidget(

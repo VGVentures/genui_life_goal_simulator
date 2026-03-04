@@ -13,8 +13,7 @@ class HeaderSelectorCatalogPage extends StatefulWidget {
       _HeaderSelectorCatalogPageState();
 }
 
-class _HeaderSelectorCatalogPageState
-    extends State<HeaderSelectorCatalogPage> {
+class _HeaderSelectorCatalogPageState extends State<HeaderSelectorCatalogPage> {
   int _horizontalIndex = 0;
   int _verticalIndex = 2;
 

@@ -78,8 +78,7 @@ class _HeaderSelectorChipState extends State<_HeaderSelectorChip> {
       borderColor = Colors.transparent;
       textColor = colorExtension?.onPrimary ?? Colors.white;
     } else if (_isHovered) {
-      backgroundColor =
-          colorExtension?.primaryContainer ?? _ChipColors.hovered;
+      backgroundColor = colorExtension?.primaryContainer ?? _ChipColors.hovered;
       borderColor = colorExtension?.primary ?? _ChipColors.selected;
       textColor = colorExtension?.onSurfaceVariant ?? _ChipColors.text;
     } else {
