@@ -1,5 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> _pumpCard(WidgetTester tester, TrendType trend) {
@@ -31,7 +32,7 @@ void main() {
         testWidgets('trend line for ${trend.name}', (tester) async {
           await _pumpCard(tester, trend);
 
-          expect(find.byType(Image), findsOneWidget);
+          expect(find.byType(SvgPicture), findsOneWidget);
         });
       }
 
