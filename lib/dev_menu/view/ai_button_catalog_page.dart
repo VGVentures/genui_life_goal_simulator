@@ -13,20 +13,11 @@ class AiButtonCatalogPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('AiButton')),
-      body: ListView(
-        padding: const EdgeInsets.all(Spacing.md),
-        children: [
-          const SizedBox(height: Spacing.xs),
-          AiButton(
-            text: "What's eating my money?",
-            onTap: () {},
-          ),
-          const SizedBox(height: Spacing.md),
-          AiButton(
-            text: 'Suggest a budget',
-            onTap: () {},
-          ),
-        ],
+      body: Center(
+        child: AiButton(
+          text: "What's eating my money?",
+          onTap: () {},
+        ),
       ),
     );
   }

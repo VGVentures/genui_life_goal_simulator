@@ -19,7 +19,7 @@ class AiButton extends StatelessWidget {
     final colorExtension = Theme.of(context).extension<AppColors>();
 
     return Material(
-      type: MaterialType.transparency,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

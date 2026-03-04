@@ -39,7 +39,7 @@ void main() {
       final text = tester.widget<Text>(find.text('Test prompt'));
       expect(text.style?.fontWeight, FontWeight.w500);
       expect(text.style?.fontSize, 16);
-      expect(text.style?.color, const Color(0xFF232326));
+      expect(text.style?.color, const Color(0xFF1A1C1C));
     });
 
     testWidgets('calls onTap callback when tapped', (tester) async {
