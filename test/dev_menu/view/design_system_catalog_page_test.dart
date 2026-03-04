@@ -32,5 +32,22 @@ void main() {
 
       expect(find.byType(MetricCardCatalogPage), findsOneWidget);
     });
+
+    testWidgets('renders EmojiCard list tile', (tester) async {
+      await _pumpPage(tester);
+
+      expect(find.text('EmojiCard'), findsOneWidget);
+    });
+
+    testWidgets('tapping EmojiCard navigates to EmojiCardCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.tap(find.text('EmojiCard'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmojiCardCatalogPage), findsOneWidget);
+    });
   });
 }

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 ///   primary border when [isSelected] is `true`.
 ///
 /// Use [EmojiCardLayout] to display a collection of cards with a responsive
-/// horizontal-row (desktop) or 2-column grid (mobile) arrangement.
+/// horizontal-row (desktop) or 1-column grid (mobile) arrangement.
 class EmojiCard extends StatelessWidget {
   /// Creates an [EmojiCard].
   const EmojiCard({
@@ -22,7 +22,7 @@ class EmojiCard extends StatelessWidget {
     super.key,
   });
 
-  /// The emoji character to display (e.g. '📊').
+  /// The emoji character to display.
   final String emoji;
 
   /// Short label shown below the emoji (e.g. 'Fixed costs').
@@ -31,7 +31,7 @@ class EmojiCard extends StatelessWidget {
   /// Whether this card renders in the selected/active state.
   final bool isSelected;
 
-  /// Optional tap callback. When `null` the card is non-interactive.
+  /// Optional tap callback.
   final VoidCallback? onTap;
 
   @override
@@ -88,9 +88,7 @@ class _EmojiCardContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
         border: Border.all(
           color: borderColor,
-          width: isSelected
-              ? _Dimensions.selectedBorderWidth
-              : _Dimensions.borderWidth,
+          width: _Dimensions.borderWidth,
         ),
       ),
       child: Column(
@@ -146,12 +144,16 @@ class _DesktopEmojiCardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        for (var i = 0; i < cards.length; i++) ...[
-          Expanded(child: cards[i]),
-          if (i < cards.length - 1) const SizedBox(width: Spacing.md),
-        ],
-      ],
+      children:
+          cards
+              .expand(
+                (c) => [
+                  Expanded(child: c),
+                  const SizedBox(width: Spacing.md),
+                ],
+              )
+              .toList()
+            ..removeLast(),
     );
   }
 }
@@ -163,27 +165,19 @@ class _MobileEmojiCardLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: Spacing.md,
-        mainAxisSpacing: Spacing.md,
-        mainAxisExtent: _Dimensions.mobileCardHeight,
-      ),
-      itemCount: cards.length,
-      itemBuilder: (context, index) => cards[index],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children:
+          cards.expand((c) => [c, const SizedBox(height: Spacing.md)]).toList()
+            ..removeLast(),
     );
   }
 }
 
 abstract final class _Dimensions {
   static const double borderRadius = 8;
-  static const double borderWidth = 1;
-  static const double selectedBorderWidth = 2;
+  static const double borderWidth = 2;
   static const double emojiSize = 32;
-  static const double mobileCardHeight = 108;
 }
 
 abstract final class _EmojiCardColors {
