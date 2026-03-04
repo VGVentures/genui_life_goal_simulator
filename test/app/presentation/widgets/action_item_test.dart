@@ -224,8 +224,9 @@ void main() {
       });
     });
 
-    testWidgets('renders without error without AppColors extension',
-        (tester) async {
+    testWidgets('renders without error without AppColors extension', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
