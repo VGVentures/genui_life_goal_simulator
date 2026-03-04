@@ -46,7 +46,10 @@ void main() {
       final decoration = container.decoration! as BoxDecoration;
 
       expect(decoration.color, const Color(0xFFF7F6F7));
-      expect(decoration.border, Border.all(color: Colors.transparent));
+      expect(
+        decoration.border,
+        Border.all(color: Colors.transparent, width: 2),
+      );
     });
 
     testWidgets(
@@ -138,7 +141,7 @@ void main() {
         _buildTestApp(child: EmojiCardLayout(cards: cards)),
       );
 
-      expect(find.byType(GridView), findsOneWidget);
+      expect(find.byType(Row), findsNothing);
       expect(find.byType(EmojiCard), findsNWidgets(4));
     });
 

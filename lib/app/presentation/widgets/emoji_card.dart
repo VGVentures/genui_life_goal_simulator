@@ -128,8 +128,7 @@ class EmojiCardLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return responsiveValue(
-      context,
+    return ResponsiveScaffold(
       mobile: _MobileEmojiCardLayout(cards: cards),
       desktop: _DesktopEmojiCardLayout(cards: cards),
     );
