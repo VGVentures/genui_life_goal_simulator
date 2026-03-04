@@ -1,4 +1,5 @@
 import 'package:feature_flags_repository/feature_flags_repository.dart';
+import 'package:finance_app/dev_menu/dev_menu.dart';
 import 'package:finance_app/feature_flag/bloc/feature_flags_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +55,26 @@ class DevMenuDrawer extends StatelessWidget {
                           _FeatureFlagList(featureFlags: featureFlags),
                       };
                     },
+                  ),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(
+                    Icons.palette_outlined,
+                    color: Colors.black54,
+                  ),
+                  title: const Text(
+                    'Design System',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    color: Colors.black54,
+                  ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const DesignSystemCatalogPage(),
+                    ),
                   ),
                 ),
               ],
