@@ -2,6 +2,7 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
+import 'package:finance_app/simple_chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,12 +47,22 @@ class WantToFocusPage extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Builder(
-          builder: (context) => SizedBox(
+        floatingActionButton: BlocBuilder<WantToFocusCubit, WantToFocusState>(
+          builder: (context, state) => SizedBox(
             width: fabSize,
             height: fabSize,
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => ChatScreen(
+                      profileType: profileType,
+                      customScenario: state.customOption,
+                      selectedOptions: state.selectedOptions,
+                    ),
+                  ),
+                );
+              },
               backgroundColor: Colors.transparent,
               hoverColor: colorExtensions?.secondary.shade200,
               elevation: 0,

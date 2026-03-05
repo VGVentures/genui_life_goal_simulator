@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/feature_flag/feature_flag.dart';
 import 'package:finance_app/intro/intro.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
-import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
 
@@ -46,37 +42,6 @@ class _IntroPage extends StatelessWidget {
       onGetStarted: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(builder: (_) => const PickProfilePage()),
       ),
-    );
-  }
-}
-
-class _HomePage extends StatelessWidget {
-  const _HomePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.homeAppBarTitle),
-        actions: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.bug_report),
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-              );
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          unawaited(Wiredash.of(context).show());
-        },
-        child: const Icon(Icons.feedback),
-      ),
-      endDrawer: const DevMenuDrawer(),
-      body: const PersonaSelectorPage(),
     );
   }
 }

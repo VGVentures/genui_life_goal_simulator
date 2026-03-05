@@ -15,14 +15,13 @@ dependencies:
   firebase_ai: ^3.8.0
   firebase_analytics: ^12.1.2
   firebase_core: ^4.4.0
+  fl_chart: ^1.1.1
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^2.2.3
-  genui: ^0.7.0
-  genui_firebase_ai: ^0.7.0
   intl: ^0.20.2
   json_schema_builder: ^0.1.3
   provider: ^6.1.2
@@ -34,6 +33,27 @@ dependencies:
     git:
       url: https://github.com/brianegan/wiredash-sdk.git
       ref: dc5595a500b7e8419b2efe4889b5fc745582b493
+  dartantic_ai:
+    git:
+      url: https://github.com/brianegan/dartantic.git
+      ref: firebase-ai-provider-dartantic-3.x
+      path: packages/dartantic_ai
+  dartantic_firebase_ai:
+    git:
+      url: https://github.com/brianegan/dartantic.git
+      ref: firebase-ai-provider-dartantic-3.x
+      path: packages/dartantic_firebase_ai
+  genui:
+    git:
+      url: https://github.com/flutter/genui.git
+      ref: main
+      path: packages/genui
+dependency_overrides:
+  genai_primitives:
+    git:
+      url: https://github.com/flutter/genui.git
+      ref: main
+      path: packages/genai_primitives
 
 dev_dependencies:
   bloc_lint: ^0.3.7
