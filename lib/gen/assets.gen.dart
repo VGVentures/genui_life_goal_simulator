@@ -20,6 +20,10 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/onboarding
   $AssetsImagesOnboardingGen get onboarding =>
       const $AssetsImagesOnboardingGen();
+
+  /// Directory path: assets/images/sparkline_cards
+  $AssetsImagesSparklineCardsGen get sparklineCards =>
+      const $AssetsImagesSparklineCardsGen();
 }
 
 class $AssetsImagesIntroGen {
@@ -101,6 +105,25 @@ class $AssetsImagesOnboardingGen {
     editPencil,
     rightArrow,
   ];
+}
+
+class $AssetsImagesSparklineCardsGen {
+  const $AssetsImagesSparklineCardsGen();
+
+  /// File path: assets/images/sparkline_cards/negative_line.png
+  AssetGenImage get negativeLine =>
+      const AssetGenImage('assets/images/sparkline_cards/negative_line.png');
+
+  /// File path: assets/images/sparkline_cards/positive_line.png
+  AssetGenImage get positiveLine =>
+      const AssetGenImage('assets/images/sparkline_cards/positive_line.png');
+
+  /// File path: assets/images/sparkline_cards/stable_line.png
+  AssetGenImage get stableLine =>
+      const AssetGenImage('assets/images/sparkline_cards/stable_line.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [negativeLine, positiveLine, stableLine];
 }
 
 class Assets {

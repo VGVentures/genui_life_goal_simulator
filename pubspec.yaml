@@ -46,8 +46,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.4.0
   mocktail: ^1.0.4
-  very_good_analysis: ^10.2.0
-  very_good_cli: ^1.0.0
+  very_good_analysis: ^10.1.0
 
 flutter_gen:
   output: lib/gen/
@@ -60,6 +59,7 @@ flutter:
     - assets/images/
     - assets/images/intro/
     - assets/images/onboarding/
+    - assets/images/sparkline_cards/
   fonts:
     - family: Poppins
       fonts:
