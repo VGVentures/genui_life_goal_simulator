@@ -16,5 +16,6 @@ export 'radio_card.dart';
 export 'ranked_table.dart';
 export 'responsive_scaffold.dart';
 export 'section_header.dart';
+export 'slider.dart';
 export 'sparkline_card.dart';
 export 'transaction_list.dart';
