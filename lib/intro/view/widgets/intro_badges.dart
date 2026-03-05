@@ -3,7 +3,6 @@ import 'dart:math' show pi;
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 /// {@template intro_badges}
 /// The "2026 ✦ Gen UI" overlapping badges shown on the intro screen.
@@ -71,8 +70,7 @@ class IntroBadges extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(
-            Assets.images.intro.softstargradient,
+          Assets.images.intro.softstargradient.svg(
             width: 22,
             height: 22,
           ),

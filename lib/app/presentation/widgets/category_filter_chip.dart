@@ -41,7 +41,7 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
     final BoxBorder? border;
 
     if (isDisabled) {
-      if (widget.isSelected == true) {
+      if (widget.isSelected ?? false) {
         backgroundColor = colors.surfaceContainerHigh;
         border = null;
       } else {
@@ -51,7 +51,7 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
         );
       }
       textColor = colors.onSurfaceDisabled;
-    } else if (widget.isSelected == true) {
+    } else if (widget.isSelected ?? false) {
       backgroundColor = baseColor;
       border = null;
       textColor = widget.color.useDarkTextWhenSelected
