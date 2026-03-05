@@ -1,5 +1,6 @@
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/line_chart_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const HorizontalBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'LineChart',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Line chart with tooltip on data point tap',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const LineChartCatalogPage(),
               ),
             ),
           ),
