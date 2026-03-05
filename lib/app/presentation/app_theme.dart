@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/app/presentation/radio_theme.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppThemeMode {
@@ -70,5 +71,6 @@ class AppTheme {
             .copyWith(
               backgroundColor: colorScheme.primary,
             ),
+        radioTheme: radioThemeData,
       );
 }
