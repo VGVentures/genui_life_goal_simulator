@@ -13,7 +13,7 @@ dependencies:
   feature_flags_repository:
     path: packages/feature_flags_repository
   firebase_ai: ^3.9.0
-  firebase_analytics: ^12.1.2
+  firebase_analytics: ^12.1.3
   firebase_app_check: ^0.4.1+4
   firebase_core: ^4.5.0
   flutter:
