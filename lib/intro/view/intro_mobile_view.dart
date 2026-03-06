@@ -2,7 +2,6 @@ import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/intro/view/widgets/widgets.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 /// {@template intro_mobile_view}
 /// Mobile layout for the intro screen.
@@ -40,16 +39,14 @@ class IntroMobileView extends StatelessWidget {
             top: MediaQuery.paddingOf(context).top,
             left: 0,
             right: 0,
-            child: SvgPicture.asset(
-              Assets.images.intro.waveline3,
+            child: Assets.images.intro.waveline3.svg(
               fit: BoxFit.fitWidth,
             ),
           ),
           Positioned(
             left: 18,
             top: 90,
-            child: SvgPicture.asset(
-              Assets.images.intro.star8,
+            child: Assets.images.intro.star8.svg(
               width: 18,
               height: 18,
             ),
@@ -57,8 +54,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             left: 25,
             top: 250,
-            child: SvgPicture.asset(
-              Assets.images.intro.star8,
+            child: Assets.images.intro.star8.svg(
               width: 15,
               height: 15,
             ),
@@ -66,8 +62,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             left: 100,
             top: 380,
-            child: SvgPicture.asset(
-              Assets.images.intro.circles,
+            child: Assets.images.intro.circles.svg(
               width: 10,
               height: 10,
             ),
@@ -75,8 +70,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             right: 50,
             top: 100,
-            child: SvgPicture.asset(
-              Assets.images.intro.star8,
+            child: Assets.images.intro.star8.svg(
               width: 16,
               height: 16,
             ),
@@ -84,8 +78,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             left: 160,
             top: 210,
-            child: SvgPicture.asset(
-              Assets.images.intro.circles,
+            child: Assets.images.intro.circles.svg(
               width: 10,
               height: 10,
             ),
@@ -93,8 +86,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             right: 30,
             top: 350,
-            child: SvgPicture.asset(
-              Assets.images.intro.softstar,
+            child: Assets.images.intro.softstar.svg(
               width: 25,
               height: 25,
             ),
@@ -102,8 +94,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             right: 50,
             top: 200,
-            child: SvgPicture.asset(
-              Assets.images.intro.circles,
+            child: Assets.images.intro.circles.svg(
               width: 10,
               height: 10,
             ),
@@ -111,8 +102,7 @@ class IntroMobileView extends StatelessWidget {
           Positioned(
             right: 120,
             top: 350,
-            child: SvgPicture.asset(
-              Assets.images.intro.star7,
+            child: Assets.images.intro.star7.svg(
               width: 12,
               height: 12,
             ),

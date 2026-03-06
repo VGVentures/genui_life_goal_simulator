@@ -17,6 +17,7 @@ abstract class AppColors extends ThemeExtension<AppColors> {
   Color get primaryContainer;
   Color get onPrimaryContainer;
   Color get primarySurface;
+  Color get primaryStrong;
 
   /// Surface
   Color get surface;
@@ -125,6 +126,8 @@ class LightThemeColors extends AppColors {
   Color get onPrimaryContainer => const Color(0xFF020F30);
   @override
   Color get primarySurface => const Color(0xFFE2E8F9);
+  @override
+  Color get primaryStrong => const Color(0xFF2C64F1);
 
   /// Surface
   @override
