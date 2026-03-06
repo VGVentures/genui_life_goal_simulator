@@ -41,7 +41,7 @@ dev_dependencies:
   bloc_test: ^10.0.0
   bloc_tools: ^0.1.0-dev.20
   build_runner: ^2.4.0
-  flutter_gen_runner: ^5.10.0
+  flutter_gen_runner: ^5.13.0
   flutter_test:
     sdk: flutter
   mockito: ^5.4.0
