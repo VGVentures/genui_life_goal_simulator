@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation/app_colors.dart';
+import 'package:finance_app/dev_menu/view/action_item_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/category_filter_chip_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
@@ -30,6 +31,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Design System')),
       body: ListView(
         children: [
+          ListTile(
+            title: const Text(
+              'ActionItem',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Task/recommendation row with primary, secondary, and no-button variants',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ActionItemCatalogPage(),
+              ),
+            ),
+          ),
           ListTile(
             title: const Text(
               'AiButton',
@@ -98,20 +115,6 @@ class DesignSystemCatalogPage extends StatelessWidget {
             title: Text(
               'HorizontalBar',
               style: textTheme.titleSmall,
-            ),
-            subtitle: Text(
-              'Horizontal bar chart for comparisons',
-              style: textTheme.bodyMedium,
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const HorizontalBarCatalogPage(),
-              ),
-            ),
-          ),
-          ListTile(
-            title: const Text(
               'HeaderSelector',
               style: TextStyle(color: Colors.black),
             ),

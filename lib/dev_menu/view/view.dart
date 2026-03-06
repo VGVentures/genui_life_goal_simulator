@@ -1,3 +1,4 @@
+export 'action_item_catalog_page.dart';
 export 'ai_button_catalog_page.dart';
 export 'category_filter_chip_catalog_page.dart';
 export 'design_system_catalog_page.dart';
