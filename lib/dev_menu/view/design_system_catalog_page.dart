@@ -112,10 +112,8 @@ class DesignSystemCatalogPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text(
+            title: const Text(
               'HorizontalBar',
-              style: textTheme.titleSmall,
-              'HeaderSelector',
               style: TextStyle(color: Colors.black),
             ),
             subtitle: const Text(
