@@ -116,7 +116,6 @@ void main() {
       tester,
     ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      addTearDown(() => debugDefaultTargetPlatformOverride = null);
 
       await tester.pumpApp(
         const Scaffold(
@@ -129,6 +128,8 @@ void main() {
       await tester.tapAt(chartPos + const Offset(80, 100));
       await tester.pumpAndSettle();
 
+      debugDefaultTargetPlatformOverride = null;
+
       expect(
         find.textContaining(r'Spend: $4200', findRichText: true),
         findsOneWidget,
@@ -137,7 +138,6 @@ void main() {
 
     testWidgets('tapping same point again dismisses tooltip', (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      addTearDown(() => debugDefaultTargetPlatformOverride = null);
 
       await tester.pumpApp(
         const Scaffold(
@@ -155,6 +155,9 @@ void main() {
 
       await tester.tapAt(chartPos + const Offset(80, 100));
       await tester.pumpAndSettle();
+
+      debugDefaultTargetPlatformOverride = null;
+
       expect(
         find.textContaining(r'Spend: $4200', findRichText: true),
         findsNothing,
