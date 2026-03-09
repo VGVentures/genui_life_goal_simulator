@@ -15,7 +15,7 @@ class KickOffPage extends StatelessWidget {
 
   void _onNextPressed(BuildContext context) {
     unawaited(
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
           builder: (_) => const PickProfilePage(),
         ),

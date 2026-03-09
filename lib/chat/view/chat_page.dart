@@ -1,19 +1,35 @@
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
-import 'package:finance_app/financials/mock/mock_scenario.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({required this.scenario, this.chatBloc, super.key});
+  const ChatPage({
+    required this.profileType,
+    this.focusOptions = const {},
+    this.customOption = '',
+    this.chatBloc,
+    super.key,
+  });
 
-  final MockScenario scenario;
+  final ProfileType profileType;
+  final Set<FocusOption> focusOptions;
+  final String customOption;
   final ChatBloc? chatBloc;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => (chatBloc ?? ChatBloc())..add(ChatStarted(scenario)),
+      create: (_) => (chatBloc ?? ChatBloc())
+        ..add(
+          ChatStarted(
+            profileType: profileType,
+            focusOptions: focusOptions,
+            customOption: customOption,
+          ),
+        ),
       child: const ChatView(),
     );
   }

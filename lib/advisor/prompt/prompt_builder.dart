@@ -1,107 +1,66 @@
-import 'package:finance_app/financials/mock/mock_scenario.dart';
-import 'package:finance_app/financials/models/models.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 
 /// Composes the full system prompt for the financial advisor LLM.
 class PromptBuilder {
   const PromptBuilder();
 
-  /// Builds a prompt from the given [scenario].
-  static String build(MockScenario scenario) {
-    final accounts = _formatAccounts(scenario.accounts);
-    final transactions = _formatTransactions(
-      scenario.transactions,
-      scenario.accounts,
-    );
+  /// Builds a prompt from the user's onboarding selections.
+  static String build({
+    required ProfileType profileType,
+    Set<FocusOption> focusOptions = const {},
+    String customOption = '',
+  }) {
+    final focusAreas = [
+      for (final option in focusOptions) _focusLabel(option),
+      if (customOption.isNotEmpty) customOption,
+    ];
+
+    final focusSection = focusAreas.isEmpty
+        ? 'No specific focus areas selected.'
+        : focusAreas.map((a) => '- $a').join('\n');
 
     return '''
-You are a knowledgeable, empathetic financial advisor analyzing a specific person's financial data and providing personalized advice.
+You are a knowledgeable, empathetic financial advisor providing personalized advice.
 
 RULES:
-1. Reference specific accounts, transactions, and patterns when giving advice.
-2. Be encouraging but honest about financial concerns.
-3. You MUST use the UserSummaryCard widget in your FIRST response to show a financial overview.
-4. Tailor your tone to the person's situation.
-5. All monetary values are in USD.
-6. Today is February 12, 2026. Transactions marked pending are not yet finalized.
-7. Positive amounts = money leaving the account (spending); negative = money entering (income, refunds).
+1. Be encouraging but honest about financial concerns.
+2. Tailor your tone to the person's experience level.
+3. All monetary values are in USD.
 
-PERSONA:
-Name: ${scenario.name}
-Description: ${scenario.description}
+USER PROFILE:
+Experience level: ${_profileLabel(profileType)}
 
-ACCOUNTS:
-$accounts
-
-TRANSACTIONS (Dec 1, 2025 - Feb 5, 2026):
-$transactions
+FOCUS AREAS:
+$focusSection
 
 WIDGET INSTRUCTIONS:
-When populating the UserSummaryCard, calculate the following from the data above:
-- totalAssets: Sum of current balances for depository + investment accounts.
-- totalDebt: Sum of current balances for credit + loan accounts (these represent amounts owed).
+When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
+- totalAssets: Total value of depository + investment accounts.
+- totalDebt: Total value of credit + loan balances owed.
 - netWorth: totalAssets minus totalDebt.
-- monthlyIncome: Sum of all negative-amount (income) transactions in January 2026.
-- monthlyExpenses: Sum of all positive-amount non-transfer transactions in January 2026.
-- financialHealthScore: Your overall assessment based on all the data. Must be one of: Excellent, Good, Fair, Poor, Critical.
-- recommendation: A concise, specific, actionable recommendation referencing their actual data.
+- monthlyIncome: Estimated monthly income.
+- monthlyExpenses: Estimated monthly expenses.
+- financialHealthScore: Your overall assessment. Must be one of: Excellent, Good, Fair, Poor, Critical.
+- recommendation: A concise, specific, actionable recommendation based on their profile and focus areas.
 ''';
   }
 
-  static String _formatAccounts(List<Account> accounts) {
-    final buffer = StringBuffer();
-    for (final account in accounts) {
-      buffer
-        ..writeln('- ${account.name} (****${account.mask})')
-        ..writeln(
-          '  Type: ${account.type.name} / ${account.subtype.name}',
-        )
-        ..writeln(
-          '  Current Balance: '
-          '\$${account.balance.current.toStringAsFixed(2)}',
-        );
-      if (account.balance.available != null) {
-        buffer.writeln(
-          '  Available: '
-          '\$${account.balance.available!.toStringAsFixed(2)}',
-        );
-      }
-      if (account.balance.limit != null) {
-        buffer.writeln(
-          '  Credit Limit: '
-          '\$${account.balance.limit!.toStringAsFixed(2)}',
-        );
-      }
-      buffer.writeln();
-    }
-    return buffer.toString();
+  static String _profileLabel(ProfileType type) {
+    return switch (type) {
+      ProfileType.beginner => 'Beginner - new to financial planning',
+      ProfileType.optimizer =>
+        'Optimizer - experienced and looking to fine-tune',
+    };
   }
 
-  static String _formatTransactions(
-    List<Transaction> transactions,
-    List<Account> accounts,
-  ) {
-    final accountNames = {
-      for (final a in accounts) a.id: '${a.name} (****${a.mask})',
+  static String _focusLabel(FocusOption option) {
+    return switch (option) {
+      FocusOption.everydaySpending => 'Everyday spending',
+      FocusOption.saveForRetirement => 'Saving for retirement',
+      FocusOption.mortgage => 'Mortgage',
+      FocusOption.housingAndFixedCosts => 'Housing and fixed costs',
+      FocusOption.healthcareAndInsurance => 'Healthcare and insurance',
     };
-
-    final buffer = StringBuffer();
-    for (final txn in transactions) {
-      final sign = txn.amount >= 0 ? '+' : '';
-      final pending = txn.pending ? ' [PENDING]' : '';
-      final merchant = txn.merchantName != null ? ' (${txn.merchantName})' : '';
-      final date =
-          '${txn.date.year}-'
-          '${txn.date.month.toString().padLeft(2, '0')}-'
-          '${txn.date.day.toString().padLeft(2, '0')}';
-      buffer.writeln(
-        '- $date | '
-        '$sign\$${txn.amount.toStringAsFixed(2)} | '
-        '${txn.name}$merchant | '
-        '${txn.category.name} | '
-        '${accountNames[txn.accountId] ?? txn.accountId}'
-        '$pending',
-      );
-    }
-    return buffer.toString();
   }
 }
