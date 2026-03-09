@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:finance_app/advisor/catalog/catalog.dart';
 import 'package:finance_app/advisor/prompt/prompt.dart';
-import 'package:finance_app/financials/mock/mock_scenario.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_firebase_ai/genui_firebase_ai.dart';
 
@@ -26,7 +27,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(status: ChatStatus.loading));
 
     final catalog = buildFinanceCatalog();
-    final prompt = PromptBuilder.build(event.scenario);
+    final prompt = PromptBuilder.build(
+      profileType: event.profileType,
+      focusOptions: event.focusOptions,
+      customOption: event.customOption,
+    );
 
     final contentGenerator = FirebaseAiContentGenerator(
       catalog: catalog,

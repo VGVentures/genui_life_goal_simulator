@@ -1,6 +1,6 @@
-import 'package:finance_app/intro/view/intro_desktop_view.dart';
-import 'package:finance_app/intro/view/widgets/widgets.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/intro/view/intro_mobile_view.dart';
+import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,22 +8,17 @@ Future<void> _pump(
   WidgetTester tester, {
   VoidCallback? onGetStarted,
 }) {
-  tester.view.physicalSize = const Size(1920, 1080);
-  tester.view.devicePixelRatio = 1.0;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-
   return tester.pumpWidget(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: IntroDesktopView(onGetStarted: onGetStarted),
+      home: IntroMobileView(onGetStarted: onGetStarted),
     ),
   );
 }
 
 void main() {
-  group(IntroDesktopView, () {
+  group(IntroMobileView, () {
     group('renders', () {
       testWidgets('title prefix text', (tester) async {
         await _pump(tester);
@@ -60,12 +55,12 @@ void main() {
         expect(find.byType(IntroBadges), findsOneWidget);
       });
 
-      testWidgets('$GetStartedButton with uppercased label', (tester) async {
+      testWidgets('$GetStartedButton with localized label', (tester) async {
         await _pump(tester);
         await tester.pumpAndSettle();
 
         expect(find.byType(GetStartedButton), findsOneWidget);
-        expect(find.text('GET STARTED'), findsOneWidget);
+        expect(find.text('Get started'), findsOneWidget);
       });
     });
 

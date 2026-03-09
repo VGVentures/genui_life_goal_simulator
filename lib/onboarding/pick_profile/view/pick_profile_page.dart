@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
+import 'package:finance_app/onboarding/want_to_focus/view/want_to_focus_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,7 +49,20 @@ class PickProfilePage extends StatelessWidget {
             height: fabSize,
             child: FloatingActionButton(
               onPressed: () {
-                // TODO(paulinacrespi): Add navigation to next screen.
+                final profileType = context
+                    .read<PickProfileCubit>()
+                    .state
+                    .selectedProfile;
+                if (profileType == null) return;
+                unawaited(
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute<void>(
+                      builder: (_) => WantToFocusPage(
+                        profileType: profileType,
+                      ),
+                    ),
+                  ),
+                );
               },
               backgroundColor: Colors.transparent,
               hoverColor: colorExtensions?.primarySurface,
