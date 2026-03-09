@@ -49,8 +49,10 @@ class PickProfilePage extends StatelessWidget {
             height: fabSize,
             child: FloatingActionButton(
               onPressed: () {
-                final profileType =
-                    context.read<PickProfileCubit>().state.selectedProfile;
+                final profileType = context
+                    .read<PickProfileCubit>()
+                    .state
+                    .selectedProfile;
                 if (profileType == null) return;
                 unawaited(
                   Navigator.of(context).pushReplacement(

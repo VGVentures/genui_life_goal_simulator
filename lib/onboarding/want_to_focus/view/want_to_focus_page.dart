@@ -55,8 +55,7 @@ class WantToFocusPage extends StatelessWidget {
             height: fabSize,
             child: FloatingActionButton(
               onPressed: () {
-                final focusState =
-                    context.read<WantToFocusCubit>().state;
+                final focusState = context.read<WantToFocusCubit>().state;
                 unawaited(
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute<void>(
