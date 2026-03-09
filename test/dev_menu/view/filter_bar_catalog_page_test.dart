@@ -13,35 +13,37 @@ Future<void> _pumpPage(WidgetTester tester) {
 }
 
 void main() {
-  group('FilterBarCatalogPage', () {
-    testWidgets('renders app bar title', (tester) async {
-      await _pumpPage(tester);
+  group('$FilterBarCatalogPage', () {
+    group('renders', () {
+      testWidgets('app bar title', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('Filter Bar'), findsOneWidget);
-    });
+        expect(find.text('Filter Bar'), findsOneWidget);
+      });
 
-    testWidgets('renders Interactive section', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('Interactive section', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('Interactive'), findsOneWidget);
-    });
+        expect(find.text('Interactive'), findsOneWidget);
+      });
 
-    testWidgets('renders Disabled All Chip section', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('Disabled All Chip section', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('Disabled All Chip'), findsOneWidget);
-    });
+        expect(find.text('Disabled All Chip'), findsOneWidget);
+      });
 
-    testWidgets('renders FilterBar widgets', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('FilterBar widgets', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.byType(FilterBar), findsNWidgets(2));
-    });
+        expect(find.byType(FilterBar), findsNWidgets(2));
+      });
 
-    testWidgets('renders All chip in each FilterBar', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('All chip in each FilterBar', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('All'), findsNWidgets(2));
+        expect(find.text('All'), findsNWidgets(2));
+      });
     });
 
     testWidgets('tapping a category chip toggles its selection', (

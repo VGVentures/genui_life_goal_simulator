@@ -1,5 +1,6 @@
 import 'package:finance_app/app/presentation/app_colors.dart';
 import 'package:finance_app/app/presentation/app_text_styles.dart';
+import 'package:finance_app/app/presentation/spacing.dart';
 import 'package:finance_app/app/presentation/widgets/category_filter_chip.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,7 @@ class FilterBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildChipsSection(),
-          const SizedBox(height: _Dimensions.summarySpacing),
+          const SizedBox(height: Spacing.md),
           Text(
             '$_selectedCount of ${categories.length} categories selected',
             style: AppTextStyles.bodyMediumDesktop.copyWith(
@@ -92,8 +93,8 @@ class FilterBar extends StatelessWidget {
 
   Widget _buildChipsSection() {
     return Wrap(
-      spacing: _Dimensions.chipSpacing,
-      runSpacing: _Dimensions.runSpacing,
+      spacing: Spacing.xs,
+      runSpacing: Spacing.xs,
       children: [
         CategoryFilterChip(
           color: allChipColor,
@@ -113,10 +114,4 @@ class FilterBar extends StatelessWidget {
       ],
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double chipSpacing = 8;
-  static const double runSpacing = 8;
-  static const double summarySpacing = 16;
 }

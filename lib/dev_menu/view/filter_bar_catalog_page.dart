@@ -72,11 +72,7 @@ class _FilterBarCatalogPageState extends State<FilterBarCatalogPage> {
           children: [
             const Text(
               'Interactive',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: AppTextStyles.titleSmallDesktop,
             ),
             const SizedBox(height: Spacing.sm),
             Container(
@@ -90,11 +86,7 @@ class _FilterBarCatalogPageState extends State<FilterBarCatalogPage> {
             const SizedBox(height: Spacing.xl),
             const Text(
               'Disabled All Chip',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: AppTextStyles.titleSmallDesktop,
             ),
             const SizedBox(height: Spacing.sm),
             Container(
