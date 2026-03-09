@@ -1,6 +1,6 @@
 import 'package:finance_app/gen/assets.gen.dart';
-import 'package:finance_app/intro/view/widgets/widgets.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 /// {@template intro_desktop_view}

@@ -1,4 +1,4 @@
-import 'package:finance_app/intro/view/widgets/get_started_button.dart';
+import 'package:finance_app/onboarding/intro/view/widgets/get_started_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

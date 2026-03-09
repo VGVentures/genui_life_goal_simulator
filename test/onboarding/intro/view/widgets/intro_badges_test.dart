@@ -1,5 +1,5 @@
-import 'package:finance_app/intro/view/widgets/intro_badges.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/intro/view/widgets/intro_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

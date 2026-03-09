@@ -1,7 +1,7 @@
-import 'package:finance_app/intro/intro.dart';
-import 'package:finance_app/intro/view/intro_desktop_view.dart';
-import 'package:finance_app/intro/view/intro_mobile_view.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/intro/intro.dart';
+import 'package:finance_app/onboarding/intro/view/intro_desktop_view.dart';
+import 'package:finance_app/onboarding/intro/view/intro_mobile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
