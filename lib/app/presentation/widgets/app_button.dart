@@ -80,8 +80,12 @@ class AppButton extends StatelessWidget {
     // When loading the button looks enabled but is non‑interactive.
     final effectiveOnPressed = isLoading ? () {} : onPressed;
 
-    final child = _buildChild(
-      context,
+    final child = _Content(
+      label: label,
+      variant: variant,
+      isLoading: isLoading,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
       primary: primary,
       onPrimary: onPrimary,
     );
@@ -98,47 +102,6 @@ class AppButton extends StatelessWidget {
         child: child,
       ),
     };
-  }
-
-  Widget _buildChild(
-    BuildContext context, {
-    required Color primary,
-    required Color onPrimary,
-  }) {
-    if (isLoading) {
-      final indicatorColor = variant == AppButtonVariant.filled
-          ? onPrimary
-          : primary;
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox.square(
-            dimension: _Dimensions.loadingIndicatorSize,
-            child: CircularProgressIndicator(
-              strokeWidth: _Dimensions.loadingStrokeWidth,
-              color: indicatorColor,
-            ),
-          ),
-          const SizedBox(width: Spacing.xs),
-          Text(context.l10n.appButtonLoadingLabel),
-        ],
-      );
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (leadingIcon != null) ...[
-          leadingIcon!,
-          const SizedBox(width: Spacing.xs),
-        ],
-        Text(label),
-        if (trailingIcon != null) ...[
-          const SizedBox(width: Spacing.xs),
-          trailingIcon!,
-        ],
-      ],
-    );
   }
 
   ButtonStyle _buttonStyle({
@@ -244,6 +207,64 @@ class AppButton extends StatelessWidget {
       return primary.withValues(alpha: 0.1);
     }
     return Colors.transparent;
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    required this.label,
+    required this.variant,
+    required this.isLoading,
+    required this.leadingIcon,
+    required this.trailingIcon,
+    required this.primary,
+    required this.onPrimary,
+  });
+
+  final String label;
+  final AppButtonVariant variant;
+  final bool isLoading;
+  final Widget? leadingIcon;
+  final Widget? trailingIcon;
+  final Color primary;
+  final Color onPrimary;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      final indicatorColor = variant == AppButtonVariant.filled
+          ? onPrimary
+          : primary;
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox.square(
+            dimension: _Dimensions.loadingIndicatorSize,
+            child: CircularProgressIndicator(
+              strokeWidth: _Dimensions.loadingStrokeWidth,
+              color: indicatorColor,
+            ),
+          ),
+          const SizedBox(width: Spacing.xs),
+          Text(context.l10n.appButtonLoadingLabel),
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (leadingIcon != null) ...[
+          leadingIcon!,
+          const SizedBox(width: Spacing.xs),
+        ],
+        Text(label),
+        if (trailingIcon != null) ...[
+          const SizedBox(width: Spacing.xs),
+          trailingIcon!,
+        ],
+      ],
+    );
   }
 }
 
