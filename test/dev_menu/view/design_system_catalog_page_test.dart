@@ -56,10 +56,10 @@ void main() {
 
     testWidgets('renders SectionHeader list tile', (tester) async {
       await _pumpPage(tester);
-      
+
       expect(find.text('SectionHeader'), findsOneWidget);
     });
-    
+
     testWidgets('tapping SectionHeader navigates to SectionHeaderCatalogPage', (
       tester,
     ) async {
