@@ -1,4 +1,4 @@
-import 'dart:math' show max;
+import 'dart:math';
 
 import 'package:finance_app/app/presentation.dart';
 import 'package:fl_chart/fl_chart.dart' as fl;
@@ -183,6 +183,22 @@ class _LineChartState extends State<LineChart> {
                 maxY: widget.maxValue,
                 lineBarsData: [lineBarData],
                 gridData: _buildGridData(gridColor),
+                extraLinesData: fl.ExtraLinesData(
+                  horizontalLines: [
+                    fl.HorizontalLine(
+                      y: widget.minValue,
+                      color: gridColor,
+                      strokeWidth: 1,
+                      dashArray: [4, 4],
+                    ),
+                    fl.HorizontalLine(
+                      y: widget.maxValue,
+                      color: gridColor,
+                      strokeWidth: 1,
+                      dashArray: [4, 4],
+                    ),
+                  ],
+                ),
                 titlesData: _buildTitlesData(xLabelStyle, yLabelStyle),
                 borderData: fl.FlBorderData(show: false),
                 lineTouchData: fl.LineTouchData(
@@ -198,6 +214,7 @@ class _LineChartState extends State<LineChart> {
                 selectedX: spotX(_selectedIndex!),
                 selectedY: spotY(_selectedIndex!),
                 chartWidth: constraints.maxWidth,
+                chartHeight: chartHeight,
                 colors: colors,
                 textTheme: theme.textTheme,
               ),
@@ -281,6 +298,7 @@ class _TooltipCard extends StatelessWidget {
     required this.selectedX,
     required this.selectedY,
     required this.chartWidth,
+    required this.chartHeight,
     required this.colors,
     required this.textTheme,
   });
@@ -289,6 +307,7 @@ class _TooltipCard extends StatelessWidget {
   final double selectedX;
   final double selectedY;
   final double chartWidth;
+  final double chartHeight;
   final AppColors? colors;
   final TextTheme textTheme;
 
@@ -301,7 +320,10 @@ class _TooltipCard extends StatelessWidget {
     final left = selectedX + offsetX + tooltipWidth > chartWidth
         ? selectedX - tooltipWidth - offsetX
         : selectedX + offsetX;
-    final top = max<double>(0, selectedY - offsetY);
+    final top = (selectedY - offsetY).clamp(
+      0.0,
+      max<double>(0, chartHeight - _LineChartDimensions.tooltipHeight),
+    );
 
     final monthStyle = textTheme.bodySmall?.copyWith(
       color: colors?.onSurfaceVariant ?? _LineChartColors.indicator,
@@ -343,6 +365,7 @@ class _TooltipCard extends StatelessWidget {
 abstract final class _LineChartDimensions {
   static const double dotRadius = 4;
   static const double tooltipWidth = 130;
+  static const double tooltipHeight = 44;
   static const double tooltipRadius = 8;
   static const double tooltipOffsetX = 8;
   static const double tooltipOffsetY = 8;
