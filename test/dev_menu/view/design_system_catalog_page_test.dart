@@ -1,10 +1,14 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/dev_menu/dev_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> _pumpPage(WidgetTester tester) {
   return tester.pumpWidget(
-    const MaterialApp(home: DesignSystemCatalogPage()),
+    MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
+      home: const DesignSystemCatalogPage(),
+    ),
   );
 }
 
@@ -48,6 +52,23 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(EmojiCardCatalogPage), findsOneWidget);
+    });
+
+    testWidgets('renders FilterBar list tile', (tester) async {
+      await _pumpPage(tester);
+
+      expect(find.text('FilterBar'), findsOneWidget);
+    });
+
+    testWidgets('tapping FilterBar navigates to FilterBarCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.tap(find.text('FilterBar'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(FilterBarCatalogPage), findsOneWidget);
     });
   });
 }
