@@ -35,6 +35,23 @@ void main() {
       expect(find.byType(MetricCardCatalogPage), findsOneWidget);
     });
 
+    testWidgets('renders Drawer list tile', (tester) async {
+      await _pumpPage(tester);
+
+      expect(find.text('Drawer'), findsOneWidget);
+    });
+
+    testWidgets('tapping Drawer navigates to DrawerCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.tap(find.text('Drawer'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DrawerCatalogPage), findsOneWidget);
+    });
+
     testWidgets('renders EmojiCard list tile', (tester) async {
       await _pumpPage(tester);
 
