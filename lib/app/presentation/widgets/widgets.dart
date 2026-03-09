@@ -1,5 +1,6 @@
 export 'action_item.dart';
 export 'ai_button.dart';
+export 'drawer.dart';
 export 'emoji_card.dart';
 export 'header_selector.dart';
 export 'horizontal_bar.dart';
