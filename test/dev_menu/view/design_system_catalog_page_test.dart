@@ -27,6 +27,8 @@ void main() {
     ) async {
       await _pumpPage(tester);
 
+      await tester.drag(find.byType(ListView), const Offset(0, -200));
+      await tester.pump();
       await tester.tap(find.text('MetricCard'));
       await tester.pumpAndSettle();
 
