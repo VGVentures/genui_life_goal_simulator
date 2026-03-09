@@ -1,5 +1,6 @@
 import 'package:finance_app/app/presentation/widgets/line_chart.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -105,12 +106,18 @@ void main() {
         ),
       );
 
-      expect(find.text(r'Spend: $4200'), findsNothing);
+      expect(
+        find.textContaining(r'Spend: $4200', findRichText: true),
+        findsNothing,
+      );
     });
 
     testWidgets('tapping chart shows tooltip for nearest point', (
       tester,
     ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
       await tester.pumpApp(
         const Scaffold(
           body: SizedBox(width: 670, height: 240, child: _chart),
@@ -118,28 +125,40 @@ void main() {
       );
 
       // Tap near the left edge of the chart area to select the first point.
-      final chartPos = tester.getTopLeft(find.byType(GestureDetector).first);
-      await tester.tapAt(chartPos + const Offset(4, 80));
-      await tester.pump();
+      final chartPos = tester.getTopLeft(find.byType(LineChart));
+      await tester.tapAt(chartPos + const Offset(80, 100));
+      await tester.pumpAndSettle();
 
-      expect(find.text(r'Spend: $4200'), findsOneWidget);
+      expect(
+        find.textContaining(r'Spend: $4200', findRichText: true),
+        findsOneWidget,
+      );
     });
 
     testWidgets('tapping same point again dismisses tooltip', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
       await tester.pumpApp(
         const Scaffold(
           body: SizedBox(width: 670, height: 240, child: _chart),
         ),
       );
 
-      final chartPos = tester.getTopLeft(find.byType(GestureDetector).first);
-      await tester.tapAt(chartPos + const Offset(4, 80));
-      await tester.pump();
-      expect(find.text(r'Spend: $4200'), findsOneWidget);
+      final chartPos = tester.getTopLeft(find.byType(LineChart));
+      await tester.tapAt(chartPos + const Offset(80, 100));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(r'Spend: $4200', findRichText: true),
+        findsOneWidget,
+      );
 
-      await tester.tapAt(chartPos + const Offset(4, 80));
-      await tester.pump();
-      expect(find.text(r'Spend: $4200'), findsNothing);
+      await tester.tapAt(chartPos + const Offset(80, 100));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(r'Spend: $4200', findRichText: true),
+        findsNothing,
+      );
     });
 
     testWidgets('renders with a single data point without error', (

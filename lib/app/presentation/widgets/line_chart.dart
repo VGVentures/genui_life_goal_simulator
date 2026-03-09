@@ -1,7 +1,8 @@
 import 'dart:math' show max;
 
 import 'package:finance_app/app/presentation.dart';
-import 'package:flutter/foundation.dart' show immutable, listEquals;
+import 'package:fl_chart/fl_chart.dart' as fl;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A single data point on the [LineChart].
@@ -76,43 +77,44 @@ class LineChart extends StatefulWidget {
 }
 
 class _LineChartState extends State<LineChart> {
+  // Reserved pixel sizes matching fl_chart's AxisTitles reservedSize values.
+  static const double _leftReserved = 48;
+  static const double _bottomReserved = 22;
+
   int? _selectedIndex;
 
-  List<double> get _normalizedValues {
-    final range = widget.maxValue - widget.minValue;
-    return widget.points.map((p) {
-      if (range == 0) return 0.5;
-      return (p.value - widget.minValue) / range;
-    }).toList();
-  }
-
-  int _nearestIndex(double dx, double chartWidth) {
-    if (widget.points.length == 1) return 0;
-    var nearest = 0;
-    var minDist = double.infinity;
-    for (var i = 0; i < widget.points.length; i++) {
-      final x = (i / (widget.points.length - 1)) * chartWidth;
-      final dist = (dx - x).abs();
-      if (dist < minDist) {
-        minDist = dist;
-        nearest = i;
-      }
-    }
-    return nearest;
-  }
-
-  void _onTapDown(Offset position, double chartWidth) {
+  void _handleTouch(
+    fl.FlTouchEvent event,
+    fl.LineTouchResponse? response,
+  ) {
     if (widget.points.isEmpty) return;
-    final index = _nearestIndex(position.dx, chartWidth);
-    setState(() {
-      _selectedIndex = _selectedIndex == index ? null : index;
-    });
+
+    final touchedIndex = response?.lineBarSpots?.isNotEmpty == true
+        ? response!.lineBarSpots!.first.spotIndex
+        : null;
+
+    final isDesktop =
+        kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux;
+
+    if (event is fl.FlPointerHoverEvent) {
+      setState(() => _selectedIndex = touchedIndex);
+    } else if (event is fl.FlPointerExitEvent) {
+      setState(() => _selectedIndex = null);
+    } else if (event is fl.FlTapUpEvent && !isDesktop) {
+      setState(() {
+        _selectedIndex = _selectedIndex == touchedIndex ? null : touchedIndex;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.extension<AppColors>();
+
     final yLabelStyle = theme.textTheme.labelSmall?.copyWith(
       color: colors?.onSurfaceMuted ?? _LineChartColors.label,
     );
@@ -120,105 +122,155 @@ class _LineChartState extends State<LineChart> {
       color: colors?.onSurfaceMuted ?? _LineChartColors.label,
     );
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _YAxisLabels(labels: widget.yAxisLabels, style: yLabelStyle),
-        const SizedBox(width: Spacing.xs),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final chartWidth = constraints.maxWidth;
-                    final chartHeight = constraints.maxHeight;
-                    final normalized = _normalizedValues;
+    final gradient = colors?.geniusGradient ?? _LineChartColors.lineGradient;
+    final gridColor = colors?.outlineVariant ?? _LineChartColors.grid;
+    final indicatorColor =
+        colors?.onSurfaceVariant ?? _LineChartColors.indicator;
 
-                    double pointX(int i) => widget.points.length <= 1
-                        ? chartWidth / 2
-                        : (i / (widget.points.length - 1)) * chartWidth;
+    final spots = widget.points
+        .asMap()
+        .entries
+        .map((e) => fl.FlSpot(e.key.toDouble(), e.value.value))
+        .toList();
 
-                    double pointY(int i) => (1 - normalized[i]) * chartHeight;
+    final lineBarData = fl.LineChartBarData(
+      spots: spots,
+      isCurved: true,
+      gradient: gradient,
+      dotData: fl.FlDotData(
+        getDotPainter: (spot, percent, barData, index) => _GradientDotPainter(
+          gradient: gradient,
+          radius: _LineChartDimensions.dotRadius,
+        ),
+      ),
+    );
 
-                    return GestureDetector(
-                      onTapDown: (d) => _onTapDown(d.localPosition, chartWidth),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          CustomPaint(
-                            painter: _LineChartPainter(
-                              normalizedValues: normalized,
-                              gridLineCount: widget.yAxisLabels.length,
-                              lineGradient:
-                                  colors?.geniusGradient ??
-                                  _LineChartColors.lineGradient,
-                              gridColor:
-                                  colors?.outlineVariant ??
-                                  _LineChartColors.grid,
-                              indicatorColor:
-                                  colors?.onSurfaceVariant ??
-                                  _LineChartColors.indicator,
-                              selectedIndex: _selectedIndex,
-                            ),
-                            size: Size(chartWidth, chartHeight),
-                          ),
-                          if (_selectedIndex != null)
-                            _TooltipCard(
-                              point: widget.points[_selectedIndex!],
-                              selectedX: pointX(_selectedIndex!),
-                              selectedY: pointY(_selectedIndex!),
-                              chartWidth: chartWidth,
-                              colors: colors,
-                              textTheme: theme.textTheme,
-                            ),
-                        ],
-                      ),
-                    );
-                  },
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final chartWidth = constraints.maxWidth - _leftReserved;
+        final chartHeight = constraints.maxHeight - _bottomReserved;
+        final n = widget.points.length;
+
+        double spotX(int i) =>
+            _leftReserved + (n <= 1 ? 0.0 : (i / (n - 1)) * chartWidth);
+
+        double spotY(int i) {
+          final range = widget.maxValue - widget.minValue;
+          final normalized = range == 0
+              ? 0.5
+              : (widget.points[i].value - widget.minValue) / range;
+          return (1 - normalized) * chartHeight;
+        }
+
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            if (_selectedIndex != null)
+              Positioned(
+                left: spotX(_selectedIndex!) - 0.5,
+                top: 0,
+                width: 1,
+                height: chartHeight,
+                child: IgnorePointer(
+                  child: ColoredBox(color: indicatorColor),
                 ),
               ),
-              const SizedBox(height: Spacing.xxs),
-              _XAxisLabels(
-                labels: widget.points.map((p) => p.xLabel).toList(),
-                style: xLabelStyle,
+            fl.LineChart(
+              fl.LineChartData(
+                minX: 0,
+                maxX: max<double>(1, (n - 1).toDouble()),
+                minY: widget.minValue,
+                maxY: widget.maxValue,
+                lineBarsData: [lineBarData],
+                gridData: _buildGridData(gridColor),
+                titlesData: _buildTitlesData(xLabelStyle, yLabelStyle),
+                borderData: fl.FlBorderData(show: false),
+                lineTouchData: fl.LineTouchData(
+                  handleBuiltInTouches: false,
+                  touchSpotThreshold: 100,
+                  touchCallback: _handleTouch,
+                ),
               ),
-            ],
-          ),
+            ),
+            if (_selectedIndex != null)
+              _TooltipCard(
+                point: widget.points[_selectedIndex!],
+                selectedX: spotX(_selectedIndex!),
+                selectedY: spotY(_selectedIndex!),
+                chartWidth: constraints.maxWidth,
+                colors: colors,
+                textTheme: theme.textTheme,
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  fl.FlGridData _buildGridData(Color gridColor) {
+    final showGrid = widget.yAxisLabels.length >= 2;
+    final interval = showGrid
+        ? (widget.maxValue - widget.minValue) / (widget.yAxisLabels.length - 1)
+        : null;
+    return fl.FlGridData(
+      show: showGrid,
+      drawVerticalLine: false,
+      horizontalInterval: interval,
+      getDrawingHorizontalLine: (_) => fl.FlLine(
+        color: gridColor,
+        strokeWidth: 1,
+        dashArray: [4, 4],
+      ),
+    );
+  }
+
+  fl.FlTitlesData _buildTitlesData(
+    TextStyle? xStyle,
+    TextStyle? yStyle,
+  ) {
+    final yInterval = widget.yAxisLabels.length >= 2
+        ? (widget.maxValue - widget.minValue) / (widget.yAxisLabels.length - 1)
+        : null;
+
+    return fl.FlTitlesData(
+      topTitles: const fl.AxisTitles(),
+      rightTitles: const fl.AxisTitles(),
+      bottomTitles: fl.AxisTitles(
+        sideTitles: fl.SideTitles(
+          showTitles: widget.points.isNotEmpty,
+          interval: 1,
+          getTitlesWidget: (value, meta) {
+            final i = value.round();
+            if (i < 0 || i >= widget.points.length || value != i.toDouble()) {
+              return const SizedBox.shrink();
+            }
+            return fl.SideTitleWidget(
+              meta: meta,
+              child: Text(widget.points[i].xLabel, style: xStyle),
+            );
+          },
         ),
-      ],
-    );
-  }
-}
-
-class _YAxisLabels extends StatelessWidget {
-  const _YAxisLabels({required this.labels, required this.style});
-
-  final List<String> labels;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: labels.reversed.map((l) => Text(l, style: style)).toList(),
-    );
-  }
-}
-
-class _XAxisLabels extends StatelessWidget {
-  const _XAxisLabels({required this.labels, required this.style});
-
-  final List<String> labels;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: labels.map((l) => Text(l, style: style)).toList(),
+      ),
+      leftTitles: fl.AxisTitles(
+        sideTitles: fl.SideTitles(
+          showTitles: widget.yAxisLabels.isNotEmpty,
+          reservedSize: _leftReserved,
+          interval: yInterval,
+          getTitlesWidget: (value, meta) {
+            if (widget.yAxisLabels.length < 2 || yInterval == null) {
+              return const SizedBox.shrink();
+            }
+            final i = ((value - widget.minValue) / yInterval).round();
+            if (i < 0 || i >= widget.yAxisLabels.length) {
+              return const SizedBox.shrink();
+            }
+            return fl.SideTitleWidget(
+              meta: meta,
+              child: Text(widget.yAxisLabels[i], style: yStyle),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -261,142 +313,31 @@ class _TooltipCard extends StatelessWidget {
     return Positioned(
       left: left,
       top: top,
-      child: Container(
-        width: tooltipWidth,
-        padding: const EdgeInsets.symmetric(
-          horizontal: Spacing.sm,
-          vertical: Spacing.xs,
-        ),
-        decoration: BoxDecoration(
-          color: colors?.surfaceContainer ?? _LineChartColors.tooltipBg,
-          borderRadius: BorderRadius.circular(
-            _LineChartDimensions.tooltipRadius,
+      child: IgnorePointer(
+        child: Container(
+          width: tooltipWidth,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.sm,
+            vertical: Spacing.xs,
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(point.tooltipLabel, style: monthStyle),
-            Text(point.tooltipValue, style: spendStyle),
-          ],
+          decoration: BoxDecoration(
+            color: colors?.surfaceContainer ?? _LineChartColors.tooltipBg,
+            borderRadius: BorderRadius.circular(
+              _LineChartDimensions.tooltipRadius,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(point.tooltipLabel, style: monthStyle),
+              Text(point.tooltipValue, style: spendStyle),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-class _LineChartPainter extends CustomPainter {
-  _LineChartPainter({
-    required this.normalizedValues,
-    required this.gridLineCount,
-    required this.lineGradient,
-    required this.gridColor,
-    required this.indicatorColor,
-    required this.selectedIndex,
-  });
-
-  final List<double> normalizedValues;
-  final int gridLineCount;
-  final LinearGradient lineGradient;
-  final Color gridColor;
-  final Color indicatorColor;
-  final int? selectedIndex;
-
-  Offset _pointAt(int index, Size size) {
-    final x = normalizedValues.length <= 1
-        ? size.width / 2
-        : (index / (normalizedValues.length - 1)) * size.width;
-    final y = (1 - normalizedValues[index]) * size.height;
-    return Offset(x, y);
-  }
-
-  void _drawGridLines(Canvas canvas, Size size) {
-    if (gridLineCount < 2) return;
-    final paint = Paint()
-      ..color = gridColor
-      ..strokeWidth = 1;
-    const dashWidth = 4.0;
-    const dashGap = 4.0;
-    for (var i = 0; i < gridLineCount; i++) {
-      final y = (i / (gridLineCount - 1)) * size.height;
-      var x = 0.0;
-      while (x < size.width) {
-        canvas.drawLine(
-          Offset(x, y),
-          Offset((x + dashWidth).clamp(0, size.width), y),
-          paint,
-        );
-        x += dashWidth + dashGap;
-      }
-    }
-  }
-
-  void _drawIndicatorLine(Canvas canvas, Size size) {
-    final x = _pointAt(selectedIndex!, size).dx.roundToDouble();
-    final paint = Paint()
-      ..color = indicatorColor
-      ..strokeWidth = 1;
-    canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-  }
-
-  void _drawLine(Canvas canvas, Size size) {
-    if (normalizedValues.length < 2) return;
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final paint = Paint()
-      ..shader = lineGradient.createShader(rect)
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    final pts = List.generate(
-      normalizedValues.length,
-      (i) => _pointAt(i, size),
-    );
-    final path = Path()..moveTo(pts[0].dx, pts[0].dy);
-    for (var i = 0; i < pts.length - 1; i++) {
-      final midX = (pts[i].dx + pts[i + 1].dx) / 2;
-      path.cubicTo(
-        midX,
-        pts[i].dy,
-        midX,
-        pts[i + 1].dy,
-        pts[i + 1].dx,
-        pts[i + 1].dy,
-      );
-    }
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawDots(Canvas canvas, Size size) {
-    for (var i = 0; i < normalizedValues.length; i++) {
-      final point = _pointAt(i, size);
-      final dotRect = Rect.fromCircle(
-        center: point,
-        radius: _LineChartDimensions.dotRadius,
-      );
-      final paint = Paint()
-        ..shader = lineGradient.createShader(dotRect)
-        ..style = PaintingStyle.fill;
-      canvas.drawCircle(point, _LineChartDimensions.dotRadius, paint);
-    }
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    _drawGridLines(canvas, size);
-    if (selectedIndex != null) _drawIndicatorLine(canvas, size);
-    _drawLine(canvas, size);
-    _drawDots(canvas, size);
-  }
-
-  @override
-  bool shouldRepaint(_LineChartPainter old) =>
-      !listEquals(old.normalizedValues, normalizedValues) ||
-      old.selectedIndex != selectedIndex ||
-      old.lineGradient != lineGradient ||
-      old.gridColor != gridColor ||
-      old.indicatorColor != indicatorColor;
 }
 
 abstract final class _LineChartDimensions {
@@ -416,4 +357,36 @@ abstract final class _LineChartColors {
   static const Color tooltipBg = Color(0xFFF0F1F1);
   static const Color tooltipText = Color(0xFF1A1C1C);
   static const Color label = Color(0xFF909191);
+}
+
+class _GradientDotPainter extends fl.FlDotPainter {
+  const _GradientDotPainter({
+    required this.gradient,
+    required this.radius,
+  });
+
+  final LinearGradient gradient;
+  final double radius;
+
+  @override
+  void draw(Canvas canvas, fl.FlSpot spot, Offset offsetInCanvas) {
+    final rect = Rect.fromCircle(center: offsetInCanvas, radius: radius);
+    canvas.drawCircle(
+      offsetInCanvas,
+      radius,
+      Paint()..shader = gradient.createShader(rect),
+    );
+  }
+
+  @override
+  Size getSize(fl.FlSpot spot) => Size(radius * 2, radius * 2);
+
+  @override
+  Color get mainColor => gradient.colors.first;
+
+  @override
+  fl.FlDotPainter lerp(fl.FlDotPainter a, fl.FlDotPainter b, double t) => b;
+
+  @override
+  List<Object?> get props => [gradient, radius];
 }
