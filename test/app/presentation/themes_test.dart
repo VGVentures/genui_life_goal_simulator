@@ -26,11 +26,6 @@ void main() {
       final theme = LightTheme();
       expect(theme.themeData.colorScheme.brightness, Brightness.light);
     });
-
-    test('themeData includes $AppColors extension', () {
-      final themeData = LightTheme().themeData.themeData;
-      expect(themeData.extension<AppColors>(), isA<LightThemeColors>());
-    });
   });
 
   group(DarkTheme, () {

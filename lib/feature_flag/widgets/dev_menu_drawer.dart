@@ -1,4 +1,5 @@
 import 'package:feature_flags_repository/feature_flags_repository.dart';
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/dev_menu/dev_menu.dart';
 import 'package:finance_app/feature_flag/bloc/feature_flags_cubit.dart';
 import 'package:flutter/material.dart';
@@ -13,23 +14,22 @@ class DevMenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = Theme.of(context).textTheme;
+
     return BlocProvider(
       create: (_) => FeatureFlagsCubit(
         featureFlagsRepository: context.read<FeatureFlagsRepository>(),
       )..init(),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-            onSurface: Colors.black87,
-          ),
-        ),
+        data: AppThemes.light.themeData.getThemeData(context),
         child: Drawer(
           child: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(Spacing.md),
                   child: Text(
                     'Dev Menu',
                     style: Theme.of(
@@ -59,17 +59,17 @@ class DevMenuDrawer extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.palette_outlined,
-                    color: Colors.black54,
+                    color: colors?.onSurface,
                   ),
-                  title: const Text(
+                  title: Text(
                     'Design System',
-                    style: TextStyle(color: Colors.black87),
+                    style: textTheme.titleSmall,
                   ),
-                  trailing: const Icon(
+                  trailing: Icon(
                     Icons.chevron_right,
-                    color: Colors.black54,
+                    color: colors?.onSurface,
                   ),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
