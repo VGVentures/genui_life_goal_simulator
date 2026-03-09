@@ -89,6 +89,9 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   final themeOf = Theme.of(context)
+   final textTheme = themeOf.textTheme;
+   final colors = themeOf.extension<AppColors>();
     return Padding(
       padding: const EdgeInsets.only(bottom: Spacing.xs),
       child: Text(
