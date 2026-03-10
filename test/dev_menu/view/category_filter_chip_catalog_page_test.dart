@@ -1,5 +1,4 @@
 import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/app/presentation/widgets/category_filter_chip.dart';
 import 'package:finance_app/dev_menu/dev_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

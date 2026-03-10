@@ -1,7 +1,7 @@
 import 'package:finance_app/app/app.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
-import 'package:finance_app/intro/intro.dart';
+import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/intro/view/intro_desktop_view.dart';
-import 'package:finance_app/intro/view/intro_mobile_view.dart';
+import 'package:finance_app/onboarding/intro/view/intro_desktop_view.dart';
+import 'package:finance_app/onboarding/intro/view/intro_mobile_view.dart';
 import 'package:flutter/material.dart';
 
 /// {@template intro_page}

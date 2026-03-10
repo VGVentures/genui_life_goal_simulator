@@ -1,34 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
-import 'package:finance_app/financials/mock/mock_scenario.dart';
-import 'package:finance_app/financials/models/models.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 
-final _scenario = MockScenario(
-  name: 'Test',
-  description: 'A test persona.',
-  accounts: const [
-    Account(
-      id: 'a1',
-      name: 'Checking',
-      type: AccountType.depository,
-      subtype: AccountSubtype.checking,
-      mask: '0001',
-      balance: Balance(current: 1000, currencyCode: CurrencyCode.usd),
-    ),
-  ],
-  transactions: [
-    Transaction(
-      id: 't1',
-      accountId: 'a1',
-      amount: 50,
-      date: DateTime(2026, 1, 15),
-      name: 'Grocery Store',
-      category: TransactionCategory.foodAndDrink,
-      paymentChannel: PaymentChannel.inStore,
-    ),
-  ],
+const _chatStarted = ChatStarted(
+  profileType: ProfileType.beginner,
+  focusOptions: {FocusOption.everydaySpending},
 );
 
 ChatBloc _buildBloc() {
@@ -90,9 +69,15 @@ void main() {
   });
 
   group(ChatEvent, () {
-    test('$ChatStarted holds scenario', () {
-      final event = ChatStarted(_scenario);
-      expect(event.scenario, _scenario);
+    test('$ChatStarted holds onboarding data', () {
+      const event = ChatStarted(
+        profileType: ProfileType.optimizer,
+        focusOptions: {FocusOption.mortgage},
+        customOption: 'custom',
+      );
+      expect(event.profileType, ProfileType.optimizer);
+      expect(event.focusOptions, {FocusOption.mortgage});
+      expect(event.customOption, 'custom');
     });
 
     test('$ChatMessageSent holds text', () {
@@ -129,7 +114,7 @@ void main() {
     blocTest<ChatBloc, ChatState>(
       '$ChatStarted emits [loading, active] with a host',
       build: _buildBloc,
-      act: (bloc) => bloc.add(ChatStarted(_scenario)),
+      act: (bloc) => bloc.add(_chatStarted),
       expect: () => [
         isA<ChatState>().having(
           (s) => s.status,
@@ -147,7 +132,7 @@ void main() {
       build: _buildBloc,
       seed: () => const ChatState(),
       act: (bloc) async {
-        bloc.add(ChatStarted(_scenario));
+        bloc.add(_chatStarted);
         await Future<void>.delayed(Duration.zero);
         bloc.add(const ChatMessageSent('Hello'));
       },
@@ -188,7 +173,7 @@ void main() {
     );
 
     test('close disposes conversation resources', () async {
-      final bloc = _buildBloc()..add(ChatStarted(_scenario));
+      final bloc = _buildBloc()..add(_chatStarted);
       await Future<void>.delayed(Duration.zero);
       // Should not throw when closing after starting.
       await bloc.close();
@@ -202,7 +187,7 @@ void main() {
     test(
       'onError callback from content generator fires $ChatErrorOccurred',
       () async {
-        final bloc = _buildBloc()..add(ChatStarted(_scenario));
+        final bloc = _buildBloc()..add(_chatStarted);
         await Future<void>.delayed(Duration.zero);
 
         bloc.add(const ChatMessageSent('Test'));
@@ -215,7 +200,7 @@ void main() {
     );
 
     test('processing listener fires $ChatLoading event', () async {
-      final bloc = _buildBloc()..add(ChatStarted(_scenario));
+      final bloc = _buildBloc()..add(_chatStarted);
       await Future<void>.delayed(Duration.zero);
 
       // After ChatStarted, the isProcessing notifier exists.

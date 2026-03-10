@@ -75,7 +75,6 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
       child: GestureDetector(
         onTap: isDisabled ? null : widget.onTap,
         child: Container(
-          constraints: const BoxConstraints(minWidth: _Dimensions.minWidth),
           padding: const EdgeInsets.symmetric(
             horizontal: _Dimensions.horizontalPadding,
             vertical: _Dimensions.verticalPadding,
@@ -99,7 +98,6 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
 }
 
 abstract final class _Dimensions {
-  static const double minWidth = 116;
   static const double borderRadius = 32;
   static const double horizontalPadding = 16;
   static const double verticalPadding = 8;

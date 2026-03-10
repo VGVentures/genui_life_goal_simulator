@@ -7,11 +7,17 @@ sealed class ChatEvent {
   const ChatEvent();
 }
 
-/// The user selected a persona and wants to start a conversation
+/// The user completed onboarding and wants to start a conversation
 final class ChatStarted extends ChatEvent {
-  const ChatStarted(this.scenario);
+  const ChatStarted({
+    required this.profileType,
+    this.focusOptions = const {},
+    this.customOption = '',
+  });
 
-  final MockScenario scenario;
+  final ProfileType profileType;
+  final Set<FocusOption> focusOptions;
+  final String customOption;
 }
 
 /// The user sent a text message

@@ -1,6 +1,9 @@
 export 'action_item.dart';
 export 'ai_button.dart';
+export 'app_button.dart';
+export 'category_filter_chip.dart';
 export 'emoji_card.dart';
+export 'filter_bar.dart';
 export 'header_selector.dart';
 export 'horizontal_bar.dart';
 export 'line_chart.dart';
@@ -8,5 +11,6 @@ export 'metric_cards.dart';
 export 'radio_card.dart';
 export 'ranked_table.dart';
 export 'responsive_scaffold.dart';
+export 'section_header.dart';
 export 'sparkline_card.dart';
 export 'transaction_list.dart';
