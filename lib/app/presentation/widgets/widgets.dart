@@ -1,8 +1,8 @@
+export 'accordion.dart';
 export 'action_item.dart';
 export 'ai_button.dart';
 export 'app_button.dart';
 export 'category_filter_chip.dart';
-export 'accordion.dart';
 export 'emoji_card.dart';
 export 'filter_bar.dart';
 export 'header_selector.dart';
