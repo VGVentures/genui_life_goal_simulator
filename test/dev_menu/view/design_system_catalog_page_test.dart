@@ -81,6 +81,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RadioCardCatalogPage), findsOneWidget);
+    });
+
     testWidgets('renders SectionHeader list tile', (tester) async {
       await _pumpPage(tester);
 
