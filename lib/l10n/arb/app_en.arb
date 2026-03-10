@@ -111,5 +111,9 @@
     "viewLabel": "View",
     "@viewLabel": {
         "description": "Label for see a transaction detail"
+    },
+    "appButtonLoadingLabel": "Loading...",
+    "@appButtonLoadingLabel": {
+        "description": "Text shown on a button while an action is in progress"
     }
 }

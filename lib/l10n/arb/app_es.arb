@@ -107,5 +107,9 @@
     "viewLabel": "Ver",
     "@viewLabel": {
         "description": "Etiqueta para ver el detalle de una transacción"
+    },
+    "appButtonLoadingLabel": "Cargando...",
+    "@appButtonLoadingLabel": {
+        "description": "Texto mostrado en un botón mientras una acción está en progreso"
     }
 }
