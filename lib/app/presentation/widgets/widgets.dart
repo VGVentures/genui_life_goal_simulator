@@ -8,6 +8,7 @@ export 'header_selector.dart';
 export 'horizontal_bar.dart';
 export 'line_chart.dart';
 export 'metric_cards.dart';
+export 'progress_bar.dart';
 export 'radio_card.dart';
 export 'ranked_table.dart';
 export 'responsive_scaffold.dart';

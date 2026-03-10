@@ -9,6 +9,7 @@ import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/line_chart_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/progress_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/radio_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
 import 'package:finance_app/dev_menu/view/section_header_catalog_page.dart';
@@ -128,6 +129,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const FilterBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'ProgressBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Threshold-based color-coded progress bar',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ProgressBarCatalogPage(),
               ),
             ),
           ),
