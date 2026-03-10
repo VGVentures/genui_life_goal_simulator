@@ -14,25 +14,27 @@ Future<void> _pumpPage(WidgetTester tester) {
 
 void main() {
   group('AccordionCatalogPage', () {
-    testWidgets('renders AppAccordion app bar title', (tester) async {
-      await _pumpPage(tester);
+    group('renders', () {
+      testWidgets('Accordion app bar title', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('AppAccordion'), findsOneWidget);
-    });
+        expect(find.text('Accordion'), findsOneWidget);
+      });
 
-    testWidgets('renders AppAccordion widget', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('AppAccordion widget', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.byType(AppAccordion), findsOneWidget);
-    });
+        expect(find.byType(AppAccordion), findsOneWidget);
+      });
 
-    testWidgets('renders section label', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('section label', (tester) async {
+        await _pumpPage(tester);
 
-      expect(
-        find.text('Collapsed state (tap to expand)'),
-        findsOneWidget,
-      );
+        expect(
+          find.text('Collapsed state (tap to expand)'),
+          findsOneWidget,
+        );
+      });
     });
   });
 }
