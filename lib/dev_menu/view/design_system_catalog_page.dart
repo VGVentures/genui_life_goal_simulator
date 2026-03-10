@@ -294,6 +294,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
               ),
             ),
           ),
+          ListTile(
+            title: Text(
+              'Comparison Table',
+              style: textTheme.titleSmall,
+            ),
+            subtitle: Text(
+              'Monthly spending comparison with calculated delta',
+              style: textTheme.bodyMedium,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ComparisonTableCatalogPage(),
+              ),
+            ),
+          ),
         ],
       ),
     );
