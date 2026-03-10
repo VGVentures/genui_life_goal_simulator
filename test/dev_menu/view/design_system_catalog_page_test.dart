@@ -23,6 +23,7 @@ void main() {
     testWidgets('renders MetricCard list tile', (tester) async {
       await _pumpPage(tester);
 
+      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
       expect(find.text('MetricCard'), findsOneWidget);
     });
 
@@ -31,8 +32,7 @@ void main() {
     ) async {
       await _pumpPage(tester);
 
-      await tester.drag(find.byType(ListView), const Offset(0, -200));
-      await tester.pump();
+      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
       await tester.tap(find.text('MetricCard'));
       await tester.pumpAndSettle();
 
