@@ -1,12 +1,12 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
-/// {@template drawer_catalog_page}
-/// Catalog page showcasing [AppDrawer] in collapsed and expanded states.
+/// {@template accordion_catalog_page}
+/// Catalog page showcasing [AppAccordion] in collapsed and expanded states.
 /// {@endtemplate}
-class DrawerCatalogPage extends StatelessWidget {
-  /// {@macro drawer_catalog_page}
-  const DrawerCatalogPage({super.key});
+class AccordionCatalogPage extends StatelessWidget {
+  /// {@macro accordion_catalog_page}
+  const AccordionCatalogPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +62,15 @@ class DrawerCatalogPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('AppDrawer')),
+      appBar: AppBar(title: const Text('AppAccordion')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(Spacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _SectionLabel('Collapsed state (tap to expand)'),
-            AppDrawer(
-              title: 'Drawer Title',
+            AppAccordion(
+              title: 'Accordion Title',
               content: actionItems,
             ),
           ],

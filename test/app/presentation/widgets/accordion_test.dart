@@ -12,7 +12,7 @@ Future<void> _pump(WidgetTester tester, Widget widget) {
 }
 
 void main() {
-  group(AppDrawer, () {
+  group(AppAccordion, () {
     final content = ActionItemsGroup(
       items: [
         ActionItem(
@@ -40,16 +40,16 @@ void main() {
       testWidgets('renders title', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
-        expect(find.text('Drawer Title'), findsOneWidget);
+        expect(find.text('Accordion Title'), findsOneWidget);
       });
 
       testWidgets('renders expand icon', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
         expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
@@ -58,20 +58,20 @@ void main() {
       testWidgets('adapts to available width', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
-        final size = tester.getSize(find.byType(AppDrawer));
+        final size = tester.getSize(find.byType(AppAccordion));
         expect(size.width, greaterThan(0));
       });
 
       testWidgets('has collapsed height approximately 56', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
-        final size = tester.getSize(find.byType(AppDrawer));
+        final size = tester.getSize(find.byType(AppAccordion));
         // Height is 56 + 2 (border) = 58
         expect(size.height, closeTo(56, 4));
       });
@@ -79,7 +79,7 @@ void main() {
       testWidgets('content is not hittable when collapsed', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
         // Content should not be hittable when collapsed
@@ -94,21 +94,21 @@ void main() {
       testWidgets('renders title', (tester) async {
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
           ),
         );
 
-        expect(find.text('Drawer Title'), findsOneWidget);
+        expect(find.text('Accordion Title'), findsOneWidget);
       });
 
       testWidgets('shows action items when expanded', (tester) async {
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
           ),
@@ -121,8 +121,8 @@ void main() {
       testWidgets('content is hittable when expanded', (tester) async {
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
           ),
@@ -138,14 +138,14 @@ void main() {
       testWidgets('expands to fit content', (tester) async {
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
           ),
         );
 
-        final size = tester.getSize(find.byType(AppDrawer));
+        final size = tester.getSize(find.byType(AppAccordion));
         expect(size.width, greaterThan(0));
         expect(size.height, greaterThan(56));
       });
@@ -155,14 +155,14 @@ void main() {
       testWidgets('expands when tapped', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
         // Initially collapsed - content not hittable
         expect(find.text('Restaurant').hitTestable(), findsNothing);
 
         // Tap to expand
-        await tester.tap(find.text('Drawer Title'));
+        await tester.tap(find.text('Accordion Title'));
         await tester.pumpAndSettle();
 
         // Now expanded - content hittable
@@ -172,8 +172,8 @@ void main() {
       testWidgets('collapses when tapped again', (tester) async {
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
           ),
@@ -183,7 +183,7 @@ void main() {
         expect(find.text('Restaurant').hitTestable(), findsNWidgets(2));
 
         // Tap to collapse
-        await tester.tap(find.text('Drawer Title'));
+        await tester.tap(find.text('Accordion Title'));
         await tester.pumpAndSettle();
 
         // Now collapsed - content not hittable
@@ -196,14 +196,14 @@ void main() {
         var toggledValue = false;
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             onToggle: (value) => toggledValue = value,
           ),
         );
 
-        await tester.tap(find.text('Drawer Title'));
+        await tester.tap(find.text('Accordion Title'));
         await tester.pumpAndSettle();
 
         expect(toggledValue, isTrue);
@@ -215,15 +215,15 @@ void main() {
         var toggledValue = true;
         await _pump(
           tester,
-          AppDrawer(
-            title: 'Drawer Title',
+          AppAccordion(
+            title: 'Accordion Title',
             content: content,
             isExpanded: true,
             onToggle: (value) => toggledValue = value,
           ),
         );
 
-        await tester.tap(find.text('Drawer Title'));
+        await tester.tap(find.text('Accordion Title'));
         await tester.pumpAndSettle();
 
         expect(toggledValue, isFalse);
@@ -232,26 +232,26 @@ void main() {
       testWidgets('icon rotates when expanded', (tester) async {
         await _pump(
           tester,
-          AppDrawer(title: 'Drawer Title', content: content),
+          AppAccordion(title: 'Accordion Title', content: content),
         );
 
         // Get initial rotation
         var rotation = tester.widget<RotationTransition>(
           find.descendant(
-            of: find.byType(AppDrawer),
+            of: find.byType(AppAccordion),
             matching: find.byType(RotationTransition),
           ),
         );
         expect(rotation.turns.value, 0);
 
         // Tap to expand
-        await tester.tap(find.text('Drawer Title'));
+        await tester.tap(find.text('Accordion Title'));
         await tester.pumpAndSettle();
 
         // Check rotation after expansion
         rotation = tester.widget<RotationTransition>(
           find.descendant(
-            of: find.byType(AppDrawer),
+            of: find.byType(AppAccordion),
             matching: find.byType(RotationTransition),
           ),
         );
@@ -265,15 +265,15 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AppDrawer(
-              title: 'Drawer Title',
+            body: AppAccordion(
+              title: 'Accordion Title',
               content: content,
             ),
           ),
         ),
       );
 
-      expect(find.text('Drawer Title'), findsOneWidget);
+      expect(find.text('Accordion Title'), findsOneWidget);
     });
 
     testWidgets('updates when isExpanded prop changes', (tester) async {
@@ -291,8 +291,8 @@ void main() {
                       onPressed: () => setState(() => isExpanded = !isExpanded),
                       child: const Text('Toggle'),
                     ),
-                    AppDrawer(
-                      title: 'Drawer Title',
+                    AppAccordion(
+                      title: 'Accordion Title',
                       content: content,
                       isExpanded: isExpanded,
                     ),

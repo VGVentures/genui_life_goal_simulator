@@ -48,21 +48,21 @@ void main() {
       expect(find.byType(MetricCardCatalogPage), findsOneWidget);
     });
 
-    testWidgets('renders Drawer list tile', (tester) async {
+    testWidgets('renders Accordion list tile', (tester) async {
       await _pumpPage(tester);
 
-      expect(find.text('Drawer'), findsOneWidget);
+      expect(find.text('Accordion'), findsOneWidget);
     });
 
-    testWidgets('tapping Drawer navigates to DrawerCatalogPage', (
+    testWidgets('tapping Accordion navigates to AccordionCatalogPage', (
       tester,
     ) async {
       await _pumpPage(tester);
 
-      await tester.tap(find.text('Drawer'));
+      await tester.tap(find.text('Accordion'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(DrawerCatalogPage), findsOneWidget);
+      expect(find.byType(AccordionCatalogPage), findsOneWidget);
     });
 
     testWidgets('renders EmojiCard list tile', (tester) async {

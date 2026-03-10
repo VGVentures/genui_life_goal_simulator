@@ -7,23 +7,23 @@ Future<void> _pumpPage(WidgetTester tester) {
   return tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
-      home: const DrawerCatalogPage(),
+      home: const AccordionCatalogPage(),
     ),
   );
 }
 
 void main() {
-  group('DrawerCatalogPage', () {
-    testWidgets('renders AppDrawer app bar title', (tester) async {
+  group('AccordionCatalogPage', () {
+    testWidgets('renders AppAccordion app bar title', (tester) async {
       await _pumpPage(tester);
 
-      expect(find.text('AppDrawer'), findsOneWidget);
+      expect(find.text('AppAccordion'), findsOneWidget);
     });
 
-    testWidgets('renders AppDrawer widget', (tester) async {
+    testWidgets('renders AppAccordion widget', (tester) async {
       await _pumpPage(tester);
 
-      expect(find.byType(AppDrawer), findsOneWidget);
+      expect(find.byType(AppAccordion), findsOneWidget);
     });
 
     testWidgets('renders section label', (tester) async {

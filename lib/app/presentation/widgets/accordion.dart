@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
-/// {@template app_drawer}
+/// {@template app_accordion}
 /// A molecule widget that represents an expandable content panel with
 /// collapsed and open states.
 ///
@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 ///
 /// Use [ActionItemsGroup] as content to render a list of action items.
 /// {@endtemplate}
-class AppDrawer extends StatefulWidget {
-  const AppDrawer({
+class AppAccordion extends StatefulWidget {
+  const AppAccordion({
     required this.title,
     required this.content,
     this.isExpanded = false,
@@ -21,23 +21,23 @@ class AppDrawer extends StatefulWidget {
     super.key,
   });
 
-  /// Header text displayed in the drawer.
+  /// Header text displayed in the accordion.
   final String title;
 
-  /// Content widget shown when the drawer is expanded.
+  /// Content widget shown when the accordion is expanded.
   final Widget content;
 
-  /// Whether the drawer starts in expanded state.
+  /// Whether the accordion starts in expanded state.
   final bool isExpanded;
 
-  /// Callback when the drawer is toggled.
+  /// Callback when the accordion is toggled.
   final ValueChanged<bool>? onToggle;
 
   @override
-  State<AppDrawer> createState() => _AppDrawerState();
+  State<AppAccordion> createState() => _AppAccordionState();
 }
 
-class _AppDrawerState extends State<AppDrawer>
+class _AppAccordionState extends State<AppAccordion>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _heightFactor;
@@ -49,7 +49,7 @@ class _AppDrawerState extends State<AppDrawer>
     super.initState();
     _isExpanded = widget.isExpanded;
     _controller = AnimationController(
-      duration: _DrawerDimensions.animationDuration,
+      duration: _AccordionDimensions.animationDuration,
       vsync: this,
     );
     _heightFactor = _controller.drive(CurveTween(curve: Curves.easeInOut));
@@ -65,7 +65,7 @@ class _AppDrawerState extends State<AppDrawer>
   }
 
   @override
-  void didUpdateWidget(AppDrawer oldWidget) {
+  void didUpdateWidget(AppAccordion oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isExpanded != oldWidget.isExpanded) {
       _setExpanded(widget.isExpanded);
@@ -102,16 +102,16 @@ class _AppDrawerState extends State<AppDrawer>
 
     return Container(
       decoration: BoxDecoration(
-        color: colors?.surfaceVariant ?? _DrawerColors.surface,
-        borderRadius: BorderRadius.circular(_DrawerDimensions.borderRadius),
+        color: colors?.surfaceVariant ?? _AccordionColors.surface,
+        borderRadius: BorderRadius.circular(_AccordionDimensions.borderRadius),
         border: Border.all(
-          color: colors?.outlineVariant ?? _DrawerColors.border,
+          color: colors?.outlineVariant ?? _AccordionColors.border,
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _DrawerHeader(
+          _AccordionHeader(
             title: widget.title,
             isExpanded: _isExpanded,
             iconRotation: _iconRotation,
@@ -129,7 +129,7 @@ class _AppDrawerState extends State<AppDrawer>
                   child: child,
                 );
               },
-              child: _DrawerContent(
+              child: _AccordionContent(
                 content: widget.content,
               ),
             ),
@@ -140,8 +140,8 @@ class _AppDrawerState extends State<AppDrawer>
   }
 }
 
-class _DrawerHeader extends StatelessWidget {
-  const _DrawerHeader({
+class _AccordionHeader extends StatelessWidget {
+  const _AccordionHeader({
     required this.title,
     required this.isExpanded,
     required this.iconRotation,
@@ -161,9 +161,9 @@ class _DrawerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onToggle,
-      borderRadius: BorderRadius.circular(_DrawerDimensions.borderRadius),
+      borderRadius: BorderRadius.circular(_AccordionDimensions.borderRadius),
       child: Container(
-        height: _DrawerDimensions.collapsedHeight,
+        height: _AccordionDimensions.collapsedHeight,
         padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
         child: Row(
           children: [
@@ -171,7 +171,7 @@ class _DrawerHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: textTheme.titleSmall?.copyWith(
-                  color: colors?.onSurface ?? _DrawerColors.title,
+                  color: colors?.onSurface ?? _AccordionColors.title,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -181,8 +181,8 @@ class _DrawerHeader extends StatelessWidget {
               turns: iconRotation,
               child: Icon(
                 Icons.keyboard_arrow_down,
-                color: colors?.onSurface ?? _DrawerColors.icon,
-                size: _DrawerDimensions.iconSize,
+                color: colors?.onSurface ?? _AccordionColors.icon,
+                size: _AccordionDimensions.iconSize,
               ),
             ),
           ],
@@ -192,8 +192,8 @@ class _DrawerHeader extends StatelessWidget {
   }
 }
 
-class _DrawerContent extends StatelessWidget {
-  const _DrawerContent({
+class _AccordionContent extends StatelessWidget {
+  const _AccordionContent({
     required this.content,
   });
 
@@ -212,14 +212,14 @@ class _DrawerContent extends StatelessWidget {
   }
 }
 
-abstract final class _DrawerDimensions {
+abstract final class _AccordionDimensions {
   static const double collapsedHeight = 56;
   static const double borderRadius = 16;
   static const double iconSize = 24;
   static const Duration animationDuration = Duration(milliseconds: 300);
 }
 
-abstract final class _DrawerColors {
+abstract final class _AccordionColors {
   static const Color surface = Color(0xFFFFFFFF);
   static const Color border = Color(0xFFF0F1F1);
   static const Color title = Color(0xFF1A1C1C);

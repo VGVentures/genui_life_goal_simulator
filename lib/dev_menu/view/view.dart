@@ -3,7 +3,7 @@ export 'ai_button_catalog_page.dart';
 export 'app_button_catalog_page.dart';
 export 'category_filter_chip_catalog_page.dart';
 export 'design_system_catalog_page.dart';
-export 'drawer_catalog_page.dart';
+export 'accordion_catalog_page.dart';
 export 'emoji_card_catalog_page.dart';
 export 'filter_bar_catalog_page.dart';
 export 'header_selector_catalog_page.dart';
