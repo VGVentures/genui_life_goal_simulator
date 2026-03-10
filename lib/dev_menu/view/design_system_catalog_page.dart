@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation/app_colors.dart';
+import 'package:finance_app/dev_menu/view/accordion_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/action_item_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/app_button_catalog_page.dart';
@@ -97,6 +98,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const CategoryFilterChipCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Accordion',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Expandable content panel with collapsed and open states',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const AccordionCatalogPage(),
               ),
             ),
           ),

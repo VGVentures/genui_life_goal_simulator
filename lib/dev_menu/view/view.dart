@@ -1,3 +1,4 @@
+export 'accordion_catalog_page.dart';
 export 'action_item_catalog_page.dart';
 export 'ai_button_catalog_page.dart';
 export 'app_button_catalog_page.dart';

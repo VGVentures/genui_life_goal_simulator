@@ -23,7 +23,11 @@ void main() {
     testWidgets('renders MetricCard list tile', (tester) async {
       await _pumpPage(tester);
 
-      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
+      await tester.dragUntilVisible(
+        find.text('MetricCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
       expect(find.text('MetricCard'), findsOneWidget);
     });
 
@@ -32,11 +36,33 @@ void main() {
     ) async {
       await _pumpPage(tester);
 
-      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
+      await tester.dragUntilVisible(
+        find.text('MetricCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text('MetricCard'));
       await tester.pumpAndSettle();
 
       expect(find.byType(MetricCardCatalogPage), findsOneWidget);
+    });
+
+    testWidgets('renders Accordion list tile', (tester) async {
+      await _pumpPage(tester);
+
+      expect(find.text('Accordion'), findsOneWidget);
+    });
+
+    testWidgets('tapping Accordion navigates to AccordionCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.tap(find.text('Accordion'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AccordionCatalogPage), findsOneWidget);
     });
 
     testWidgets('renders EmojiCard list tile', (tester) async {
@@ -88,7 +114,12 @@ void main() {
     testWidgets('renders SectionHeader list tile', (tester) async {
       await _pumpPage(tester);
 
-      await tester.scrollUntilVisible(find.text('SectionHeader'), 200);
+      await tester.dragUntilVisible(
+        find.text('SectionHeader'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+
       expect(find.text('SectionHeader'), findsOneWidget);
     });
 
@@ -96,10 +127,12 @@ void main() {
       tester,
     ) async {
       await _pumpPage(tester);
-      await tester.scrollUntilVisible(
+      await tester.dragUntilVisible(
         find.text('SectionHeader'),
-        200,
+        find.byType(ListView),
+        const Offset(0, -100),
       );
+      await tester.pumpAndSettle();
       await tester.tap(find.text('SectionHeader'));
       await tester.pumpAndSettle();
       expect(find.byType(SectionHeaderCatalogPage), findsOneWidget);
@@ -107,6 +140,13 @@ void main() {
 
     testWidgets('renders FilterBar list tile', (tester) async {
       await _pumpPage(tester);
+
+      await tester.dragUntilVisible(
+        find.text('FilterBar'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+
       expect(find.text('FilterBar'), findsOneWidget);
     });
 
@@ -114,10 +154,12 @@ void main() {
       tester,
     ) async {
       await _pumpPage(tester);
-      await tester.scrollUntilVisible(
+      await tester.dragUntilVisible(
         find.text('FilterBar'),
-        200,
+        find.byType(ListView),
+        const Offset(0, -100),
       );
+      await tester.pumpAndSettle();
       await tester.tap(find.text('FilterBar'));
       await tester.pumpAndSettle();
       expect(find.byType(FilterBarCatalogPage), findsOneWidget);
