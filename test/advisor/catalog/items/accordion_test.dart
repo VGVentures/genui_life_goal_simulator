@@ -65,8 +65,9 @@ void main() {
       expect(find.byType(AppAccordion), findsOneWidget);
     });
 
-    testWidgets('defaults to collapsed when isExpanded is omitted',
-        (tester) async {
+    testWidgets('defaults to collapsed when isExpanded is omitted', (
+      tester,
+    ) async {
       await _pump(tester, _data());
       await tester.pump();
 
