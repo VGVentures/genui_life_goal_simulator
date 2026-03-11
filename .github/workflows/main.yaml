@@ -47,7 +47,7 @@ jobs:
         package:
           - .
           - packages/feature_flags_repository
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@refactor/remove-vgc
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
       working_directory: ${{ matrix.package }}
