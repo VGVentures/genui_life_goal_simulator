@@ -11,7 +11,6 @@ class DonutChart extends StatelessWidget {
     required this.amount,
     required this.label,
     required this.percentage,
-    required this.colors,
     super.key,
   });
 
@@ -22,11 +21,11 @@ class DonutChart extends StatelessWidget {
   final String amount;
   final String label;
   final String? percentage;
-  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).extension<AppColors>();
 
     return SizedBox(
       width: _Dimensions.donutSize,

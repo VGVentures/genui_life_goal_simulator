@@ -19,31 +19,31 @@ class PieChartCatalogPage extends StatelessWidget {
         label: 'Groceries',
         value: 1420,
         amount: r'$1,420',
-        color: colors?.pinkColor ?? const Color(0xFFE98AD4),
+        color: colors?.pinkColor,
       ),
       PieChartItem(
         label: 'Shopping',
         value: 1420,
         amount: r'$1,420',
-        color: colors?.mustardColor ?? const Color(0xFFF2C01C),
+        color: colors?.mustardColor,
       ),
       PieChartItem(
         label: 'Dining Out',
         value: 1420,
         amount: r'$1,420',
-        color: colors?.orangeColor ?? const Color(0xFFFA912A),
+        color: colors?.orangeColor,
       ),
       PieChartItem(
         label: 'Transport',
         value: 1420,
         amount: r'$1,420',
-        color: colors?.plumColor ?? const Color(0xFF9B3C6B),
+        color: colors?.plumColor,
       ),
       PieChartItem(
         label: 'Travel',
         value: 1420,
         amount: r'$1,420',
-        color: colors?.lightBlueColor ?? const Color(0xFF83D1EC),
+        color: colors?.lightBlueColor,
       ),
     ];
 

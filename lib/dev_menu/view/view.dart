@@ -13,4 +13,6 @@ export 'metric_card_catalog_page.dart';
 export 'pie_chart_catalog_page.dart';
 export 'progress_bar_catalog_page.dart';
 export 'radio_card_catalog_page.dart';
+export 'ranked_table_page.dart';
 export 'section_header_catalog_page.dart';
+export 'transaction_list_catalog_page.dart';

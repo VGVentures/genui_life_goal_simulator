@@ -1,7 +1,5 @@
 import 'package:finance_app/app/presentation/app_colors.dart';
 import 'package:finance_app/dev_menu/dev_menu.dart';
-import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
-import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
 
 /// {@template design_system_catalog_page}

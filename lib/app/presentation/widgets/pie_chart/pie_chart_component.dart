@@ -21,7 +21,7 @@ class PieChartItem {
   final String amount;
 
   /// Segment color from the extended palette.
-  final Color color;
+  final Color? color;
 }
 
 /// {@template pie_chart}
@@ -102,8 +102,6 @@ class _PieChartComponentState extends State<PieChartComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
-
     final selected = _effectiveSelectedIndex;
     final String amount;
     final String label;
@@ -128,7 +126,6 @@ class _PieChartComponentState extends State<PieChartComponent> {
       amount: amount,
       label: label,
       percentage: percentage,
-      colors: colors,
     );
 
     final legend = Legend(
@@ -137,7 +134,6 @@ class _PieChartComponentState extends State<PieChartComponent> {
       selectedIndex: _effectiveSelectedIndex,
       onItemHover: _handleHover,
       onHoverExit: _handleHoverExit,
-      colors: colors,
     );
 
     return ResponsiveScaffold(

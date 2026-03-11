@@ -8,7 +8,6 @@ class Legend extends StatelessWidget {
     required this.selectedIndex,
     required this.onItemHover,
     required this.onHoverExit,
-    required this.colors,
     super.key,
   });
 
@@ -17,7 +16,6 @@ class Legend extends StatelessWidget {
   final int? selectedIndex;
   final ValueChanged<int> onItemHover;
   final VoidCallback onHoverExit;
-  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,6 @@ class Legend extends StatelessWidget {
             isSelected: i == selectedIndex,
             onHover: () => onItemHover(i),
             onHoverExit: onHoverExit,
-            colors: colors,
           ),
       ],
     );
@@ -47,7 +44,6 @@ class _LegendRow extends StatelessWidget {
     required this.isSelected,
     required this.onHover,
     required this.onHoverExit,
-    required this.colors,
   });
 
   final PieChartItem item;
@@ -55,11 +51,11 @@ class _LegendRow extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onHover;
   final VoidCallback onHoverExit;
-  final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).extension<AppColors>();
 
     return MouseRegion(
       onEnter: (_) => onHover(),
