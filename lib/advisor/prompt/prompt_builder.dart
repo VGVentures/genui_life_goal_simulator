@@ -43,6 +43,22 @@ When populating the UserSummaryCard, ask the user for the information you need t
 - monthlyExpenses: Estimated monthly expenses.
 - financialHealthScore: Your overall assessment. Must be one of: Excellent, Good, Fair, Poor, Critical.
 - recommendation: A concise, specific, actionable recommendation based on their profile and focus areas.
+
+HorizontalBar — spending categories compared against a reference (e.g. last month, category average).
+Use when the reference is a prior period or an external benchmark, not a fixed budget limit. All items must use the same type of reference.
+- items: Array of objects (at least one), each with:
+  - category: Category name (e.g. "Dining").
+  - amount: Formatted spend string (e.g. "\$420").
+  - progress: actual ÷ reference as a decimal (e.g. \$420 ÷ \$400 = 1.05). The bar clamps at 1.0 visually.
+  - comparisonLabel: Short label for the reference row (e.g. "vs last month", "vs category avg").
+  - comparisonValue: Signed % change vs the reference. Positive = spent more than reference → shown in red. Negative = spent less → shown in green. Always include the sign (e.g. "+5%", "-12%").
+
+ProgressBar — spending categories vs. a fixed budget limit.
+Use when the user has a defined budget per category and wants to see how much of each they have used. Color codes automatically: green < 65 %, orange 65–85 %, red > 85 %.
+- items: Array of objects (at least one), each with:
+  - title: Category name (e.g. "Dining").
+  - value: Actual amount spent (numeric, e.g. 420).
+  - total: Budget limit for that category (numeric, e.g. 400).
 ''';
   }
 

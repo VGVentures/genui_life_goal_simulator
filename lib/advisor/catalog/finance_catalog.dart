@@ -4,6 +4,8 @@ import 'package:genui/genui.dart';
 /// Builds the full catalog of financial widgets for GenUI.
 Catalog buildFinanceCatalog() {
   return CoreCatalogItems.asCatalog().copyWith([
+    horizontalBarItem,
+    progressBarItem,
     userSummaryCardItem,
   ]);
 }
