@@ -12,12 +12,12 @@ dependencies:
   dartantic_ai:
     git:
       url: https://github.com/brianegan/dartantic.git
-      ref: firebase-ai-provider-dartantic-3.x
+      ref: 76fab07b7381dc0f8d4c55109798da80867c60d3
       path: packages/dartantic_ai
   dartantic_firebase_ai:
     git:
       url: https://github.com/brianegan/dartantic.git
-      ref: firebase-ai-provider-dartantic-3.x
+      ref: 76fab07b7381dc0f8d4c55109798da80867c60d3
       path: packages/dartantic_firebase_ai
   equatable: ^2.0.8
   feature_flags_repository:
