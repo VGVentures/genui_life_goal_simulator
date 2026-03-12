@@ -56,8 +56,13 @@ void main() {
 
       await tester.pumpApp(const PickProfilePage());
 
-      // Tap on the first profile card
-      await tester.tap(find.byType(ProfileCard).first);
+      // Tap on the first profile card's GestureDetector
+      await tester.tap(
+        find.descendant(
+          of: find.byType(ProfileCard).first,
+          matching: find.byType(GestureDetector),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // The card should still be rendered
