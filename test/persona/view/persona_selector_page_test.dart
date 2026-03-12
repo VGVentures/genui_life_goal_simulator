@@ -50,7 +50,6 @@ void main() {
       reset(observer);
 
       await tester.tap(find.byType(PersonaCard).first);
-      await tester.pump();
 
       verify(() => observer.didPush(any(), any())).called(1);
     });
