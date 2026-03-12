@@ -310,6 +310,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
               ),
             ),
           ),
+          ListTile(
+            title: Text(
+              'Slider',
+              style: textTheme.titleSmall,
+            ),
+            subtitle: Text(
+              'Range slider with basic and split-marker variants',
+              style: textTheme.bodyMedium,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SliderCatalogPage(),
+              ),
+            ),
+          ),
         ],
       ),
     );

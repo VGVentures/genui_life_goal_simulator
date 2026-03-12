@@ -6,6 +6,7 @@ export 'category_filter_chip.dart';
 export 'comparison_table.dart';
 export 'emoji_card.dart';
 export 'filter_bar.dart';
+export 'gcn_slider.dart';
 export 'header_selector.dart';
 export 'horizontal_bar.dart';
 export 'line_chart.dart';
