@@ -96,6 +96,10 @@
     "@kickOffDescription": {
         "description": "Texto de descripción en la página de onboarding KickOff"
     },
+    "kickOffDescriptionMobile": "Estamos usando VGV Finances como nuestra aplicación hipotética.\nHemos configurado dos perfiles de usuario, elige uno, establece tus preferencias y observa cómo Gen UI construye la experiencia en tiempo real.",
+    "@kickOffDescriptionMobile": {
+        "description": "Texto de descripción en la página de onboarding KickOff (móvil)"
+    },
     "trustBadgeText": "Puedes confiar en nosotros",
     "@trustBadgeText": {
         "description": "Texto para la insignia de confianza en la página KickOff"
@@ -111,5 +115,13 @@
     "appButtonLoadingLabel": "Cargando...",
     "@appButtonLoadingLabel": {
         "description": "Texto mostrado en un botón mientras una acción está en progreso"
+    },
+    "lastMonthLabel": "Mes pasado",
+    "@lastMonthLabel": {
+        "description": "Etiqueta para ver el monto del mes pasado"
+    },
+    "thisMonthLabel": "Este mes",
+    "@thisMonthLabel": {
+        "description": "Etiqueta para ver el monto del mes actual"
     }
 }

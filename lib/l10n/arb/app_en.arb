@@ -115,5 +115,13 @@
     "appButtonLoadingLabel": "Loading...",
     "@appButtonLoadingLabel": {
         "description": "Text shown on a button while an action is in progress"
+    },
+    "lastMonthLabel": "Last month",
+    "@lastMonthLabel": {
+        "description": "Label for see a past month amount"
+    },
+    "thisMonthLabel": "This month",
+    "@thisMonthLabel": {
+        "description": "Label for see an actual month amount"
     }
 }
