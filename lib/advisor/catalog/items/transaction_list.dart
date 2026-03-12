@@ -9,16 +9,13 @@ final _schema = S.object(
       items: S.object(
         properties: {
           'title': S.string(
-            description:
-                'Transaction name (e.g. "Nobu Restaurant").',
+            description: 'Transaction name (e.g. "Nobu Restaurant").',
           ),
           'description': S.string(
-            description:
-                'Transaction category (e.g. "Dining").',
+            description: 'Transaction category (e.g. "Dining").',
           ),
           'amount': S.string(
-            description:
-                r'Formatted amount string (e.g. "$450").',
+            description: r'Formatted amount string (e.g. "$450").',
           ),
         },
         required: ['title', 'description', 'amount'],
