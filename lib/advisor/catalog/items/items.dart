@@ -8,4 +8,5 @@ export 'gcn_slider_catalog_item.dart';
 export 'line_chart_catalog_item.dart';
 export 'metric_cards_catalog_item.dart';
 export 'radio_card_catalog_item.dart';
+export 'sparkline_card.dart';
 export 'user_summary_card_catalog_item.dart';

@@ -44,6 +44,7 @@ Catalog buildFinanceCatalog() {
       lineChartItem,
       metricCardsItem,
       radioCardItem,
+      sparklineCardItem,
       userSummaryCardItem,
     ],
     systemPromptFragments: [_financeWidgetRules],
