@@ -1,15 +1,16 @@
+import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockGenUiHost extends Mock implements GenUiHost {}
+class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
 Future<void> _pump(
   WidgetTester tester,
-  ChatMessage message,
-  GenUiHost host,
+  DisplayMessage message,
+  SurfaceHost host,
 ) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -21,16 +22,16 @@ Future<void> _pump(
 }
 
 void main() {
-  late _MockGenUiHost host;
+  late _MockSurfaceHost host;
 
   setUp(() {
-    host = _MockGenUiHost();
+    host = _MockSurfaceHost();
   });
 
   group(ChatMessageBubble, () {
     group('renders', () {
-      testWidgets('user bubble for $UserMessage', (tester) async {
-        await _pump(tester, UserMessage.text('Hello'), host);
+      testWidgets('user bubble for $UserDisplayMessage', (tester) async {
+        await _pump(tester, const UserDisplayMessage('Hello'), host);
 
         expect(find.text('Hello'), findsOneWidget);
 
@@ -38,8 +39,8 @@ void main() {
         expect(align.alignment, Alignment.centerRight);
       });
 
-      testWidgets('assistant bubble for $AiTextMessage', (tester) async {
-        await _pump(tester, AiTextMessage.text('Hi there'), host);
+      testWidgets('assistant bubble for $AiTextDisplayMessage', (tester) async {
+        await _pump(tester, const AiTextDisplayMessage('Hi there'), host);
 
         expect(find.text('Hi there'), findsOneWidget);
 

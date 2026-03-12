@@ -31,7 +31,7 @@ final class ChatMessageSent extends ChatEvent {
 final class ChatConversationUpdated extends ChatEvent {
   const ChatConversationUpdated(this.messages);
 
-  final List<ChatMessage> messages;
+  final List<DisplayMessage> messages;
 }
 
 /// Loading state when LLM is processing a request

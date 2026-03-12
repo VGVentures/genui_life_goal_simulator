@@ -1,5 +1,31 @@
 part of 'chat_bloc.dart';
 
+/// A message to display in the chat UI.
+sealed class DisplayMessage {
+  const DisplayMessage();
+}
+
+/// A message sent by the user.
+final class UserDisplayMessage extends DisplayMessage {
+  const UserDisplayMessage(this.text);
+
+  final String text;
+}
+
+/// A text response from the AI.
+final class AiTextDisplayMessage extends DisplayMessage {
+  const AiTextDisplayMessage(this.text);
+
+  final String text;
+}
+
+/// An AI-generated UI surface.
+final class AiSurfaceDisplayMessage extends DisplayMessage {
+  const AiSurfaceDisplayMessage(this.surfaceId);
+
+  final String surfaceId;
+}
+
 /// {@template advisor_state}
 /// State for the [ChatBloc].
 /// {@endtemplate}
@@ -14,16 +40,16 @@ final class ChatState {
   });
 
   final ChatStatus status;
-  final List<ChatMessage> messages;
+  final List<DisplayMessage> messages;
   final bool isLoading;
-  final GenUiHost? host;
+  final SurfaceHost? host;
   final String? error;
 
   ChatState copyWith({
     ChatStatus? status,
-    List<ChatMessage>? messages,
+    List<DisplayMessage>? messages,
     bool? isLoading,
-    GenUiHost? host,
+    SurfaceHost? host,
     String? error,
   }) {
     return ChatState(

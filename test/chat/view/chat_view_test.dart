@@ -11,7 +11,7 @@ import 'package:mocktail/mocktail.dart';
 class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
     implements ChatBloc {}
 
-class _MockGenUiHost extends Mock implements GenUiHost {}
+class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
 extension on WidgetTester {
   Future<void> pumpChatView(ChatBloc bloc) {
@@ -74,11 +74,11 @@ void main() {
     });
 
     testWidgets('renders message bubbles when messages exist', (tester) async {
-      final host = _MockGenUiHost();
+      final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
         ChatState(
           status: ChatStatus.active,
-          messages: [UserMessage.text('Hello')],
+          messages: const [UserDisplayMessage('Hello')],
           host: host,
         ),
       );
@@ -131,13 +131,13 @@ void main() {
     testWidgets('messages buildWhen triggers rebuild on message change', (
       tester,
     ) async {
-      final host = _MockGenUiHost();
+      final host = _MockSurfaceHost();
       whenListen(
         bloc,
         Stream.fromIterable([
           ChatState(
             status: ChatStatus.active,
-            messages: [UserMessage.text('Hello')],
+            messages: const [UserDisplayMessage('Hello')],
             host: host,
           ),
         ]),

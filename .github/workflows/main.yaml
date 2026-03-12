@@ -54,14 +54,6 @@ jobs:
       run_bloc_lint: true
       min_coverage: 85
 
-  build:
-    needs: [verify_and_test]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - if: needs.verify_and_test.result != 'success'
-        run: exit 1
-
   license_check:
     name: License Check
     needs: setup
