@@ -2,6 +2,9 @@ import 'package:finance_app/advisor/catalog/items/user_summary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   String name = 'Alice',
@@ -27,12 +30,15 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
+    type: 'UserSummaryCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(DataModel(), '/'),
+    dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
+    getCatalogItem: (_) => null,
     surfaceId: 'surface',
+    reportError: (_, _) {},
   );
 }
 
@@ -77,7 +83,7 @@ void main() {
       );
 
       final required = schema.value['required']! as List;
-      expect(required, hasLength(8));
+      expect(required, hasLength(9));
     });
 
     testWidgets('renders sections with valid data', (tester) async {

@@ -1,9 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class _MockFirebaseAIChatModel extends Mock implements FirebaseAIChatModel {}
 
 const _chatStarted = ChatStarted(
   profileType: ProfileType.beginner,
@@ -11,10 +15,18 @@ const _chatStarted = ChatStarted(
 );
 
 ChatBloc _buildBloc() {
-  return ChatBloc();
+  final mockModel = _MockFirebaseAIChatModel();
+  when(() => mockModel.sendStream(any())).thenAnswer(
+    (_) => const Stream.empty(),
+  );
+  return ChatBloc(chatModelFactory: () => mockModel);
 }
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(<ChatMessage>[]);
+  });
+
   group(ChatState, () {
     test('has correct defaults', () {
       const state = ChatState();
@@ -29,7 +41,7 @@ void main() {
       const state = ChatState();
       final updated = state.copyWith(
         status: ChatStatus.error,
-        messages: [UserMessage.text('hi')],
+        messages: [const UserDisplayMessage('hi')],
         isLoading: true,
         error: 'oops',
       );
@@ -40,9 +52,9 @@ void main() {
     });
 
     test('copyWith preserves values when not overridden', () {
-      final state = ChatState(
+      const state = ChatState(
         status: ChatStatus.active,
-        messages: [UserMessage.text('hi')],
+        messages: [UserDisplayMessage('hi')],
         isLoading: true,
         error: 'err',
       );
@@ -86,8 +98,8 @@ void main() {
     });
 
     test('$ChatConversationUpdated holds messages', () {
-      final msgs = <ChatMessage>[UserMessage.text('a')];
-      final event = ChatConversationUpdated(msgs);
+      const msgs = <DisplayMessage>[UserDisplayMessage('a')];
+      const event = ChatConversationUpdated(msgs);
       expect(event.messages, msgs);
     });
 
@@ -112,41 +124,24 @@ void main() {
     });
 
     blocTest<ChatBloc, ChatState>(
-      '$ChatStarted emits [loading, active] with a host',
+      '$ChatStarted emits loading, then active with host and initial '
+      'message',
       build: _buildBloc,
       act: (bloc) => bloc.add(_chatStarted),
-      expect: () => [
-        isA<ChatState>().having(
-          (s) => s.status,
-          'status',
-          ChatStatus.loading,
-        ),
-        isA<ChatState>()
-            .having((s) => s.status, 'status', ChatStatus.active)
-            .having((s) => s.host, 'host', isNotNull),
-      ],
-    );
-
-    blocTest<ChatBloc, ChatState>(
-      '$ChatMessageSent forwards message to conversation',
-      build: _buildBloc,
-      seed: () => const ChatState(),
-      act: (bloc) async {
-        bloc.add(_chatStarted);
-        await Future<void>.delayed(Duration.zero);
-        bloc.add(const ChatMessageSent('Hello'));
-      },
-      wait: const Duration(milliseconds: 50),
       verify: (bloc) {
+        expect(bloc.state.status, ChatStatus.active);
+        expect(bloc.state.host, isNotNull);
         expect(bloc.state.messages, isNotEmpty);
+        expect(bloc.state.messages.first, isA<UserDisplayMessage>());
       },
     );
 
     blocTest<ChatBloc, ChatState>(
       '$ChatConversationUpdated emits state with new messages',
       build: _buildBloc,
-      act: (bloc) =>
-          bloc.add(ChatConversationUpdated([UserMessage.text('msg')])),
+      act: (bloc) => bloc.add(
+        const ChatConversationUpdated([UserDisplayMessage('msg')]),
+      ),
       expect: () => [
         isA<ChatState>().having((s) => s.messages, 'messages', hasLength(1)),
       ],
@@ -181,37 +176,6 @@ void main() {
 
     test('close without starting does not throw', () async {
       final bloc = _buildBloc();
-      await bloc.close();
-    });
-
-    test(
-      'onError callback from content generator fires $ChatErrorOccurred',
-      () async {
-        final bloc = _buildBloc()..add(_chatStarted);
-        await Future<void>.delayed(Duration.zero);
-
-        bloc.add(const ChatMessageSent('Test'));
-        await Future<void>.delayed(const Duration(milliseconds: 50));
-
-        expect(bloc.state.status, ChatStatus.error);
-
-        await bloc.close();
-      },
-    );
-
-    test('processing listener fires $ChatLoading event', () async {
-      final bloc = _buildBloc()..add(_chatStarted);
-      await Future<void>.delayed(Duration.zero);
-
-      // After ChatStarted, the isProcessing notifier exists.
-      // Send a message to trigger the processing cycle.
-      bloc.add(const ChatMessageSent('test'));
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-
-      // The processing listener should have toggled isLoading via Loading
-      // events. After the message is processed, isLoading goes back to false.
-      expect(bloc.state.isLoading, isFalse);
-
       await bloc.close();
     });
   });

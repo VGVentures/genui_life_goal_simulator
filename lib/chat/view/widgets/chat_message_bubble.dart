@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 
@@ -9,20 +10,18 @@ class ChatMessageBubble extends StatelessWidget {
     super.key,
   });
 
-  final ChatMessage message;
-  final GenUiHost host;
+  final DisplayMessage message;
+  final SurfaceHost host;
 
   @override
   Widget build(BuildContext context) {
     return switch (message) {
-      UserMessage(:final text) => _UserBubble(text: text),
-      // TODO(juanRodriguez17): Just to see the hole model response
-      AiTextMessage(:final text) => _AssistantTextBubble(text: text),
-      AiUiMessage(:final surfaceId) => Padding(
+      UserDisplayMessage(:final text) => _UserBubble(text: text),
+      AiTextDisplayMessage(:final text) => _AssistantTextBubble(text: text),
+      AiSurfaceDisplayMessage(:final surfaceId) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: GenUiSurface(host: host, surfaceId: surfaceId),
+        child: Surface(surfaceContext: host.contextFor(surfaceId)),
       ),
-      _ => const SizedBox.shrink(),
     };
   }
 }
