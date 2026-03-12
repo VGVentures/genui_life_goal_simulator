@@ -45,8 +45,8 @@ void main() {
       expect(aiButtonItem.name, 'AiButton');
 
       final schema = aiButtonItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, contains('text'));
 
       final required = schema.value['required']! as List;
