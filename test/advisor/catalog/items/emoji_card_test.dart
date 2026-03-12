@@ -1,0 +1,86 @@
+import 'package:finance_app/advisor/catalog/items/emoji_card.dart';
+import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:genui/genui.dart';
+
+Map<String, Object?> _data({
+  List<Map<String, Object?>>? cards,
+}) => {
+  'cards': cards ?? [
+    {'emoji': '💰', 'label': 'Savings', 'isSelected': true},
+    {'emoji': '🏠', 'label': 'Housing', 'isSelected': false},
+  ],
+};
+
+CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+  return CatalogItemContext(
+    data: data,
+    id: 'test',
+    buildChild: (id, [dataContext]) => const SizedBox.shrink(),
+    dispatchEvent: (_) {},
+    buildContext: context,
+    dataContext: DataContext(DataModel(), '/'),
+    getComponent: (_) => null,
+    surfaceId: 'surface',
+  );
+}
+
+Future<void> _pump(
+  WidgetTester tester,
+  Map<String, Object?> data,
+) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        body: Builder(
+          builder: (context) =>
+              emojiCardItem.widgetBuilder(_context(context, data)),
+        ),
+      ),
+    ),
+  );
+}
+
+void main() {
+  group(emojiCardItem, () {
+    test('has correct name and schema keys', () {
+      expect(emojiCardItem.name, 'EmojiCard');
+
+      final schema = emojiCardItem.dataSchema;
+      final props =
+          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      expect(props, contains('cards'));
+
+      final required = schema.value['required']! as List;
+      expect(required, ['cards']);
+    });
+
+    testWidgets('renders emoji cards', (tester) async {
+      await _pump(tester, _data());
+
+      expect(find.text('💰'), findsOneWidget);
+      expect(find.text('Savings'), findsOneWidget);
+      expect(find.text('🏠'), findsOneWidget);
+      expect(find.text('Housing'), findsOneWidget);
+    });
+
+    testWidgets('renders EmojiCardLayout', (tester) async {
+      await _pump(tester, _data());
+
+      expect(find.byType(EmojiCardLayout), findsOneWidget);
+    });
+
+    testWidgets('defaults isSelected to false when omitted', (tester) async {
+      await _pump(
+        tester,
+        _data(cards: [
+          {'emoji': '📊', 'label': 'Budget'},
+        ]),
+      );
+
+      expect(find.text('📊'), findsOneWidget);
+      expect(find.text('Budget'), findsOneWidget);
+    });
+  });
+}
