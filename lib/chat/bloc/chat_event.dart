@@ -27,11 +27,16 @@ final class ChatMessageSent extends ChatEvent {
   final String text;
 }
 
-/// Conversation messages changed
-final class ChatConversationUpdated extends ChatEvent {
-  const ChatConversationUpdated(this.messages);
+/// A new AI response turn has started — create a new page.
+final class ChatNewPageStarted extends ChatEvent {
+  const ChatNewPageStarted();
+}
 
-  final List<DisplayMessage> messages;
+/// A display message was added to the current page.
+final class ChatContentReceived extends ChatEvent {
+  const ChatContentReceived(this.message);
+
+  final DisplayMessage message;
 }
 
 /// Loading state when LLM is processing a request
