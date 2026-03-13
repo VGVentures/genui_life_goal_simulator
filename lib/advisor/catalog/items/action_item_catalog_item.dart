@@ -79,8 +79,7 @@ final actionItemsGroupItem = CatalogItem(
               UserActionEvent(
                 name: event['name']! as String,
                 sourceComponentId: ctx.id,
-                context:
-                    event['context'] as Map<String, Object?>? ?? {},
+                context: event['context'] as Map<String, Object?>? ?? {},
               ),
             );
           }
