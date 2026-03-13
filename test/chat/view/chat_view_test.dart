@@ -41,7 +41,7 @@ void main() {
   });
 
   group(ChatView, () {
-    testWidgets('shows empty-state label when messages are empty', (
+    testWidgets('shows empty-state label when pages are empty', (
       tester,
     ) async {
       await tester.pumpChatView(bloc);
@@ -58,32 +58,24 @@ void main() {
       await tester.pumpChatView(bloc);
 
       expect(find.byType(ChatInputBar), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
-    testWidgets('shows $CircularProgressIndicator when loading', (
+    testWidgets('renders message bubbles in PageView when pages exist', (
       tester,
     ) async {
-      when(() => bloc.state).thenReturn(
-        const ChatState(status: ChatStatus.active, isLoading: true),
-      );
-      await tester.pumpChatView(bloc);
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byType(ChatInputBar), findsNothing);
-    });
-
-    testWidgets('renders message bubbles when messages exist', (tester) async {
       final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
         ChatState(
           status: ChatStatus.active,
-          messages: const [UserDisplayMessage('Hello')],
+          pages: const [
+            [AiTextDisplayMessage('Hello')],
+          ],
           host: host,
         ),
       );
       await tester.pumpChatView(bloc);
 
+      expect(find.byType(PageView), findsOneWidget);
       expect(find.byType(ChatMessageBubble), findsOneWidget);
       expect(
         find.text('Send a message to get started!'),
@@ -114,7 +106,7 @@ void main() {
       expect((captured.first as ChatMessageSent).text, 'hi');
     });
 
-    testWidgets('$ChatInputBar is disabled when status is not active', (
+    testWidgets('$ChatInputBar is not shown when status is not active', (
       tester,
     ) async {
       when(() => bloc.state).thenReturn(
@@ -122,22 +114,36 @@ void main() {
       );
       await tester.pumpChatView(bloc);
 
-      final inputBar = tester.widget<ChatInputBar>(
-        find.byType(ChatInputBar),
-      );
-      expect(inputBar.enabled, isFalse);
+      expect(find.byType(ChatInputBar), findsNothing);
     });
 
-    testWidgets('messages buildWhen triggers rebuild on message change', (
+    testWidgets('shows loading indicator on current page when loading', (
       tester,
     ) async {
+      final host = _MockSurfaceHost();
+      when(() => bloc.state).thenReturn(
+        ChatState(
+          status: ChatStatus.active,
+          pages: const [[]],
+          isLoading: true,
+          host: host,
+        ),
+      );
+      await tester.pumpChatView(bloc);
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('rebuilds when pages change', (tester) async {
       final host = _MockSurfaceHost();
       whenListen(
         bloc,
         Stream.fromIterable([
           ChatState(
             status: ChatStatus.active,
-            messages: const [UserDisplayMessage('Hello')],
+            pages: const [
+              [AiTextDisplayMessage('Hello')],
+            ],
             host: host,
           ),
         ]),
@@ -148,23 +154,6 @@ void main() {
       await tester.pump();
 
       expect(find.byType(ChatMessageBubble), findsOneWidget);
-    });
-
-    testWidgets('bottom buildWhen triggers rebuild on loading change', (
-      tester,
-    ) async {
-      whenListen(
-        bloc,
-        Stream.fromIterable([
-          const ChatState(status: ChatStatus.active, isLoading: true),
-        ]),
-        initialState: const ChatState(status: ChatStatus.active),
-      );
-
-      await tester.pumpChatView(bloc);
-      await tester.pump();
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
   });
 }

@@ -20,7 +20,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       super(const ChatState()) {
     on<ChatStarted>(_onStarted);
     on<ChatMessageSent>(_onMessageSent);
-    on<ChatConversationUpdated>(_onConversationUpdated);
+    on<ChatNewPageStarted>(_onNewPageStarted);
+    on<ChatContentReceived>(_onContentReceived);
     on<ChatLoading>(_onLoading);
     on<ChatErrorOccurred>(_onErrorOccurred);
   }
@@ -30,7 +31,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   FirebaseAIChatModel? _chatModel;
   StreamSubscription<ConversationEvent>? _eventSubscription;
   late final List<ChatMessage> _history = [];
-  late final List<DisplayMessage> _displayMessages = [];
   late String _systemPrompt;
 
   Future<void> _onStarted(
@@ -69,15 +69,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _eventSubscription = _conversation!.events.listen((event) {
       if (isClosed) return;
       switch (event) {
+        case ConversationWaiting():
+          add(const ChatNewPageStarted());
+          add(const ChatLoading(isLoading: true));
         case ConversationContentReceived(:final text):
-          _addDisplayMessage(AiTextDisplayMessage(text));
+          add(ChatContentReceived(AiTextDisplayMessage(text)));
         case ConversationSurfaceAdded(:final surfaceId):
-          _addDisplayMessage(AiSurfaceDisplayMessage(surfaceId));
+          add(ChatContentReceived(AiSurfaceDisplayMessage(surfaceId)));
         case ConversationError(:final error):
           add(ChatErrorOccurred(error.toString()));
-        case ConversationWaiting():
-          add(const ChatLoading(isLoading: true));
         case _:
+          // ConversationComponentsUpdated: Surface widget auto-rebuilds.
           break;
       }
     });
@@ -98,20 +100,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       focusOptions: event.focusOptions,
       customOption: event.customOption,
     );
-    _addDisplayMessage(UserDisplayMessage(initialMessage));
     await _conversation!.sendRequest(ChatMessage.user(initialMessage));
   }
 
   void _onStateChanged() {
     if (!isClosed) {
       add(ChatLoading(isLoading: _conversation!.state.value.isWaiting));
-    }
-  }
-
-  void _addDisplayMessage(DisplayMessage message) {
-    if (!isClosed) {
-      _displayMessages.add(message);
-      add(ChatConversationUpdated(List.of(_displayMessages)));
     }
   }
 
@@ -138,11 +132,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _history.add(ChatMessage.model(buffer.toString()));
   }
 
-  void _onConversationUpdated(
-    ChatConversationUpdated event,
+  void _onNewPageStarted(
+    ChatNewPageStarted event,
     Emitter<ChatState> emit,
   ) {
-    emit(state.copyWith(messages: event.messages));
+    final pages = [...state.pages, <DisplayMessage>[]];
+    emit(state.copyWith(pages: pages, currentPageIndex: pages.length - 1));
+  }
+
+  void _onContentReceived(
+    ChatContentReceived event,
+    Emitter<ChatState> emit,
+  ) {
+    if (state.pages.isEmpty) return;
+    final pages = [
+      for (var i = 0; i < state.pages.length; i++)
+        if (i == state.currentPageIndex)
+          [...state.pages[i], event.message]
+        else
+          state.pages[i],
+    ];
+    emit(state.copyWith(pages: pages));
   }
 
   void _onLoading(
@@ -156,7 +166,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ChatMessageSent event,
     Emitter<ChatState> emit,
   ) async {
-    _addDisplayMessage(UserDisplayMessage(event.text));
     await _conversation?.sendRequest(ChatMessage.user(event.text));
   }
 

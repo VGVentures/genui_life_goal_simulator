@@ -1,12 +1,28 @@
+import 'dart:async';
+
 import 'package:finance_app/app/presentation/spacing.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:genui/genui.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends StatefulWidget {
   const ChatView({super.key});
+
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  final _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,56 +31,85 @@ class ChatView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.chatAppBarTitle)),
-      body: Column(
-        children: [
-          Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
-              buildWhen: (previous, current) =>
-                  previous.messages != current.messages,
-              builder: (context, state) {
-                if (state.messages.isEmpty) {
-                  return Center(
-                    child: Text(l10n.startChattingLabel),
-                  );
-                }
-                return ListView.builder(
-                  reverse: true,
-                  padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-                  itemCount: state.messages.length,
-                  itemBuilder: (context, index) {
-                    final message =
-                        state.messages[state.messages.length - 1 - index];
-                    return ChatMessageBubble(
-                      message: message,
-                      host: state.host!,
-                    );
+      body: BlocConsumer<ChatBloc, ChatState>(
+        listenWhen: (previous, current) =>
+            previous.currentPageIndex != current.currentPageIndex,
+        listener: (context, state) {
+          if (_pageController.hasClients && state.pages.isNotEmpty) {
+            unawaited(
+              _pageController.animateToPage(
+                state.currentPageIndex,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              ),
+            );
+          }
+        },
+        buildWhen: (previous, current) =>
+            previous.pages != current.pages ||
+            previous.isLoading != current.isLoading ||
+            previous.status != current.status,
+        builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(
+                child: state.pages.isEmpty
+                    ? Center(child: Text(l10n.startChattingLabel))
+                    : PageView.builder(
+                        controller: _pageController,
+                        itemCount: state.pages.length,
+                        itemBuilder: (context, pageIndex) {
+                          final messages = state.pages[pageIndex];
+                          return _ChatPage(
+                            messages: messages,
+                            host: state.host!,
+                            isLoading:
+                                state.isLoading &&
+                                pageIndex == state.currentPageIndex,
+                          );
+                        },
+                      ),
+              ),
+              if (state.status == ChatStatus.active)
+                ChatInputBar(
+                  enabled: !state.isLoading,
+                  onSend: (text) {
+                    chatBloc.add(ChatMessageSent(text));
                   },
-                );
-              },
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ChatPage extends StatelessWidget {
+  const _ChatPage({
+    required this.messages,
+    required this.host,
+    required this.isLoading,
+  });
+
+  final List<DisplayMessage> messages;
+  final SurfaceHost host;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final message in messages)
+            ChatMessageBubble(message: message, host: host),
+          if (isLoading)
+            const Padding(
+              padding: EdgeInsets.all(Spacing.md),
+              child: Center(child: CircularProgressIndicator()),
             ),
-          ),
-          BlocBuilder<ChatBloc, ChatState>(
-            buildWhen: (previous, current) =>
-                previous.isLoading != current.isLoading ||
-                previous.status != current.status,
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.md,
-                    vertical: Spacing.md,
-                  ),
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ChatInputBar(
-                enabled: state.status == ChatStatus.active && !state.isLoading,
-                onSend: (text) {
-                  chatBloc.add(ChatMessageSent(text));
-                },
-              );
-            },
-          ),
         ],
       ),
     );
