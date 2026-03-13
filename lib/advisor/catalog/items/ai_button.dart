@@ -4,7 +4,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
   properties: {
-    'text': S.string(
+    'text': A2uiSchemas.stringReference(
       description: 'The label displayed on the AI button.',
     ),
   },
@@ -17,16 +17,21 @@ final aiButtonItem = CatalogItem(
   dataSchema: _schema,
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
-    final text = json['text']! as String;
 
-    return AiButton(
-      text: text,
-      onTap: () {
-        ctx.dispatchEvent(
-          UserActionEvent(
-            name: 'ai_button_tapped',
-            sourceComponentId: ctx.id,
-          ),
+    return BoundString(
+      dataContext: ctx.dataContext,
+      value: json['text'],
+      builder: (context, text) {
+        return AiButton(
+          text: text ?? '',
+          onTap: () {
+            ctx.dispatchEvent(
+              UserActionEvent(
+                name: 'ai_button_tapped',
+                sourceComponentId: ctx.id,
+              ),
+            );
+          },
         );
       },
     );

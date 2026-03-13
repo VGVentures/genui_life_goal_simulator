@@ -21,7 +21,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       super(const ChatState()) {
     on<ChatStarted>(_onStarted);
     on<ChatMessageSent>(_onMessageSent);
-    on<ChatNewPageStarted>(_onNewPageStarted);
+    on<ChatSurfaceReceived>(_onSurfaceReceived);
     on<ChatContentReceived>(_onContentReceived);
     on<ChatLoading>(_onLoading);
     on<ChatErrorOccurred>(_onErrorOccurred);
@@ -71,12 +71,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (isClosed) return;
       switch (event) {
         case ConversationWaiting():
-          add(const ChatNewPageStarted());
           add(const ChatLoading(isLoading: true));
         case ConversationContentReceived(:final text):
           add(ChatContentReceived(AiTextDisplayMessage(text)));
         case ConversationSurfaceAdded(:final surfaceId):
-          add(ChatContentReceived(AiSurfaceDisplayMessage(surfaceId)));
+          add(ChatSurfaceReceived(surfaceId));
         case ConversationError(:final error):
           add(ChatErrorOccurred(error.toString()));
         case _:
@@ -154,27 +153,69 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return ChatMessage(role: message.role, parts: converted);
   }
 
-  void _onNewPageStarted(
-    ChatNewPageStarted event,
+  void _onSurfaceReceived(
+    ChatSurfaceReceived event,
     Emitter<ChatState> emit,
   ) {
-    final pages = [...state.pages, <DisplayMessage>[]];
-    emit(state.copyWith(pages: pages, currentPageIndex: pages.length - 1));
+    // Check if this surface already exists on any page.
+    final existingPageIndex = state.pages.indexWhere(
+      (page) => page.any(
+        (m) => m is AiSurfaceDisplayMessage && m.surfaceId == event.surfaceId,
+      ),
+    );
+
+    if (existingPageIndex != -1) {
+      // Surface already exists — stay on that page. The surface widget
+      // auto-rebuilds via GenUI, so we just navigate back to it.
+      emit(state.copyWith(currentPageIndex: existingPageIndex));
+    } else {
+      // New surface — create a new page with it.
+      final message = AiSurfaceDisplayMessage(event.surfaceId);
+      final pages = [...state.pages, <DisplayMessage>[message]];
+      emit(state.copyWith(pages: pages, currentPageIndex: pages.length - 1));
+    }
   }
 
   void _onContentReceived(
     ChatContentReceived event,
     Emitter<ChatState> emit,
   ) {
-    if (state.pages.isEmpty) return;
-    final pages = [
-      for (var i = 0; i < state.pages.length; i++)
-        if (i == state.currentPageIndex)
-          [...state.pages[i], event.message]
+    // Ensure there's a page to append to.
+    var pages = [...state.pages];
+    var currentPageIndex = state.currentPageIndex;
+    if (pages.isEmpty) {
+      pages = [<DisplayMessage>[]];
+      currentPageIndex = 0;
+    }
+
+    final currentPage = pages[currentPageIndex];
+    final message = event.message;
+
+    // Merge consecutive text messages into a single paragraph.
+    if (message is AiTextDisplayMessage && currentPage.isNotEmpty) {
+      final last = currentPage.last;
+      if (last is AiTextDisplayMessage) {
+        final merged = AiTextDisplayMessage(last.text + message.text);
+        pages = [
+          for (var i = 0; i < pages.length; i++)
+            if (i == currentPageIndex)
+              [...currentPage.sublist(0, currentPage.length - 1), merged]
+            else
+              pages[i],
+        ];
+        emit(state.copyWith(pages: pages, currentPageIndex: currentPageIndex));
+        return;
+      }
+    }
+
+    pages = [
+      for (var i = 0; i < pages.length; i++)
+        if (i == currentPageIndex)
+          [...currentPage, message]
         else
-          state.pages[i],
+          pages[i],
     ];
-    emit(state.copyWith(pages: pages));
+    emit(state.copyWith(pages: pages, currentPageIndex: currentPageIndex));
   }
 
   void _onLoading(

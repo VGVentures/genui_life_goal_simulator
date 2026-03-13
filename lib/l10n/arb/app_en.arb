@@ -8,8 +8,12 @@
     "@homeAppBarTitle": {
         "description": "Text shown in the AppBar of the Home Page"
     },
-    "chatAppBarTitle": "Chat",
-    "@chatAppBarTitle": {
+    "chatAppBarTitleFirstPart": "VGV ",
+    "@chatAppBarTitleFirstPart": {
+        "description": "Text shown in the AppBar of the Chat Page"
+    },
+    "chatAppBarTitleSecondPart": "Finances",
+    "@chatAppBarTitleSecondPart": {
         "description": "Text shown in the AppBar of the Chat Page"
     },
     "chatInputBarHint": "Ask about your finances...",

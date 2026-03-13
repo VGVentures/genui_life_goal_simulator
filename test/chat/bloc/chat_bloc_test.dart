@@ -104,9 +104,9 @@ void main() {
       expect(event.text, 'hello');
     });
 
-    test('$ChatNewPageStarted is const constructible', () {
-      const event = ChatNewPageStarted();
-      expect(event, isA<ChatEvent>());
+    test('$ChatSurfaceReceived holds surfaceId', () {
+      const event = ChatSurfaceReceived('surface_1');
+      expect(event.surfaceId, 'surface_1');
     });
 
     test('$ChatContentReceived holds message', () {
@@ -145,12 +145,31 @@ void main() {
     );
 
     blocTest<ChatBloc, ChatState>(
-      '$ChatNewPageStarted adds an empty page',
+      '$ChatSurfaceReceived creates a new page for a new surface',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const ChatNewPageStarted()),
+      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
       expect: () => [
         isA<ChatState>()
             .having((s) => s.pages, 'pages', hasLength(1))
+            .having((s) => s.pages.first, 'first page', hasLength(1))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
+      ],
+    );
+
+    blocTest<ChatBloc, ChatState>(
+      '$ChatSurfaceReceived stays on existing page for known surface',
+      build: _buildBloc,
+      seed: () => const ChatState(
+        pages: [
+          [AiSurfaceDisplayMessage('surface_1')],
+          [AiSurfaceDisplayMessage('surface_2')],
+        ],
+        currentPageIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
+      expect: () => [
+        isA<ChatState>()
+            .having((s) => s.pages, 'pages', hasLength(2))
             .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
       ],
     );
@@ -169,6 +188,18 @@ void main() {
           'first page',
           hasLength(1),
         ),
+      ],
+    );
+
+    blocTest<ChatBloc, ChatState>(
+      '$ChatContentReceived creates a page if none exist',
+      build: _buildBloc,
+      act: (bloc) =>
+          bloc.add(const ChatContentReceived(AiTextDisplayMessage('hi'))),
+      expect: () => [
+        isA<ChatState>()
+            .having((s) => s.pages, 'pages', hasLength(1))
+            .having((s) => s.pages.first, 'first page', hasLength(1)),
       ],
     );
 

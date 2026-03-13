@@ -7,10 +7,6 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-const _defaultAction = {
-  'event': {'name': 'slider_changed'},
-};
-
 Map<String, Object?> _data({
   String title = 'Budget',
   String subtitle = 'Dining • Feb 18',
@@ -22,7 +18,6 @@ Map<String, Object?> _data({
   String? maxLabel,
   int? divisions,
   List<String>? splitLabels,
-  Map<String, Object?> action = _defaultAction,
 }) => {
   'title': title,
   'subtitle': subtitle,
@@ -34,7 +29,6 @@ Map<String, Object?> _data({
   'maxLabel': maxLabel,
   'divisions': divisions,
   'splitLabels': splitLabels,
-  'action': action,
 };
 
 CatalogItemContext _context(
@@ -97,14 +91,13 @@ void main() {
           'maxLabel',
           'divisions',
           'splitLabels',
-          'action',
         ]),
       );
 
       final required = schema.value['required']! as List;
       expect(
         required,
-        containsAll(['title', 'subtitle', 'value', 'min', 'max', 'action']),
+        containsAll(['title', 'subtitle', 'value', 'min', 'max']),
       );
     });
 
@@ -148,22 +141,15 @@ void main() {
         expect(find.text('Max'), findsWidgets);
       });
 
-      testWidgets('dispatches event on value change', (tester) async {
-        final events = <UiEvent>[];
-        await _pump(
-          tester,
-          _data(value: 0, max: 100),
-          dispatchEvent: events.add,
-        );
+      testWidgets('updates value locally on drag', (tester) async {
+        await _pump(tester, _data(value: 0, max: 100));
 
         // Drag the slider thumb to the right
         await tester.drag(find.byType(Slider), const Offset(100, 0));
         await tester.pump();
 
-        expect(events, isNotEmpty);
-        final event = events.last as UserActionEvent;
-        expect(event.name, 'slider_changed');
-        expect(event.context, containsPair('value', isA<double>()));
+        // Slider should still be rendered (state managed locally)
+        expect(find.byType(GCNSlider), findsOneWidget);
       });
     });
   });

@@ -8,13 +8,13 @@ final _schema = S.object(
       description: 'List of transactions to display.',
       items: S.object(
         properties: {
-          'title': S.string(
+          'title': A2uiSchemas.stringReference(
             description: 'Transaction name (e.g. "Nobu Restaurant").',
           ),
-          'description': S.string(
+          'description': A2uiSchemas.stringReference(
             description: 'Transaction category (e.g. "Dining").',
           ),
-          'amount': S.string(
+          'amount': A2uiSchemas.stringReference(
             description: r'Formatted amount string (e.g. "$450").',
           ),
         },
@@ -33,17 +33,19 @@ final transactionListItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final rawItems = json['items']! as List;
 
-    final items = rawItems
-        .cast<Map<String, Object?>>()
-        .map(
-          (item) => TransactionListItem(
-            title: item['title']! as String,
-            description: item['description']! as String,
-            amount: item['amount']! as String,
-          ),
-        )
-        .toList();
+    final items = rawItems.cast<Map<String, Object?>>().map((item) {
+      return TransactionListItem(
+        title: _resolveString(item['title']),
+        description: _resolveString(item['description']),
+        amount: _resolveString(item['amount']),
+      );
+    }).toList();
 
     return TransactionList(items: items);
   },
 );
+
+String _resolveString(Object? value) {
+  if (value is String) return value;
+  return value?.toString() ?? '';
+}

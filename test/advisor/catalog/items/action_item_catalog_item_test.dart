@@ -81,10 +81,9 @@ void main() {
       expect(required, contains('items'));
     });
 
-    testWidgets('renders ActionItemsGroup with valid data', (tester) async {
+    testWidgets('renders ActionItem with valid data', (tester) async {
       await _pump(tester, _data());
 
-      expect(find.byType(ActionItemsGroup), findsOneWidget);
       expect(find.byType(ActionItem), findsOneWidget);
       expect(find.text('Restaurant'), findsOneWidget);
       expect(find.text('Dining • Feb 18'), findsOneWidget);

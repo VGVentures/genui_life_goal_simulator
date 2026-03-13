@@ -68,29 +68,49 @@ Use the TransactionList widget to display a list of recent transactions. Each it
 
 /// Builds the full catalog of financial widgets for GenUI.
 Catalog buildFinanceCatalog() {
-  return BasicCatalogItems.asCatalog().copyWith(
-    catalogId: financeCatalogId,
-    newItems: [
-      aiButtonItem,
-      headerSelectorItem,
-      sectionHeaderItem,
-      accordionItem,
-      actionItemsGroupItem,
-      appButtonItem,
-      categoryFilterChipItem,
-      comparisonTableItem,
-      emojiCardItem,
-      filterBarItem,
-      horizontalBarItem,
-      gcnSliderItem,
-      lineChartItem,
-      progressBarItem,
-      metricCardsItem,
-      radioCardItem,
-      rankedTableItem,
-      sparklineCardItem,
-      transactionListItem,
-    ],
-    systemPromptFragments: [_financeWidgetRules],
-  );
+  return BasicCatalogItems.asCatalog()
+      .copyWithout(
+        itemsToRemove: [
+          BasicCatalogItems.audioPlayer,
+          BasicCatalogItems.button,
+          BasicCatalogItems.card,
+          BasicCatalogItems.checkBox,
+          BasicCatalogItems.choicePicker,
+          BasicCatalogItems.dateTimeInput,
+          BasicCatalogItems.divider,
+          BasicCatalogItems.icon,
+          BasicCatalogItems.image,
+          BasicCatalogItems.list,
+          BasicCatalogItems.modal,
+          BasicCatalogItems.slider,
+          BasicCatalogItems.tabs,
+          BasicCatalogItems.textField,
+          BasicCatalogItems.video,
+        ],
+      )
+      .copyWith(
+        catalogId: financeCatalogId,
+        newItems: [
+          actionItemsGroupItem,
+          aiButtonItem,
+          headerSelectorItem,
+          sectionHeaderItem,
+          accordionItem,
+          appButtonItem,
+          categoryFilterChipItem,
+          comparisonTableItem,
+          emojiCardItem,
+          filterBarItem,
+          horizontalBarItem,
+          gcnSliderItem,
+          lineChartItem,
+          progressBarItem,
+          metricCardsItem,
+          radioCardItem,
+          rankedTableItem,
+          sparklineCardItem,
+          transactionListItem,
+        ],
+        systemPromptFragments: [_financeWidgetRules],
+      );
 }

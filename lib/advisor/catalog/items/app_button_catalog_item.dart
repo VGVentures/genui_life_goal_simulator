@@ -7,7 +7,9 @@ final _schema = S.object(
       'A call-to-action button for navigating to a detail view, '
       'confirming a choice, or starting a workflow.',
   properties: {
-    'label': S.string(description: 'The button text.'),
+    'label': A2uiSchemas.stringReference(
+      description: 'The button text.',
+    ),
     'variant': S.string(
       description: 'Visual style of the button.',
       enumValues: ['filled', 'outlined'],
@@ -33,7 +35,7 @@ final appButtonItem = CatalogItem(
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
 
-    final label = json['label']! as String;
+    final labelValue = json['label']!;
     final variant = switch (json['variant']! as String) {
       'outlined' => AppButtonVariant.outlined,
       _ => AppButtonVariant.filled,
@@ -45,21 +47,27 @@ final appButtonItem = CatalogItem(
     final isLoading = json['isLoading'] as bool? ?? false;
     final action = json['action'] as Map<String, Object?>?;
 
-    return AppButton(
-      label: label,
-      variant: variant,
-      size: size,
-      isLoading: isLoading,
-      onPressed: () {
-        if (action case {'event': final Map<String, Object?> event}) {
-          ctx.dispatchEvent(
-            UserActionEvent(
-              name: event['name']! as String,
-              sourceComponentId: ctx.id,
-              context: event['context'] as Map<String, Object?>? ?? {},
-            ),
-          );
-        }
+    return BoundString(
+      dataContext: ctx.dataContext,
+      value: labelValue,
+      builder: (context, label) {
+        return AppButton(
+          label: label ?? '',
+          variant: variant,
+          size: size,
+          isLoading: isLoading,
+          onPressed: () {
+            if (action case {'event': final Map<String, Object?> event}) {
+              ctx.dispatchEvent(
+                UserActionEvent(
+                  name: event['name']! as String,
+                  sourceComponentId: ctx.id,
+                  context: event['context'] as Map<String, Object?>? ?? {},
+                ),
+              );
+            }
+          },
+        );
       },
     );
   },

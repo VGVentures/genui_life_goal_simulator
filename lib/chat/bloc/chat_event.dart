@@ -27,9 +27,11 @@ final class ChatMessageSent extends ChatEvent {
   final String text;
 }
 
-/// A new AI response turn has started — create a new page.
-final class ChatNewPageStarted extends ChatEvent {
-  const ChatNewPageStarted();
+/// A surface was added or already exists — route to the correct page.
+final class ChatSurfaceReceived extends ChatEvent {
+  const ChatSurfaceReceived(this.surfaceId);
+
+  final String surfaceId;
 }
 
 /// A display message was added to the current page.

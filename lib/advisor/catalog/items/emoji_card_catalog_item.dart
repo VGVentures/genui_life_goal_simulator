@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
@@ -11,8 +12,10 @@ final _schema = S.object(
       description: 'List of emoji cards to display in a responsive grid.',
       items: S.object(
         properties: {
-          'emoji': S.string(description: 'A single emoji character.'),
-          'label': S.string(
+          'emoji': A2uiSchemas.stringReference(
+            description: 'A single emoji character.',
+          ),
+          'label': A2uiSchemas.stringReference(
             description: 'Short label shown below the emoji.',
           ),
           'isSelected': S.boolean(
@@ -34,14 +37,49 @@ final emojiCardItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final rawCards = json['cards']! as List;
 
-    final cards = rawCards.cast<Map<String, Object?>>().map((c) {
-      return EmojiCard(
-        emoji: c['emoji']! as String,
-        label: c['label']! as String,
-        isSelected: c['isSelected'] as bool? ?? false,
-      );
-    }).toList();
-
-    return EmojiCardLayout(cards: cards);
+    return EmojiCardLayout(
+      cards: rawCards.cast<Map<String, Object?>>().indexed.map((entry) {
+        final (index, c) = entry;
+        return _BoundEmojiCard(
+          key: ValueKey('emoji_card_$index'),
+          dataContext: ctx.dataContext,
+          cardData: c,
+        );
+      }).toList(),
+    );
   },
 );
+
+class _BoundEmojiCard extends EmojiCard {
+  const _BoundEmojiCard({
+    required DataContext dataContext,
+    required Map<String, Object?> cardData,
+    super.key,
+  }) : _dataContext = dataContext,
+       _cardData = cardData,
+       super(emoji: '', label: '');
+
+  final DataContext _dataContext;
+  final Map<String, Object?> _cardData;
+
+  @override
+  Widget build(BuildContext context) {
+    return BoundString(
+      dataContext: _dataContext,
+      value: _cardData['emoji'],
+      builder: (context, emoji) {
+        return BoundString(
+          dataContext: _dataContext,
+          value: _cardData['label'],
+          builder: (context, label) {
+            return EmojiCard(
+              emoji: emoji ?? '',
+              label: label ?? '',
+              isSelected: _cardData['isSelected'] as bool? ?? false,
+            );
+          },
+        );
+      },
+    );
+  }
+}

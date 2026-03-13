@@ -92,10 +92,10 @@ void main() {
         expect(find.text('vs last month'), findsOneWidget);
       });
 
-      testWidgets('MetricCardsLayout', (tester) async {
+      testWidgets('MetricCard widgets', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.byType(MetricCardsLayout), findsOneWidget);
+        expect(find.byType(MetricCard), findsNWidgets(2));
       });
 
       testWidgets('plain card without delta', (tester) async {

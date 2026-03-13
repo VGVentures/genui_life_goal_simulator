@@ -1,19 +1,23 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _itemSchema = S.object(
   description:
-      'A single financial task, recommendation, or transaction highlight.',
+      'A single financial task, recommendation, or transaction highlight. '
+      'String fields support data model bindings via {"path": "..."}.',
   properties: {
-    'title': S.string(description: 'Primary label, e.g. "Restaurant".'),
-    'subtitle': S.string(
+    'title': A2uiSchemas.stringReference(
+      description: 'Primary label, e.g. "Restaurant".',
+    ),
+    'subtitle': A2uiSchemas.stringReference(
       description: 'Secondary label, e.g. "Dining • Feb 18".',
     ),
-    'amount': S.string(
+    'amount': A2uiSchemas.stringReference(
       description: r'Monetary value shown on the right, e.g. "$450".',
     ),
-    'delta': S.string(
+    'delta': A2uiSchemas.stringReference(
       description: 'Optional change indicator, e.g. "+28%".',
     ),
     'buttonLabel': S.string(
@@ -48,7 +52,19 @@ final _schema = S.object(
   required: ['items'],
 );
 
+ActionItemButtonVariant _parseVariant(String? value) {
+  return switch (value) {
+    'primary' => ActionItemButtonVariant.primary,
+    'secondary' => ActionItemButtonVariant.secondary,
+    _ => ActionItemButtonVariant.none,
+  };
+}
+
 /// CatalogItem that renders a group of financial action items.
+///
+/// String fields (`title`, `subtitle`, `amount`, `delta`) support data model
+/// bindings via `{"path": "..."}` for reactive values. Buttons dispatch
+/// actions immediately when tapped.
 final actionItemsGroupItem = CatalogItem(
   name: 'ActionItemsGroup',
   dataSchema: _schema,
@@ -56,37 +72,109 @@ final actionItemsGroupItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final rawItems = json['items']! as List<Object?>;
 
-    final items = rawItems.map((raw) {
-      final item = raw! as Map<String, Object?>;
-      final variantRaw = item['buttonVariant'] as String?;
-      final variant = switch (variantRaw) {
-        'primary' => ActionItemButtonVariant.primary,
-        'secondary' => ActionItemButtonVariant.secondary,
-        _ => ActionItemButtonVariant.none,
-      };
-      final action = item['action'] as Map<String, Object?>?;
-
-      return ActionItem(
-        title: item['title']! as String,
-        subtitle: item['subtitle']! as String,
-        amount: item['amount']! as String,
-        delta: item['delta'] as String?,
-        buttonLabel: item['buttonLabel'] as String?,
-        buttonVariant: variant,
-        onButtonTap: () {
-          if (action case {'event': final Map<String, Object?> event}) {
-            ctx.dispatchEvent(
-              UserActionEvent(
-                name: event['name']! as String,
-                sourceComponentId: ctx.id,
-                context: event['context'] as Map<String, Object?>? ?? {},
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: rawItems
+          .cast<Map<String, Object?>>()
+          .indexed
+          .map((entry) {
+            final (index, item) = entry;
+            return _BoundActionItem(
+              key: ValueKey('action_item_$index'),
+              dataContext: ctx.dataContext,
+              itemData: item,
+              dispatchEvent: ctx.dispatchEvent,
+              componentId: ctx.id,
             );
-          }
-        },
-      );
-    }).toList();
-
-    return ActionItemsGroup(items: items);
+          })
+          .toList(),
+    );
   },
 );
+
+class _BoundActionItem extends StatelessWidget {
+  const _BoundActionItem({
+    required this.dataContext,
+    required this.itemData,
+    required this.dispatchEvent,
+    required this.componentId,
+    super.key,
+  });
+
+  final DataContext dataContext;
+  final Map<String, Object?> itemData;
+  final DispatchEventCallback dispatchEvent;
+  final String componentId;
+
+  VoidCallback? _buildOnButtonTap(String? title) {
+    final action = itemData['action'] as Map<String, Object?>?;
+    if (action == null) return null;
+    if (action case {'event': final Map<String, Object?> event}) {
+      return () {
+        dispatchEvent(
+          UserActionEvent(
+            name: event['name']! as String,
+            sourceComponentId: componentId,
+            context: {
+              ...event['context'] as Map<String, Object?>? ?? {},
+              'title': ?title,
+            },
+          ),
+        );
+      };
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BoundString(
+      dataContext: dataContext,
+      value: itemData['title'],
+      builder: (context, title) {
+        return BoundString(
+          dataContext: dataContext,
+          value: itemData['subtitle'],
+          builder: (context, subtitle) {
+            return BoundString(
+              dataContext: dataContext,
+              value: itemData['amount'],
+              builder: (context, amount) {
+                final deltaValue = itemData['delta'];
+                if (deltaValue == null) {
+                  return ActionItem(
+                    title: title ?? '',
+                    subtitle: subtitle ?? '',
+                    amount: amount ?? '',
+                    buttonLabel: itemData['buttonLabel'] as String?,
+                    buttonVariant: _parseVariant(
+                      itemData['buttonVariant'] as String?,
+                    ),
+                    onButtonTap: _buildOnButtonTap(title),
+                  );
+                }
+                return BoundString(
+                  dataContext: dataContext,
+                  value: deltaValue,
+                  builder: (context, delta) {
+                    return ActionItem(
+                      title: title ?? '',
+                      subtitle: subtitle ?? '',
+                      amount: amount ?? '',
+                      delta: delta,
+                      buttonLabel: itemData['buttonLabel'] as String?,
+                      buttonVariant: _parseVariant(
+                        itemData['buttonVariant'] as String?,
+                      ),
+                      onButtonTap: _buildOnButtonTap(title),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}

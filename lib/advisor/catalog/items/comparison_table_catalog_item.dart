@@ -11,7 +11,7 @@ final _schema = S.object(
       description: 'Rows of the comparison table.',
       items: S.object(
         properties: {
-          'label': S.string(
+          'label': A2uiSchemas.stringReference(
             description: 'Category name (e.g. "Groceries").',
           ),
           'lastMonthAmount': S.number(
@@ -38,7 +38,7 @@ final comparisonTableItem = CatalogItem(
 
     final items = rawItems.cast<Map<String, Object?>>().map((row) {
       return ComparisonTableItem(
-        label: row['label']! as String,
+        label: _resolveString(row['label']),
         lastMonthAmount: (row['lastMonthAmount']! as num).toDouble(),
         actualMonthAmount: (row['actualMonthAmount']! as num).toDouble(),
       );
@@ -47,3 +47,8 @@ final comparisonTableItem = CatalogItem(
     return ComparisonTable(items: items);
   },
 );
+
+String _resolveString(Object? value) {
+  if (value is String) return value;
+  return value?.toString() ?? '';
+}

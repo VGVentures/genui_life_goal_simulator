@@ -8,16 +8,15 @@ final _schema = S.object(
       description: 'Ranked list of items, ordered from highest to lowest.',
       items: S.object(
         properties: {
-          'title': S.string(
+          'title': A2uiSchemas.stringReference(
             description: 'Display name (e.g. "The French Laundry").',
           ),
-          'amount': S.string(
+          'amount': A2uiSchemas.stringReference(
             description: r'Formatted spend amount (e.g. "$350").',
           ),
-          'delta': S.string(
+          'delta': A2uiSchemas.stringReference(
             description:
-                'Percentage change with sign '
-                '(e.g. "+15%", "-5%").',
+                'Percentage change with sign (e.g. "+15%", "-5%").',
           ),
         },
         required: ['title', 'amount', 'delta'],
@@ -35,17 +34,19 @@ final rankedTableItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final rankedItems = json['items']! as List;
 
-    final items = rankedItems
-        .cast<Map<String, Object?>>()
-        .map(
-          (item) => RankedTableItem(
-            title: item['title']! as String,
-            amount: item['amount']! as String,
-            delta: item['delta']! as String,
-          ),
-        )
-        .toList();
+    final items = rankedItems.cast<Map<String, Object?>>().map((item) {
+      return RankedTableItem(
+        title: _resolveString(item['title']),
+        amount: _resolveString(item['amount']),
+        delta: _resolveString(item['delta']),
+      );
+    }).toList();
 
     return RankedTable(items: items);
   },
 );
+
+String _resolveString(Object? value) {
+  if (value is String) return value;
+  return value?.toString() ?? '';
+}

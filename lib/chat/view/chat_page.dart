@@ -41,7 +41,7 @@ class ChatPage extends StatelessWidget {
                 customOption: customOption,
               ),
             ),
-      child: const ChatView(),
+      child: ChatView(profileType: profileType),
     );
   }
 }

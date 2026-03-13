@@ -7,13 +7,8 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-const _defaultAction = {
-  'event': {'name': 'filter_toggled'},
-};
-
 Map<String, Object?> _data({
   List<Map<String, Object?>>? categories,
-  Map<String, Object?> action = _defaultAction,
 }) => {
   'categories':
       categories ??
@@ -21,7 +16,6 @@ Map<String, Object?> _data({
         {'label': 'Food', 'color': 'orange', 'isSelected': true},
         {'label': 'Shopping', 'color': 'lightBlue', 'isSelected': false},
       ],
-  'action': action,
 };
 
 CatalogItemContext _context(
@@ -71,10 +65,10 @@ void main() {
       final schema = filterBarItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, containsAll(['categories', 'action']));
+      expect(props, contains('categories'));
 
       final required = schema.value['required']! as List;
-      expect(required, containsAll(['categories', 'action']));
+      expect(required, contains('categories'));
     });
 
     group('renders', () {
@@ -107,30 +101,25 @@ void main() {
         expect(find.byType(FilterBar), findsOneWidget);
       });
 
-      testWidgets('dispatches event on category tap', (tester) async {
-        final events = <UiEvent>[];
-        await _pump(tester, _data(), dispatchEvent: events.add);
+      testWidgets('toggles category selection locally', (tester) async {
+        await _pump(tester, _data());
 
+        // Shopping starts unselected — tap to select
         await tester.tap(find.text('Shopping'));
         await tester.pump();
 
-        expect(events, hasLength(1));
-        final event = events.single as UserActionEvent;
-        expect(event.name, 'filter_toggled');
-        expect(event.context, containsPair('label', 'Shopping'));
+        // Both should now be selected: "2 of 2"
+        expect(find.text('2 of 2 categories selected'), findsOneWidget);
       });
 
-      testWidgets('dispatches event on All tap', (tester) async {
-        final events = <UiEvent>[];
-        await _pump(tester, _data(), dispatchEvent: events.add);
+      testWidgets('toggles all categories on All tap', (tester) async {
+        await _pump(tester, _data());
 
+        // Tap "All" to select all
         await tester.tap(find.text('All'));
         await tester.pump();
 
-        expect(events, hasLength(1));
-        final event = events.single as UserActionEvent;
-        expect(event.name, 'filter_toggled');
-        expect(event.context, containsPair('label', 'All'));
+        expect(find.text('2 of 2 categories selected'), findsOneWidget);
       });
     });
   });

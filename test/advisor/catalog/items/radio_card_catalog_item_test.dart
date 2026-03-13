@@ -7,13 +7,8 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-const _defaultAction = {
-  'event': {'name': 'option_selected'},
-};
-
 Map<String, Object?> _data({
   List<Map<String, Object?>>? options,
-  Map<String, Object?> action = _defaultAction,
 }) => {
   'options':
       options ??
@@ -21,7 +16,6 @@ Map<String, Object?> _data({
         {'label': 'Beginner', 'isSelected': true},
         {'label': 'Optimizer', 'isSelected': false},
       ],
-  'action': action,
 };
 
 CatalogItemContext _context(
@@ -71,10 +65,10 @@ void main() {
       final schema = radioCardItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, containsAll(['options', 'action']));
+      expect(props, contains('options'));
 
       final required = schema.value['required']! as List;
-      expect(required, containsAll(['options', 'action']));
+      expect(required, contains('options'));
     });
 
     group('renders', () {
@@ -105,17 +99,15 @@ void main() {
         expect(find.byType(RadioCard), findsOneWidget);
       });
 
-      testWidgets('dispatches event on tap', (tester) async {
-        final events = <UiEvent>[];
-        await _pump(tester, _data(), dispatchEvent: events.add);
+      testWidgets('toggles selection locally on tap', (tester) async {
+        await _pump(tester, _data());
 
+        // Tap Optimizer — should become selected
         await tester.tap(find.text('Optimizer'));
         await tester.pump();
 
-        expect(events, hasLength(1));
-        final event = events.single as UserActionEvent;
-        expect(event.name, 'option_selected');
-        expect(event.context, containsPair('label', 'Optimizer'));
+        // Both RadioCard widgets should still be rendered
+        expect(find.byType(RadioCard), findsNWidgets(2));
       });
     });
   });

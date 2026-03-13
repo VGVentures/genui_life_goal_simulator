@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
-import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,15 +13,16 @@ class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
 
 class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
+const _testSurfaceSize = Size(1200, 800);
+
 extension on WidgetTester {
-  Future<void> pumpChatView(ChatBloc bloc) {
+  Future<void> pumpChatView(ChatBloc bloc) async {
+    await binding.setSurfaceSize(_testSurfaceSize);
     return pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<ChatBloc>.value(
           value: bloc,
-          child: const ChatView(),
+          child: const ChatView(profileType: ProfileType.optimizer),
         ),
       ),
     );
@@ -41,23 +42,12 @@ void main() {
   });
 
   group(ChatView, () {
-    testWidgets('shows empty-state label when pages are empty', (
+    testWidgets('shows loading indicator when pages are empty', (
       tester,
     ) async {
       await tester.pumpChatView(bloc);
 
-      expect(find.text('Send a message to get started!'), findsOneWidget);
-    });
-
-    testWidgets('shows $ChatInputBar when active and not loading', (
-      tester,
-    ) async {
-      when(() => bloc.state).thenReturn(
-        const ChatState(status: ChatStatus.active),
-      );
-      await tester.pumpChatView(bloc);
-
-      expect(find.byType(ChatInputBar), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('renders message bubbles in PageView when pages exist', (
@@ -77,44 +67,15 @@ void main() {
 
       expect(find.byType(PageView), findsOneWidget);
       expect(find.byType(ChatMessageBubble), findsOneWidget);
-      expect(
-        find.text('Send a message to get started!'),
-        findsNothing,
-      );
+      // Loading spinner should not be shown when pages exist
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
-    testWidgets('shows $AppBar', (tester) async {
+    testWidgets('shows app bar with logo and profile chip', (tester) async {
       await tester.pumpChatView(bloc);
-      expect(find.byType(AppBar), findsOneWidget);
-    });
-
-    testWidgets('$ChatInputBar onSend dispatches $ChatMessageSent', (
-      tester,
-    ) async {
-      when(() => bloc.state).thenReturn(
-        const ChatState(status: ChatStatus.active),
-      );
-      await tester.pumpChatView(bloc);
-
-      await tester.enterText(find.byType(TextField), 'hi');
-      await tester.testTextInput.receiveAction(TextInputAction.send);
-      await tester.pump();
-
-      final captured = verify(() => bloc.add(captureAny())).captured;
-      expect(captured, hasLength(1));
-      expect(captured.first, isA<ChatMessageSent>());
-      expect((captured.first as ChatMessageSent).text, 'hi');
-    });
-
-    testWidgets('$ChatInputBar is not shown when status is not active', (
-      tester,
-    ) async {
-      when(() => bloc.state).thenReturn(
-        const ChatState(),
-      );
-      await tester.pumpChatView(bloc);
-
-      expect(find.byType(ChatInputBar), findsNothing);
+      expect(find.textContaining('VGV'), findsOneWidget);
+      expect(find.text('The Optimizer'), findsOneWidget);
+      expect(find.text('Restart Demo'), findsOneWidget);
     });
 
     testWidgets('shows loading indicator on current page when loading', (

@@ -39,13 +39,10 @@ void main() {
         expect(align.alignment, Alignment.centerRight);
       });
 
-      testWidgets('assistant bubble for $AiTextDisplayMessage', (tester) async {
+      testWidgets('assistant text for $AiTextDisplayMessage', (tester) async {
         await _pump(tester, const AiTextDisplayMessage('Hi there'), host);
 
         expect(find.text('Hi there'), findsOneWidget);
-
-        final align = tester.widget<Align>(find.byType(Align));
-        expect(align.alignment, Alignment.centerLeft);
       });
     });
   });
