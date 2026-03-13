@@ -13,7 +13,9 @@ Map<String, Object?> _data({
 }) => {
   'options': options,
   'selectedIndex': selectedIndex,
-  'action': {'event': <String, Object?>{'name': 'periodChanged'}},
+  'action': {
+    'event': <String, Object?>{'name': 'periodChanged'},
+  },
 };
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
