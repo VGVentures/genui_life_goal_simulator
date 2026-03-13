@@ -73,28 +73,13 @@ class _AssistantTextBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorExtension = theme.extension<AppColors>();
 
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: Spacing.xs,
-          horizontal: Spacing.xs,
-        ),
-        padding: const EdgeInsets.symmetric(
-          vertical: Spacing.sm,
-          horizontal: Spacing.sm,
-        ),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.sizeOf(context).width * 0.75,
-        ),
-        decoration: BoxDecoration(
-          color: colorExtension?.surfaceContainer,
-          borderRadius: BorderRadius.circular(Spacing.md),
-        ),
-        child: Text(text, style: theme.textTheme.bodyMedium),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: Spacing.xs,
+        horizontal: Spacing.sm,
       ),
+      child: Text(text, style: theme.textTheme.bodyMedium),
     );
   }
 }

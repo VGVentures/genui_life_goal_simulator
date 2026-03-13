@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
@@ -110,7 +111,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future<void> _handleSend(ChatMessage message) async {
-    _history.add(message);
+    // GenUI encodes interaction events as DataParts with a custom MIME type
+    // that the Gemini API doesn't support in inlineData. Convert them to
+    // TextParts so the API accepts them.
+    _history.add(_convertDataPartsToText(message));
 
     final messages = [
       ChatMessage.system(_systemPrompt),
@@ -130,6 +134,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     // Add AI response to history for future context
     _history.add(ChatMessage.model(buffer.toString()));
+  }
+
+  /// Converts any [DataPart]s in [message] to [TextPart]s by UTF-8 decoding
+  /// the bytes. This is needed because the Gemini API rejects custom MIME
+  /// types (like `application/vnd.genui.interaction+json`) in `inlineData`.
+  ChatMessage _convertDataPartsToText(ChatMessage message) {
+    final hasDataParts = message.parts.any((p) => p is DataPart);
+    if (!hasDataParts) return message;
+
+    final converted = [
+      for (final part in message.parts)
+        if (part is DataPart)
+          TextPart(utf8.decode(part.bytes))
+        else
+          part,
+    ];
+
+    return ChatMessage(role: message.role, parts: converted);
   }
 
   void _onNewPageStarted(

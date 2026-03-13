@@ -47,8 +47,7 @@ class _ChatViewState extends State<ChatView> {
         },
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
-            previous.isLoading != current.isLoading ||
-            previous.status != current.status,
+            previous.isLoading != current.isLoading,
         builder: (context, state) {
           return Column(
             children: [
@@ -70,13 +69,6 @@ class _ChatViewState extends State<ChatView> {
                         },
                       ),
               ),
-              if (state.status == ChatStatus.active)
-                ChatInputBar(
-                  enabled: !state.isLoading,
-                  onSend: (text) {
-                    chatBloc.add(ChatMessageSent(text));
-                  },
-                ),
             ],
           );
         },
@@ -104,7 +96,8 @@ class _ChatPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final message in messages)
-            ChatMessageBubble(message: message, host: host),
+            if (message is! UserDisplayMessage)
+              ChatMessageBubble(message: message, host: host),
           if (isLoading)
             const Padding(
               padding: EdgeInsets.all(Spacing.md),
