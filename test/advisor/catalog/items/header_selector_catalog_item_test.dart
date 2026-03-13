@@ -10,7 +10,11 @@ class _MockDataModel extends Mock implements DataModel {}
 Map<String, Object?> _data({
   List<String> options = const ['1M', '3M', '6M'],
   int selectedIndex = 0,
-}) => {'options': options, 'selectedIndex': selectedIndex};
+}) => {
+  'options': options,
+  'selectedIndex': selectedIndex,
+  'action': {'event': <String, Object?>{'name': 'periodChanged'}},
+};
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
@@ -53,10 +57,10 @@ void main() {
       final schema = headerSelectorItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, containsAll(['options', 'selectedIndex']));
+      expect(props, containsAll(['options', 'selectedIndex', 'action']));
 
       final required = schema.value['required']! as List;
-      expect(required, containsAll(['options', 'selectedIndex']));
+      expect(required, containsAll(['options', 'selectedIndex', 'action']));
     });
 
     testWidgets('renders HeaderSelector with options', (tester) async {
