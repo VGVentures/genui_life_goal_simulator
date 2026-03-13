@@ -7,6 +7,7 @@ import 'package:finance_app/onboarding/kick_off/view/kick_off_values.dart';
 import 'package:finance_app/onboarding/kick_off/view/mobile_kick_off_view.dart';
 import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
 import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
+import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -137,20 +138,10 @@ class KickOffPage extends StatelessWidget {
       descriptionText: l10n.kickOffDescription,
     );
 
-    final baseButton = OutlinedButton(
+    final baseButton = OnboardingNextButton(
       onPressed: () => _onNextPressed(context),
-      style: OutlinedButton.styleFrom(
-        shape: const CircleBorder(),
-        side: const BorderSide(
-          color: Colors.white,
-          width: KickOffValues.buttonBorderWidth,
-        ),
-        padding: const EdgeInsets.all(KickOffValues.buttonPadding),
-      ),
-      child: const Icon(
-        Icons.arrow_forward,
-        color: Colors.white,
-      ),
+      borderColor: Colors.white,
+      iconColor: Colors.white,
     );
 
     return ResponsiveScaffold(

@@ -13,10 +13,6 @@ abstract class KickOffValues {
   // Button
   static const double buttonBorderWidth = 1.1;
   static const double buttonPadding = 40;
-  static const double desktopButtonBottom = 30;
-  static const double desktopButtonRight = 20;
-  static const double mobileButtonBottom = 10;
-  static const double mobileButtonRight = 10;
 
   // Desktop decorations
   static const double desktopDecorationOffset = 40;

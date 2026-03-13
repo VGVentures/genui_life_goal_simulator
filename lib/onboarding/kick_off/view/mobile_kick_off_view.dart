@@ -24,13 +24,7 @@ class MobileKickOffView extends StatelessWidget {
           _buildBottomLeftDecoration(),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(
-          bottom: KickOffValues.mobileButtonBottom,
-          right: KickOffValues.mobileButtonRight,
-        ),
-        child: floatingActionButton,
-      ),
+      floatingActionButton: floatingActionButton,
     );
   }
 
