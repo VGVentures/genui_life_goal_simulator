@@ -21,7 +21,14 @@ final aiButtonItem = CatalogItem(
 
     return AiButton(
       text: text,
-      onTap: () {},
+      onTap: () {
+        ctx.dispatchEvent(
+          UserActionEvent(
+            name: 'ai_button_tapped',
+            sourceComponentId: ctx.id,
+          ),
+        );
+      },
     );
   },
 );
