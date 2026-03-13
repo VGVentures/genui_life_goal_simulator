@@ -3,6 +3,8 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _itemSchema = S.object(
+  description:
+      'A single financial task, recommendation, or transaction highlight.',
   properties: {
     'title': S.string(description: 'Primary label, e.g. "Restaurant".'),
     'subtitle': S.string(
@@ -27,6 +29,13 @@ final _itemSchema = S.object(
 );
 
 final _schema = S.object(
+  description:
+      'A list of financial tasks, recommendations, or transaction highlights. '
+      'Stack between 2 and 10 items — all items must be the same type '
+      '(e.g. all with buttons or all without). '
+      'Add delta when showing change over time (e.g. "+28%"). '
+      'Set buttonVariant to "primary" or "secondary" with a buttonLabel '
+      'only when there is a clear, immediate action for the user to take.',
   properties: {
     'items': S.list(
       items: _itemSchema,

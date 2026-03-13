@@ -1,4 +1,4 @@
-export 'action_item.dart';
+export 'action_item_catalog_item.dart';
 export 'app_button_catalog_item.dart';
 export 'comparison_table_catalog_item.dart';
 export 'emoji_card_catalog_item.dart';

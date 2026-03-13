@@ -24,6 +24,8 @@ Use the FilterBar widget to let the user filter data by category (e.g. spending 
 Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Set divisions and splitLabels for discrete steps.
 
 Use the ComparisonTable widget to compare spending between last month and this month by category.
+
+Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items of the same type.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
