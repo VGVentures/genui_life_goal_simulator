@@ -39,22 +39,23 @@ class WantToFocusPage extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Builder(
-          builder: (context) => OnboardingNextButton(
-            onPressed: () {
-              final focusState = context.read<WantToFocusCubit>().state;
-              unawaited(
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (_) => ChatPage(
-                      profileType: profileType,
-                      focusOptions: focusState.selectedOptions,
-                      customOption: focusState.customOption,
-                    ),
-                  ),
-                ),
-              );
-            },
+        floatingActionButton: BlocBuilder<WantToFocusCubit, WantToFocusState>(
+          builder: (context, state) => OnboardingNextButton(
+            onPressed: state.hasSelection
+                ? () {
+                    unawaited(
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute<void>(
+                          builder: (_) => ChatPage(
+                            profileType: profileType,
+                            focusOptions: state.selectedOptions,
+                            customOption: state.customOption,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                : null,
           ),
         ),
       ),

@@ -37,24 +37,21 @@ class PickProfilePage extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Builder(
-          builder: (context) => OnboardingNextButton(
-            onPressed: () {
-              final profileType = context
-                  .read<PickProfileCubit>()
-                  .state
-                  .selectedProfile;
-              if (profileType == null) return;
-              unawaited(
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (_) => WantToFocusPage(
-                      profileType: profileType,
-                    ),
-                  ),
-                ),
-              );
-            },
+        floatingActionButton: BlocBuilder<PickProfileCubit, PickProfileState>(
+          builder: (context, state) => OnboardingNextButton(
+            onPressed: state.hasSelection
+                ? () {
+                    unawaited(
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute<void>(
+                          builder: (_) => WantToFocusPage(
+                            profileType: state.selectedProfile!,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                : null,
           ),
         ),
       ),
