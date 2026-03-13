@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/filter_bar.dart';
+import 'package:finance_app/advisor/catalog/items/radio_card_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,13 +8,13 @@ import 'package:mocktail/mocktail.dart';
 class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
-  List<Map<String, Object?>>? categories,
+  List<Map<String, Object?>>? options,
 }) => {
-  'categories':
-      categories ??
+  'options':
+      options ??
       [
-        {'label': 'Food', 'color': 'orange', 'isSelected': true},
-        {'label': 'Shopping', 'color': 'lightBlue', 'isSelected': false},
+        {'label': 'Beginner', 'isSelected': true},
+        {'label': 'Optimizer', 'isSelected': false},
       ],
 };
 
@@ -22,7 +22,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
-    type: 'FilterBar',
+    type: 'RadioCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
@@ -44,7 +44,7 @@ Future<void> _pump(
       home: Scaffold(
         body: Builder(
           builder: (context) =>
-              filterBarItem.widgetBuilder(_context(context, data)),
+              radioCardItem.widgetBuilder(_context(context, data)),
         ),
       ),
     ),
@@ -52,47 +52,45 @@ Future<void> _pump(
 }
 
 void main() {
-  group(filterBarItem, () {
+  group(radioCardItem, () {
     test('has correct name and schema keys', () {
-      expect(filterBarItem.name, 'FilterBar');
+      expect(radioCardItem.name, 'RadioCard');
 
-      final schema = filterBarItem.dataSchema;
+      final schema = radioCardItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, contains('categories'));
+      expect(props, contains('options'));
 
       final required = schema.value['required']! as List;
-      expect(required, contains('categories'));
+      expect(required, contains('options'));
     });
 
     group('renders', () {
-      testWidgets('category chips', (tester) async {
+      testWidgets('radio card labels', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.text('Food'), findsOneWidget);
-        expect(find.text('Shopping'), findsOneWidget);
-        // "All" chip is always rendered
-        expect(find.text('All'), findsOneWidget);
+        expect(find.text('Beginner'), findsOneWidget);
+        expect(find.text('Optimizer'), findsOneWidget);
       });
 
-      testWidgets('selection summary', (tester) async {
+      testWidgets('RadioCard widgets', (tester) async {
         await _pump(tester, _data());
 
-        // 1 of 2 selected (Food is selected, Shopping is not)
-        expect(find.text('1 of 2 categories selected'), findsOneWidget);
+        expect(find.byType(RadioCard), findsNWidgets(2));
       });
 
-      testWidgets('with empty categories', (tester) async {
-        await _pump(tester, _data(categories: []));
+      testWidgets('single option', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            options: [
+              {'label': 'Solo', 'isSelected': true},
+            ],
+          ),
+        );
 
-        expect(find.text('All'), findsOneWidget);
-        expect(find.text('0 of 0 categories selected'), findsOneWidget);
-      });
-
-      testWidgets('FilterBar widget', (tester) async {
-        await _pump(tester, _data());
-
-        expect(find.byType(FilterBar), findsOneWidget);
+        expect(find.text('Solo'), findsOneWidget);
+        expect(find.byType(RadioCard), findsOneWidget);
       });
     });
   });

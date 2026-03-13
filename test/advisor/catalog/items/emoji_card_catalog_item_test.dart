@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/radio_card.dart';
+import 'package:finance_app/advisor/catalog/items/emoji_card_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,13 +8,13 @@ import 'package:mocktail/mocktail.dart';
 class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
-  List<Map<String, Object?>>? options,
+  List<Map<String, Object?>>? cards,
 }) => {
-  'options':
-      options ??
+  'cards':
+      cards ??
       [
-        {'label': 'Beginner', 'isSelected': true},
-        {'label': 'Optimizer', 'isSelected': false},
+        {'emoji': '💰', 'label': 'Savings', 'isSelected': true},
+        {'emoji': '🏠', 'label': 'Housing', 'isSelected': false},
       ],
 };
 
@@ -22,7 +22,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
-    type: 'RadioCard',
+    type: 'EmojiCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
@@ -40,11 +40,10 @@ Future<void> _pump(
 ) async {
   await tester.pumpWidget(
     MaterialApp(
-      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
           builder: (context) =>
-              radioCardItem.widgetBuilder(_context(context, data)),
+              emojiCardItem.widgetBuilder(_context(context, data)),
         ),
       ),
     ),
@@ -52,45 +51,47 @@ Future<void> _pump(
 }
 
 void main() {
-  group(radioCardItem, () {
+  group(emojiCardItem, () {
     test('has correct name and schema keys', () {
-      expect(radioCardItem.name, 'RadioCard');
+      expect(emojiCardItem.name, 'EmojiCard');
 
-      final schema = radioCardItem.dataSchema;
+      final schema = emojiCardItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, contains('options'));
+      expect(props, contains('cards'));
 
       final required = schema.value['required']! as List;
-      expect(required, contains('options'));
+      expect(required, contains('cards'));
     });
 
     group('renders', () {
-      testWidgets('radio card labels', (tester) async {
+      testWidgets('emoji cards', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.text('Beginner'), findsOneWidget);
-        expect(find.text('Optimizer'), findsOneWidget);
+        expect(find.text('💰'), findsOneWidget);
+        expect(find.text('Savings'), findsOneWidget);
+        expect(find.text('🏠'), findsOneWidget);
+        expect(find.text('Housing'), findsOneWidget);
       });
 
-      testWidgets('RadioCard widgets', (tester) async {
+      testWidgets('EmojiCardLayout', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.byType(RadioCard), findsNWidgets(2));
+        expect(find.byType(EmojiCardLayout), findsOneWidget);
       });
 
-      testWidgets('single option', (tester) async {
+      testWidgets('defaults isSelected to false when omitted', (tester) async {
         await _pump(
           tester,
           _data(
-            options: [
-              {'label': 'Solo', 'isSelected': true},
+            cards: [
+              {'emoji': '📊', 'label': 'Budget'},
             ],
           ),
         );
 
-        expect(find.text('Solo'), findsOneWidget);
-        expect(find.byType(RadioCard), findsOneWidget);
+        expect(find.text('📊'), findsOneWidget);
+        expect(find.text('Budget'), findsOneWidget);
       });
     });
   });

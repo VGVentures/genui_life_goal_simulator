@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/emoji_card.dart';
+import 'package:finance_app/advisor/catalog/items/metric_cards_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,8 +13,19 @@ Map<String, Object?> _data({
   'cards':
       cards ??
       [
-        {'emoji': '💰', 'label': 'Savings', 'isSelected': true},
-        {'emoji': '🏠', 'label': 'Housing', 'isSelected': false},
+        {
+          'label': 'Total Spending',
+          'value': r'$4,319',
+          'delta': '+1.2%',
+          'deltaDirection': 'negative',
+          'subtitle': 'vs last month',
+        },
+        {
+          'label': 'Savings',
+          'value': r'$1,200',
+          'delta': '+5%',
+          'deltaDirection': 'positive',
+        },
       ],
 };
 
@@ -22,7 +33,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
-    type: 'EmojiCard',
+    type: 'MetricCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
@@ -43,7 +54,7 @@ Future<void> _pump(
       home: Scaffold(
         body: Builder(
           builder: (context) =>
-              emojiCardItem.widgetBuilder(_context(context, data)),
+              metricCardsItem.widgetBuilder(_context(context, data)),
         ),
       ),
     ),
@@ -51,11 +62,11 @@ Future<void> _pump(
 }
 
 void main() {
-  group(emojiCardItem, () {
+  group(metricCardsItem, () {
     test('has correct name and schema keys', () {
-      expect(emojiCardItem.name, 'EmojiCard');
+      expect(metricCardsItem.name, 'MetricCard');
 
-      final schema = emojiCardItem.dataSchema;
+      final schema = metricCardsItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
       expect(props, contains('cards'));
@@ -65,33 +76,40 @@ void main() {
     });
 
     group('renders', () {
-      testWidgets('emoji cards', (tester) async {
+      testWidgets('metric card labels and values', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.text('💰'), findsOneWidget);
+        expect(find.text('Total Spending'), findsOneWidget);
+        expect(find.text(r'$4,319'), findsOneWidget);
         expect(find.text('Savings'), findsOneWidget);
-        expect(find.text('🏠'), findsOneWidget);
-        expect(find.text('Housing'), findsOneWidget);
+        expect(find.text(r'$1,200'), findsOneWidget);
       });
 
-      testWidgets('EmojiCardLayout', (tester) async {
+      testWidgets('delta and subtitle', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.byType(EmojiCardLayout), findsOneWidget);
+        expect(find.text('+1.2%'), findsOneWidget);
+        expect(find.text('vs last month'), findsOneWidget);
       });
 
-      testWidgets('defaults isSelected to false when omitted', (tester) async {
+      testWidgets('MetricCardsLayout', (tester) async {
+        await _pump(tester, _data());
+
+        expect(find.byType(MetricCardsLayout), findsOneWidget);
+      });
+
+      testWidgets('plain card without delta', (tester) async {
         await _pump(
           tester,
           _data(
             cards: [
-              {'emoji': '📊', 'label': 'Budget'},
+              {'label': 'Net Worth', 'value': r'$50,000'},
             ],
           ),
         );
 
-        expect(find.text('📊'), findsOneWidget);
-        expect(find.text('Budget'), findsOneWidget);
+        expect(find.text('Net Worth'), findsOneWidget);
+        expect(find.text(r'$50,000'), findsOneWidget);
       });
     });
   });

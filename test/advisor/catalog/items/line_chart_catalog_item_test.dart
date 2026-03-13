@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/line_chart.dart';
+import 'package:finance_app/advisor/catalog/items/line_chart_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

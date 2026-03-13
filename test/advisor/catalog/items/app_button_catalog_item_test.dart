@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/app_button.dart';
+import 'package:finance_app/advisor/catalog/items/app_button_catalog_item.dart';
 import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

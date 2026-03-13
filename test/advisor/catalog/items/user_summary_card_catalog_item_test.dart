@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/user_summary_card.dart';
+import 'package:finance_app/advisor/catalog/items/user_summary_card_catalog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';

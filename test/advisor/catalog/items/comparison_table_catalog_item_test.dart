@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/comparison_table.dart';
+import 'package:finance_app/advisor/catalog/items/comparison_table_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
