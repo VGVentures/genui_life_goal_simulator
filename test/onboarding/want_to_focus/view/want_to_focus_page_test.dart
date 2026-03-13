@@ -2,6 +2,7 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
+import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -38,7 +39,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.byType(FloatingActionButton),
+          find.byType(OnboardingNextButton),
           findsOneWidget,
         );
       },
@@ -55,7 +56,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.byType(FloatingActionButton),
+          find.byType(OnboardingNextButton),
           findsOneWidget,
         );
       },
@@ -67,7 +68,7 @@ void main() {
         await _pump(tester);
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(FloatingActionButton));
+        await tester.tap(find.byType(OnboardingNextButton));
       },
     );
 
@@ -82,7 +83,7 @@ void main() {
           findsOneWidget,
         );
 
-        await tester.tap(find.byType(FloatingActionButton));
+        await tester.tap(find.byType(OnboardingNextButton));
       },
     );
   });
