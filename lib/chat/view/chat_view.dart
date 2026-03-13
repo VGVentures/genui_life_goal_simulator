@@ -31,7 +31,8 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor:
+          Theme.of(context).extension<AppColors>()?.surface,
       appBar: _ChatAppBar(profileType: widget.profileType),
       body: BlocConsumer<ChatBloc, ChatState>(
         listenWhen: (previous, current) =>
@@ -39,7 +40,7 @@ class _ChatViewState extends State<ChatView> {
         listener: (context, state) {
           if (_pageController.hasClients && state.pages.isNotEmpty) {
             unawaited(
-              Future<void>.delayed(const Duration(seconds: 2)).then((_) {
+              Future<void>.delayed(const Duration(seconds: 4)).then((_) {
                 if (_pageController.hasClients) {
                   unawaited(
                     _pageController.animateToPage(
@@ -344,25 +345,21 @@ class _ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 670),
-        padding: const EdgeInsetsDirectional.only(end: Spacing.lg),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (final message in messages)
-                if (message is! UserDisplayMessage)
-                  ChatMessageBubble(message: message, host: host),
-              if (isLoading)
-                const Padding(
-                  padding: EdgeInsets.all(Spacing.md),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-            ],
-          ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final message in messages)
+              if (message is! UserDisplayMessage)
+                ChatMessageBubble(message: message, host: host),
+            if (isLoading)
+              const Padding(
+                padding: EdgeInsets.all(Spacing.md),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          ],
         ),
       ),
     );

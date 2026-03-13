@@ -146,10 +146,14 @@ class _StatefulGCNSliderState extends State<_StatefulGCNSlider> {
     }
   }
 
-  void _writeToDataModel(double value) {
+  String _formatValue(double value) {
     final locale = Localizations.maybeLocaleOf(context)?.toString();
     final number = NumberFormat.decimalPattern(locale).format(value.round());
-    final formatted = '${widget.prefix}$number';
+    return '${widget.prefix}$number';
+  }
+
+  void _writeToDataModel(double value) {
+    final formatted = _formatValue(value);
 
     widget.dataContext.update(
       DataPath('/${widget.componentId}/value'),
@@ -171,26 +175,25 @@ class _StatefulGCNSliderState extends State<_StatefulGCNSlider> {
           dataContext: widget.dataContext,
           value: widget.subtitleValue,
           builder: (context, subtitle) {
-            return BoundString(
-              dataContext: widget.dataContext,
-              value: widget.valueLabelValue ?? '',
-              builder: (context, valueLabel) {
-                return GCNSlider(
-                  title: title ?? '',
-                  subtitle: subtitle ?? '',
-                  value: _value,
-                  min: widget.min,
-                  max: widget.max,
-                  valueLabel: valueLabel?.isEmpty ?? true ? null : valueLabel,
-                  minLabel: widget.minLabel,
-                  maxLabel: widget.maxLabel,
-                  divisions: widget.divisions,
-                  splitLabels: widget.splitLabels,
-                  onChanged: (newValue) {
-                    setState(() => _value = newValue);
-                    _writeToDataModel(newValue);
-                  },
-                );
+            // If the LLM provided a valueLabel (static or bound),
+            // always show the locally formatted value so it updates
+            // as the user drags.
+            final showValueLabel = widget.valueLabelValue != null;
+
+            return GCNSlider(
+              title: title ?? '',
+              subtitle: subtitle ?? '',
+              value: _value,
+              min: widget.min,
+              max: widget.max,
+              valueLabel: showValueLabel ? _formatValue(_value) : null,
+              minLabel: widget.minLabel,
+              maxLabel: widget.maxLabel,
+              divisions: widget.divisions,
+              splitLabels: widget.splitLabels,
+              onChanged: (newValue) {
+                setState(() => _value = newValue);
+                _writeToDataModel(newValue);
               },
             );
           },

@@ -46,24 +46,7 @@ class _IntroPage extends StatelessWidget {
     return IntroPage(
       onGetStarted: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          // TODO(juanRodriguez17): Just to see our custom components
-          builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: Text(l10n.homeAppBarTitle),
-              actions: [
-                Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: const Icon(Icons.bug_report),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    );
-                  },
-                ),
-              ],
-            ),
-            endDrawer: const DevMenuDrawer(),
-            body: const KickOffPage(),
-          ),
+          builder: (_) => const KickOffPage(),
         ),
       ),
     );

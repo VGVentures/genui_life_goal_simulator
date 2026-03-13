@@ -16,6 +16,7 @@ Map<String, Object?> _data({
   String? valueLabel,
   String? minLabel,
   String? maxLabel,
+  String? prefix,
   int? divisions,
   List<String>? splitLabels,
 }) => {
@@ -27,6 +28,7 @@ Map<String, Object?> _data({
   'valueLabel': valueLabel,
   'minLabel': minLabel,
   'maxLabel': maxLabel,
+  'prefix': prefix,
   'divisions': divisions,
   'splitLabels': splitLabels,
 };
@@ -111,8 +113,12 @@ void main() {
       });
 
       testWidgets('with value label', (tester) async {
-        await _pump(tester, _data(valueLabel: r'$450'));
+        await _pump(
+          tester,
+          _data(valueLabel: r'$450', prefix: r'$'),
+        );
 
+        // The slider formats the value locally: prefix + formatted number
         expect(find.text(r'$450'), findsOneWidget);
       });
 

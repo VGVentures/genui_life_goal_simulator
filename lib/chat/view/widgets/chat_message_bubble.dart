@@ -18,15 +18,10 @@ class ChatMessageBubble extends StatelessWidget {
     return switch (message) {
       UserDisplayMessage(:final text) => _UserBubble(text: text),
       AiTextDisplayMessage(:final text) => _AssistantTextBubble(text: text),
-      AiSurfaceDisplayMessage(:final surfaceId) => Container(
-        margin: const EdgeInsets.symmetric(
+      AiSurfaceDisplayMessage(:final surfaceId) => Padding(
+        padding: const EdgeInsets.symmetric(
           vertical: Spacing.xs,
           horizontal: Spacing.xs,
-        ),
-        padding: const EdgeInsets.all(Spacing.md),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(Spacing.md),
         ),
         child: Surface(surfaceContext: host.contextFor(surfaceId)),
       ),
