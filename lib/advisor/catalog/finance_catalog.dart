@@ -28,6 +28,10 @@ Use the ComparisonTable widget to compare spending between last month and this m
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
 
 Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
+
+Use HorizontalBar to compare spending categories against a prior period or external benchmark (e.g. last month, category average). Set progress as actual ÷ reference. Use ProgressBar instead when the reference is a fixed budget limit.
+
+Use ProgressBar to show spending categories vs. a fixed budget limit. Set value to actual spend and total to the budget. Do not use when the reference is a prior period — use HorizontalBar instead.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -40,8 +44,10 @@ Catalog buildFinanceCatalog() {
       comparisonTableItem,
       emojiCardItem,
       filterBarItem,
+      horizontalBarItem,
       gcnSliderItem,
       lineChartItem,
+      progressBarItem,
       metricCardsItem,
       radioCardItem,
       userSummaryCardItem,
