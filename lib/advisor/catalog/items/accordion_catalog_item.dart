@@ -3,6 +3,7 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _itemSchema = S.object(
+  description: 'A single action item displayed inside the accordion.',
   properties: {
     'title': S.string(description: 'Primary label, e.g. "Restaurant".'),
     'subtitle': S.string(
@@ -25,6 +26,8 @@ final _itemSchema = S.object(
 );
 
 final _schema = S.object(
+  description:
+      'A collapsible panel that groups related action items under a header.',
   properties: {
     'title': S.string(description: 'Header text displayed in the accordion.'),
     'items': S.list(
