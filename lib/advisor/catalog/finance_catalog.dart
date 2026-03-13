@@ -28,6 +28,10 @@ Use the ComparisonTable widget to compare spending between last month and this m
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
 
 Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
+
+Use SectionHeader to label a section with a title and subtitle. Optionally include selectorOptions to show a HeaderSelector alongside the title for time period switching (e.g. title: "Your spending this month", subtitle: "February 2026 • 19 days tracked", selectorOptions: ["1M", "3M", "6M"], selectedIndex: 0).
+
+Use HeaderSelector to show chip-style toggles for switching between views or time periods (e.g. ["1M", "3M", "6M"]). Set selectedIndex to highlight the currently relevant option.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.

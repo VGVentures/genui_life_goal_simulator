@@ -3,6 +3,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A section header with a title, subtitle, and an optional chip '
+      'selector for switching between time ranges or views.',
   properties: {
     'title': S.string(description: 'Main title text of the section.'),
     'subtitle': S.string(

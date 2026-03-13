@@ -1,8 +1,11 @@
-import 'package:finance_app/advisor/catalog/items/section_header.dart';
+import 'package:finance_app/advisor/catalog/items/section_header_catalog_item.dart';
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   String title = 'Spending',
@@ -20,12 +23,15 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
+    type: 'SectionHeader',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(DataModel(), '/'),
+    dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
+    getCatalogItem: (_) => null,
     surfaceId: 'surface',
+    reportError: (_, _) {},
   );
 }
 
