@@ -1,6 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/onboarding.dart';
+import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -94,8 +95,7 @@ void main() {
           buildTestableWidget(child: const KickOffPage()),
         );
 
-        expect(find.byType(OutlinedButton), findsOneWidget);
-        expect(find.byIcon(Icons.arrow_forward), findsOneWidget);
+        expect(find.byType(OnboardingNextButton), findsOneWidget);
       });
 
       testWidgets('ResponsiveScaffold', (tester) async {

@@ -9,6 +9,9 @@ final class WantToFocusState extends Equatable {
   final Set<FocusOption> selectedOptions;
   final String customOption;
 
+  bool get hasSelection =>
+      selectedOptions.isNotEmpty || customOption.trim().isNotEmpty;
+
   WantToFocusState copyWith({
     Set<FocusOption>? selectedOptions,
     String? customOption,
