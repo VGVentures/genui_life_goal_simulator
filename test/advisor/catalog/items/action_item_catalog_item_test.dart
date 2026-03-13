@@ -7,6 +7,10 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+Map<String, Object?> _action({String name = 'itemAction'}) => {
+  'event': <String, Object?>{'name': name},
+};
+
 Map<String, Object?> _item({
   String title = 'Restaurant',
   String subtitle = 'Dining • Feb 18',
@@ -14,6 +18,7 @@ Map<String, Object?> _item({
   String? delta,
   String? buttonLabel,
   String? buttonVariant,
+  Map<String, Object?>? action,
 }) => {
   'title': title,
   'subtitle': subtitle,
@@ -21,6 +26,7 @@ Map<String, Object?> _item({
   'delta': ?delta,
   'buttonLabel': ?buttonLabel,
   'buttonVariant': ?buttonVariant,
+  'action': ?action,
 };
 
 Map<String, Object?> _data({List<Map<String, Object?>>? items}) => {
@@ -123,7 +129,13 @@ void main() {
       await _pump(
         tester,
         _data(
-          items: [_item(buttonVariant: 'primary', buttonLabel: 'Pay now')],
+          items: [
+            _item(
+              buttonVariant: 'primary',
+              buttonLabel: 'Pay now',
+              action: _action(),
+            ),
+          ],
         ),
       );
 
@@ -137,7 +149,13 @@ void main() {
       await _pump(
         tester,
         _data(
-          items: [_item(buttonVariant: 'secondary', buttonLabel: 'Details')],
+          items: [
+            _item(
+              buttonVariant: 'secondary',
+              buttonLabel: 'Details',
+              action: _action(),
+            ),
+          ],
         ),
       );
 
