@@ -12,6 +12,7 @@ export 'line_chart_catalog_item.dart';
 export 'metric_cards_catalog_item.dart';
 export 'progress_bar_catalog_item.dart';
 export 'radio_card_catalog_item.dart';
+export 'ranked_table.dart';
 export 'section_header_catalog_item.dart';
 export 'sparkline_card.dart';
 export 'transaction_list.dart';
