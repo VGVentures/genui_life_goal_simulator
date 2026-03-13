@@ -58,7 +58,7 @@ Future<void> bootstrap({
 
   await FirebaseAppCheck.instance.activate(
     providerWeb: ReCaptchaV3Provider(
-      '6Le_tnksAAAAAHBEuYty5MRoUWQfhVCsPfdPgIs6',
+      '6LcnMIgsAAAAAKTLZHdxUYRLTtOjr0fWa6RNezlI',
     ),
   );
 

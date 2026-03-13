@@ -7,6 +7,10 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 final _currencyFormat = NumberFormat.currency(symbol: r'$');
 
 final _schema = S.object(
+  description:
+      "A structured summary card displaying the user's financial "
+      'profile including net worth, assets, debt, cash flow, and a '
+      'personalized recommendation.',
   properties: {
     'name': S.string(description: 'The persona display name.'),
     'financialHealthScore': S.string(

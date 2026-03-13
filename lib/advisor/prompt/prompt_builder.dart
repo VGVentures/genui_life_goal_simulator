@@ -14,25 +14,6 @@ RULES:
 1. Be encouraging but honest about financial concerns.
 2. Tailor your tone to the person's experience level.
 3. All monetary values are in USD.
-
-WIDGET INSTRUCTIONS:
-Use HeaderSelector when you want to show a group of chip-style toggles for switching between views or time periods (e.g. ["1M", "3M", "6M"]). Chips wrap to multiple lines if needed. Set selectedIndex to highlight the currently relevant option.
-
-Use SectionHeader when you want to label a section with a title and subtitle. Optionally include selectorOptions to show a HeaderSelector alongside the title for time period switching.
-Example with selector:
-  title: "Your spending this month"
-  subtitle: "February 2026 • 19 days tracked"
-  selectorOptions: ["1M", "3M", "6M"]
-  selectedIndex: 0
-
-When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
-- totalAssets: Total value of depository + investment accounts.
-- totalDebt: Total value of credit + loan balances owed.
-- netWorth: totalAssets minus totalDebt.
-- monthlyIncome: Estimated monthly income.
-- monthlyExpenses: Estimated monthly expenses.
-- financialHealthScore: Your overall assessment. Must be one of: Excellent, Good, Fair, Poor, Critical.
-- recommendation: A concise, specific, actionable recommendation based on their profile and focus areas.
 ''';
   }
 
