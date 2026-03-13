@@ -63,25 +63,27 @@ void main() {
       expect(required, contains('items'));
     });
 
-    testWidgets('renders one ProgressBar per item', (tester) async {
-      await _pump(tester, _data(count: 3));
+    group('renders', () {
+      testWidgets('one ProgressBar per item', (tester) async {
+        await _pump(tester, _data(count: 3));
 
-      expect(find.byType(ProgressBar), findsNWidgets(3));
-      expect(find.text('Category 0'), findsOneWidget);
-      expect(find.text('Category 1'), findsOneWidget);
-      expect(find.text('Category 2'), findsOneWidget);
-    });
+        expect(find.byType(ProgressBar), findsNWidgets(3));
+        expect(find.text('Category 0'), findsOneWidget);
+        expect(find.text('Category 1'), findsOneWidget);
+        expect(find.text('Category 2'), findsOneWidget);
+      });
 
-    testWidgets('renders single item without error', (tester) async {
-      await _pump(tester, _data(count: 1));
+      testWidgets('single item without error', (tester) async {
+        await _pump(tester, _data(count: 1));
 
-      expect(find.byType(ProgressBar), findsOneWidget);
-    });
+        expect(find.byType(ProgressBar), findsOneWidget);
+      });
 
-    testWidgets('renders many items without error', (tester) async {
-      await _pump(tester, _data(count: 10));
+      testWidgets('many items without error', (tester) async {
+        await _pump(tester, _data(count: 10));
 
-      expect(find.byType(ProgressBar), findsNWidgets(10));
+        expect(find.byType(ProgressBar), findsNWidgets(10));
+      });
     });
   });
 }
