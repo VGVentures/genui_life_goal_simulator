@@ -10,7 +10,8 @@ const financeCatalogId = 'com.vgv.finance_catalog';
 
 /// Usage guidance appended to the system prompt so the LLM knows when and how
 /// to use the finance-specific widgets beyond what the JSON schema describes.
-const _financeWidgetRules = '''
+const _financeWidgetRules =
+    '''
 IMPORTANT: Every A2UI JSON message MUST include "version": "v0.9" at the top level, and when creating a surface you MUST use this exact catalogId: "$financeCatalogId". Do NOT invent or guess a different catalogId.
 
 Example createSurface:

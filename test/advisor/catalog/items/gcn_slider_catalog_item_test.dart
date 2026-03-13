@@ -152,7 +152,7 @@ void main() {
         final events = <UiEvent>[];
         await _pump(
           tester,
-          _data(value: 0, min: 0, max: 100),
+          _data(value: 0, max: 100),
           dispatchEvent: events.add,
         );
 

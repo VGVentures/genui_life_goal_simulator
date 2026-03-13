@@ -116,7 +116,10 @@ void main() {
           tester,
           _data(
             action: {
-              'event': {'name': 'get_started', 'context': {'page': 'home'}},
+              'event': {
+                'name': 'get_started',
+                'context': {'page': 'home'},
+              },
             },
           ),
           dispatchEvent: events.add,
