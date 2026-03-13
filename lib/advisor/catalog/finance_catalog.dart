@@ -26,12 +26,15 @@ Use the GCNSlider widget to let the user adjust a numeric value within a range (
 Use the ComparisonTable widget to compare spending between last month and this month by category.
 
 Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items of the same type.
+
+Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
 Catalog buildFinanceCatalog() {
   return BasicCatalogItems.asCatalog().copyWith(
     newItems: [
+      accordionItem,
       actionItemsGroupItem,
       appButtonItem,
       comparisonTableItem,
