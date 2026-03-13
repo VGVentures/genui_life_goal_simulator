@@ -26,6 +26,8 @@ Use the GCNSlider widget to let the user adjust a numeric value within a range (
 Use the ComparisonTable widget to compare spending between last month and this month by category.
 
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
+
+Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -36,6 +38,7 @@ Catalog buildFinanceCatalog() {
       sectionHeaderItem,
       accordionItem,
       appButtonItem,
+      categoryFilterChipItem,
       comparisonTableItem,
       emojiCardItem,
       filterBarItem,
