@@ -40,19 +40,17 @@ class _ChatViewState extends State<ChatView> {
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
           if (_pageController.hasClients && state.pages.isNotEmpty) {
-            unawaited(
-              Future<void>.delayed(const Duration(seconds: 4)).then((_) {
-                if (_pageController.hasClients) {
-                  unawaited(
-                    _pageController.animateToPage(
-                      state.currentPageIndex,
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutCubic,
-                    ),
-                  );
-                }
-              }),
-            );
+            Future<void>.delayed(const Duration(seconds: 4)).then((_) {
+              if (mounted && _pageController.hasClients) {
+                unawaited(
+                  _pageController.animateToPage(
+                    state.currentPageIndex,
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeOutCubic,
+                  ),
+                );
+              }
+            });
           }
         },
         buildWhen: (previous, current) =>
