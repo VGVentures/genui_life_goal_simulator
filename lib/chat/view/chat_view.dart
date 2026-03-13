@@ -46,8 +46,8 @@ class _ChatViewState extends State<ChatView> {
                   unawaited(
                     _pageController.animateToPage(
                       state.currentPageIndex,
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutCubic,
                     ),
                   );
                 }
