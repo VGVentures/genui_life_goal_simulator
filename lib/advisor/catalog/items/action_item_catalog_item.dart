@@ -24,6 +24,9 @@ final _itemSchema = S.object(
       description: 'Button style to render. Defaults to "none".',
       enumValues: ['primary', 'secondary', 'none'],
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when the button is pressed.',
+    ),
   },
   required: ['title', 'subtitle', 'amount'],
 );
@@ -61,6 +64,7 @@ final actionItemsGroupItem = CatalogItem(
         'secondary' => ActionItemButtonVariant.secondary,
         _ => ActionItemButtonVariant.none,
       };
+      final action = item['action'] as Map<String, Object?>?;
 
       return ActionItem(
         title: item['title']! as String,
@@ -69,7 +73,18 @@ final actionItemsGroupItem = CatalogItem(
         delta: item['delta'] as String?,
         buttonLabel: item['buttonLabel'] as String?,
         buttonVariant: variant,
-        onButtonTap: () {},
+        onButtonTap: () {
+          if (action case {'event': final Map<String, Object?> event}) {
+            ctx.dispatchEvent(
+              UserActionEvent(
+                name: event['name']! as String,
+                sourceComponentId: ctx.id,
+                context:
+                    event['context'] as Map<String, Object?>? ?? {},
+              ),
+            );
+          }
+        },
       );
     }).toList();
 
