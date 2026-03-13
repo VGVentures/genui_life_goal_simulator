@@ -23,6 +23,8 @@ Use the FilterBar widget to let the user filter data by category (e.g. spending 
 
 Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Set divisions and splitLabels for discrete steps.
 
+Use the RankedTable widget to display items ranked from highest to lowest (e.g. top merchants by spend, biggest expense categories). Each item shows a rank number, title, amount, and percentage delta. Positive deltas appear green, negative deltas appear red.
+
 Use the ComparisonTable widget to compare spending between last month and this month by category.
 ''';
 
