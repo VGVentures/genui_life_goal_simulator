@@ -16,8 +16,11 @@ final _schema = S.object(
       description: 'Zero-based index of the currently selected chip.',
       minimum: 0,
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when the user selects a chip.',
+    ),
   },
-  required: ['options', 'selectedIndex'],
+  required: ['options', 'selectedIndex', 'action'],
 );
 
 /// CatalogItem that renders a display-only [HeaderSelector].
@@ -31,11 +34,26 @@ final headerSelectorItem = CatalogItem(
         .map((e) => e! as String)
         .toList();
     final selectedIndex = (json['selectedIndex']! as num).toInt();
+    final action = json['action'] as Map<String, Object?>?;
 
     return HeaderSelector(
       options: options,
       selectedIndex: selectedIndex,
-      onChanged: (_) {},
+      onChanged: (index) {
+        if (action case {'event': final Map<String, Object?> event}) {
+          ctx.dispatchEvent(
+            UserActionEvent(
+              name: event['name']! as String,
+              sourceComponentId: ctx.id,
+              context: {
+                ...event['context'] as Map<String, Object?>? ?? {},
+                'selectedIndex': index,
+                'selectedOption': options[index],
+              },
+            ),
+          );
+        }
+      },
     );
   },
 );
