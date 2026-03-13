@@ -129,10 +129,10 @@ abstract final class _Dimensions {
   static const double mobilePadding = 16;
   static const double iconSize = 120;
   static const double mobileIconSize = 60;
-  static const double iconTitleSpacing = 100;
+  static const double iconTitleSpacing = 40;
   static const double mobileIconTitleSpacing = 24;
-  static const double titleFontSize = 40;
+  static const double titleFontSize = 30;
   static const double mobileTitleFontSize = 25.34;
-  static const double descFontSize = 32;
+  static const double descFontSize = 24;
   static const double mobileDescFontSize = 18;
 }

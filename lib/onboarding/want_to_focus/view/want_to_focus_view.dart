@@ -46,6 +46,6 @@ class WantToFocusView extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  static const double titleSize = 48;
+  static const double titleSize = 36;
   static const double mobileTitleSize = 28;
 }

@@ -31,7 +31,7 @@ class PickProfileView extends StatelessWidget {
                   mobile: _Dimensions.mobileTitleSize,
                   desktop: _Dimensions.titleSize,
                 ),
-                color: colorScheme.primary,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             SizedBox(
@@ -49,7 +49,7 @@ class PickProfileView extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  static const double titleSize = 35;
+  static const double titleSize = 36;
   static const double mobileTitleSize = 25;
   static const double titleSpacing = 40;
   static const double cardsTopSpacing = 70;

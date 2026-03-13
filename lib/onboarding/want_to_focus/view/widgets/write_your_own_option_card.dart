@@ -161,6 +161,6 @@ abstract final class _Dimensions {
   static const double borderWidth = 2;
   static const double horizontalPadding = 20;
   static const double verticalPadding = 44;
-  static const double fontSize = 32;
+  static const double fontSize = 24;
   static const double mobileTextSize = 18;
 }
