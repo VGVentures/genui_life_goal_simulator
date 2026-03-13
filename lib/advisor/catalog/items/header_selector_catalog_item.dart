@@ -4,8 +4,9 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
   description:
-      'A group of chip-style toggles for switching between views or time periods '
-      '(e.g. "1M", "3M", "6M"). Chips wrap to multiple lines if needed.',
+      'A group of chip-style toggles for switching between views or '
+      'time periods (e.g. "1M", "3M", "6M"). '
+      'Chips wrap to multiple lines if needed.',
   properties: {
     'options': S.list(
       items: S.string(),
