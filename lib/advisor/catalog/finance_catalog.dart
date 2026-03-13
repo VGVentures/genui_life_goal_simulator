@@ -32,6 +32,10 @@ Use the CategoryFilterChip widget to display a toggleable filter chip for catego
 Use SectionHeader to label a section with a title and subtitle. Optionally include selectorOptions to show a HeaderSelector alongside the title for time period switching (e.g. title: "Your spending this month", subtitle: "February 2026 • 19 days tracked", selectorOptions: ["1M", "3M", "6M"], selectedIndex: 0).
 
 Use HeaderSelector to show chip-style toggles for switching between views or time periods (e.g. ["1M", "3M", "6M"]). Set selectedIndex to highlight the currently relevant option.
+
+Use HorizontalBar to compare spending categories against a prior period or external benchmark (e.g. last month, category average). Set progress as actual ÷ reference. Use ProgressBar instead when the reference is a fixed budget limit.
+
+Use ProgressBar to show spending categories vs. a fixed budget limit. Set value to actual spend and total to the budget. Do not use when the reference is a prior period — use HorizontalBar instead.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -46,8 +50,10 @@ Catalog buildFinanceCatalog() {
       comparisonTableItem,
       emojiCardItem,
       filterBarItem,
+      horizontalBarItem,
       gcnSliderItem,
       lineChartItem,
+      progressBarItem,
       metricCardsItem,
       radioCardItem,
       userSummaryCardItem,
