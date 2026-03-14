@@ -74,12 +74,17 @@ class _NextStepsBarState extends State<_NextStepsBar> {
       MediaQuery.sizeOf(context).width,
     );
 
-    if (isDesktop && !_isDesktop) {
-      _showOverlay();
-    } else if (!isDesktop && _isDesktop) {
-      _removeOverlay();
+    if (isDesktop != _isDesktop) {
+      _isDesktop = isDesktop;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        if (_isDesktop) {
+          _showOverlay();
+        } else {
+          _removeOverlay();
+        }
+      });
     }
-    _isDesktop = isDesktop;
   }
 
   @override
