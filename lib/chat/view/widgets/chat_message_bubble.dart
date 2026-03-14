@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -65,26 +67,58 @@ class _UserBubble extends StatelessWidget {
   }
 }
 
-class _AssistantTextBubble extends StatelessWidget {
+class _AssistantTextBubble extends StatefulWidget {
   const _AssistantTextBubble({required this.text});
 
   final String text;
 
   @override
+  State<_AssistantTextBubble> createState() => _AssistantTextBubbleState();
+}
+
+class _AssistantTextBubbleState extends State<_AssistantTextBubble>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+    _opacity = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    );
+    unawaited(_controller.forward());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 650),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: Spacing.md,
-          ),
-          child: MarkdownBody(
-            data: text,
-            styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-              p: theme.textTheme.bodyMedium,
+    return FadeTransition(
+      opacity: _opacity,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 650),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: Spacing.md,
+            ),
+            child: MarkdownBody(
+              data: widget.text,
+              styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+                p: theme.textTheme.bodyMedium,
+              ),
             ),
           ),
         ),
