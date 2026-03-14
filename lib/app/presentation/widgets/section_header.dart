@@ -76,14 +76,12 @@ class SectionHeader extends StatelessWidget {
       ],
     );
 
+    late Widget content;
+
     if (selector == null) {
-      return titleColumn;
-    }
-
-    late Widget child;
-
-    if (isDesktop) {
-      child = Row(
+      content = titleColumn;
+    } else if (isDesktop) {
+      content = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(child: titleColumn),
@@ -91,7 +89,7 @@ class SectionHeader extends StatelessWidget {
         ],
       );
     } else {
-      child = Column(
+      content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -103,8 +101,8 @@ class SectionHeader extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: Spacing.xl),
-      child: child,
+      padding: const EdgeInsets.only(bottom: Spacing.md),
+      child: content,
     );
   }
 }
