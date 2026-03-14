@@ -401,7 +401,7 @@ class _ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 40, bottom: 120),
+      padding: const EdgeInsets.only(top: 40, bottom: 100),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

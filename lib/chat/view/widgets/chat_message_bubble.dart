@@ -78,8 +78,8 @@ class _AssistantTextBubble extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 650),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Spacing.sm,
+          padding: const EdgeInsets.only(
+            top: Spacing.md,
           ),
           child: MarkdownBody(
             data: text,
