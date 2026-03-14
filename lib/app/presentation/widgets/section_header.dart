@@ -80,25 +80,31 @@ class SectionHeader extends StatelessWidget {
       return titleColumn;
     }
 
+    late Widget child;
+
     if (isDesktop) {
-      return Row(
+      child = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(child: titleColumn),
           selector,
         ],
       );
+    } else {
+      child = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          titleColumn,
+          const SizedBox(height: Spacing.sm),
+          selector,
+        ],
+      );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        titleColumn,
-        const SizedBox(height: Spacing.sm),
-        selector,
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.xl),
+      child: child,
     );
   }
 }

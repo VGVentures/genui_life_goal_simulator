@@ -19,13 +19,7 @@ class ChatMessageBubble extends StatelessWidget {
     return switch (message) {
       UserDisplayMessage(:final text) => _UserBubble(text: text),
       AiTextDisplayMessage(:final text) => _AssistantTextBubble(text: text),
-      AiSurfaceDisplayMessage(:final surfaceId) => Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: Spacing.xs,
-          horizontal: Spacing.xs,
-        ),
-        child: Surface(surfaceContext: host.contextFor(surfaceId)),
-      ),
+      AiSurfaceDisplayMessage(:final surfaceId) => Surface(surfaceContext: host.contextFor(surfaceId)),
     };
   }
 }
@@ -83,7 +77,6 @@ class _AssistantTextBubble extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 650),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: Spacing.xs,
             horizontal: Spacing.sm,
           ),
           child: MarkdownBody(

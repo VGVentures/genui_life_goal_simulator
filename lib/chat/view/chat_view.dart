@@ -32,25 +32,26 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).extension<AppColors>()?.surface,
+      backgroundColor: Theme.of(context).extension<AppColors>()?.surface,
       appBar: _ChatAppBar(profileType: widget.profileType),
       body: BlocConsumer<ChatBloc, ChatState>(
         listenWhen: (previous, current) =>
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
           if (_pageController.hasClients && state.pages.isNotEmpty) {
-            Future<void>.delayed(const Duration(seconds: 4)).then((_) {
-              if (mounted && _pageController.hasClients) {
-                unawaited(
-                  _pageController.animateToPage(
-                    state.currentPageIndex,
-                    duration: const Duration(milliseconds: 1200),
-                    curve: Curves.easeInOutCubic,
-                  ),
-                );
-              }
-            });
+            unawaited(
+              Future<void>.delayed(const Duration(seconds: 4)).then((_) {
+                if (mounted && _pageController.hasClients) {
+                  unawaited(
+                    _pageController.animateToPage(
+                      state.currentPageIndex,
+                      duration: const Duration(milliseconds: 1200),
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  );
+                }
+              }),
+            );
           }
         },
         buildWhen: (previous, current) =>
@@ -356,7 +357,8 @@ class _FadingPageView extends StatelessWidget {
           itemCount: itemCount,
           itemBuilder: (context, pageIndex) {
             // Calculate how far this page is from the current position.
-            final currentPage = controller.hasClients &&
+            final currentPage =
+                controller.hasClients &&
                     controller.position.hasContentDimensions
                 ? controller.page ?? controller.initialPage.toDouble()
                 : controller.initialPage.toDouble();
@@ -399,7 +401,7 @@ class _ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
+      padding: const EdgeInsets.only(top: 40, bottom: 120),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
