@@ -29,8 +29,11 @@ final summaryContainerItem = CatalogItem(
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1000),
-            child: ColoredBox(
-              color: colors?.onPrimary ?? const Color(0xFFFFFFFF),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: colors?.onPrimary ?? const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(Spacing.xs),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(Spacing.lg),
                 child: ctx.buildChild(childId),

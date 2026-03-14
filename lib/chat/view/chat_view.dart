@@ -45,8 +45,8 @@ class _ChatViewState extends State<ChatView> {
                 unawaited(
                   _pageController.animateToPage(
                     state.currentPageIndex,
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOutCubic,
+                    duration: const Duration(milliseconds: 1200),
+                    curve: Curves.easeInOutCubic,
                   ),
                 );
               }
@@ -62,7 +62,7 @@ class _ChatViewState extends State<ChatView> {
               Expanded(
                 child: state.pages.isEmpty
                     ? const Center(child: CircularProgressIndicator())
-                    : PageView.builder(
+                    : _FadingPageView(
                         controller: _pageController,
                         itemCount: state.pages.length,
                         itemBuilder: (context, pageIndex) {
@@ -331,6 +331,56 @@ class _ProfileChip extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FadingPageView extends StatelessWidget {
+  const _FadingPageView({
+    required this.controller,
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  final PageController controller;
+  final int itemCount;
+  final Widget Function(BuildContext, int) itemBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        return PageView.builder(
+          controller: controller,
+          itemCount: itemCount,
+          itemBuilder: (context, pageIndex) {
+            // Calculate how far this page is from the current position.
+            final currentPage = controller.hasClients &&
+                    controller.position.hasContentDimensions
+                ? controller.page ?? controller.initialPage.toDouble()
+                : controller.initialPage.toDouble();
+            final distance = (pageIndex - currentPage).abs();
+            // Fade out aggressively — fully transparent at 50% scroll.
+            final opacity = (1.0 - distance * 2).clamp(0.0, 1.0);
+            // Arc downward along a cubic curve as the page scrolls away.
+            final t = distance.clamp(0.0, 1.0);
+            final curved = Curves.easeInCubic.transform(t);
+            final yOffset = curved * 200;
+            // Slight horizontal shift in the scroll direction for the arc.
+            final direction = (pageIndex - currentPage).sign;
+            final xOffset = curved * 30 * direction;
+
+            return Transform.translate(
+              offset: Offset(xOffset, yOffset),
+              child: Opacity(
+                opacity: opacity,
+                child: itemBuilder(context, pageIndex),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

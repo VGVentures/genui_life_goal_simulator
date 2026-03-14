@@ -77,25 +77,17 @@ class SectionHeader extends StatelessWidget {
     );
 
     if (selector == null) {
-      return SizedBox(
-        height: _Dimensions.height,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: titleColumn,
-        ),
-      );
+      return titleColumn;
     }
 
     if (isDesktop) {
-      return SizedBox(
-        height: _Dimensions.height,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: titleColumn),
-            selector,
-          ],
-        ),
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(child: titleColumn),
+          selector,
+        ],
       );
     }
 
@@ -109,10 +101,6 @@ class SectionHeader extends StatelessWidget {
       ],
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double height = 56;
 }
 
 abstract final class _DefaultColors {
