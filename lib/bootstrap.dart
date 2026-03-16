@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:finance_app/app.dart';
-import 'package:finance_app/app_check_debug.dart';
+import 'package:finance_app/app_check/app_check_debug.dart';
 import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:finance_app/feature_flags/active_feature_flags.dart';
 import 'package:finance_app/feature_flags/repository/feature_flags_repository.dart';

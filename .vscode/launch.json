@@ -14,7 +14,8 @@
         "development",
         "--target",
         "lib/main_development.dart",
-        "--dart-define=APP_CHECK_DEBUG_TOKEN=${env:APP_CHECK_DEBUG_TOKEN}"
+        "--dart-define=APP_CHECK_DEBUG_TOKEN=${env:APP_CHECK_DEBUG_TOKEN}",
+        "--dart-define=RECAPTCHA_SITE_KEY=${env:RECAPTCHA_SITE_KEY}"
       ]
     },
     {
@@ -26,7 +27,8 @@
         "--flavor",
         "production",
         "--target",
-        "lib/main_production.dart"
+        "lib/main_production.dart",
+        "--dart-define=RECAPTCHA_SITE_KEY=${env:RECAPTCHA_SITE_KEY}"
       ]
     },
   ]

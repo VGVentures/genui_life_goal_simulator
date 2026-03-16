@@ -1,22 +1,27 @@
-# Finance App
-
-A Flutter demo app built for **Google Cloud Next 2026**, showcasing [Firebase AI](https://firebase.google.com/docs/vertex-ai-in-firebase) and [GenUI](https://github.com/flutter/genui) (Generative UI) in a personal-finance dashboard.
+# Very Good Financial Advisor
 
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
----
+A multi-platform Flutter demo app built for **Google Cloud Next 2026**, showcasing [Firebase AI](https://firebase.google.com/docs/vertex-ai-in-firebase) and [GenUI](https://github.com/flutter/genui) (Generative UI) in a personal-finance dashboard. Runs on Android, iOS, Web, and macOS from a single codebase.
+
+**[Live Demo](https://gcn26demo.vgv.ai)**
+
+<p align="center">
+  <a href="https://gcn26demo.vgv.ai"><img src="screenshots/intro_desktop.png" width="500" alt="Desktop intro screen" /></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://gcn26demo.vgv.ai"><img src="screenshots/intro_mobile.png" width="180" alt="Mobile intro screen" /></a>
+</p>
+
 
 ## Features
 
 - **AI Financial Advisor** — chat-powered insights using Firebase AI and structured output via [Dartantic](https://github.com/brianegan/dartantic)
 - **Generative UI** — AI responses rendered as interactive Flutter widgets (charts, tables, chips) via [GenUI](https://github.com/flutter/genui)
 - **Dashboard** — sparkline cards, portfolio overview, and responsive layouts
-- **Feature Flags** — runtime toggles backed by shared preferences
 - **Rive Animations** — loading screens and thinking indicators
-
----
+- **Multi-platform** — runs on Android, iOS, Web, and macOS
 
 ## Getting Started
 
@@ -36,7 +41,7 @@ fvm install
 This project requires a Firebase project with **Firebase AI** and **App Check** enabled. The only config file needed is `lib/firebase_options.dart` (Dart-only initialization — no native config files required). Generate it with:
 
 ```sh
-flutterfire configure --platforms=android,ios,macos,web,windows --out=lib/firebase_options.dart
+flutterfire configure --platforms=android,ios,macos,web --out=lib/firebase_options.dart
 ```
 
 ### Run the App
@@ -55,9 +60,7 @@ To enable App Check with reCAPTCHA (web builds):
 fvm flutter run --target lib/main_development.dart --dart-define=RECAPTCHA_SITE_KEY=your_key_here
 ```
 
-_Works on iOS, Android, Web, macOS, and Windows._
-
----
+_Works on iOS, Android, Web, and macOS._
 
 ## Architecture
 
@@ -65,21 +68,24 @@ The app follows a **feature-first** structure with [BLoC](https://bloclibrary.de
 
 ```
 lib/
-  app/             — App shell, theme, presentation tokens
-  advisor/         — AI chat experience (Bloc, catalog items, GenUI)
-  core/            — Shared repositories (error reporting, feature flags)
-  dashboard/       — Portfolio dashboard and sparkline cards
-  feature_flag/    — Feature flag cubit and dev menu
-  onboarding/      — Intro and profile selection screens
+  advisor/         — AI financial advisor (chat bloc, GenUI catalog, prompt builder)
+  app.dart         — Root MaterialApp widget
+  app_check/       — Firebase App Check debug token helpers
+  bootstrap.dart   — App initialization (Firebase, providers, error handling)
+  design_system/   — Theme, colors, spacing, and reusable UI widgets
+  dev_menu/        — Component catalog pages (development tool)
+  error_reporting/ — Error reporting repository
+  feature_flags/   — Feature flag repository, cubit, and dev menu drawer
+  l10n/            — Localization (English, Spanish)
+  onboarding/      — Intro, profile selection, and focus selection screens
 ```
 
 Key dependencies:
 - **firebase_ai** — Gemini model access via Firebase
+- **firebase_app_check** — Protects Firebase backends from abuse
 - **genui** — Renders structured AI output as Flutter widgets
 - **flutter_bloc** — State management
 - **dartantic_ai / dartantic_firebase_ai** — Structured output schemas for AI
-
----
 
 ## Running Tests
 
@@ -94,8 +100,6 @@ genhtml coverage/lcov.info -o coverage/
 open coverage/index.html
 ```
 
----
-
 ## Bloc Lints
 
 This project uses [bloc_lint](https://pub.dev/packages/bloc_lint) to enforce best practices.
@@ -105,8 +109,6 @@ fvm dart run bloc_tools:bloc lint .
 ```
 
 You can also validate with VSCode using the [official bloc extension](https://marketplace.visualstudio.com/items?itemName=FelixAngelov.bloc).
-
----
 
 ## Translations
 
