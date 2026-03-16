@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart' show RiveNative;
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -44,6 +45,8 @@ Future<void> bootstrap({
   required AnalyticsRepository Function() analyticsRepositoryFactory,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+
+  await RiveNative.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

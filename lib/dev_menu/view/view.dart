@@ -17,4 +17,5 @@ export 'radio_card_catalog_page.dart';
 export 'ranked_table_page.dart';
 export 'section_header_catalog_page.dart';
 export 'slider_catalog_page.dart';
+export 'thinking_animation_catalog_page.dart';
 export 'transaction_list_catalog_page.dart';
