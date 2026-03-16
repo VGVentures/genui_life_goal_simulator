@@ -11,7 +11,7 @@ Map<String, Object?> _data({
   String? bottomBar,
 }) => {
   'child': child,
-  if (bottomBar != null) 'bottomBar': bottomBar,
+  'bottomBar': ?bottomBar,
 };
 
 CatalogItemContext _context(
