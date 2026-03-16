@@ -14,16 +14,25 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsAnimationsGen {
+  const $AssetsAnimationsGen();
+
+  /// File path: assets/animations/loading.riv
+  String get loading => 'assets/animations/loading.riv';
+
+  /// File path: assets/animations/thinking.riv
+  String get thinking => 'assets/animations/thinking.riv';
+
+  /// List of all assets
+  List<String> get values => [loading, thinking];
+}
+
 class $AssetsIconsKickOffGen {
   const $AssetsIconsKickOffGen();
 
   /// File path: assets/icons_kick_off/activity_zone.png
   AssetGenImage get activityZone =>
       const AssetGenImage('assets/icons_kick_off/activity_zone.png');
-
-  /// File path: assets/icons_kick_off/check_icon.png
-  AssetGenImage get checkIcon =>
-      const AssetGenImage('assets/icons_kick_off/check_icon.png');
 
   /// File path: assets/icons_kick_off/ellipse_139.png
   AssetGenImage get ellipse139 =>
@@ -57,10 +66,13 @@ class $AssetsIconsKickOffGen {
   AssetGenImage get star9 =>
       const AssetGenImage('assets/icons_kick_off/star_9.png');
 
+  /// File path: assets/icons_kick_off/trust_icon.svg
+  SvgGenImage get trustIcon =>
+      const SvgGenImage('assets/icons_kick_off/trust_icon.svg');
+
   /// List of all assets
-  List<AssetGenImage> get values => [
+  List<dynamic> get values => [
     activityZone,
-    checkIcon,
     ellipse139,
     flare,
     softStar,
@@ -69,6 +81,7 @@ class $AssetsIconsKickOffGen {
     star5,
     star7,
     star9,
+    trustIcon,
   ];
 }
 
@@ -164,13 +177,18 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get rightArrow =>
       const AssetGenImage('assets/images/onboarding/right_arrow.png');
 
+  /// File path: assets/images/onboarding/soft_star.svg
+  SvgGenImage get softStar =>
+      const SvgGenImage('assets/images/onboarding/soft_star.svg');
+
   /// List of all assets
-  List<AssetGenImage> get values => [
+  List<dynamic> get values => [
     starBegginer,
     starOptimizer,
     checkedOption,
     editPencil,
     rightArrow,
+    softStar,
   ];
 }
 
@@ -196,6 +214,7 @@ class $AssetsImagesSparklineCardsGen {
 class Assets {
   const Assets._();
 
+  static const $AssetsAnimationsGen animations = $AssetsAnimationsGen();
   static const $AssetsIconsKickOffGen iconsKickOff = $AssetsIconsKickOffGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }

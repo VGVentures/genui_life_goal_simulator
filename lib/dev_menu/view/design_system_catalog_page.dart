@@ -326,6 +326,39 @@ class DesignSystemCatalogPage extends StatelessWidget {
               ),
             ),
           ),
+          ListTile(
+            title: const Text(
+              'Loading Animation',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Rive overlay animation shown while transitioning to the chat'
+              ' screen',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const LoadingAnimationCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Thinking Animation',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Rive animation shown while AI is generating a response',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ThinkingAnimationCatalogPage(),
+              ),
+            ),
+          ),
         ],
       ),
     );
