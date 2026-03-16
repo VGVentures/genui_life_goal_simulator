@@ -27,11 +27,18 @@ final class ChatMessageSent extends ChatEvent {
   final String text;
 }
 
-/// Conversation messages changed
-final class ChatConversationUpdated extends ChatEvent {
-  const ChatConversationUpdated(this.messages);
+/// A surface was added or already exists — route to the correct page.
+final class ChatSurfaceReceived extends ChatEvent {
+  const ChatSurfaceReceived(this.surfaceId);
 
-  final List<DisplayMessage> messages;
+  final String surfaceId;
+}
+
+/// A display message was added to the current page.
+final class ChatContentReceived extends ChatEvent {
+  const ChatContentReceived(this.message);
+
+  final DisplayMessage message;
 }
 
 /// Loading state when LLM is processing a request

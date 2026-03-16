@@ -33,28 +33,37 @@ final class ChatState {
   /// {@macro advisor_state}
   const ChatState({
     this.status = ChatStatus.initial,
-    this.messages = const [],
+    this.pages = const [],
+    this.currentPageIndex = 0,
     this.isLoading = false,
     this.host,
     this.error,
   });
 
   final ChatStatus status;
-  final List<DisplayMessage> messages;
+
+  /// Each page is a list of display messages shown on one full-screen step.
+  final List<List<DisplayMessage>> pages;
+
+  /// The index of the page currently being built by the AI.
+  final int currentPageIndex;
+
   final bool isLoading;
   final SurfaceHost? host;
   final String? error;
 
   ChatState copyWith({
     ChatStatus? status,
-    List<DisplayMessage>? messages,
+    List<List<DisplayMessage>>? pages,
+    int? currentPageIndex,
     bool? isLoading,
     SurfaceHost? host,
     String? error,
   }) {
     return ChatState(
       status: status ?? this.status,
-      messages: messages ?? this.messages,
+      pages: pages ?? this.pages,
+      currentPageIndex: currentPageIndex ?? this.currentPageIndex,
       isLoading: isLoading ?? this.isLoading,
       host: host ?? this.host,
       error: error ?? this.error,

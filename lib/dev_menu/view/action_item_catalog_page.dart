@@ -18,28 +18,19 @@ class ActionItemCatalogPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _SectionLabel('Primary button variant'),
+            const _SectionLabel('With trailing button'),
             ActionItem(
               title: 'Restaurant',
               subtitle: 'Dining • Feb 18',
               amount: r'$450',
               delta: '+28%',
-              buttonLabel: 'Details',
-              buttonVariant: ActionItemButtonVariant.primary,
-              onButtonTap: () {},
+              trailing: FilledButton(
+                onPressed: () {},
+                child: const Text('Details'),
+              ),
             ),
             const SizedBox(height: Spacing.xl),
-            const _SectionLabel('Secondary button variant'),
-            ActionItem(
-              title: 'Netflix',
-              subtitle: 'Subscriptions • Feb 15',
-              amount: r'$18',
-              buttonLabel: 'Cancel Subscription',
-              buttonVariant: ActionItemButtonVariant.secondary,
-              onButtonTap: () {},
-            ),
-            const SizedBox(height: Spacing.xl),
-            const _SectionLabel('No button variant'),
+            const _SectionLabel('Without trailing'),
             const ActionItem(
               title: 'Restaurant',
               subtitle: 'Dining • Feb 18',
@@ -54,17 +45,19 @@ class ActionItemCatalogPage extends StatelessWidget {
                   subtitle: 'Dining • Feb 18',
                   amount: r'$450',
                   delta: '+28%',
-                  buttonLabel: 'Details',
-                  buttonVariant: ActionItemButtonVariant.primary,
-                  onButtonTap: () {},
+                  trailing: FilledButton(
+                    onPressed: () {},
+                    child: const Text('Details'),
+                  ),
                 ),
                 ActionItem(
                   title: 'Netflix',
                   subtitle: 'Subscriptions • Feb 15',
                   amount: r'$18',
-                  buttonLabel: 'Cancel Subscription',
-                  buttonVariant: ActionItemButtonVariant.secondary,
-                  onButtonTap: () {},
+                  trailing: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text('Cancel'),
+                  ),
                 ),
                 const ActionItem(
                   title: 'Restaurant',

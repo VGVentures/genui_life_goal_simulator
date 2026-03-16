@@ -76,43 +76,35 @@ class SectionHeader extends StatelessWidget {
       ],
     );
 
+    late Widget content;
+
     if (selector == null) {
-      return SizedBox(
-        height: _Dimensions.height,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: titleColumn,
-        ),
+      content = titleColumn;
+    } else if (isDesktop) {
+      content = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(child: titleColumn),
+          selector,
+        ],
+      );
+    } else {
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          titleColumn,
+          const SizedBox(height: Spacing.sm),
+          selector,
+        ],
       );
     }
 
-    if (isDesktop) {
-      return SizedBox(
-        height: _Dimensions.height,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: titleColumn),
-            selector,
-          ],
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        titleColumn,
-        const SizedBox(height: Spacing.sm),
-        selector,
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.md),
+      child: content,
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double height = 56;
 }
 
 abstract final class _DefaultColors {

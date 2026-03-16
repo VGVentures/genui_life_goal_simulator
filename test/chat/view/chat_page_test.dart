@@ -30,6 +30,7 @@ void main() {
       final bloc = _MockChatBloc();
       when(() => bloc.state).thenReturn(const ChatState());
 
+      await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,

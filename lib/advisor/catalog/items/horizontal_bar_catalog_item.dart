@@ -6,10 +6,10 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _itemSchema = S.object(
   properties: {
-    'category': S.string(
+    'category': A2uiSchemas.stringReference(
       description: 'Spending category label (e.g. "Dining").',
     ),
-    'amount': S.string(
+    'amount': A2uiSchemas.stringReference(
       description: r'Formatted amount string (e.g. "$420").',
     ),
     'progress': S.number(
@@ -17,12 +17,12 @@ final _itemSchema = S.object(
           r'Actual ÷ reference as a decimal (e.g. $420 ÷ $400 = 1.05). '
           'The bar clamps at 1.0 visually.',
     ),
-    'comparisonLabel': S.string(
+    'comparisonLabel': A2uiSchemas.stringReference(
       description:
           'Short label for the reference row '
           '(e.g. "vs last month", "vs category avg").',
     ),
-    'comparisonValue': S.string(
+    'comparisonValue': A2uiSchemas.stringReference(
       description:
           'Signed % change vs the reference. '
           'Positive = spent more than reference → shown in red. '
@@ -68,22 +68,64 @@ final horizontalBarItem = CatalogItem(
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int i = 0; i < rawItems.length; i++) ...[
-          if (i > 0) const SizedBox(height: Spacing.md),
-          _buildBar(rawItems[i]! as Map<String, Object?>),
-        ],
-      ],
+      children: rawItems.cast<Map<String, Object?>>().indexed.map((entry) {
+        final (index, item) = entry;
+        return Padding(
+          key: ValueKey('hbar_$index'),
+          padding: EdgeInsets.only(
+            top: index > 0 ? Spacing.md : 0,
+          ),
+          child: _BoundHorizontalBar(
+            dataContext: ctx.dataContext,
+            itemData: item,
+          ),
+        );
+      }).toList(),
     );
   },
 );
 
-Widget _buildBar(Map<String, Object?> item) {
-  return HorizontalBar(
-    category: item['category']! as String,
-    amount: item['amount']! as String,
-    progress: (item['progress']! as num).toDouble(),
-    comparisonLabel: item['comparisonLabel']! as String,
-    comparisonValue: item['comparisonValue']! as String,
-  );
+class _BoundHorizontalBar extends StatelessWidget {
+  const _BoundHorizontalBar({
+    required this.dataContext,
+    required this.itemData,
+  });
+
+  final DataContext dataContext;
+  final Map<String, Object?> itemData;
+
+  @override
+  Widget build(BuildContext context) {
+    return BoundString(
+      dataContext: dataContext,
+      value: itemData['category'],
+      builder: (context, category) {
+        return BoundString(
+          dataContext: dataContext,
+          value: itemData['amount'],
+          builder: (context, amount) {
+            return BoundString(
+              dataContext: dataContext,
+              value: itemData['comparisonLabel'],
+              builder: (context, comparisonLabel) {
+                return BoundString(
+                  dataContext: dataContext,
+                  value: itemData['comparisonValue'],
+                  builder: (context, comparisonValue) {
+                    return HorizontalBar(
+                      category: category ?? '',
+                      amount: amount ?? '',
+                      progress: (itemData['progress']! as num).toDouble(),
+                      comparisonLabel: comparisonLabel ?? '',
+                      comparisonValue: comparisonValue ?? '',
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 }

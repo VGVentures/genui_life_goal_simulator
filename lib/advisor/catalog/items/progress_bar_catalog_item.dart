@@ -6,7 +6,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _itemSchema = S.object(
   properties: {
-    'title': S.string(
+    'title': A2uiSchemas.stringReference(
       description: 'Category label displayed above the bar (e.g. "Dining").',
     ),
     'value': S.number(
@@ -46,20 +46,26 @@ final progressBarItem = CatalogItem(
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int i = 0; i < rawItems.length; i++) ...[
-          if (i > 0) const SizedBox(height: Spacing.md),
-          _buildBar(rawItems[i]! as Map<String, Object?>),
-        ],
-      ],
+      children: rawItems.cast<Map<String, Object?>>().indexed.map((entry) {
+        final (index, item) = entry;
+        return Padding(
+          key: ValueKey('pbar_$index'),
+          padding: EdgeInsets.only(
+            top: index > 0 ? Spacing.md : 0,
+          ),
+          child: BoundString(
+            dataContext: ctx.dataContext,
+            value: item['title'],
+            builder: (context, title) {
+              return ProgressBar(
+                title: title ?? '',
+                value: (item['value']! as num).toDouble(),
+                total: (item['total']! as num).toDouble(),
+              );
+            },
+          ),
+        );
+      }).toList(),
     );
   },
 );
-
-Widget _buildBar(Map<String, Object?> item) {
-  return ProgressBar(
-    title: item['title']! as String,
-    value: (item['value']! as num).toDouble(),
-    total: (item['total']! as num).toDouble(),
-  );
-}

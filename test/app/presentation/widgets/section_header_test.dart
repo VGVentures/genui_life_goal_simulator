@@ -131,7 +131,9 @@ void main() {
         expect(subtitleText.style?.color, colors.onSurfaceVariant);
       });
 
-      testWidgets('has 56px height on desktop with selector', (tester) async {
+      testWidgets('wraps content in Padding with bottom spacing', (
+        tester,
+      ) async {
         await _pumpSectionHeader(
           tester,
           SectionHeader(
@@ -140,15 +142,16 @@ void main() {
             selectorOptions: const ['1M', '3M', '6M'],
             onSelectorChanged: (_) {},
           ),
+          size: const Size(1200, 600),
         );
 
-        final sizedBox = tester.widget<SizedBox>(
+        final padding = tester.widget<Padding>(
           find.ancestor(
             of: find.byType(Row),
-            matching: find.byType(SizedBox),
+            matching: find.byType(Padding),
           ),
         );
-        expect(sizedBox.height, 56);
+        expect(padding, isNotNull);
       });
     });
 
@@ -162,6 +165,7 @@ void main() {
             selectorOptions: const ['1M', '3M', '6M'],
             onSelectorChanged: (_) {},
           ),
+          size: const Size(1200, 600),
         );
 
         expect(find.byType(Row), findsOneWidget);

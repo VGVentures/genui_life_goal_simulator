@@ -20,18 +20,20 @@ void main() {
           subtitle: 'Dining • Feb 18',
           amount: r'$450',
           delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
+          trailing: FilledButton(
+            onPressed: () {},
+            child: const Text('Details'),
+          ),
         ),
         ActionItem(
           title: 'Restaurant',
           subtitle: 'Dining • Feb 18',
           amount: r'$450',
           delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
+          trailing: FilledButton(
+            onPressed: () {},
+            child: const Text('Details'),
+          ),
         ),
       ],
     );

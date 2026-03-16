@@ -13,7 +13,7 @@ Future<void> _pump(WidgetTester tester, Widget widget) {
 
 void main() {
   group(ActionItem, () {
-    group('no-button variant', () {
+    group('without trailing', () {
       testWidgets('renders', (tester) async {
         await _pump(
           tester,
@@ -27,14 +27,12 @@ void main() {
         expect(find.text('Restaurant'), findsOneWidget);
         expect(find.text('Dining • Feb 18'), findsOneWidget);
         expect(find.text(r'$87'), findsOneWidget);
-        expect(find.byType(FilledButton), findsNothing);
-        expect(find.byType(OutlinedButton), findsNothing);
         expect(find.byType(Divider), findsOneWidget);
       });
     });
 
-    group('primary button variant', () {
-      testWidgets('renders FilledButton with label', (tester) async {
+    group('with trailing widget', () {
+      testWidgets('renders trailing widget', (tester) async {
         await _pump(
           tester,
           ActionItem(
@@ -42,9 +40,10 @@ void main() {
             subtitle: 'Dining • Feb 18',
             amount: r'$450',
             delta: '+28%',
-            buttonLabel: 'Details',
-            buttonVariant: ActionItemButtonVariant.primary,
-            onButtonTap: () {},
+            trailing: FilledButton(
+              onPressed: () {},
+              child: const Text('Details'),
+            ),
           ),
         );
 
@@ -52,7 +51,7 @@ void main() {
         expect(find.text('Details'), findsOneWidget);
       });
 
-      testWidgets('calls onButtonTap when pressed', (tester) async {
+      testWidgets('trailing button is tappable', (tester) async {
         var tapped = false;
         await _pump(
           tester,
@@ -60,83 +59,15 @@ void main() {
             title: 'Restaurant',
             subtitle: 'Dining • Feb 18',
             amount: r'$450',
-            buttonLabel: 'Details',
-            buttonVariant: ActionItemButtonVariant.primary,
-            onButtonTap: () => tapped = true,
+            trailing: FilledButton(
+              onPressed: () => tapped = true,
+              child: const Text('Details'),
+            ),
           ),
         );
 
         await tester.tap(find.byType(FilledButton));
         expect(tapped, isTrue);
-      });
-
-      testWidgets('renders no OutlinedButton', (tester) async {
-        await _pump(
-          tester,
-          ActionItem(
-            title: 'Restaurant',
-            subtitle: 'Dining • Feb 18',
-            amount: r'$450',
-            buttonLabel: 'Details',
-            buttonVariant: ActionItemButtonVariant.primary,
-            onButtonTap: () {},
-          ),
-        );
-
-        expect(find.byType(OutlinedButton), findsNothing);
-      });
-    });
-
-    group('secondary button variant', () {
-      testWidgets('renders OutlinedButton with label', (tester) async {
-        await _pump(
-          tester,
-          ActionItem(
-            title: 'Netflix',
-            subtitle: 'Subscriptions • Feb 15',
-            amount: r'$18',
-            buttonLabel: 'Cancel Subscription',
-            buttonVariant: ActionItemButtonVariant.secondary,
-            onButtonTap: () {},
-          ),
-        );
-
-        expect(find.byType(OutlinedButton), findsOneWidget);
-        expect(find.text('Cancel Subscription'), findsOneWidget);
-      });
-
-      testWidgets('calls onButtonTap when pressed', (tester) async {
-        var tapped = false;
-        await _pump(
-          tester,
-          ActionItem(
-            title: 'Netflix',
-            subtitle: 'Subscriptions • Feb 15',
-            amount: r'$18',
-            buttonLabel: 'Cancel Subscription',
-            buttonVariant: ActionItemButtonVariant.secondary,
-            onButtonTap: () => tapped = true,
-          ),
-        );
-
-        await tester.tap(find.byType(OutlinedButton));
-        expect(tapped, isTrue);
-      });
-
-      testWidgets('renders no FilledButton', (tester) async {
-        await _pump(
-          tester,
-          ActionItem(
-            title: 'Netflix',
-            subtitle: 'Subscriptions • Feb 15',
-            amount: r'$18',
-            buttonLabel: 'Cancel Subscription',
-            buttonVariant: ActionItemButtonVariant.secondary,
-            onButtonTap: () {},
-          ),
-        );
-
-        expect(find.byType(FilledButton), findsNothing);
       });
     });
 
@@ -214,17 +145,19 @@ void main() {
         subtitle: 'Dining • Feb 18',
         amount: r'$450',
         delta: '+28%',
-        buttonLabel: 'Details',
-        buttonVariant: ActionItemButtonVariant.primary,
-        onButtonTap: () {},
+        trailing: FilledButton(
+          onPressed: () {},
+          child: const Text('Details'),
+        ),
       ),
       ActionItem(
         title: 'Netflix',
         subtitle: 'Subscriptions • Feb 15',
         amount: r'$18',
-        buttonLabel: 'Cancel Subscription',
-        buttonVariant: ActionItemButtonVariant.secondary,
-        onButtonTap: () {},
+        trailing: OutlinedButton(
+          onPressed: () {},
+          child: const Text('Cancel'),
+        ),
       ),
       const ActionItem(
         title: 'Restaurant',

@@ -3,7 +3,16 @@ import 'package:finance_app/onboarding/want_to_focus/view/widgets/selectable_opt
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> _pumpCard(WidgetTester tester, Widget widget) {
+Future<void> _pumpCard(
+  WidgetTester tester,
+  Widget widget, {
+  Size size = const Size(1200, 800),
+}) {
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+
   return tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
@@ -30,7 +39,7 @@ void main() {
         expect(find.byType(Image), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w600);
-        expect(text.style?.fontSize, 32);
+        expect(text.style?.fontSize, 24);
       },
     );
 
@@ -50,7 +59,7 @@ void main() {
         expect(find.byType(Image), findsNothing);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w400);
-        expect(text.style?.fontSize, 32);
+        expect(text.style?.fontSize, 24);
       },
     );
 
@@ -58,13 +67,6 @@ void main() {
       'applies mobile font size and shows check icon '
       'when screen width is below threshold',
       (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
-
         await _pumpCard(
           tester,
           SelectableOptionCard(
@@ -72,6 +74,7 @@ void main() {
             isSelected: true,
             onTap: () {},
           ),
+          size: const Size(400, 800),
         );
 
         expect(find.byType(Image), findsOneWidget);

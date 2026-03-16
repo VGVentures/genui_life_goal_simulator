@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
@@ -9,7 +10,10 @@ final List<String> _colorValues = FilterChipColor.values
 final _schema = S.object(
   description:
       'A toggleable filter chip for category selection '
-      '(e.g. spending categories or tags).',
+      '(e.g. spending categories or tags). '
+      'The selected state is written to the data model at '
+      '"/<componentId>/isSelected" so it is included automatically '
+      'in the next interaction.',
   properties: {
     'label': S.string(description: 'Text displayed inside the chip.'),
     'color': S.string(
@@ -28,7 +32,11 @@ final _schema = S.object(
   required: ['label', 'color'],
 );
 
-/// CatalogItem that renders a display-only [CategoryFilterChip].
+/// CatalogItem that renders a [CategoryFilterChip] with local state.
+///
+/// The selected state is managed locally and written to the data model at
+/// `/<componentId>/isSelected` so it is available when the user triggers
+/// a subsequent action.
 final categoryFilterChipItem = CatalogItem(
   name: 'CategoryFilterChip',
   dataSchema: _schema,
@@ -37,7 +45,7 @@ final categoryFilterChipItem = CatalogItem(
 
     final label = json['label']! as String;
     final colorRaw = json['color']! as String;
-    final isSelected = json['isSelected'] as bool? ?? false;
+    final initialSelected = json['isSelected'] as bool? ?? false;
     final isEnabled = json['isEnabled'] as bool? ?? true;
 
     final color = FilterChipColor.values.firstWhere(
@@ -45,12 +53,63 @@ final categoryFilterChipItem = CatalogItem(
       orElse: () => FilterChipColor.aqua,
     );
 
-    return CategoryFilterChip(
+    return _StatefulCategoryFilterChip(
       label: label,
       color: color,
-      isSelected: isSelected,
+      initialSelected: initialSelected,
       isEnabled: isEnabled,
-      onTap: () {},
+      dataContext: ctx.dataContext,
+      componentId: ctx.id,
     );
   },
 );
+
+class _StatefulCategoryFilterChip extends StatefulWidget {
+  const _StatefulCategoryFilterChip({
+    required this.label,
+    required this.color,
+    required this.initialSelected,
+    required this.isEnabled,
+    required this.dataContext,
+    required this.componentId,
+  });
+
+  final String label;
+  final FilterChipColor color;
+  final bool initialSelected;
+  final bool isEnabled;
+  final DataContext dataContext;
+  final String componentId;
+
+  @override
+  State<_StatefulCategoryFilterChip> createState() =>
+      _StatefulCategoryFilterChipState();
+}
+
+class _StatefulCategoryFilterChipState
+    extends State<_StatefulCategoryFilterChip> {
+  late bool _isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSelected = widget.initialSelected;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CategoryFilterChip(
+      label: widget.label,
+      color: widget.color,
+      isSelected: _isSelected,
+      isEnabled: widget.isEnabled,
+      onTap: () {
+        setState(() => _isSelected = !_isSelected);
+        widget.dataContext.update(
+          DataPath('/${widget.componentId}/isSelected'),
+          _isSelected,
+        );
+      },
+    );
+  }
+}

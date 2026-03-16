@@ -1,6 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/onboarding/intro/view/intro_desktop_view.dart';
 import 'package:finance_app/onboarding/intro/view/intro_mobile_view.dart';
+import 'package:finance_app/onboarding/kick_off/view/kick_off_page.dart';
 import 'package:flutter/material.dart';
 
 /// {@template intro_page}
@@ -13,14 +14,23 @@ class IntroPage extends StatelessWidget {
   /// {@macro intro_page}
   const IntroPage({this.onGetStarted, super.key});
 
-  /// Called when the "Get started" button is pressed.
   final VoidCallback? onGetStarted;
 
   @override
   Widget build(BuildContext context) {
+    Future<void> backupOnGetStarted() {
+      return Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) => const KickOffPage(),
+        ),
+      );
+    }
+
     return ResponsiveScaffold(
-      mobile: IntroMobileView(onGetStarted: onGetStarted),
-      desktop: IntroDesktopView(onGetStarted: onGetStarted),
+      mobile: IntroMobileView(onGetStarted: onGetStarted ?? backupOnGetStarted),
+      desktop: IntroDesktopView(
+        onGetStarted: onGetStarted ?? backupOnGetStarted,
+      ),
     );
   }
 }

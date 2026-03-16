@@ -47,7 +47,7 @@ class RadioCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? colorExtension?.primaryContainer
-                : colorExtension?.surface,
+                : colorExtension?.onPrimary,
             borderRadius: BorderRadius.circular(Spacing.xs),
             border: Border.all(
               color: isSelected

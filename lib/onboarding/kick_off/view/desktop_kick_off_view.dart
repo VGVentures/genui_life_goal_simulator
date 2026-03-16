@@ -24,13 +24,7 @@ class DesktopKickOffView extends StatelessWidget {
           _buildBottomLeftDecoration(),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(
-          bottom: KickOffValues.desktopButtonBottom,
-          right: KickOffValues.desktopButtonRight,
-        ),
-        child: floatingActionButton,
-      ),
+      floatingActionButton: floatingActionButton,
     );
   }
 

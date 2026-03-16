@@ -1,29 +1,12 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
-/// Variants for the optional CTA button on an [ActionItem].
-enum ActionItemButtonVariant {
-  /// Filled button using the primary colour.
-  primary,
-
-  /// Outlined button with no background fill.
-  secondary,
-
-  /// No button is rendered.
-  none,
-}
-
 /// {@template action_item}
 /// A molecule widget that represents a single task or recommendation with an
-/// optional CTA button.
+/// optional trailing widget.
 ///
 /// Displays a [title] and [subtitle] on the left, an [amount] on the right,
-/// and optionally a [delta] indicator and a CTA button.
-///
-/// Three button styles are supported via [buttonVariant]:
-/// - [ActionItemButtonVariant.primary] – filled button.
-/// - [ActionItemButtonVariant.secondary] – outlined button.
-/// - [ActionItemButtonVariant.none] – no button (default).
+/// and optionally a [delta] indicator and a [trailing] widget (e.g. a button).
 ///
 /// Use [ActionItemsGroup] to render a stacked list of [ActionItem] widgets.
 /// {@endtemplate}
@@ -34,9 +17,7 @@ class ActionItem extends StatelessWidget {
     required this.subtitle,
     required this.amount,
     this.delta,
-    this.buttonLabel,
-    this.buttonVariant = ActionItemButtonVariant.none,
-    this.onButtonTap,
+    this.trailing,
     super.key,
   });
 
@@ -52,15 +33,8 @@ class ActionItem extends StatelessWidget {
   /// Optional change indicator shown below [amount], e.g. "+28%".
   final String? delta;
 
-  /// Label for the CTA button; required when [buttonVariant] is not
-  /// [ActionItemButtonVariant.none].
-  final String? buttonLabel;
-
-  /// Button style to render.
-  final ActionItemButtonVariant buttonVariant;
-
-  /// Called when the CTA button is tapped.
-  final VoidCallback? onButtonTap;
+  /// Optional widget rendered after the amount/delta area (e.g. a button).
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +60,7 @@ class ActionItem extends StatelessWidget {
               _ActionItemTrailing(
                 amount: amount,
                 delta: delta,
-                buttonLabel: buttonLabel,
-                buttonVariant: buttonVariant,
-                onButtonTap: onButtonTap,
+                trailing: trailing,
                 textTheme: textTheme,
                 colors: colors,
               ),
@@ -150,18 +122,14 @@ class _ActionItemTrailing extends StatelessWidget {
   const _ActionItemTrailing({
     required this.amount,
     required this.delta,
-    required this.buttonLabel,
-    required this.buttonVariant,
-    required this.onButtonTap,
+    required this.trailing,
     required this.textTheme,
     required this.colors,
   });
 
   final String amount;
   final String? delta;
-  final String? buttonLabel;
-  final ActionItemButtonVariant buttonVariant;
-  final VoidCallback? onButtonTap;
+  final Widget? trailing;
   final TextTheme textTheme;
   final AppColors? colors;
 
@@ -191,96 +159,12 @@ class _ActionItemTrailing extends StatelessWidget {
             ],
           ],
         ),
-        if (buttonVariant != ActionItemButtonVariant.none &&
-            buttonLabel != null) ...[
+        if (trailing != null) ...[
           const SizedBox(width: Spacing.md),
-          _ActionButton(
-            label: buttonLabel!,
-            variant: buttonVariant,
-            onTap: onButtonTap,
-            colors: colors,
-            textTheme: textTheme,
-          ),
+          trailing!,
         ],
       ],
     );
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({
-    required this.label,
-    required this.variant,
-    required this.onTap,
-    required this.colors,
-    required this.textTheme,
-  });
-
-  final String label;
-  final ActionItemButtonVariant variant;
-  final VoidCallback? onTap;
-  final AppColors? colors;
-  final TextTheme textTheme;
-
-  @override
-  Widget build(BuildContext context) {
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(_ActionItemDimensions.buttonRadius),
-    );
-
-    return switch (variant) {
-      ActionItemButtonVariant.primary => FilledButton(
-        onPressed: onTap,
-        style: FilledButton.styleFrom(
-          backgroundColor: colors?.primary,
-          foregroundColor: colors?.onInverseSurface,
-          shape: shape,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Spacing.lg,
-            vertical: Spacing.xs,
-          ),
-          minimumSize: const Size(0, _ActionItemDimensions.buttonHeight),
-          maximumSize: const Size(
-            double.infinity,
-            _ActionItemDimensions.buttonHeight,
-          ),
-        ),
-        child: Text(
-          label,
-          style: textTheme.labelLarge?.copyWith(
-            color: colors?.onInverseSurface,
-          ),
-        ),
-      ),
-      ActionItemButtonVariant.secondary => OutlinedButton(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: colors?.surfaceVariant,
-          foregroundColor: colors?.onSurface,
-          side: BorderSide(
-            width: _ActionItemDimensions.secondaryBorderWidth,
-            color: colors?.primary ?? _ActionItemColors.secondaryBorder,
-          ),
-          shape: shape,
-          padding: const EdgeInsets.symmetric(horizontal: Spacing.sm),
-          minimumSize: const Size(
-            _ActionItemDimensions.secondaryButtonMinWidth,
-            _ActionItemDimensions.buttonHeight,
-          ),
-          maximumSize: const Size(
-            _ActionItemDimensions.secondaryButtonMaxWidth,
-            _ActionItemDimensions.buttonHeight,
-          ),
-        ),
-        child: Text(
-          label,
-          style: textTheme.labelLarge?.copyWith(
-            color: colors?.onSurface,
-          ),
-        ),
-      ),
-      ActionItemButtonVariant.none => const SizedBox.shrink(),
-    };
   }
 }
 
@@ -306,12 +190,7 @@ class ActionItemsGroup extends StatelessWidget {
 }
 
 abstract final class _ActionItemDimensions {
-  static const double buttonRadius = 100;
   static const double titleSubtitleGap = 2;
-  static const double secondaryBorderWidth = 1.5;
-  static const double buttonHeight = 45;
-  static const double secondaryButtonMinWidth = 72;
-  static const double secondaryButtonMaxWidth = 192;
 }
 
 abstract final class _ActionItemColors {
@@ -319,5 +198,4 @@ abstract final class _ActionItemColors {
   static const Color subtitle = Color(0xFF5D5F5F);
   static const Color divider = Color(0xFFF0F1F1);
   static const Color delta = Color(0xFF00A65F);
-  static const Color secondaryBorder = Color(0xFFE2E2E2);
 }

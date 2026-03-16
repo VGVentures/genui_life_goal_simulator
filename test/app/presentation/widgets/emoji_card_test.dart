@@ -119,7 +119,7 @@ void main() {
     ];
 
     testWidgets('renders as Row on desktop', (tester) async {
-      tester.view.physicalSize = const Size(Breakpoints.desktop, 800);
+      tester.view.physicalSize = const Size(Breakpoints.breakpoint, 800);
       tester.view.devicePixelRatio = 1;
       addTeardownToResetView(tester);
 
@@ -133,7 +133,7 @@ void main() {
     });
 
     testWidgets('renders as GridView on mobile', (tester) async {
-      tester.view.physicalSize = const Size(Breakpoints.mobile - 1, 800);
+      tester.view.physicalSize = const Size(Breakpoints.breakpoint - 1, 800);
       tester.view.devicePixelRatio = 1;
       addTeardownToResetView(tester);
 
@@ -146,7 +146,7 @@ void main() {
     });
 
     testWidgets('desktop Row has Expanded children', (tester) async {
-      tester.view.physicalSize = const Size(Breakpoints.desktop + 400, 800);
+      tester.view.physicalSize = const Size(Breakpoints.breakpoint + 400, 800);
       tester.view.devicePixelRatio = 1;
       addTeardownToResetView(tester);
 

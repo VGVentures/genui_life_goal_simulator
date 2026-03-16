@@ -105,7 +105,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart
+      - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

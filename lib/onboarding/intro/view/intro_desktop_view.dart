@@ -1,3 +1,4 @@
+import 'package:finance_app/feature_flag/widgets/dev_menu_drawer.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
@@ -32,6 +33,20 @@ class IntroDesktopView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
+      endDrawer: const DevMenuDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [
+          Builder(
+            builder: (context) {
+              return IconButton(
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                icon: const Icon(Icons.bug_report),
+              );
+            },
+          ),
+        ],
+      ),
       backgroundColor: _backgroundColor,
       body: Stack(
         fit: StackFit.expand,

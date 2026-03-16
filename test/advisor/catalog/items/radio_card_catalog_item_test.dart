@@ -18,13 +18,17 @@ Map<String, Object?> _data({
       ],
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'RadioCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -36,15 +40,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              radioCardItem.widgetBuilder(_context(context, data)),
+          builder: (context) => radioCardItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -91,6 +97,17 @@ void main() {
 
         expect(find.text('Solo'), findsOneWidget);
         expect(find.byType(RadioCard), findsOneWidget);
+      });
+
+      testWidgets('toggles selection locally on tap', (tester) async {
+        await _pump(tester, _data());
+
+        // Tap Optimizer — should become selected
+        await tester.tap(find.text('Optimizer'));
+        await tester.pump();
+
+        // Both RadioCard widgets should still be rendered
+        expect(find.byType(RadioCard), findsNWidgets(2));
       });
     });
   });

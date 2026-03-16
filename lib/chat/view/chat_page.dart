@@ -28,8 +28,8 @@ class ChatPage extends StatelessWidget {
           (chatBloc ??
                 ChatBloc(
                   chatModelFactory: () => FirebaseAIChatModel(
-                    name: 'gemini-2.5-flash',
-                    backend: FirebaseAIBackend.vertexAI,
+                    name: 'gemini-3-flash-preview',
+                    backend: FirebaseAIBackend.googleAI,
                     appCheck: FirebaseAppCheck.instance,
                     useLimitedUseAppCheckTokens: true,
                   ),
@@ -41,7 +41,7 @@ class ChatPage extends StatelessWidget {
                 customOption: customOption,
               ),
             ),
-      child: const ChatView(),
+      child: ChatView(profileType: profileType),
     );
   }
 }

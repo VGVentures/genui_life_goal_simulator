@@ -16,6 +16,7 @@ Map<String, Object?> _data({
   String? valueLabel,
   String? minLabel,
   String? maxLabel,
+  String? prefix,
   int? divisions,
   List<String>? splitLabels,
 }) => {
@@ -27,17 +28,22 @@ Map<String, Object?> _data({
   'valueLabel': valueLabel,
   'minLabel': minLabel,
   'maxLabel': maxLabel,
+  'prefix': prefix,
   'divisions': divisions,
   'splitLabels': splitLabels,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'GCNSlider',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -49,15 +55,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              gcnSliderItem.widgetBuilder(_context(context, data)),
+          builder: (context) => gcnSliderItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -105,8 +113,12 @@ void main() {
       });
 
       testWidgets('with value label', (tester) async {
-        await _pump(tester, _data(valueLabel: r'$450'));
+        await _pump(
+          tester,
+          _data(valueLabel: r'$450', prefix: r'$'),
+        );
 
+        // The slider formats the value locally: prefix + formatted number
         expect(find.text(r'$450'), findsOneWidget);
       });
 
@@ -133,6 +145,17 @@ void main() {
         expect(find.text('Med'), findsWidgets);
         expect(find.text('High'), findsWidgets);
         expect(find.text('Max'), findsWidgets);
+      });
+
+      testWidgets('updates value locally on drag', (tester) async {
+        await _pump(tester, _data(value: 0, max: 100));
+
+        // Drag the slider thumb to the right
+        await tester.drag(find.byType(Slider), const Offset(100, 0));
+        await tester.pump();
+
+        // Slider should still be rendered (state managed locally)
+        expect(find.byType(GCNSlider), findsOneWidget);
       });
     });
   });

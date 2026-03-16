@@ -126,7 +126,7 @@ void main() {
           final decoration = ink.decoration! as BoxDecoration;
           final colors = LightThemeColors();
 
-          expect(decoration.color, colors.surface);
+          expect(decoration.color, colors.onPrimary);
           expect(
             (decoration.border! as Border).top.color,
             Colors.transparent,

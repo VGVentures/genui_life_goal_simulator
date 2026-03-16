@@ -142,17 +142,36 @@ class _DesktopEmojiCardLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children:
-          cards
-              .expand(
-                (c) => [
-                  Expanded(child: c),
-                  const SizedBox(width: Spacing.md),
+    // Split cards into rows of max 4.
+    final rows = <List<EmojiCard>>[];
+    for (var i = 0; i < cards.length; i += 4) {
+      rows.add(
+        cards.sublist(i, i + 4 > cards.length ? cards.length : i + 4),
+      );
+    }
+
+    return Column(
+      children: [
+        for (var r = 0; r < rows.length; r++) ...[
+          if (r > 0) const SizedBox(height: Spacing.md),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var c = 0; c < rows[r].length; c++) ...[
+                  if (c > 0) const SizedBox(width: Spacing.md),
+                  Expanded(child: rows[r][c]),
                 ],
-              )
-              .toList()
-            ..removeLast(),
+                // Fill remaining slots so cards keep equal width.
+                for (var empty = rows[r].length; empty < 4; empty++) ...[
+                  const SizedBox(width: Spacing.md),
+                  const Expanded(child: SizedBox.shrink()),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

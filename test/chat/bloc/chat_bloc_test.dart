@@ -31,7 +31,8 @@ void main() {
     test('has correct defaults', () {
       const state = ChatState();
       expect(state.status, ChatStatus.initial);
-      expect(state.messages, isEmpty);
+      expect(state.pages, isEmpty);
+      expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
       expect(state.host, isNull);
       expect(state.error, isNull);
@@ -41,12 +42,15 @@ void main() {
       const state = ChatState();
       final updated = state.copyWith(
         status: ChatStatus.error,
-        messages: [const UserDisplayMessage('hi')],
+        pages: [
+          [const UserDisplayMessage('hi')],
+        ],
         isLoading: true,
         error: 'oops',
       );
       expect(updated.status, ChatStatus.error);
-      expect(updated.messages, hasLength(1));
+      expect(updated.pages, hasLength(1));
+      expect(updated.currentPageIndex, 0);
       expect(updated.isLoading, isTrue);
       expect(updated.error, 'oops');
     });
@@ -54,13 +58,16 @@ void main() {
     test('copyWith preserves values when not overridden', () {
       const state = ChatState(
         status: ChatStatus.active,
-        messages: [UserDisplayMessage('hi')],
+        pages: [
+          [UserDisplayMessage('hi')],
+        ],
         isLoading: true,
         error: 'err',
       );
       final copy = state.copyWith();
       expect(copy.status, ChatStatus.active);
-      expect(copy.messages, hasLength(1));
+      expect(copy.pages, hasLength(1));
+      expect(copy.currentPageIndex, 0);
       expect(copy.isLoading, isTrue);
       expect(copy.error, 'err');
     });
@@ -97,10 +104,14 @@ void main() {
       expect(event.text, 'hello');
     });
 
-    test('$ChatConversationUpdated holds messages', () {
-      const msgs = <DisplayMessage>[UserDisplayMessage('a')];
-      const event = ChatConversationUpdated(msgs);
-      expect(event.messages, msgs);
+    test('$ChatSurfaceReceived holds surfaceId', () {
+      const event = ChatSurfaceReceived('surface_1');
+      expect(event.surfaceId, 'surface_1');
+    });
+
+    test('$ChatContentReceived holds message', () {
+      const event = ChatContentReceived(AiTextDisplayMessage('hi'));
+      expect(event.message, isA<AiTextDisplayMessage>());
     });
 
     test('$ChatLoading holds isLoading', () {
@@ -118,32 +129,77 @@ void main() {
     test('initial state is {$ChatState()}', () {
       final bloc = _buildBloc();
       expect(bloc.state.status, ChatStatus.initial);
-      expect(bloc.state.messages, isEmpty);
+      expect(bloc.state.pages, isEmpty);
       expect(bloc.state.isLoading, isFalse);
       addTearDown(bloc.close);
     });
 
     blocTest<ChatBloc, ChatState>(
-      '$ChatStarted emits loading, then active with host and initial '
-      'message',
+      '$ChatStarted emits loading, then active with host',
       build: _buildBloc,
       act: (bloc) => bloc.add(_chatStarted),
       verify: (bloc) {
         expect(bloc.state.status, ChatStatus.active);
         expect(bloc.state.host, isNotNull);
-        expect(bloc.state.messages, isNotEmpty);
-        expect(bloc.state.messages.first, isA<UserDisplayMessage>());
       },
     );
 
     blocTest<ChatBloc, ChatState>(
-      '$ChatConversationUpdated emits state with new messages',
+      '$ChatSurfaceReceived creates a new page for a new surface',
       build: _buildBloc,
-      act: (bloc) => bloc.add(
-        const ChatConversationUpdated([UserDisplayMessage('msg')]),
-      ),
+      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
       expect: () => [
-        isA<ChatState>().having((s) => s.messages, 'messages', hasLength(1)),
+        isA<ChatState>()
+            .having((s) => s.pages, 'pages', hasLength(1))
+            .having((s) => s.pages.first, 'first page', hasLength(1))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
+      ],
+    );
+
+    blocTest<ChatBloc, ChatState>(
+      '$ChatSurfaceReceived stays on existing page for known surface',
+      build: _buildBloc,
+      seed: () => const ChatState(
+        pages: [
+          [AiSurfaceDisplayMessage('surface_1')],
+          [AiSurfaceDisplayMessage('surface_2')],
+        ],
+        currentPageIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
+      expect: () => [
+        isA<ChatState>()
+            .having((s) => s.pages, 'pages', hasLength(2))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
+      ],
+    );
+
+    blocTest<ChatBloc, ChatState>(
+      '$ChatContentReceived appends message to current page',
+      build: _buildBloc,
+      seed: () => const ChatState(
+        pages: [[]],
+      ),
+      act: (bloc) =>
+          bloc.add(const ChatContentReceived(AiTextDisplayMessage('hi'))),
+      expect: () => [
+        isA<ChatState>().having(
+          (s) => s.pages.first,
+          'first page',
+          hasLength(1),
+        ),
+      ],
+    );
+
+    blocTest<ChatBloc, ChatState>(
+      '$ChatContentReceived creates a page if none exist',
+      build: _buildBloc,
+      act: (bloc) =>
+          bloc.add(const ChatContentReceived(AiTextDisplayMessage('hi'))),
+      expect: () => [
+        isA<ChatState>()
+            .having((s) => s.pages, 'pages', hasLength(1))
+            .having((s) => s.pages.first, 'first page', hasLength(1)),
       ],
     );
 

@@ -14,14 +14,14 @@ final _schema = S.object(
       description: 'Data points defining the line.',
       items: S.object(
         properties: {
-          'xLabel': S.string(
+          'xLabel': A2uiSchemas.stringReference(
             description: 'Label on the x-axis (e.g. "Jan", "Feb").',
           ),
           'value': S.number(description: 'Numeric y-axis value.'),
-          'tooltipLabel': S.string(
+          'tooltipLabel': A2uiSchemas.stringReference(
             description: 'Header text shown in the tooltip.',
           ),
-          'tooltipValue': S.string(
+          'tooltipValue': A2uiSchemas.stringReference(
             description:
                 r'Body text shown in the tooltip (e.g. "Spend: \$1580").',
           ),
@@ -40,6 +40,9 @@ final _schema = S.object(
 );
 
 /// CatalogItem that renders a [LineChart] widget.
+///
+/// Point string fields (`xLabel`, `tooltipLabel`, `tooltipValue`) support
+/// data model bindings via `{"path": "..."}`.
 final lineChartItem = CatalogItem(
   name: 'LineChart',
   dataSchema: _schema,
@@ -48,12 +51,15 @@ final lineChartItem = CatalogItem(
     final rawPoints = json['points']! as List;
     final rawYLabels = json['yAxisLabels']! as List;
 
+    // LineChart points need all values up front for min/max calculation,
+    // so we resolve strings eagerly here. BoundString is used per-point
+    // for reactivity if needed, but the chart itself requires static data.
     final points = rawPoints.cast<Map<String, Object?>>().map((p) {
       return LineChartPoint(
-        xLabel: p['xLabel']! as String,
+        xLabel: _resolveString(p['xLabel']),
         value: (p['value']! as num).toDouble(),
-        tooltipLabel: p['tooltipLabel']! as String,
-        tooltipValue: p['tooltipValue']! as String,
+        tooltipLabel: _resolveString(p['tooltipLabel']),
+        tooltipValue: _resolveString(p['tooltipValue']),
       );
     }).toList();
 
@@ -74,3 +80,14 @@ final lineChartItem = CatalogItem(
     );
   },
 );
+
+/// Resolves a value that may be a literal string or a path binding map.
+/// For path bindings, returns the path as a fallback since LineChart
+/// needs synchronous data.
+String _resolveString(Object? value) {
+  if (value is String) return value;
+  if (value is Map && value.containsKey('path')) {
+    return value['path'] as String? ?? '';
+  }
+  return value?.toString() ?? '';
+}

@@ -18,13 +18,17 @@ Map<String, Object?> _data({
       ],
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'FilterBar',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -36,15 +40,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              filterBarItem.widgetBuilder(_context(context, data)),
+          builder: (context) => filterBarItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -93,6 +99,27 @@ void main() {
         await _pump(tester, _data());
 
         expect(find.byType(FilterBar), findsOneWidget);
+      });
+
+      testWidgets('toggles category selection locally', (tester) async {
+        await _pump(tester, _data());
+
+        // Shopping starts unselected — tap to select
+        await tester.tap(find.text('Shopping'));
+        await tester.pump();
+
+        // Both should now be selected: "2 of 2"
+        expect(find.text('2 of 2 categories selected'), findsOneWidget);
+      });
+
+      testWidgets('toggles all categories on All tap', (tester) async {
+        await _pump(tester, _data());
+
+        // Tap "All" to select all
+        await tester.tap(find.text('All'));
+        await tester.pump();
+
+        expect(find.text('2 of 2 categories selected'), findsOneWidget);
       });
     });
   });

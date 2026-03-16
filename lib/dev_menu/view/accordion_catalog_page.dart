@@ -12,51 +12,17 @@ class AccordionCatalogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final actionItems = ActionItemsGroup(
       items: [
-        ActionItem(
-          title: 'Restaurant',
-          subtitle: 'Dining • Feb 18',
-          amount: r'$450',
-          delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
-        ),
-        ActionItem(
-          title: 'Restaurant',
-          subtitle: 'Dining • Feb 18',
-          amount: r'$450',
-          delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
-        ),
-        ActionItem(
-          title: 'Restaurant',
-          subtitle: 'Dining • Feb 18',
-          amount: r'$450',
-          delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
-        ),
-        ActionItem(
-          title: 'Restaurant',
-          subtitle: 'Dining • Feb 18',
-          amount: r'$450',
-          delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
-        ),
-        ActionItem(
-          title: 'Restaurant',
-          subtitle: 'Dining • Feb 18',
-          amount: r'$450',
-          delta: '+28%',
-          buttonLabel: 'Details',
-          buttonVariant: ActionItemButtonVariant.primary,
-          onButtonTap: () {},
-        ),
+        for (var i = 0; i < 5; i++)
+          ActionItem(
+            title: 'Restaurant',
+            subtitle: 'Dining • Feb 18',
+            amount: r'$450',
+            delta: '+28%',
+            trailing: FilledButton(
+              onPressed: () {},
+              child: const Text('Details'),
+            ),
+          ),
       ],
     );
 

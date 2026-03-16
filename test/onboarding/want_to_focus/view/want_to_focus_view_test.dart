@@ -15,7 +15,7 @@ class _MockWantToFocusCubit extends MockCubit<WantToFocusState>
 Future<void> _pump(
   WidgetTester tester, {
   required WantToFocusCubit cubit,
-  Size size = const Size(800, 1000),
+  Size size = const Size(1200, 1000),
 }) {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
