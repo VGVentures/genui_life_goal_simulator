@@ -1,5 +1,4 @@
-import 'package:finance_app/chat/bloc/bloc.dart';
-import 'package:finance_app/chat/chat.dart';
+import 'package:finance_app/advisor/advisor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';

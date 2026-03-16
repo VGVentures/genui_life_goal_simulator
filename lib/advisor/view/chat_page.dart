@@ -1,6 +1,5 @@
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
-import 'package:finance_app/chat/bloc/bloc.dart';
-import 'package:finance_app/chat/chat.dart';
+import 'package:finance_app/advisor/advisor.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';

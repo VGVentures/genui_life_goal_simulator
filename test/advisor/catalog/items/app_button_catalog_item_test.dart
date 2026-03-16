@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/advisor/catalog/items/app_button_catalog_item.dart';
-import 'package:finance_app/chat/bloc/bloc.dart';
+import 'package:finance_app/advisor/advisor.dart';
 import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

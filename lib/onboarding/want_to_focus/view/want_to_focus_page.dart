@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:finance_app/chat/view/chat_page.dart';
+import 'package:finance_app/advisor/view/chat_page.dart';
 import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
