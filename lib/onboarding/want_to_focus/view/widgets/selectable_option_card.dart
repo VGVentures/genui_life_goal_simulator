@@ -19,16 +19,10 @@ class SelectableOptionCard extends StatelessWidget {
     final themeOf = Theme.of(context);
     final colorScheme = themeOf.colorScheme;
     final colorExtension = themeOf.extension<AppColors>();
-    final textTheme = themeOf.textTheme;
     final iconSize = responsiveValue(
       context,
       mobile: Spacing.lg,
       desktop: _Dimensions.iconSize,
-    );
-    final textSize = responsiveValue(
-      context,
-      mobile: _Dimensions.mobileTextSize,
-      desktop: _Dimensions.fontSize,
     );
 
     return Material(
