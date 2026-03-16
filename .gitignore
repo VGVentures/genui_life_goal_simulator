@@ -123,7 +123,4 @@ lib/l10n/gen/
 .claude/*
 
 # Firebase config (generated at build time / via flutterfire configure)
-**/google-services.json
-**/GoogleService-Info.plist
 lib/firebase_options.dart
-.firebaserc

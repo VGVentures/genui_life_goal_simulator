@@ -33,13 +33,11 @@ fvm install
 
 ### Firebase Setup
 
-This project requires a Firebase project with **Firebase AI** and **App Check** enabled. Config files are not committed to the repo — generate them with:
+This project requires a Firebase project with **Firebase AI** and **App Check** enabled. The only config file needed is `lib/firebase_options.dart` (Dart-only initialization — no native config files required). Generate it with:
 
 ```sh
-flutterfire configure
+flutterfire configure --platforms=android,ios,macos,web,windows --out=lib/firebase_options.dart
 ```
-
-This creates `lib/firebase_options.dart`, `android/app/google-services.json`, and the platform-specific plist files.
 
 ### Run the App
 

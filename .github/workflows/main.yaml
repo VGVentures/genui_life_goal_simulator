@@ -74,11 +74,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - name: Generate Firebase config
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_IOS }}" | base64 -d > ios/Runner/GoogleService-Info.plist
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_MACOS }}" | base64 -d > macos/Runner/GoogleService-Info.plist
-          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
       - run: flutter pub get
       - run: flutter build web --wasm --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -99,11 +95,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - name: Generate Firebase config
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_IOS }}" | base64 -d > ios/Runner/GoogleService-Info.plist
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_MACOS }}" | base64 -d > macos/Runner/GoogleService-Info.plist
-          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
       - run: flutter pub get
       - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }} --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -132,11 +124,7 @@ jobs:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
 
       - name: Generate Firebase config
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_IOS }}" | base64 -d > ios/Runner/GoogleService-Info.plist
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_MACOS }}" | base64 -d > macos/Runner/GoogleService-Info.plist
-          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
 
       - run: flutter pub get
 
