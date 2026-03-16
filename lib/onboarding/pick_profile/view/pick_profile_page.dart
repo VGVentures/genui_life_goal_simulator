@@ -13,15 +13,11 @@ class PickProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final isMobile = Breakpoints.isMobile(MediaQuery.of(context).size.width);
-
-    final horizontalPadding = isMobile
-        ? _Dimensions.mobileHorizontalPadding
-        : _Dimensions.horizontalPadding;
-    final verticalPadding = isMobile
-        ? _Dimensions.mobileVerticalPadding
-        : _Dimensions.verticalPadding;
-    final fabSize = isMobile ? _Dimensions.mobileFabSize : _Dimensions.fabSize;
+    final fabSize = responsiveValue(
+      context,
+      mobile: _Dimensions.mobileFabSize,
+      desktop: _Dimensions.fabSize,
+    );
     final fabIconSize = responsiveValue(
       context,
       mobile: _Dimensions.mobileFabIconSize,
@@ -33,13 +29,23 @@ class PickProfilePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor:
             colorExtensions?.primarySurface ?? Colors.grey.shade200,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: verticalPadding,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: responsiveValue(
+                  context,
+                  mobile: Spacing.xxl,
+                  desktop: _Dimensions.horizontalPadding,
+                ),
+                vertical: responsiveValue(
+                  context,
+                  mobile: Spacing.md,
+                  desktop: _Dimensions.verticalPadding,
+                ),
+              ),
+              child: const PickProfileView(),
             ),
-            child: const PickProfileView(),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -87,14 +93,12 @@ class PickProfilePage extends StatelessWidget {
 
 abstract final class _Dimensions {
   // Mobile
-  static const double mobileHorizontalPadding = Spacing.xxl;
-  static const double mobileVerticalPadding = 0;
   static const double mobileFabSize = 80;
   static const double mobileFabIconSize = 13;
 
   // Desktop
   static const double horizontalPadding = 200;
-  static const double verticalPadding = 0;
+  static const double verticalPadding = 80;
   static const double fabSize = 140;
   static const double fabIconSize = 22;
 }

@@ -40,7 +40,7 @@
     "@profileOptimizerDescription": {
         "description": "Descripción para el tipo de perfil optimizador"
     },
-    "whatDoYouWantToFocusLabel": "¿En qué quieres enfocarte?",
+    "whatDoYouWantToFocusLabel": "¿En qué quieres\nenfocarte?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
     },

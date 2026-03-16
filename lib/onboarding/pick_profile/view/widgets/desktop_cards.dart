@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation/spacing.dart';
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,7 @@ class DesktopCards extends StatelessWidget {
         for (final type in ProfileType.values)
           Flexible(
             child: Padding(
-              padding: const EdgeInsets.only(right: _Dimensions.cardSpacing),
+              padding: const EdgeInsets.only(right: Spacing.xxxl * 2),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxWidth: _Dimensions.cardWidth,
@@ -35,6 +36,5 @@ class DesktopCards extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  static const double cardSpacing = 60;
   static const double cardWidth = 450;
 }

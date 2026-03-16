@@ -11,7 +11,6 @@ class WantToFocusView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final themeOf = Theme.of(context);
-    final textTheme = themeOf.textTheme;
     final colorScheme = themeOf.colorScheme;
 
     return Center(
@@ -25,14 +24,11 @@ class WantToFocusView extends StatelessWidget {
               mobile: l10n.whatWouldYouLikeToFocusLabel,
               desktop: l10n.whatDoYouWantToFocusLabel,
             ),
-            style: textTheme.displayLarge?.copyWith(
-              fontSize: responsiveValue(
-                context,
-                mobile: _Dimensions.mobileTitleSize,
-                desktop: _Dimensions.titleSize,
-              ),
-              color: colorScheme.onPrimaryContainer,
-            ),
+            style: responsiveValue<TextStyle>(
+              context,
+              mobile: AppTextStyles.displaySmallMobile,
+              desktop: AppTextStyles.displayLargeDesktop,
+            ).copyWith(color: colorScheme.onPrimaryContainer),
             textAlign: TextAlign.center,
           ),
           const ResponsiveScaffold(
@@ -43,9 +39,4 @@ class WantToFocusView extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double titleSize = 48;
-  static const double mobileTitleSize = 28;
 }

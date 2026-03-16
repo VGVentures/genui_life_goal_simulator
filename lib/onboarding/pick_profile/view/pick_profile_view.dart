@@ -12,30 +12,22 @@ class PickProfileView extends StatelessWidget {
     final isMobile = Breakpoints.isMobile(MediaQuery.of(context).size.width);
     final l10n = context.l10n;
     final themeOf = Theme.of(context);
-    final textTheme = themeOf.textTheme;
     final colorScheme = themeOf.colorScheme;
 
     return BlocBuilder<PickProfileCubit, PickProfileState>(
       builder: (context, state) {
         return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: Spacing.xxxl,
           children: [
-            SizedBox(
-              height: isMobile ? 60 : _Dimensions.titleSpacing,
-            ),
             Text(
               l10n.pickProfileTitle,
               textAlign: TextAlign.center,
-              style: textTheme.displayLarge?.copyWith(
-                fontSize: responsiveValue(
-                  context,
-                  mobile: _Dimensions.mobileTitleSize,
-                  desktop: _Dimensions.titleSize,
-                ),
-                color: colorScheme.primary,
-              ),
-            ),
-            SizedBox(
-              height: isMobile ? Spacing.xl : _Dimensions.cardsTopSpacing,
+              style: responsiveValue<TextStyle>(
+                context,
+                mobile: AppTextStyles.displaySmallMobile,
+                desktop: AppTextStyles.displayLargeDesktop,
+              ).copyWith(color: colorScheme.onSurface),
             ),
             if (isMobile)
               MobileCards(selectedProfile: state.selectedProfile)
@@ -46,11 +38,4 @@ class PickProfileView extends StatelessWidget {
       },
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double titleSize = 35;
-  static const double mobileTitleSize = 25;
-  static const double titleSpacing = 40;
-  static const double cardsTopSpacing = 70;
 }

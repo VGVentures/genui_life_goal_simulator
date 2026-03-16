@@ -40,11 +40,11 @@
     "@profileOptimizerDescription": {
         "description": "Description for the optimizer profile type"
     },
-    "whatDoYouWantToFocusLabel": "What do you want to focus on?",
+    "whatDoYouWantToFocusLabel": "What do you want to\nfocus on?",
     "@whatDoYouWantToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
     },
-    "whatWouldYouLikeToFocusLabel": "What would you like to focus on?",
+    "whatWouldYouLikeToFocusLabel": "What would you\nlike to focus on?",
     "@whatWouldYouLikeToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
     },

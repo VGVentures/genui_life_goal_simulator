@@ -78,13 +78,17 @@ class SelectableOptionCard extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    style: textTheme.bodyLarge?.copyWith(
-                      fontSize: textSize,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w400,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    style:
+                        responsiveValue<TextStyle>(
+                          context,
+                          mobile: AppTextStyles.titleSmallDesktop,
+                          desktop: AppTextStyles.headlineLargeDesktop,
+                        ).copyWith(
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          color: colorScheme.onSurface,
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

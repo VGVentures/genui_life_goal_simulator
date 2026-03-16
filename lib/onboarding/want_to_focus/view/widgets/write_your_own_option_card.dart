@@ -102,11 +102,14 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     focusNode: _focusNode,
                     autofocus: true,
                     textAlign: TextAlign.center,
-                    style: textTheme.bodyLarge?.copyWith(
-                      fontSize: textSize,
-                      fontWeight: FontWeight.w600,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    style:
+                        responsiveValue<TextStyle>(
+                          context,
+                          mobile: AppTextStyles.titleSmallDesktop,
+                          desktop: AppTextStyles.headlineLargeDesktop,
+                        ).copyWith(
+                          color: colorScheme.onSurface,
+                        ),
                     decoration: InputDecoration.collapsed(
                       hintText: widget.label,
                       hintStyle: textTheme.bodyLarge?.copyWith(
@@ -129,13 +132,18 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                       Flexible(
                         child: Text(
                           _hasText ? _controller.text : widget.label,
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontSize: textSize,
-                            fontWeight: _hasText
-                                ? FontWeight.w600
-                                : FontWeight.w400,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
+                          style:
+                              responsiveValue<TextStyle>(
+                                context,
+                                mobile: AppTextStyles.titleSmallDesktop,
+                                desktop: AppTextStyles.headlineLargeDesktop,
+                              ).copyWith(
+                                fontSize: textSize,
+                                fontWeight: _hasText
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: colorScheme.onPrimaryContainer,
+                              ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
