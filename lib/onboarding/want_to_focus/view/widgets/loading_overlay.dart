@@ -73,8 +73,8 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
           onLoaded: _onLoaded,
           builder: (context, state) => switch (state) {
             RiveLoaded(:final controller) => RiveWidget(
-                controller: controller,
-              ),
+              controller: controller,
+            ),
             RiveLoading() => const SizedBox.shrink(),
             RiveFailed() => const SizedBox.shrink(),
           },

@@ -48,8 +48,8 @@ class _ThinkingAnimationCatalogPageState
             fileLoader: _fileLoader,
             builder: (context, state) => switch (state) {
               RiveLoaded(:final controller) => RiveWidget(
-                  controller: controller,
-                ),
+                controller: controller,
+              ),
               RiveLoading() => const CircularProgressIndicator(),
               RiveFailed() => const Text('Failed to load animation'),
             },

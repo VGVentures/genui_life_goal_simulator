@@ -94,8 +94,8 @@ class _WantToFocusPageState extends State<WantToFocusPage> {
                     onPressed: _showLoading
                         ? null
                         : () => _onFabPressed(
-                              context.read<WantToFocusCubit>().state,
-                            ),
+                            context.read<WantToFocusCubit>().state,
+                          ),
                     backgroundColor: Colors.transparent,
                     hoverColor: colorExtensions?.primaryContainer,
                     elevation: 0,
