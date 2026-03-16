@@ -88,7 +88,7 @@ class _StatefulRadioCardsState extends State<_StatefulRadioCards> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      spacing: Spacing.sm,
+      spacing: Spacing.xl,
       children: [
         for (var i = 0; i < widget.options.length; i++)
           RadioCard(
