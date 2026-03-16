@@ -4,40 +4,21 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/chat/view/chat_page.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/view/widgets/loading_overlay.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WantToFocusPage extends StatefulWidget {
+class WantToFocusPage extends StatelessWidget {
   const WantToFocusPage({required this.profileType, super.key});
 
   final ProfileType profileType;
 
-  @override
-  State<WantToFocusPage> createState() => _WantToFocusPageState();
-}
-
-class _WantToFocusPageState extends State<WantToFocusPage> {
-  bool _showLoading = false;
-  WantToFocusState? _capturedFocusState;
-
-  void _onFabPressed(WantToFocusState focusState) {
-    setState(() {
-      _capturedFocusState = focusState;
-      _showLoading = true;
-    });
-  }
-
-  void _onAnimationComplete() {
-    if (!mounted) return;
-    final focusState = _capturedFocusState;
-    if (focusState == null) return;
+  void _onFabPressed(BuildContext context, WantToFocusState focusState) {
     unawaited(
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
           builder: (_) => ChatPage(
-            profileType: widget.profileType,
+            profileType: profileType,
             focusOptions: focusState.selectedOptions,
             customOption: focusState.customOption,
           ),
@@ -64,64 +45,50 @@ class _WantToFocusPageState extends State<WantToFocusPage> {
       create: (_) => WantToFocusCubit(),
       child: Builder(
         builder: (context) {
-          return Stack(
-            children: [
-              Scaffold(
-                backgroundColor: colorExtensions?.primarySurface,
-                body: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: responsiveValue(
-                        context,
-                        mobile: Spacing.xxl,
-                        desktop: _Dimensions.horizontalPadding,
-                      ),
-                      vertical: responsiveValue(
-                        context,
-                        mobile: Spacing.md,
-                        desktop: _Dimensions.verticalPadding,
-                      ),
-                    ),
-                    child: const WantToFocusView(),
+          return Scaffold(
+            backgroundColor: colorExtensions?.primarySurface,
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: responsiveValue(
+                    context,
+                    mobile: Spacing.xxl,
+                    desktop: _Dimensions.horizontalPadding,
+                  ),
+                  vertical: responsiveValue(
+                    context,
+                    mobile: Spacing.md,
+                    desktop: _Dimensions.verticalPadding,
                   ),
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endFloat,
-                floatingActionButton: SizedBox(
-                  width: fabSize,
-                  height: fabSize,
-                  child: FloatingActionButton(
-                    onPressed: _showLoading
-                        ? null
-                        : () => _onFabPressed(
-                            context.read<WantToFocusCubit>().state,
-                          ),
-                    backgroundColor: Colors.transparent,
-                    hoverColor: colorExtensions?.primaryContainer,
-                    elevation: 0,
-                    shape: CircleBorder(
-                      side: BorderSide(
-                        color: colorExtensions?.primary ?? Colors.transparent,
-                      ),
-                    ),
-                    child: Assets.images.onboarding.rightArrow.image(
-                      color: colorExtensions?.primary,
-                      width: fabIconSize,
-                      height: fabIconSize,
-                    ),
+                child: const WantToFocusView(),
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.endFloat,
+            floatingActionButton: SizedBox(
+              width: fabSize,
+              height: fabSize,
+              child: FloatingActionButton(
+                onPressed: () => _onFabPressed(
+                  context,
+                  context.read<WantToFocusCubit>().state,
+                ),
+                backgroundColor: Colors.transparent,
+                hoverColor: colorExtensions?.primaryContainer,
+                elevation: 0,
+                shape: CircleBorder(
+                  side: BorderSide(
+                    color: colorExtensions?.primary ?? Colors.transparent,
                   ),
+                ),
+                child: Assets.images.onboarding.rightArrow.image(
+                  color: colorExtensions?.primary,
+                  width: fabIconSize,
+                  height: fabIconSize,
                 ),
               ),
-              if (_showLoading)
-                Positioned.fill(
-                  child: LoadingOverlay(
-                    animationPath: Assets.animations.loading,
-                    onAnimationComplete: _onAnimationComplete,
-                    animationDuration: const Duration(seconds: 7),
-                    backgroundOpacity: 0.75,
-                  ),
-                ),
-            ],
+            ),
           );
         },
       ),
