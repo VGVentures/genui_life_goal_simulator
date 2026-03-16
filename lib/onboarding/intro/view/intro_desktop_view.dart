@@ -218,8 +218,13 @@ class IntroDesktopView extends StatelessWidget {
                           ShaderMask(
                             shaderCallback: (bounds) =>
                                 _vgvGradient.createShader(
-                              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                            ),
+                                  Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    bounds.width,
+                                    bounds.height,
+                                  ),
+                                ),
                             child: const Text('VGV', style: _titleStyle),
                           ),
                         ],
