@@ -50,15 +50,15 @@ class _IntroPage extends StatelessWidget {
     return IntroPage(
       onGetStarted: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          builder: (_) => _StartPage(showDevMenu: showDevMenu),
+          builder: (_) => _IntroView(showDevMenu: showDevMenu),
         ),
       ),
     );
   }
 }
 
-class _StartPage extends StatelessWidget {
-  const _StartPage({this.showDevMenu = false});
+class _IntroView extends StatelessWidget {
+  const _IntroView({this.showDevMenu = false});
 
   final bool showDevMenu;
 
