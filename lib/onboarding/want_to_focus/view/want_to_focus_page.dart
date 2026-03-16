@@ -13,20 +13,6 @@ class WantToFocusPage extends StatelessWidget {
 
   final ProfileType profileType;
 
-  void _onFabPressed(BuildContext context, WantToFocusState focusState) {
-    unawaited(
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (_) => ChatPage(
-            profileType: profileType,
-            focusOptions: focusState.selectedOptions,
-            customOption: focusState.customOption,
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
@@ -43,53 +29,61 @@ class WantToFocusPage extends StatelessWidget {
 
     return BlocProvider(
       create: (_) => WantToFocusCubit(),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            backgroundColor: colorExtensions?.primarySurface,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: responsiveValue(
-                    context,
-                    mobile: Spacing.xxl,
-                    desktop: _Dimensions.horizontalPadding,
-                  ),
-                  vertical: responsiveValue(
-                    context,
-                    mobile: Spacing.md,
-                    desktop: _Dimensions.verticalPadding,
-                  ),
-                ),
-                child: const WantToFocusView(),
+      child: Scaffold(
+        backgroundColor: colorExtensions?.primarySurface,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: responsiveValue(
+                context,
+                mobile: Spacing.xxl,
+                desktop: _Dimensions.horizontalPadding,
+              ),
+              vertical: responsiveValue(
+                context,
+                mobile: Spacing.md,
+                desktop: _Dimensions.verticalPadding,
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: SizedBox(
-              width: fabSize,
-              height: fabSize,
-              child: FloatingActionButton(
-                onPressed: () => _onFabPressed(
-                  context,
-                  context.read<WantToFocusCubit>().state,
-                ),
-                backgroundColor: Colors.transparent,
-                hoverColor: colorExtensions?.primaryContainer,
-                elevation: 0,
-                shape: CircleBorder(
-                  side: BorderSide(
-                    color: colorExtensions?.primary ?? Colors.transparent,
+            child: const WantToFocusView(),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Builder(
+          builder: (context) => SizedBox(
+            width: fabSize,
+            height: fabSize,
+            child: FloatingActionButton(
+              onPressed: () {
+                final focusState = context.read<WantToFocusCubit>().state;
+                unawaited(
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ChatPage(
+                        profileType: profileType,
+                        focusOptions: focusState.selectedOptions,
+                        customOption: focusState.customOption,
+                      ),
+                    ),
                   ),
-                ),
-                child: Assets.images.onboarding.rightArrow.image(
-                  color: colorExtensions?.primary,
-                  width: fabIconSize,
-                  height: fabIconSize,
+                );
+              },
+              backgroundColor: Colors.transparent,
+              hoverColor: colorExtensions?.primaryContainer,
+              elevation: 0,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: colorExtensions?.primary ?? Colors.transparent,
                 ),
               ),
+              child: Assets.images.onboarding.rightArrow.image(
+                color: colorExtensions?.primary,
+                width: fabIconSize,
+                height: fabIconSize,
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
