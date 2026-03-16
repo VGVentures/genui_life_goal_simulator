@@ -74,7 +74,9 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - name: Generate Firebase config
-        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
       - run: flutter pub get
       - run: flutter build web --wasm --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -95,7 +97,9 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - name: Generate Firebase config
-        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
       - run: flutter pub get
       - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }} --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
