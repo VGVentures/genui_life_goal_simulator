@@ -6,7 +6,8 @@ import 'package:finance_app/app_check/app_check_debug.dart';
 import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:finance_app/feature_flags/active_feature_flags.dart';
 import 'package:finance_app/feature_flags/repository/feature_flags_repository.dart';
-import 'package:finance_app/firebase_options.dart';
+// TODO(you): Uncomment this when the Firebase config is ready
+// import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -46,7 +47,8 @@ Future<void> bootstrap({
   await RiveNative.init();
 
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    // TODO(you): Uncomment this when the Firebase config is ready
+    // options: DefaultFirebaseOptions.currentPlatform,
   );
 
   const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
