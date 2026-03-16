@@ -205,17 +205,32 @@ class IntroDesktopView extends StatelessWidget {
               children: [
                 const IntroBadges(),
                 const SizedBox(height: 40),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(l10n.introTitlePrefix, style: _titleStyle),
-                    ShaderMask(
-                      shaderCallback: (bounds) => _vgvGradient.createShader(
-                        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(l10n.introTitlePrefix, style: _titleStyle),
+                          ShaderMask(
+                            shaderCallback: (bounds) =>
+                                _vgvGradient.createShader(
+                                  Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    bounds.width,
+                                    bounds.height,
+                                  ),
+                                ),
+                            child: const Text('VGV', style: _titleStyle),
+                          ),
+                        ],
                       ),
-                      child: const Text('VGV', style: _titleStyle),
                     ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
