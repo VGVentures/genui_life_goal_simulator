@@ -68,49 +68,49 @@ class ProfileCard extends StatelessWidget {
                 ],
               ),
               child: Padding(
-              padding: EdgeInsets.all(isMobile ? Spacing.md : Spacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    profileType.iconAsset,
-                    width: isMobile
-                        ? _Dimensions.mobileIconSize
-                        : _Dimensions.iconSize,
-                    height: isMobile
-                        ? _Dimensions.mobileIconSize
-                        : _Dimensions.iconSize,
-                  ),
-                  SizedBox(
-                    height: isMobile ? Spacing.xl : (Spacing.xxxl * 3),
-                  ),
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        (isMobile
-                                ? AppTextStyles.displaySmallMobile
-                                : AppTextStyles.displayLargeDesktop)
-                            .copyWith(color: titleColor),
-                  ),
-                  const SizedBox(height: Spacing.xs),
-                  Text(
-                    description,
-                    style: isMobile
-                        ? AppTextStyles.titleMediumMobile.copyWith(
-                            color: colorExtensions?.onSurfaceVariant,
-                          )
-                        : AppTextStyles.headlineLargeDesktop.copyWith(
-                            color: colorExtensions?.onSurfaceVariant,
-                            fontWeight: FontWeight.w400,
-                          ),
-                  ),
-                ],
+                padding: EdgeInsets.all(isMobile ? Spacing.md : Spacing.xl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      profileType.iconAsset,
+                      width: isMobile
+                          ? _Dimensions.mobileIconSize
+                          : _Dimensions.iconSize,
+                      height: isMobile
+                          ? _Dimensions.mobileIconSize
+                          : _Dimensions.iconSize,
+                    ),
+                    SizedBox(
+                      height: isMobile ? Spacing.xl : (Spacing.xxxl * 3),
+                    ),
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          (isMobile
+                                  ? AppTextStyles.displaySmallMobile
+                                  : AppTextStyles.displayLargeDesktop)
+                              .copyWith(color: titleColor),
+                    ),
+                    const SizedBox(height: Spacing.xs),
+                    Text(
+                      description,
+                      style: isMobile
+                          ? AppTextStyles.titleMediumMobile.copyWith(
+                              color: colorExtensions?.onSurfaceVariant,
+                            )
+                          : AppTextStyles.headlineLargeDesktop.copyWith(
+                              color: colorExtensions?.onSurfaceVariant,
+                              fontWeight: FontWeight.w400,
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ),
       ),
     );
