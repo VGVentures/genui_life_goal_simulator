@@ -1,12 +1,12 @@
-#!/usr/bin/env dart
+// Allow print for CLI output
 // ignore_for_file: avoid_print
 
-/// Publishes a clean, history-free snapshot of the current branch
-/// to the "public" remote's main branch.
-///
-/// Usage:
-///   dart run tool/publish.dart              # from current HEAD
-///   dart run tool/publish.dart my-branch    # from a specific branch
+// Publishes a clean, history-free snapshot of the current branch
+// to the "public" remote's main branch.
+//
+// Usage:
+//   dart run tool/publish.dart              # from current HEAD
+//   dart run tool/publish.dart my-branch    # from a specific branch
 import 'dart:io';
 
 const publicRemote = 'public';
@@ -57,8 +57,9 @@ Future<void> main(List<String> args) async {
 Future<String> git(List<String> args) async {
   final result = await Process.run('git', args);
   if (result.exitCode != 0) {
-    stderr.writeln('git ${args.join(' ')} failed:');
-    stderr.writeln(result.stderr);
+    stderr
+      ..writeln('git ${args.join(' ')} failed:')
+      ..writeln(result.stderr);
     exit(result.exitCode);
   }
   return (result.stdout as String).trim();
