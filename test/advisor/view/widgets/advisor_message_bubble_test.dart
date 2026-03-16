@@ -14,7 +14,7 @@ Future<void> _pump(
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
-        body: ChatMessageBubble(message: message, host: host),
+        body: AdvisorMessageBubble(message: message, host: host),
       ),
     ),
   );
@@ -27,7 +27,7 @@ void main() {
     host = _MockSurfaceHost();
   });
 
-  group(ChatMessageBubble, () {
+  group(AdvisorMessageBubble, () {
     group('renders', () {
       testWidgets('user bubble for $UserDisplayMessage', (tester) async {
         await _pump(tester, const UserDisplayMessage('Hello'), host);

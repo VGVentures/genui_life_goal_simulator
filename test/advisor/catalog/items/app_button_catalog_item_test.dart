@@ -9,8 +9,8 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
-    implements ChatBloc {}
+class _MockAdvisorBloc extends MockBloc<AdvisorEvent, AdvisorState>
+    implements AdvisorBloc {}
 
 const _defaultAction = {
   'event': {'name': 'button_pressed'},
@@ -55,10 +55,10 @@ Future<void> _pump(
   Map<String, Object?> data, {
   void Function(UiEvent)? dispatchEvent,
 }) async {
-  final bloc = _MockChatBloc();
-  when(() => bloc.state).thenReturn(const ChatState());
+  final bloc = _MockAdvisorBloc();
+  when(() => bloc.state).thenReturn(const AdvisorState());
   await tester.pumpWidget(
-    BlocProvider<ChatBloc>.value(
+    BlocProvider<AdvisorBloc>.value(
       value: bloc,
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

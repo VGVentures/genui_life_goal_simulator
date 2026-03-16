@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:genui/genui.dart';
 
-class ChatMessageBubble extends StatelessWidget {
-  const ChatMessageBubble({
+class AdvisorMessageBubble extends StatelessWidget {
+  const AdvisorMessageBubble({
     required this.message,
     required this.host,
     super.key,

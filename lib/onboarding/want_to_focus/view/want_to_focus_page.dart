@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:finance_app/advisor/view/chat_page.dart';
+import 'package:finance_app/advisor/view/advisor_page.dart';
 import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
@@ -48,7 +48,7 @@ class WantToFocusPage extends StatelessWidget {
                     unawaited(
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute<void>(
-                          builder: (_) => ChatPage(
+                          builder: (_) => AdvisorPage(
                             profileType: profileType,
                             focusOptions: state.selectedOptions,
                             customOption: state.customOption,

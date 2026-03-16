@@ -8,15 +8,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
-    implements ChatBloc {}
+class _MockAdvisorBloc extends MockBloc<AdvisorEvent, AdvisorState>
+    implements AdvisorBloc {}
 
 class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
 const _testSurfaceSize = Size(1200, 800);
 
 extension on WidgetTester {
-  Future<void> pumpChatView(ChatBloc bloc) async {
+  Future<void> pumpAdvisorView(AdvisorBloc bloc) async {
     view.physicalSize = _testSurfaceSize;
     view.devicePixelRatio = 1.0;
     addTearDown(view.resetPhysicalSize);
@@ -25,9 +25,9 @@ extension on WidgetTester {
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: BlocProvider<ChatBloc>.value(
+        home: BlocProvider<AdvisorBloc>.value(
           value: bloc,
-          child: const ChatView(profileType: ProfileType.optimizer),
+          child: const AdvisorView(profileType: ProfileType.optimizer),
         ),
       ),
     );
@@ -35,22 +35,22 @@ extension on WidgetTester {
 }
 
 void main() {
-  late _MockChatBloc bloc;
+  late _MockAdvisorBloc bloc;
 
   setUpAll(() {
-    registerFallbackValue(const ChatMessageSent(''));
+    registerFallbackValue(const AdvisorMessageSent(''));
   });
 
   setUp(() {
-    bloc = _MockChatBloc();
-    when(() => bloc.state).thenReturn(const ChatState());
+    bloc = _MockAdvisorBloc();
+    when(() => bloc.state).thenReturn(const AdvisorState());
   });
 
-  group(ChatView, () {
+  group(AdvisorView, () {
     testWidgets('shows loading indicator when pages are empty', (
       tester,
     ) async {
-      await tester.pumpChatView(bloc);
+      await tester.pumpAdvisorView(bloc);
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -60,24 +60,24 @@ void main() {
     ) async {
       final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
-        ChatState(
-          status: ChatStatus.active,
+        AdvisorState(
+          status: AdvisorStatus.active,
           pages: const [
             [AiTextDisplayMessage('Hello')],
           ],
           host: host,
         ),
       );
-      await tester.pumpChatView(bloc);
+      await tester.pumpAdvisorView(bloc);
 
       expect(find.byType(PageView), findsOneWidget);
-      expect(find.byType(ChatMessageBubble), findsOneWidget);
+      expect(find.byType(AdvisorMessageBubble), findsOneWidget);
       // Loading spinner should not be shown when pages exist
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
     testWidgets('shows app bar with logo and profile chip', (tester) async {
-      await tester.pumpChatView(bloc);
+      await tester.pumpAdvisorView(bloc);
       expect(find.textContaining('VGV'), findsOneWidget);
       expect(find.text('The Optimizer'), findsOneWidget);
       expect(find.text('Restart Demo'), findsOneWidget);
@@ -88,14 +88,14 @@ void main() {
     ) async {
       final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
-        ChatState(
-          status: ChatStatus.active,
+        AdvisorState(
+          status: AdvisorStatus.active,
           pages: const [[]],
           isLoading: true,
           host: host,
         ),
       );
-      await tester.pumpChatView(bloc);
+      await tester.pumpAdvisorView(bloc);
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -105,21 +105,21 @@ void main() {
       whenListen(
         bloc,
         Stream.fromIterable([
-          ChatState(
-            status: ChatStatus.active,
+          AdvisorState(
+            status: AdvisorStatus.active,
             pages: const [
               [AiTextDisplayMessage('Hello')],
             ],
             host: host,
           ),
         ]),
-        initialState: ChatState(status: ChatStatus.active, host: host),
+        initialState: AdvisorState(status: AdvisorStatus.active, host: host),
       );
 
-      await tester.pumpChatView(bloc);
+      await tester.pumpAdvisorView(bloc);
       await tester.pump();
 
-      expect(find.byType(ChatMessageBubble), findsOneWidget);
+      expect(find.byType(AdvisorMessageBubble), findsOneWidget);
     });
   });
 }

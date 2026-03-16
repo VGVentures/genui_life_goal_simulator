@@ -9,17 +9,17 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockFirebaseAIChatModel extends Mock implements FirebaseAIChatModel {}
 
-const _chatStarted = ChatStarted(
+const _chatStarted = AdvisorStarted(
   profileType: ProfileType.beginner,
   focusOptions: {FocusOption.everydaySpending},
 );
 
-ChatBloc _buildBloc() {
+AdvisorBloc _buildBloc() {
   final mockModel = _MockFirebaseAIChatModel();
   when(() => mockModel.sendStream(any())).thenAnswer(
     (_) => const Stream.empty(),
   );
-  return ChatBloc(chatModelFactory: () => mockModel);
+  return AdvisorBloc(chatModelFactory: () => mockModel);
 }
 
 void main() {
@@ -27,10 +27,10 @@ void main() {
     registerFallbackValue(<ChatMessage>[]);
   });
 
-  group(ChatState, () {
+  group(AdvisorState, () {
     test('has correct defaults', () {
-      const state = ChatState();
-      expect(state.status, ChatStatus.initial);
+      const state = AdvisorState();
+      expect(state.status, AdvisorStatus.initial);
       expect(state.pages, isEmpty);
       expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
@@ -39,16 +39,16 @@ void main() {
     });
 
     test('copyWith returns new instance with overridden values', () {
-      const state = ChatState();
+      const state = AdvisorState();
       final updated = state.copyWith(
-        status: ChatStatus.error,
+        status: AdvisorStatus.error,
         pages: [
           [const UserDisplayMessage('hi')],
         ],
         isLoading: true,
         error: 'oops',
       );
-      expect(updated.status, ChatStatus.error);
+      expect(updated.status, AdvisorStatus.error);
       expect(updated.pages, hasLength(1));
       expect(updated.currentPageIndex, 0);
       expect(updated.isLoading, isTrue);
@@ -56,8 +56,8 @@ void main() {
     });
 
     test('copyWith preserves values when not overridden', () {
-      const state = ChatState(
-        status: ChatStatus.active,
+      const state = AdvisorState(
+        status: AdvisorStatus.active,
         pages: [
           [UserDisplayMessage('hi')],
         ],
@@ -65,7 +65,7 @@ void main() {
         error: 'err',
       );
       final copy = state.copyWith();
-      expect(copy.status, ChatStatus.active);
+      expect(copy.status, AdvisorStatus.active);
       expect(copy.pages, hasLength(1));
       expect(copy.currentPageIndex, 0);
       expect(copy.isLoading, isTrue);
@@ -73,23 +73,23 @@ void main() {
     });
   });
 
-  group(ChatStatus, () {
+  group(AdvisorStatus, () {
     test('has all expected values', () {
       expect(
-        ChatStatus.values,
+        AdvisorStatus.values,
         containsAll([
-          ChatStatus.initial,
-          ChatStatus.loading,
-          ChatStatus.active,
-          ChatStatus.error,
+          AdvisorStatus.initial,
+          AdvisorStatus.loading,
+          AdvisorStatus.active,
+          AdvisorStatus.error,
         ]),
       );
     });
   });
 
-  group(ChatEvent, () {
-    test('$ChatStarted holds onboarding data', () {
-      const event = ChatStarted(
+  group(AdvisorEvent, () {
+    test('$AdvisorStarted holds onboarding data', () {
+      const event = AdvisorStarted(
         profileType: ProfileType.optimizer,
         focusOptions: {FocusOption.mortgage},
         customOption: 'custom',
@@ -99,91 +99,91 @@ void main() {
       expect(event.customOption, 'custom');
     });
 
-    test('$ChatMessageSent holds text', () {
-      const event = ChatMessageSent('hello');
+    test('$AdvisorMessageSent holds text', () {
+      const event = AdvisorMessageSent('hello');
       expect(event.text, 'hello');
     });
 
-    test('$ChatSurfaceReceived holds surfaceId', () {
-      const event = ChatSurfaceReceived('surface_1');
+    test('$AdvisorSurfaceReceived holds surfaceId', () {
+      const event = AdvisorSurfaceReceived('surface_1');
       expect(event.surfaceId, 'surface_1');
     });
 
-    test('$ChatContentReceived holds message', () {
-      const event = ChatContentReceived(AiTextDisplayMessage('hi'));
+    test('$AdvisorContentReceived holds message', () {
+      const event = AdvisorContentReceived(AiTextDisplayMessage('hi'));
       expect(event.message, isA<AiTextDisplayMessage>());
     });
 
-    test('$ChatLoading holds isLoading', () {
-      const event = ChatLoading(isLoading: true);
+    test('$AdvisorLoading holds isLoading', () {
+      const event = AdvisorLoading(isLoading: true);
       expect(event.isLoading, isTrue);
     });
 
-    test('$ChatErrorOccurred holds message', () {
-      const event = ChatErrorOccurred('fail');
+    test('$AdvisorErrorOccurred holds message', () {
+      const event = AdvisorErrorOccurred('fail');
       expect(event.message, 'fail');
     });
   });
 
-  group(ChatBloc, () {
-    test('initial state is {$ChatState()}', () {
+  group(AdvisorBloc, () {
+    test('initial state is {$AdvisorState()}', () {
       final bloc = _buildBloc();
-      expect(bloc.state.status, ChatStatus.initial);
+      expect(bloc.state.status, AdvisorStatus.initial);
       expect(bloc.state.pages, isEmpty);
       expect(bloc.state.isLoading, isFalse);
       addTearDown(bloc.close);
     });
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatStarted emits loading, then active with host',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorStarted emits loading, then active with host',
       build: _buildBloc,
       act: (bloc) => bloc.add(_chatStarted),
       verify: (bloc) {
-        expect(bloc.state.status, ChatStatus.active);
+        expect(bloc.state.status, AdvisorStatus.active);
         expect(bloc.state.host, isNotNull);
       },
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatSurfaceReceived creates a new page for a new surface',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorSurfaceReceived creates a new page for a new surface',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
+      act: (bloc) => bloc.add(const AdvisorSurfaceReceived('surface_1')),
       expect: () => [
-        isA<ChatState>()
+        isA<AdvisorState>()
             .having((s) => s.pages, 'pages', hasLength(1))
             .having((s) => s.pages.first, 'first page', hasLength(1))
             .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
       ],
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatSurfaceReceived stays on existing page for known surface',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorSurfaceReceived stays on existing page for known surface',
       build: _buildBloc,
-      seed: () => const ChatState(
+      seed: () => const AdvisorState(
         pages: [
           [AiSurfaceDisplayMessage('surface_1')],
           [AiSurfaceDisplayMessage('surface_2')],
         ],
         currentPageIndex: 1,
       ),
-      act: (bloc) => bloc.add(const ChatSurfaceReceived('surface_1')),
+      act: (bloc) => bloc.add(const AdvisorSurfaceReceived('surface_1')),
       expect: () => [
-        isA<ChatState>()
+        isA<AdvisorState>()
             .having((s) => s.pages, 'pages', hasLength(2))
             .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
       ],
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatContentReceived appends message to current page',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorContentReceived appends message to current page',
       build: _buildBloc,
-      seed: () => const ChatState(
+      seed: () => const AdvisorState(
         pages: [[]],
       ),
       act: (bloc) =>
-          bloc.add(const ChatContentReceived(AiTextDisplayMessage('hi'))),
+          bloc.add(const AdvisorContentReceived(AiTextDisplayMessage('hi'))),
       expect: () => [
-        isA<ChatState>().having(
+        isA<AdvisorState>().having(
           (s) => s.pages.first,
           'first page',
           hasLength(1),
@@ -191,34 +191,34 @@ void main() {
       ],
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatContentReceived creates a page if none exist',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorContentReceived creates a page if none exist',
       build: _buildBloc,
       act: (bloc) =>
-          bloc.add(const ChatContentReceived(AiTextDisplayMessage('hi'))),
+          bloc.add(const AdvisorContentReceived(AiTextDisplayMessage('hi'))),
       expect: () => [
-        isA<ChatState>()
+        isA<AdvisorState>()
             .having((s) => s.pages, 'pages', hasLength(1))
             .having((s) => s.pages.first, 'first page', hasLength(1)),
       ],
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatLoading emits state with isLoading',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorLoading emits state with isLoading',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const ChatLoading(isLoading: true)),
+      act: (bloc) => bloc.add(const AdvisorLoading(isLoading: true)),
       expect: () => [
-        isA<ChatState>().having((s) => s.isLoading, 'isLoading', isTrue),
+        isA<AdvisorState>().having((s) => s.isLoading, 'isLoading', isTrue),
       ],
     );
 
-    blocTest<ChatBloc, ChatState>(
-      '$ChatErrorOccurred emits error status with message',
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorErrorOccurred emits error status with message',
       build: _buildBloc,
-      act: (bloc) => bloc.add(const ChatErrorOccurred('something failed')),
+      act: (bloc) => bloc.add(const AdvisorErrorOccurred('something failed')),
       expect: () => [
-        isA<ChatState>()
-            .having((s) => s.status, 'status', ChatStatus.error)
+        isA<AdvisorState>()
+            .having((s) => s.status, 'status', AdvisorStatus.error)
             .having((s) => s.error, 'error', 'something failed'),
       ],
     );

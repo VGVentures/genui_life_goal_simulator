@@ -6,8 +6,8 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({
+class AdvisorPage extends StatelessWidget {
+  const AdvisorPage({
     required this.profileType,
     this.focusOptions = const {},
     this.customOption = '',
@@ -18,14 +18,14 @@ class ChatPage extends StatelessWidget {
   final ProfileType profileType;
   final Set<FocusOption> focusOptions;
   final String customOption;
-  final ChatBloc? chatBloc;
+  final AdvisorBloc? chatBloc;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
           (chatBloc ??
-                ChatBloc(
+                AdvisorBloc(
                   chatModelFactory: () => FirebaseAIChatModel(
                     name: 'gemini-3-flash-preview',
                     backend: FirebaseAIBackend.googleAI,
@@ -34,13 +34,13 @@ class ChatPage extends StatelessWidget {
                   ),
                 ))
             ..add(
-              ChatStarted(
+              AdvisorStarted(
                 profileType: profileType,
                 focusOptions: focusOptions,
                 customOption: customOption,
               ),
             ),
-      child: ChatView(profileType: profileType),
+      child: AdvisorView(profileType: profileType),
     );
   }
 }

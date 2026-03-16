@@ -9,25 +9,25 @@ import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui/genui.dart';
 
-part 'chat_event.dart';
-part 'chat_state.dart';
+part 'advisor_event.dart';
+part 'advisor_state.dart';
 
 /// Factory for creating a [FirebaseAIChatModel].
-typedef ChatModelFactory = FirebaseAIChatModel Function();
+typedef AdvisorModelFactory = FirebaseAIChatModel Function();
 
-class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc({required ChatModelFactory chatModelFactory})
+class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
+  AdvisorBloc({required AdvisorModelFactory chatModelFactory})
     : _chatModelFactory = chatModelFactory,
-      super(const ChatState()) {
-    on<ChatStarted>(_onStarted);
-    on<ChatMessageSent>(_onMessageSent);
-    on<ChatSurfaceReceived>(_onSurfaceReceived);
-    on<ChatContentReceived>(_onContentReceived);
-    on<ChatLoading>(_onLoading);
-    on<ChatErrorOccurred>(_onErrorOccurred);
+      super(const AdvisorState()) {
+    on<AdvisorStarted>(_onStarted);
+    on<AdvisorMessageSent>(_onMessageSent);
+    on<AdvisorSurfaceReceived>(_onSurfaceReceived);
+    on<AdvisorContentReceived>(_onContentReceived);
+    on<AdvisorLoading>(_onLoading);
+    on<AdvisorErrorOccurred>(_onErrorOccurred);
   }
 
-  final ChatModelFactory _chatModelFactory;
+  final AdvisorModelFactory _chatModelFactory;
   Conversation? _conversation;
   FirebaseAIChatModel? _chatModel;
   StreamSubscription<ConversationEvent>? _eventSubscription;
@@ -35,10 +35,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   late String _systemPrompt;
 
   Future<void> _onStarted(
-    ChatStarted event,
-    Emitter<ChatState> emit,
+    AdvisorStarted event,
+    Emitter<AdvisorState> emit,
   ) async {
-    emit(state.copyWith(status: ChatStatus.loading));
+    emit(state.copyWith(status: AdvisorStatus.loading));
 
     final catalog = buildFinanceCatalog();
 
@@ -71,13 +71,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (isClosed) return;
       switch (event) {
         case ConversationWaiting():
-          add(const ChatLoading(isLoading: true));
+          add(const AdvisorLoading(isLoading: true));
         case ConversationContentReceived(:final text):
-          add(ChatContentReceived(AiTextDisplayMessage(text)));
+          add(AdvisorContentReceived(AiTextDisplayMessage(text)));
         case ConversationSurfaceAdded(:final surfaceId):
-          add(ChatSurfaceReceived(surfaceId));
+          add(AdvisorSurfaceReceived(surfaceId));
         case ConversationError(:final error):
-          add(ChatErrorOccurred(error.toString()));
+          add(AdvisorErrorOccurred(error.toString()));
         case _:
           // ConversationComponentsUpdated: Surface widget auto-rebuilds.
           break;
@@ -89,7 +89,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     emit(
       state.copyWith(
-        status: ChatStatus.active,
+        status: AdvisorStatus.active,
         host: _conversation!.controller,
       ),
     );
@@ -105,7 +105,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onStateChanged() {
     if (!isClosed) {
-      add(ChatLoading(isLoading: _conversation!.state.value.isWaiting));
+      add(AdvisorLoading(isLoading: _conversation!.state.value.isWaiting));
     }
   }
 
@@ -151,8 +151,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onSurfaceReceived(
-    ChatSurfaceReceived event,
-    Emitter<ChatState> emit,
+    AdvisorSurfaceReceived event,
+    Emitter<AdvisorState> emit,
   ) {
     // Check if this surface already exists on any page.
     final existingPageIndex = state.pages.indexWhere(
@@ -177,8 +177,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onContentReceived(
-    ChatContentReceived event,
-    Emitter<ChatState> emit,
+    AdvisorContentReceived event,
+    Emitter<AdvisorState> emit,
   ) {
     // Ensure there's a page to append to.
     var pages = [...state.pages];
@@ -227,24 +227,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onLoading(
-    ChatLoading event,
-    Emitter<ChatState> emit,
+    AdvisorLoading event,
+    Emitter<AdvisorState> emit,
   ) {
     emit(state.copyWith(isLoading: event.isLoading));
   }
 
   Future<void> _onMessageSent(
-    ChatMessageSent event,
-    Emitter<ChatState> emit,
+    AdvisorMessageSent event,
+    Emitter<AdvisorState> emit,
   ) async {
     await _conversation?.sendRequest(ChatMessage.user(event.text));
   }
 
   void _onErrorOccurred(
-    ChatErrorOccurred event,
-    Emitter<ChatState> emit,
+    AdvisorErrorOccurred event,
+    Emitter<AdvisorState> emit,
   ) {
-    emit(state.copyWith(status: ChatStatus.error, error: event.message));
+    emit(state.copyWith(status: AdvisorStatus.error, error: event.message));
   }
 
   @override

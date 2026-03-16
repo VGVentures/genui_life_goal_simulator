@@ -117,7 +117,7 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final blocLoading = context.select<ChatBloc, bool>(
+    final blocLoading = context.select<AdvisorBloc, bool>(
       (bloc) => bloc.state.isLoading,
     );
 

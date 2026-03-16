@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
-    implements ChatBloc {}
+class _MockAdvisorBloc extends MockBloc<AdvisorEvent, AdvisorState>
+    implements AdvisorBloc {}
 
 void main() {
-  group(ChatPage, () {
+  group(AdvisorPage, () {
     test('is a $StatelessWidget and holds onboarding data', () {
-      const page = ChatPage(
+      const page = AdvisorPage(
         profileType: ProfileType.beginner,
         focusOptions: {FocusOption.mortgage},
         customOption: 'custom',
@@ -25,23 +25,25 @@ void main() {
       expect(page.customOption, 'custom');
     });
 
-    testWidgets('provides $ChatBloc and renders $ChatView', (tester) async {
-      final bloc = _MockChatBloc();
-      when(() => bloc.state).thenReturn(const ChatState());
+    testWidgets('provides $AdvisorBloc and renders $AdvisorView', (
+      tester,
+    ) async {
+      final bloc = _MockAdvisorBloc();
+      when(() => bloc.state).thenReturn(const AdvisorState());
 
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: ChatPage(
+          home: AdvisorPage(
             profileType: ProfileType.beginner,
             chatBloc: bloc,
           ),
         ),
       );
 
-      expect(find.byType(ChatView), findsOneWidget);
+      expect(find.byType(AdvisorView), findsOneWidget);
     });
   });
 }

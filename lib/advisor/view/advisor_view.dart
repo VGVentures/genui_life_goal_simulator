@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 
-class ChatView extends StatefulWidget {
-  const ChatView({required this.profileType, super.key});
+class AdvisorView extends StatefulWidget {
+  const AdvisorView({required this.profileType, super.key});
 
   final ProfileType profileType;
 
   @override
-  State<ChatView> createState() => _ChatViewState();
+  State<AdvisorView> createState() => _AdvisorViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class _AdvisorViewState extends State<AdvisorView> {
   final _pageController = PageController();
 
   @override
@@ -32,8 +32,8 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).extension<AppColors>()?.surface,
-      appBar: _ChatAppBar(profileType: widget.profileType),
-      body: BlocConsumer<ChatBloc, ChatState>(
+      appBar: _AdvisorAppBar(profileType: widget.profileType),
+      body: BlocConsumer<AdvisorBloc, AdvisorState>(
         listenWhen: (previous, current) =>
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
@@ -63,7 +63,7 @@ class _ChatViewState extends State<ChatView> {
                         itemCount: state.pages.length,
                         itemBuilder: (context, pageIndex) {
                           final messages = state.pages[pageIndex];
-                          return _ChatPage(
+                          return _AdvisorPage(
                             messages: messages,
                             host: state.host!,
                             isLoading:
@@ -81,8 +81,8 @@ class _ChatViewState extends State<ChatView> {
   }
 }
 
-class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _ChatAppBar({required this.profileType});
+class _AdvisorAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AdvisorAppBar({required this.profileType});
 
   final ProfileType profileType;
 
@@ -454,8 +454,8 @@ class _FadingPageView extends StatelessWidget {
   }
 }
 
-class _ChatPage extends StatefulWidget {
-  const _ChatPage({
+class _AdvisorPage extends StatefulWidget {
+  const _AdvisorPage({
     required this.messages,
     required this.host,
     required this.isLoading,
@@ -466,10 +466,10 @@ class _ChatPage extends StatefulWidget {
   final bool isLoading;
 
   @override
-  State<_ChatPage> createState() => _ChatPageState();
+  State<_AdvisorPage> createState() => _AdvisorPageState();
 }
 
-class _ChatPageState extends State<_ChatPage>
+class _AdvisorPageState extends State<_AdvisorPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController _fadeController;
   late final Animation<double> _contentOpacity;
@@ -494,7 +494,7 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   @override
-  void didUpdateWidget(_ChatPage oldWidget) {
+  void didUpdateWidget(_AdvisorPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Detect transition from loading → done.
     if (oldWidget.isLoading && !widget.isLoading && !_hasFinishedLoading) {
@@ -529,7 +529,7 @@ class _ChatPageState extends State<_ChatPage>
                 children: [
                   for (final message in widget.messages)
                     if (message is! UserDisplayMessage)
-                      ChatMessageBubble(
+                      AdvisorMessageBubble(
                         message: message,
                         host: widget.host,
                       ),

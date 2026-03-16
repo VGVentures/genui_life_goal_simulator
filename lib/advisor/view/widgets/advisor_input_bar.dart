@@ -2,8 +2,8 @@ import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
-class ChatInputBar extends StatefulWidget {
-  const ChatInputBar({
+class AdvisorInputBar extends StatefulWidget {
+  const AdvisorInputBar({
     required this.onSend,
     this.enabled = true,
     super.key,
@@ -13,10 +13,10 @@ class ChatInputBar extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<ChatInputBar> createState() => _ChatInputBarState();
+  State<AdvisorInputBar> createState() => _AdvisorInputBarState();
 }
 
-class _ChatInputBarState extends State<ChatInputBar> {
+class _AdvisorInputBarState extends State<AdvisorInputBar> {
   final _controller = TextEditingController();
 
   void _submit() {
