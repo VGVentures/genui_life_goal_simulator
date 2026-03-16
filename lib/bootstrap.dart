@@ -10,7 +10,6 @@ import 'package:finance_app/feature_flag/active_feature_flags.dart';
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -52,11 +51,9 @@ Future<void> bootstrap({
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (kDebugMode) {
-    const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
-    if (debugToken.isNotEmpty) {
-      setAppCheckDebugToken(debugToken);
-    }
+  const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
+  if (debugToken.isNotEmpty) {
+    setAppCheckDebugToken(debugToken);
   }
 
   await FirebaseAppCheck.instance.activate(
