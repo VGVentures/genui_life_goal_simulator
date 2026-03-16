@@ -124,3 +124,4 @@ lib/l10n/gen/
 
 # Firebase config (generated at build time / via flutterfire configure)
 lib/firebase_options.dart
+firebase.json
