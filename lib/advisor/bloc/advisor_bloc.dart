@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:finance_app/advisor/prompt/prompt.dart' as app_prompt;
 import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
 import 'package:finance_app/advisor/repository/advisor_repository.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
@@ -45,11 +46,7 @@ class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
       }
     });
 
-    await _repository.startConversation(
-      profileType: event.profileType,
-      focusOptions: event.focusOptions,
-      customOption: event.customOption,
-    );
+    await _repository.startConversation();
 
     emit(
       state.copyWith(
@@ -57,6 +54,13 @@ class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
         host: _repository.surfaceHost,
       ),
     );
+
+    final initialMessage = app_prompt.PromptBuilder.buildInitialUserMessage(
+      profileType: event.profileType,
+      focusOptions: event.focusOptions,
+      customOption: event.customOption,
+    );
+    await _repository.sendMessage(initialMessage);
   }
 
   void _onSurfaceReceived(

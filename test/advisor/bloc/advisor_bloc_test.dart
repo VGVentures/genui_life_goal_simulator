@@ -33,13 +33,7 @@ void main() {
     eventsController = StreamController<AdvisorConversationEvent>.broadcast();
 
     when(() => repository.events).thenAnswer((_) => eventsController.stream);
-    when(
-      () => repository.startConversation(
-        profileType: any(named: 'profileType'),
-        focusOptions: any(named: 'focusOptions'),
-        customOption: any(named: 'customOption'),
-      ),
-    ).thenAnswer((_) async {});
+    when(() => repository.startConversation()).thenAnswer((_) async {});
     when(() => repository.sendMessage(any())).thenAnswer((_) async {});
     when(() => repository.surfaceHost).thenReturn(_MockSurfaceHost());
     when(() => repository.dispose()).thenAnswer((_) async {});
@@ -163,11 +157,9 @@ void main() {
       verify: (bloc) {
         expect(bloc.state.status, AdvisorStatus.active);
         expect(bloc.state.host, isNotNull);
+        verify(() => repository.startConversation()).called(1);
         verify(
-          () => repository.startConversation(
-            profileType: ProfileType.beginner,
-            focusOptions: {FocusOption.everydaySpending},
-          ),
+          () => repository.sendMessage(any()),
         ).called(1);
       },
     );

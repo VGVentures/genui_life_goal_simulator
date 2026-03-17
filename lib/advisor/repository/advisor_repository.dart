@@ -5,8 +5,6 @@ import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:finance_app/advisor/catalog/catalog.dart';
 import 'package:finance_app/advisor/prompt/prompt.dart' as app_prompt;
 import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
-import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui/genui.dart';
 
 /// {@template advisor_repository}
@@ -38,11 +36,9 @@ class AdvisorRepository {
   SurfaceHost? get surfaceHost => _conversation?.controller;
 
   /// Starts a new conversation with the AI advisor.
-  Future<void> startConversation({
-    required ProfileType profileType,
-    Set<FocusOption> focusOptions = const {},
-    String customOption = '',
-  }) async {
+  ///
+  /// Call [sendMessage] afterwards to send the initial user message.
+  Future<void> startConversation() async {
     final catalog = buildFinanceCatalog();
 
     final genUiPromptBuilder = PromptBuilder.chat(
@@ -78,13 +74,6 @@ class AdvisorRepository {
     });
 
     _conversation!.state.addListener(_onStateChanged);
-
-    final initialMessage = app_prompt.PromptBuilder.buildInitialUserMessage(
-      profileType: profileType,
-      focusOptions: focusOptions,
-      customOption: customOption,
-    );
-    await _conversation!.sendRequest(ChatMessage.user(initialMessage));
   }
 
   /// Sends a user message to the ongoing conversation.
