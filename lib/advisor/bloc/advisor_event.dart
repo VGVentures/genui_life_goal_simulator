@@ -1,8 +1,8 @@
-part of 'advisor_bloc.dart';
+import 'package:finance_app/advisor/bloc/advisor_state.dart';
+import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
+import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 
-/// {@template advisor_event}
-/// Events for the [AdvisorBloc].
-/// {@endtemplate}
+/// Events for the advisor bloc.
 sealed class AdvisorEvent {
   const AdvisorEvent();
 }

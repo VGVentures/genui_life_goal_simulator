@@ -1,4 +1,4 @@
-part of 'advisor_bloc.dart';
+import 'package:genui/genui.dart';
 
 /// A message to display in the chat UI.
 sealed class DisplayMessage {
@@ -27,7 +27,7 @@ final class AiSurfaceDisplayMessage extends DisplayMessage {
 }
 
 /// {@template advisor_state}
-/// State for the [AdvisorBloc].
+/// State for the advisor bloc.
 /// {@endtemplate}
 final class AdvisorState {
   /// {@macro advisor_state}
