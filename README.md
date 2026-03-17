@@ -68,7 +68,7 @@ The app follows a **feature-first** structure with [BLoC](https://bloclibrary.de
 
 ```
 lib/
-  advisor/         — AI financial advisor (chat bloc, GenUI catalog, prompt builder)
+  advisor/         — AI financial advisor (repository, bloc, GenUI catalog, prompt builder)
   app.dart         — Root MaterialApp widget
   app_check/       — Firebase App Check debug token helpers
   bootstrap.dart   — App initialization (Firebase, providers, error handling)
