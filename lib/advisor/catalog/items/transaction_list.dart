@@ -17,6 +17,10 @@ final _schema = S.object(
           'amount': A2uiSchemas.stringReference(
             description: r'Formatted amount string (e.g. "$450").',
           ),
+          'action': A2uiSchemas.action(
+            description:
+                'Optional action dispatched when the View button is tapped.',
+          ),
         },
         required: ['title', 'description', 'amount'],
       ),
@@ -34,10 +38,30 @@ final transactionListItem = CatalogItem(
     final rawItems = json['items']! as List;
 
     final items = rawItems.cast<Map<String, Object?>>().map((item) {
+      final action = item['action'] as Map<String, Object?>?;
+
       return TransactionListItem(
         title: _resolveString(item['title']),
         description: _resolveString(item['description']),
         amount: _resolveString(item['amount']),
+        onViewDetails: action == null
+            ? null
+            : () {
+                if (action case {'event': final Map<String, Object?> event}) {
+                  ctx.dispatchEvent(
+                    UserActionEvent(
+                      name: event['name']! as String,
+                      sourceComponentId: ctx.id,
+                      context: {
+                        ...event['context'] as Map<String, Object?>? ?? {},
+                        'title': _resolveString(item['title']),
+                        'description': _resolveString(item['description']),
+                        'amount': _resolveString(item['amount']),
+                      },
+                    ),
+                  );
+                }
+              },
       );
     }).toList();
 
