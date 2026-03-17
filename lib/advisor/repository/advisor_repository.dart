@@ -4,42 +4,12 @@ import 'dart:convert';
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:finance_app/advisor/catalog/catalog.dart';
 import 'package:finance_app/advisor/prompt/prompt.dart' as app_prompt;
+import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui/genui.dart';
 
-/// Events emitted by [AdvisorRepository] during a conversation.
-sealed class AdvisorConversationEvent {
-  const AdvisorConversationEvent();
-}
-
-/// The AI is waiting/processing.
-final class AdvisorConversationWaiting extends AdvisorConversationEvent {
-  const AdvisorConversationWaiting({required this.isWaiting});
-
-  final bool isWaiting;
-}
-
-/// The AI produced a text chunk.
-final class AdvisorConversationTextReceived extends AdvisorConversationEvent {
-  const AdvisorConversationTextReceived(this.text);
-
-  final String text;
-}
-
-/// The AI produced a new or updated UI surface.
-final class AdvisorConversationSurfaceAdded extends AdvisorConversationEvent {
-  const AdvisorConversationSurfaceAdded(this.surfaceId);
-
-  final String surfaceId;
-}
-
-/// An error occurred during the conversation.
-final class AdvisorConversationError extends AdvisorConversationEvent {
-  const AdvisorConversationError(this.message);
-
-  final String message;
-}
+export 'advisor_conversation_event.dart';
 
 /// {@template advisor_repository}
 /// Repository that manages the AI financial advisor conversation.
