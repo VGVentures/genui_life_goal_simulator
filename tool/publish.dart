@@ -23,8 +23,11 @@ Future<void> main(List<String> args) async {
   print('==> Target: $publicRemote/$publicBranch');
   print('');
 
-  // Create a fresh tree object from the source ref (no history)
-  final tree = await git(['rev-parse', '$sourceRef^{tree}']);
+  // Create a modified tree that excludes internal-only paths.
+  final tree = await _treeWithout(
+    sourceRef: sourceRef,
+    exclude: ['tool'],
+  );
 
   // Create an orphan commit with that tree
   final commit = await git(['commit-tree', tree, '-m', message]);
@@ -54,8 +57,36 @@ Future<void> main(List<String> args) async {
   }
 }
 
-Future<String> git(List<String> args) async {
-  final result = await Process.run('git', args);
+/// Builds a new git tree from [sourceRef] with the given paths removed.
+Future<String> _treeWithout({
+  required String sourceRef,
+  required List<String> exclude,
+}) async {
+  // Use a temporary index so we don't touch the working tree's index.
+  final tmpIndex = '${Directory.systemTemp.path}/publish_index_$pid';
+  final env = {'GIT_INDEX_FILE': tmpIndex};
+
+  try {
+    final sourceTree = await git(['rev-parse', '$sourceRef^{tree}']);
+    await git(['read-tree', sourceTree], environment: env);
+    for (final path in exclude) {
+      await git(['rm', '-r', '--cached', '--quiet', path], environment: env);
+    }
+    return git(['write-tree'], environment: env);
+  } finally {
+    File(tmpIndex).deleteSync();
+  }
+}
+
+Future<String> git(
+  List<String> args, {
+  Map<String, String>? environment,
+}) async {
+  final result = await Process.run(
+    'git',
+    args,
+    environment: environment,
+  );
   if (result.exitCode != 0) {
     stderr
       ..writeln('git ${args.join(' ')} failed:')
