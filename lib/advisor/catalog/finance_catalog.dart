@@ -63,7 +63,7 @@ Use ProgressBar to show spending categories vs. a fixed budget limit. Set value 
 
 Use the SparklineCard widget to display a financial category with its amount and a trend sparkline. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
 
-Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount.
+Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount. Optionally include an "action" on each item to show a View button — when tapped, it dispatches the specified event with the item's data as context.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.

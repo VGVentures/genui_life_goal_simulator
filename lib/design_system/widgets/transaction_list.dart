@@ -116,23 +116,10 @@ class _TransactionListRow extends StatelessWidget {
             ),
           ),
           if (item.onViewDetails != null) ...[
-            FilledButton(
+            AppButton(
+              label: l10n.viewLabel,
+              size: AppButtonSize.small,
               onPressed: item.onViewDetails,
-              style: FilledButton.styleFrom(
-                backgroundColor: colors?.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Spacing.sm,
-                ),
-              ),
-              child: Text(
-                l10n.viewLabel,
-                style: textTheme.labelLarge?.copyWith(
-                  color: colors?.onInverseSurface,
-                ),
-              ),
             ),
           ],
         ],

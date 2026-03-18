@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vgv_genui_financial_advisor/advisor/catalog/items/transaction_list.dart';
+import 'package:vgv_genui_financial_advisor/design_system/widgets/app_button.dart';
 import 'package:vgv_genui_financial_advisor/design_system/widgets/transaction_list.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
@@ -29,14 +30,15 @@ Map<String, Object?> _data({
 
 CatalogItemContext _context(
   BuildContext context,
-  Map<String, Object?> data,
-) {
+  Map<String, Object?> data, {
+  DispatchEventCallback? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'TransactionList',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -48,8 +50,9 @@ CatalogItemContext _context(
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  DispatchEventCallback? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -58,7 +61,7 @@ Future<void> _pump(
         body: SingleChildScrollView(
           child: Builder(
             builder: (context) => transactionListItem.widgetBuilder(
-              _context(context, data),
+              _context(context, data, dispatchEvent: dispatchEvent),
             ),
           ),
         ),
@@ -114,6 +117,69 @@ void main() {
         expect(find.text('Gym'), findsOneWidget);
         expect(find.text('Fitness'), findsOneWidget);
         expect(find.text(r'$50'), findsOneWidget);
+      });
+
+      testWidgets('shows AppButton when item has action', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            items: [
+              {
+                'title': 'Nobu Restaurant',
+                'description': 'Dining',
+                'amount': r'$450',
+                'action': {
+                  'event': {
+                    'name': 'view_transaction',
+                    'context': <String, Object?>{},
+                  },
+                },
+              },
+            ],
+          ),
+        );
+
+        expect(find.byType(AppButton), findsOneWidget);
+      });
+
+      testWidgets('dispatches event when View button is tapped', (
+        tester,
+      ) async {
+        UserActionEvent? dispatched;
+
+        await _pump(
+          tester,
+          _data(
+            items: [
+              {
+                'title': 'Nobu Restaurant',
+                'description': 'Dining',
+                'amount': r'$450',
+                'action': {
+                  'event': {
+                    'name': 'view_transaction',
+                    'context': <String, Object?>{},
+                  },
+                },
+              },
+            ],
+          ),
+          dispatchEvent: (event) => dispatched = event as UserActionEvent,
+        );
+
+        await tester.tap(find.byType(AppButton));
+
+        expect(dispatched, isNotNull);
+        expect(dispatched!.name, 'view_transaction');
+        expect(dispatched!.context['title'], 'Nobu Restaurant');
+      });
+
+      testWidgets('does not show AppButton when item has no action', (
+        tester,
+      ) async {
+        await _pump(tester, _data());
+
+        expect(find.byType(AppButton), findsNothing);
       });
     });
   });

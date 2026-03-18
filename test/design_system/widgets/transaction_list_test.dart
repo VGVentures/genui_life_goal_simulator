@@ -115,7 +115,7 @@ void main() {
       );
 
       expect(find.text('View'), findsOneWidget);
-      expect(find.byType(FilledButton), findsOneWidget);
+      expect(find.byType(AppButton), findsOneWidget);
     });
 
     testWidgets('does not show View button when onViewDetails is null', (
@@ -124,7 +124,7 @@ void main() {
       await _pumpList(tester);
 
       expect(find.text('View'), findsNothing);
-      expect(find.byType(FilledButton), findsNothing);
+      expect(find.byType(AppButton), findsNothing);
     });
 
     testWidgets('tapping View button triggers callback', (tester) async {
