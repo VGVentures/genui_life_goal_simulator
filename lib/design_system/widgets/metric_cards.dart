@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// Direction of a metric delta indicator relative to its context.
 enum MetricDeltaDirection {

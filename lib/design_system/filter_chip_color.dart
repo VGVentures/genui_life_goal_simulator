@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
 
 enum FilterChipColor {
   pink,

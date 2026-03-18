@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// {@template action_item}
 /// A molecule widget that represents a single task or recommendation with an

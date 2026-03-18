@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/theme_type.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/theme_type.dart';
 
 void main() {
   group(ThemeType, () {

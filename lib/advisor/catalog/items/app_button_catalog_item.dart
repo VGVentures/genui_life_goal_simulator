@@ -1,9 +1,9 @@
-import 'package:finance_app/advisor/bloc/bloc.dart';
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/bloc.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 final _schema = S.object(
   description:

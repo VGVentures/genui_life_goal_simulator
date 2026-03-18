@@ -1,6 +1,6 @@
-import 'package:finance_app/design_system/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_text_styles.dart';
 
 void main() {
   group('AppTextStyles Desktop', () {

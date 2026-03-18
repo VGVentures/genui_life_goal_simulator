@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:fl_chart/fl_chart.dart' as fl;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// A single data point on the [LineChart].
 @immutable

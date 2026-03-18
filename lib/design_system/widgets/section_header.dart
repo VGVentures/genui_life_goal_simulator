@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// {@template section_header}
 /// A section header molecule used across multiple screens for consistent

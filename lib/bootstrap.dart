@@ -1,12 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:finance_app/app.dart';
-import 'package:finance_app/app_check/app_check_debug.dart';
-import 'package:finance_app/error_reporting/error_reporting.dart';
-import 'package:finance_app/feature_flags/active_feature_flags.dart';
-import 'package:finance_app/feature_flags/repository/feature_flags_repository.dart';
-import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' show RiveNative;
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:vgv_genui_financial_advisor/app.dart';
+import 'package:vgv_genui_financial_advisor/app_check/app_check_debug.dart';
+import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/active_feature_flags.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/repository/feature_flags_repository.dart';
+import 'package:vgv_genui_financial_advisor/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});

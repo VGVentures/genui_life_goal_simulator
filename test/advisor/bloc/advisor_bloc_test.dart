@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/advisor/bloc/bloc.dart';
-import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
-import 'package:finance_app/advisor/repository/advisor_repository.dart';
-import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/bloc.dart';
+import 'package:vgv_genui_financial_advisor/advisor/repository/advisor_conversation_event.dart';
+import 'package:vgv_genui_financial_advisor/advisor/repository/advisor_repository.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/models/focus_option.dart';
 
 class _MockAdvisorRepository extends Mock implements AdvisorRepository {}
 

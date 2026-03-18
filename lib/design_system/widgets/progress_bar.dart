@@ -1,6 +1,6 @@
-import 'package:finance_app/design_system/app_colors.dart';
-import 'package:finance_app/design_system/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
+import 'package:vgv_genui_financial_advisor/design_system/spacing.dart';
 
 /// {@template progress_bar}
 /// A molecule widget displaying a labeled progress bar with

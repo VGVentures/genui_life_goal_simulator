@@ -1,4 +1,4 @@
-name: finance_app
+name: vgv_genui_financial_advisor
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

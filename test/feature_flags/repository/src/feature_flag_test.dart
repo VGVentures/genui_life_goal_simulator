@@ -1,5 +1,5 @@
-import 'package:finance_app/feature_flags/repository/feature_flags_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/repository/feature_flags_repository.dart';
 
 void main() {
   group(FeatureFlag, () {

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// {@template app_accordion}
 /// A molecule widget that represents an expandable content panel with

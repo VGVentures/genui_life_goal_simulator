@@ -1,8 +1,8 @@
 import 'dart:math' show pi;
 
-import 'package:finance_app/gen/assets.gen.dart';
-import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
 /// {@template intro_badges}
 /// The "2026 ✦ Gen UI" overlapping badges shown on the intro screen.

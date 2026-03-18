@@ -1,10 +1,10 @@
-import 'package:finance_app/advisor/catalog/items/transaction_list.dart';
-import 'package:finance_app/design_system/widgets/transaction_list.dart';
-import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/transaction_list.dart';
+import 'package:vgv_genui_financial_advisor/design_system/widgets/transaction_list.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 

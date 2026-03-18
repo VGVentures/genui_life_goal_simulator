@@ -1,7 +1,7 @@
-import 'package:finance_app/design_system/design_system.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

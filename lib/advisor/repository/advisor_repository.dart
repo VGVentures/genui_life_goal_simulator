@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
-import 'package:finance_app/advisor/catalog/catalog.dart';
-import 'package:finance_app/advisor/prompt/prompt.dart' as app_prompt;
-import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
 import 'package:genui/genui.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/catalog.dart';
+import 'package:vgv_genui_financial_advisor/advisor/prompt/prompt.dart'
+    as app_prompt;
+import 'package:vgv_genui_financial_advisor/advisor/repository/advisor_conversation_event.dart';
 
 /// {@template advisor_repository}
 /// Repository that manages the AI financial advisor conversation.

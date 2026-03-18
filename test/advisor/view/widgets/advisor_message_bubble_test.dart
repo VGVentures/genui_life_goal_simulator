@@ -1,8 +1,8 @@
-import 'package:finance_app/advisor/advisor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/advisor.dart';
 
 class _MockSurfaceHost extends Mock implements SurfaceHost {}
 

@@ -1,8 +1,8 @@
-import 'package:finance_app/design_system/app_colors.dart';
-import 'package:finance_app/design_system/breakpoints.dart';
-import 'package:finance_app/design_system/widgets/emoji_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
+import 'package:vgv_genui_financial_advisor/design_system/breakpoints.dart';
+import 'package:vgv_genui_financial_advisor/design_system/widgets/emoji_card.dart';
 
 Widget _buildTestApp({required Widget child}) {
   return MaterialApp(

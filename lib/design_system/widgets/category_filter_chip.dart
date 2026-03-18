@@ -1,9 +1,9 @@
-import 'package:finance_app/design_system/app_colors.dart';
-import 'package:finance_app/design_system/app_text_styles.dart';
-import 'package:finance_app/design_system/filter_chip_color.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_text_styles.dart';
+import 'package:vgv_genui_financial_advisor/design_system/filter_chip_color.dart';
 
-export 'package:finance_app/design_system/filter_chip_color.dart';
+export 'package:vgv_genui_financial_advisor/design_system/filter_chip_color.dart';
 
 class CategoryFilterChip extends StatefulWidget {
   const CategoryFilterChip({

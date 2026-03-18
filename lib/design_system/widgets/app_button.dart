@@ -1,7 +1,7 @@
-import 'package:finance_app/design_system/design_system.dart';
-import 'package:finance_app/gen/fonts.gen.dart';
-import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/gen/fonts.gen.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
 /// Visual variant for [AppButton].
 enum AppButtonVariant {

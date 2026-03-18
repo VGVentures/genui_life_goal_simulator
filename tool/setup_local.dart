@@ -13,18 +13,18 @@
 // One-time machine setup (only needed once, not per worktree):
 //
 //   1. Generate Firebase options into the shared config directory:
-//      flutterfire configure --out=$HOME/.config/finance_app/firebase_options.dart
+//      flutterfire configure --out=$HOME/.config/vgv_genui_financial_advisor/firebase_options.dart
 //
 //   2. Create the shared .env file with real values:
-//      cp .env.example $HOME/.config/finance_app/.env
-//      # Then edit ~/.config/finance_app/.env with real values.
+//      cp .env.example $HOME/.config/vgv_genui_financial_advisor/.env
+//      # Then edit ~/.config/vgv_genui_financial_advisor/.env with real values.
 //
 // Per-worktree setup:
 //   dart run tool/setup_local.dart
 import 'dart:io';
 
 final String home = Platform.environment['HOME']!;
-final configDir = '$home/.config/finance_app';
+final configDir = '$home/.config/vgv_genui_financial_advisor';
 
 /// Source path in the shared config directory → target path relative to the
 /// project root.

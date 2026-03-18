@@ -1,8 +1,8 @@
-import 'package:finance_app/design_system/app_colors.dart';
-import 'package:finance_app/design_system/widgets/category_filter_chip.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
+import 'package:vgv_genui_financial_advisor/design_system/widgets/category_filter_chip.dart';
 
 void main() {
   final colors = LightThemeColors();

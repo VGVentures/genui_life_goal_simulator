@@ -1,5 +1,5 @@
-import 'package:finance_app/design_system/breakpoints.dart';
 import 'package:flutter/widgets.dart';
+import 'package:vgv_genui_financial_advisor/design_system/breakpoints.dart';
 
 /// A scaffold that conditionally renders mobile or desktop layouts
 /// based on screen width.

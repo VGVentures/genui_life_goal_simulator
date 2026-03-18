@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
 
 /// {@template DevErrorReportingRepository}
 /// Development implementation of [ErrorReportingRepository].

@@ -1,5 +1,5 @@
-import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
 
 void main() {
   late DevErrorReportingRepository repository;

@@ -1,9 +1,9 @@
-import 'package:finance_app/app.dart';
-import 'package:finance_app/error_reporting/error_reporting.dart';
-import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:vgv_genui_financial_advisor/app.dart';
+import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
 
 void main() {
   group(App, () {

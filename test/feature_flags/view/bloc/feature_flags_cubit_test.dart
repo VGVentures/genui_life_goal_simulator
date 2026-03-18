@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/feature_flags/feature_flags.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/feature_flags.dart';
 
 class _MockFeatureFlagsRepository extends Mock
     implements FeatureFlagsRepository {}

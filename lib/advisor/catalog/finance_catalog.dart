@@ -1,5 +1,5 @@
-import 'package:finance_app/advisor/catalog/items/items.dart';
 import 'package:genui/genui.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/items.dart';
 
 /// The catalog ID for the finance catalog.
 ///

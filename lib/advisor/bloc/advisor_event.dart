@@ -1,6 +1,6 @@
-import 'package:finance_app/advisor/bloc/advisor_state.dart';
-import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/advisor_state.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/models/focus_option.dart';
 
 /// Events for the advisor bloc.
 sealed class AdvisorEvent {

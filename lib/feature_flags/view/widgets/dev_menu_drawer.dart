@@ -1,8 +1,8 @@
-import 'package:finance_app/design_system/design_system.dart';
-import 'package:finance_app/dev_menu/dev_menu.dart';
-import 'package:finance_app/feature_flags/feature_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/feature_flags.dart';
 
 /// {@template dev_menu_drawer}
 /// A debug drawer that displays all feature flags and allows toggling them.

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:finance_app/advisor/advisor.dart';
-import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:genui/genui.dart';
+import 'package:vgv_genui_financial_advisor/advisor/advisor.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 class AdvisorMessageBubble extends StatelessWidget {
   const AdvisorMessageBubble({

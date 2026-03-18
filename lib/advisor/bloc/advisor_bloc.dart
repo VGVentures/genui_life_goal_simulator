@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:finance_app/advisor/bloc/advisor_event.dart';
-import 'package:finance_app/advisor/bloc/advisor_state.dart';
-import 'package:finance_app/advisor/prompt/prompt.dart' as app_prompt;
-import 'package:finance_app/advisor/repository/advisor_conversation_event.dart';
-import 'package:finance_app/advisor/repository/advisor_repository.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/advisor_event.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/advisor_state.dart';
+import 'package:vgv_genui_financial_advisor/advisor/prompt/prompt.dart'
+    as app_prompt;
+import 'package:vgv_genui_financial_advisor/advisor/repository/advisor_conversation_event.dart';
+import 'package:vgv_genui_financial_advisor/advisor/repository/advisor_repository.dart';
 
 class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
   AdvisorBloc({required AdvisorRepository advisorRepository})
