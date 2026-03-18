@@ -100,7 +100,7 @@
     "@kickOffDescription": {
         "description": "Description text on the KickOff onboarding page (desktop)"
     },
-    "kickOffDescriptionMobile": "We're using VGV Finances as our hypothetical app.\nWe've set up two user profiles, choose one, set your preferences, and watch Gen UI build the experience in real time.",
+    "kickOffDescriptionMobile": "For this demo, we're using VGV\nFinances as our hypothetical app.\nWe've set up two user profiles—\nchoose one, set your preferences, and watch Gen UI build the experience\naround you in real time.",
     "@kickOffDescriptionMobile": {
         "description": "Description text on the KickOff onboarding page (mobile)"
     },
