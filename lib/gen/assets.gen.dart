@@ -165,13 +165,13 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get starOptimizer =>
       const AssetGenImage('assets/images/onboarding/StarOptimizer.png');
 
-  /// File path: assets/images/onboarding/checked_option.png
-  AssetGenImage get checkedOption =>
-      const AssetGenImage('assets/images/onboarding/checked_option.png');
+  /// File path: assets/images/onboarding/checked_option.svg
+  SvgGenImage get checkedOption =>
+      const SvgGenImage('assets/images/onboarding/checked_option.svg');
 
-  /// File path: assets/images/onboarding/edit_pencil.png
-  AssetGenImage get editPencil =>
-      const AssetGenImage('assets/images/onboarding/edit_pencil.png');
+  /// File path: assets/images/onboarding/edit_pencil.svg
+  SvgGenImage get editPencil =>
+      const SvgGenImage('assets/images/onboarding/edit_pencil.svg');
 
   /// File path: assets/images/onboarding/right_arrow.png
   AssetGenImage get rightArrow =>

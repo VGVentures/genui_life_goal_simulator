@@ -17,7 +17,6 @@ class SelectableOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeOf = Theme.of(context);
-    final colorScheme = themeOf.colorScheme;
     final colorExtension = themeOf.extension<AppColors>();
     final iconSize = responsiveValue(
       context,
@@ -26,21 +25,22 @@ class SelectableOptionCard extends StatelessWidget {
     );
 
     return Material(
-      color: Colors.transparent,
+      color: colorExtension?.onPrimary,
       borderRadius: BorderRadius.circular(Spacing.lg),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
+        hoverColor: Colors.black.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(Spacing.lg),
         child: Ink(
           decoration: BoxDecoration(
             color: isSelected
-                ? colorExtension?.primaryContainer
-                : colorExtension?.surfaceVariant,
+                ? colorExtension?.primary.withValues(alpha: 0.1)
+                : colorExtension?.onPrimary,
             borderRadius: BorderRadius.circular(Spacing.lg),
             border: Border.all(
               color: isSelected
-                  ? colorExtension?.primary ?? colorScheme.primary
+                  ? colorExtension?.primary ?? Colors.white
                   : Colors.transparent,
               width: _Dimensions.borderWidth,
             ),
@@ -62,10 +62,10 @@ class SelectableOptionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isSelected) ...[
-                  Assets.images.onboarding.checkedOption.image(
+                  Assets.images.onboarding.checkedOption.svg(
                     width: iconSize,
                     height: iconSize,
-                    color: colorExtension?.primary.withValues(alpha: 0.4),
+                    // color: colorExtension?.primary.withValues(alpha: 0.4),
                   ),
                   const SizedBox(width: Spacing.md),
                 ],
@@ -75,13 +75,13 @@ class SelectableOptionCard extends StatelessWidget {
                     style:
                         responsiveValue<TextStyle>(
                           context,
-                          mobile: AppTextStyles.titleSmallDesktop,
+                          mobile: AppTextStyles.titleMediumMobile,
                           desktop: AppTextStyles.headlineLargeDesktop,
                         ).copyWith(
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                          color: isSelected
+                              ? colorExtension?.onSurface
+                              : colorExtension?.onSurfaceVariant,
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
