@@ -13,6 +13,7 @@ class OnboardingNextButton extends StatelessWidget {
     required this.onPressed,
     this.borderColor,
     this.iconColor,
+    this.backgroundColor,
     super.key,
   });
 
@@ -25,12 +26,21 @@ class OnboardingNextButton extends StatelessWidget {
   /// Icon color. Defaults to [AppColors.primary].
   final Color? iconColor;
 
+  ///Button background color. Defaults to [AppColors.primary]
+  final Color? backgroundColor;
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>();
-    final effectiveBorderColor = borderColor ?? colors?.primary ?? Colors.white;
-    final effectiveIconColor = iconColor ?? colors?.primary ?? Colors.white;
     final isDisabled = onPressed == null;
+    final effectiveBorderColor =
+        (!isDisabled ? borderColor : colors?.onSurfaceDisabled) ??
+        colors?.primary ??
+        Colors.white;
+    final effectiveIconColor =
+        (!isDisabled ? iconColor : colors?.onSurfaceDisabled) ??
+        colors?.primary ??
+        Colors.white;
     final size = responsiveValue(
       context,
       mobile: _Dimensions.mobileSize,
@@ -42,49 +52,43 @@ class OnboardingNextButton extends StatelessWidget {
       desktop: _Dimensions.desktopIconSize,
     );
 
-    return Opacity(
-      opacity: isDisabled ? _disabledOpacity : 1.0,
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: OutlinedButton(
-          onPressed: onPressed,
-          style:
-              OutlinedButton.styleFrom(
-                shape: const CircleBorder(),
-                side: BorderSide(color: effectiveBorderColor),
-                backgroundColor: Colors.transparent,
-                padding: EdgeInsets.zero,
-              ).copyWith(
-                overlayColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.pressed)) {
-                    return effectiveBorderColor.withValues(alpha: 0.15);
-                  }
-                  if (states.contains(WidgetState.hovered)) {
-                    return effectiveBorderColor.withValues(alpha: 0.08);
-                  }
-                  return Colors.transparent;
-                }),
-              ),
-          child: Assets.images.onboarding.rightArrow.svg(
-            colorFilter: ColorFilter.mode(
-              effectiveIconColor,
-              BlendMode.srcIn,
+    return SizedBox(
+      width: size,
+      height: size,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style:
+            OutlinedButton.styleFrom(
+              shape: const CircleBorder(),
+              side: BorderSide(color: effectiveBorderColor),
+              backgroundColor: backgroundColor ?? colors?.primarySurface,
+            ).copyWith(
+              overlayColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return effectiveBorderColor.withValues(alpha: 0.20);
+                }
+                if (states.contains(WidgetState.hovered)) {
+                  return effectiveBorderColor.withValues(alpha: 0.15);
+                }
+                return Colors.transparent;
+              }),
             ),
-            width: iconSize,
-            height: iconSize,
+        child: Assets.images.onboarding.rightArrow.svg(
+          colorFilter: ColorFilter.mode(
+            effectiveIconColor,
+            BlendMode.srcIn,
           ),
+          width: iconSize,
+          height: iconSize,
         ),
       ),
     );
   }
-
-  static const double _disabledOpacity = 0.4;
 }
 
 abstract final class _Dimensions {
-  static const double mobileSize = 72;
-  static const double desktopSize = 96;
-  static const double mobileIconSize = 14;
-  static const double desktopIconSize = 20;
+  static const double mobileSize = 80;
+  static const double desktopSize = 140;
+  static const double mobileIconSize = 16;
+  static const double desktopIconSize = 21;
 }

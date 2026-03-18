@@ -164,6 +164,7 @@ class KickOffPage extends StatelessWidget {
       onPressed: () => _onNextPressed(context),
       borderColor: appColors.onPrimary,
       iconColor: appColors.onPrimary,
+      backgroundColor: appColors.primary,
     );
 
     return ResponsiveScaffold(
