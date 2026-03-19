@@ -45,7 +45,7 @@ void main() {
       final container = tester.widget<Container>(find.byType(Container).first);
       final decoration = container.decoration! as BoxDecoration;
 
-      expect(decoration.color, const Color(0xFFF7F6F7));
+      expect(decoration.color, LightThemeColors().surfaceVariant);
       expect(
         decoration.border,
         Border.all(color: Colors.transparent, width: 2),

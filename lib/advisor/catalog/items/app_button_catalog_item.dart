@@ -125,12 +125,15 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
-        return AppButton(
-          label: label ?? '',
-          variant: widget.variant,
-          size: widget.size,
-          isLoading: widget.isLoading || (_tapped && blocLoading),
-          onPressed: _tapped ? null : _onPressed,
+        return Padding(
+          padding: const EdgeInsets.only(top: Spacing.md),
+          child: AppButton(
+            label: label ?? '',
+            variant: widget.variant,
+            size: widget.size,
+            isLoading: widget.isLoading || (_tapped && blocLoading),
+            onPressed: _tapped ? null : _onPressed,
+          ),
         );
       },
     );

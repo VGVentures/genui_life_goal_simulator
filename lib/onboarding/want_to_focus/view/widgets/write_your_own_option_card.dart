@@ -43,15 +43,8 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
   @override
   Widget build(BuildContext context) {
     final themeOf = Theme.of(context);
-    final colorScheme = themeOf.colorScheme;
     final colorExtension = themeOf.extension<AppColors>();
-    final textTheme = themeOf.textTheme;
     final isActive = isEditing || _hasText;
-    final textSize = responsiveValue(
-      context,
-      mobile: _Dimensions.mobileTextSize,
-      desktop: _Dimensions.fontSize,
-    );
     final iconSize = responsiveValue(
       context,
       mobile: Spacing.sm,
@@ -59,7 +52,7 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
     );
 
     return Material(
-      color: Colors.transparent,
+      color: colorExtension?.onPrimary,
       borderRadius: BorderRadius.circular(Spacing.lg),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -69,16 +62,17 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
             _focusNode.requestFocus();
           }
         },
+        hoverColor: Colors.black.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(Spacing.lg),
         child: Ink(
           decoration: BoxDecoration(
             color: isActive
-                ? colorExtension?.primaryContainer
+                ? colorExtension?.primary.withValues(alpha: 0.1)
                 : colorExtension?.surfaceVariant,
             borderRadius: BorderRadius.circular(Spacing.lg),
             border: Border.all(
               color: isActive
-                  ? colorExtension?.primary ?? colorScheme.primary
+                  ? colorExtension?.primary ?? Colors.white
                   : Colors.transparent,
               width: _Dimensions.borderWidth,
             ),
@@ -105,18 +99,23 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     style:
                         responsiveValue<TextStyle>(
                           context,
-                          mobile: AppTextStyles.titleSmallDesktop,
+                          mobile: AppTextStyles.titleMediumMobile,
                           desktop: AppTextStyles.headlineLargeDesktop,
                         ).copyWith(
-                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                          color: colorExtension?.onSurface,
                         ),
                     decoration: InputDecoration.collapsed(
                       hintText: widget.label,
-                      hintStyle: textTheme.bodyLarge?.copyWith(
-                        fontSize: textSize,
-                        fontWeight: FontWeight.w400,
-                        color: colorExtension?.onSurfaceMuted,
-                      ),
+                      hintStyle:
+                          responsiveValue<TextStyle>(
+                            context,
+                            mobile: AppTextStyles.titleMediumMobile,
+                            desktop: AppTextStyles.headlineLargeDesktop,
+                          ).copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: colorExtension?.onSurfaceDisabled,
+                          ),
                     ),
                     onSubmitted: (value) {
                       setState(() => isEditing = false);
@@ -125,6 +124,7 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     onChanged: (value) {
                       widget.onChanged?.call(value);
                     },
+                    onTapUpOutside: (_) => setState(() => isEditing = false),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -135,24 +135,33 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                           style:
                               responsiveValue<TextStyle>(
                                 context,
-                                mobile: AppTextStyles.titleSmallDesktop,
+                                mobile: AppTextStyles.titleMediumMobile,
                                 desktop: AppTextStyles.headlineLargeDesktop,
                               ).copyWith(
-                                fontSize: textSize,
-                                fontWeight: _hasText
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                                color: colorScheme.onPrimaryContainer,
+                                fontWeight: FontWeight.w500,
+                                color: _hasText
+                                    ? colorExtension?.onSurface
+                                    : colorExtension?.onSurfaceVariant,
                               ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (!_hasText) ...[
-                        const SizedBox(width: Spacing.xs),
-                        Assets.images.onboarding.editPencil.image(
+                        SizedBox(
+                          width: responsiveValue(
+                            context,
+                            mobile: Spacing.xs,
+                            desktop: Spacing.md,
+                          ),
+                        ),
+                        Assets.images.onboarding.editPencil.svg(
                           width: iconSize,
                           height: iconSize,
+                          colorFilter: ColorFilter.mode(
+                            colorExtension?.onSurfaceVariant ?? Colors.black,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ],
                     ],
@@ -169,6 +178,4 @@ abstract final class _Dimensions {
   static const double borderWidth = 2;
   static const double horizontalPadding = 20;
   static const double verticalPadding = 44;
-  static const double fontSize = 24;
-  static const double mobileTextSize = 18;
 }

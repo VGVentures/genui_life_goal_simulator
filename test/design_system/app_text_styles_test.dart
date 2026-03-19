@@ -78,7 +78,7 @@ void main() {
 
     test('bodyLargeMobile has correct properties', () {
       const style = AppTextStyles.bodyLargeMobile;
-      expect(style.fontSize, 14);
+      expect(style.fontSize, 16);
       expect(style.fontWeight, FontWeight.w500);
       expect(style.letterSpacing, -0.15);
     });
