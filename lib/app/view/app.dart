@@ -1,8 +1,7 @@
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
-import 'package:wiredash/wiredash.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -14,22 +13,18 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wiredash(
-      projectId: 'gcn26-finance-app-j9k7f4b',
-      secret: 'p_iCQvLnrp18LEacxg6JYRtV5g-FbvfA',
-      child: MaterialApp(
-        themeMode: ThemeMode.light,
-        builder: (context, child) {
-          return Theme(
-            data: AppThemes.light.themeData.getThemeData(context),
-            child: child ?? const SizedBox.shrink(),
-          );
-        },
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: const <Locale>[Locale('en')],
-        navigatorObservers: navigatorObservers,
-        home: const _IntroPage(),
-      ),
+    return MaterialApp(
+      themeMode: ThemeMode.light,
+      builder: (context, child) {
+        return Theme(
+          data: AppThemes.light.themeData.getThemeData(context),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      navigatorObservers: navigatorObservers,
+      home: const _IntroPage(),
     );
   }
 }
