@@ -29,7 +29,9 @@ class _MetricCardCatalogPageState extends State<MetricCardCatalogPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MetricCardsLayout(
+            SizedBox(
+              width: 800,
+              child: MetricCardsLayout(
               cards: [
                 MetricCard(
                   label: 'Fixed costs',
@@ -66,6 +68,7 @@ class _MetricCardCatalogPageState extends State<MetricCardCatalogPage> {
                   onTap: () => _toggle(8),
                 ),
               ],
+            ),
             ),
           ],
         ),

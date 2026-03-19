@@ -275,7 +275,7 @@ class MetricCardsLayout extends StatelessWidget {
   const MetricCardsLayout({required this.cards, super.key});
 
   /// Cards to display.
-  final List<MetricCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +289,7 @@ class MetricCardsLayout extends StatelessWidget {
 class _DesktopMetricCardsLayout extends StatelessWidget {
   const _DesktopMetricCardsLayout({required this.cards});
 
-  final List<MetricCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +307,7 @@ class _DesktopMetricCardsLayout extends StatelessWidget {
 class _MobileMetricCardsLayout extends StatelessWidget {
   const _MobileMetricCardsLayout({required this.cards});
 
-  final List<MetricCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
