@@ -251,10 +251,10 @@ abstract class AppTextStyles {
     letterSpacing: -0.15,
   );
 
-  /// Body Large - Mobile: 14px, Medium, lineHeight: 20, letterSpacing: -0.15
+  /// Body Large - Mobile: 16px, Medium, lineHeight: 20, letterSpacing: -0.15
   static const TextStyle bodyLargeMobile = TextStyle(
     fontFamily: FontFamily.poppins,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
     height: 20 / 14,
     letterSpacing: -0.15,
