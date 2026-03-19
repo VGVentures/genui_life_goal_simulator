@@ -173,9 +173,9 @@ class $AssetsImagesOnboardingGen {
   AssetGenImage get editPencil =>
       const AssetGenImage('assets/images/onboarding/edit_pencil.png');
 
-  /// File path: assets/images/onboarding/right_arrow.png
-  AssetGenImage get rightArrow =>
-      const AssetGenImage('assets/images/onboarding/right_arrow.png');
+  /// File path: assets/images/onboarding/right_arrow.svg
+  SvgGenImage get rightArrow =>
+      const SvgGenImage('assets/images/onboarding/right_arrow.svg');
 
   /// File path: assets/images/onboarding/soft_star.svg
   SvgGenImage get softStar =>
