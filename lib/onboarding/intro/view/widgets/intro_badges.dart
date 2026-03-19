@@ -28,7 +28,7 @@ class IntroBadges extends StatelessWidget {
           offset: _yearOffset,
           child: Transform.rotate(
             angle: _yearAngle,
-            child: _buildYearPill(),
+            child: _buildYearPill(context),
           ),
         ),
         Transform.translate(
@@ -42,11 +42,11 @@ class IntroBadges extends StatelessWidget {
     );
   }
 
-  Widget _buildYearPill() {
+  Widget _buildYearPill(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 11),
-      decoration: const BoxDecoration(
-        color: Color(0xFF9DB6F8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).extension<AppColors>()?.primary,
         borderRadius: BorderRadius.all(Radius.circular(150)),
       ),
       child: Text(
