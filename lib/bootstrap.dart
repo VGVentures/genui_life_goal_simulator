@@ -1,13 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:feature_flags_repository/feature_flags_repository.dart';
-import 'package:finance_app/app/view/app.dart';
-import 'package:finance_app/app_check_debug.dart';
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
-import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
-import 'package:finance_app/feature_flag/active_feature_flags.dart';
-import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' show RiveNative;
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:vgv_genui_financial_advisor/app.dart';
+import 'package:vgv_genui_financial_advisor/app_check/app_check_debug.dart';
+import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/active_feature_flags.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/repository/feature_flags_repository.dart';
+import 'package:vgv_genui_financial_advisor/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
@@ -41,7 +40,6 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
-  required AnalyticsRepository Function() analyticsRepositoryFactory,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -56,13 +54,12 @@ Future<void> bootstrap({
     setAppCheckDebugToken(debugToken);
   }
 
-  await FirebaseAppCheck.instance.activate(
-    providerWeb: ReCaptchaV3Provider(
-      '6LcnMIgsAAAAAKTLZHdxUYRLTtOjr0fWa6RNezlI',
-    ),
-  );
-
-  final analyticsRepository = analyticsRepositoryFactory();
+  const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+  if (recaptchaSiteKey.isNotEmpty) {
+    await FirebaseAppCheck.instance.activate(
+      providerWeb: ReCaptchaV3Provider(recaptchaSiteKey),
+    );
+  }
 
   final streamingPrefs = await StreamingSharedPreferences.instance;
   final featureFlagsRepository = FeatureFlagsRepository(
@@ -84,16 +81,11 @@ Future<void> bootstrap({
         Provider<ErrorReportingRepository>.value(
           value: errorReportingRepository,
         ),
-        Provider<AnalyticsRepository>.value(
-          value: analyticsRepository,
-        ),
         Provider<FeatureFlagsRepository>.value(
           value: featureFlagsRepository,
         ),
       ],
-      child: App(
-        navigatorObservers: [analyticsRepository.navigatorObserver],
-      ),
+      child: const App(),
     ),
   );
 }

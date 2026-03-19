@@ -1,5 +1,5 @@
-import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// {@template pie_chart_catalog_page}
 /// A dev-menu page that showcases the [PieChartComponent] widget

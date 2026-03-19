@@ -1,8 +1,8 @@
-import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
-import 'package:finance_app/onboarding/pick_profile/view/pick_profile_view.dart';
-import 'package:finance_app/onboarding/pick_profile/view/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_page.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_view.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/widgets/profile_card.dart';
 
 import '../../../helpers/helpers.dart';
 

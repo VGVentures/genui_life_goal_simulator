@@ -1,7 +1,7 @@
-import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 Future<void> _pumpButton(WidgetTester tester, Widget widget) {
   return tester.pumpWidget(

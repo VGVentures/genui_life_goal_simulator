@@ -1,5 +1,5 @@
-import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 class TrustBadge extends StatelessWidget {
   const TrustBadge({

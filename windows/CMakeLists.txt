@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(finance_app LANGUAGES CXX)
+project(vgv_genui_financial_advisor LANGUAGES CXX)
 
-set(BINARY_NAME "finance_app")
+set(BINARY_NAME "vgv_genui_financial_advisor")
 
 cmake_policy(SET CMP0063 NEW)
 

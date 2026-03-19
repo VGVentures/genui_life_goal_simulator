@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0D03C85156D654A67CAFCD85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 812A1D731C51BF3183080018 /* GoogleService-Info.plist */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
@@ -92,7 +91,6 @@
 		4F9714FBF30E2914434D6B52 /* Pods-RunnerTests.profile-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile-staging.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile-staging.xcconfig"; sourceTree = "<group>"; };
 		6E1AE7E5C7FCAF6C08B24B0F /* Pods-Runner.release-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-production.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-production.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		812A1D731C51BF3183080018 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		9F1CF72403DC7B7FE4310A0A /* Pods-RunnerTests.debug-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug-production.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug-production.xcconfig"; sourceTree = "<group>"; };
 		A077F548D4DEF4D029D5CE7E /* Pods-Runner.debug-development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-development.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-development.xcconfig"; sourceTree = "<group>"; };
@@ -157,7 +155,6 @@
 				331C80D6294CF71000263BE5 /* RunnerTests */,
 				33CC10EE2044A3C60003C045 /* Products */,
 				D73912EC22F37F3D000D13A0 /* Frameworks */,
-				812A1D731C51BF3183080018 /* GoogleService-Info.plist */,
 				C1F37021E7A593C3D26EE1BE /* Pods */,
 			);
 			sourceTree = "<group>";
@@ -363,7 +360,6 @@
 				B55CDB8D2EECA409009268AC /* AppIcon-dev.icon in Resources */,
 				B55CDB8E2EECA409009268AC /* AppIcon.icon in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
-				0D03C85156D654A67CAFCD85 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,7 +522,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -541,7 +537,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -556,7 +552,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -864,7 +860,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.stg";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.stg";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -880,7 +876,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -963,7 +959,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.dev";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -979,7 +975,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -1055,7 +1051,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.dev";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1070,7 +1066,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -1146,7 +1142,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.stg";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.stg";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1161,7 +1157,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -1237,7 +1233,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.dev";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1252,7 +1248,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";
@@ -1328,7 +1324,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.stg";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.stg";
 				PRODUCT_NAME = "$(FLAVOR_APP_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1343,7 +1339,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.finance-app.RunnerTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.verygoodcore.vgv-genui-financial-advisor.RunnerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/my_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/my_app";

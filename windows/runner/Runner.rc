@@ -89,12 +89,12 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example.verygoodcore.finance-app" "\0"
-            VALUE "FileDescription", "finance_app" "\0"
+            VALUE "CompanyName", "com.example.verygoodcore.vgv-genui-financial-advisor" "\0"
+            VALUE "FileDescription", "vgv_genui_financial_advisor" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "finance_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example.verygoodcore.finance-app. All rights reserved." "\0"
-            VALUE "OriginalFilename", "finance_app.exe" "\0"
+            VALUE "InternalName", "vgv_genui_financial_advisor" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.example.verygoodcore.vgv-genui-financial-advisor. All rights reserved." "\0"
+            VALUE "OriginalFilename", "vgv_genui_financial_advisor.exe" "\0"
             VALUE "ProductName", "Finance App" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END

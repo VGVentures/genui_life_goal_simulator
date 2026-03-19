@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/models/focus_option.dart';
 
 part 'want_to_focus_state.dart';
 

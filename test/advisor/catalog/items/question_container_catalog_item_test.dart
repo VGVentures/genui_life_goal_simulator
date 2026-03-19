@@ -1,8 +1,8 @@
-import 'package:finance_app/advisor/catalog/items/question_container_catalog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/question_container_catalog_item.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 

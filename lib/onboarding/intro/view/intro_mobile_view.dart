@@ -1,7 +1,7 @@
-import 'package:finance_app/gen/assets.gen.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/widgets.dart';
 
 /// {@template intro_mobile_view}
 /// Mobile layout for the intro screen.

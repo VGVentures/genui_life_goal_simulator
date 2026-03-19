@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
 
 void main() {
   group(PickProfileState, () {

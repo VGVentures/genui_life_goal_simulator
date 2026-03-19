@@ -193,14 +193,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
-  code_assets:
-    dependency: transitive
-    description:
-      name: code_assets
-      sha256: "83ccdaa064c980b5596c35dd64a8d3ecc68620174ab9b90b6343b753aa721687"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   code_builder:
     dependency: transitive
     description:
@@ -323,22 +315,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.4"
-  device_info_plus:
-    dependency: transitive
-    description:
-      name: device_info_plus
-      sha256: "4df8babf73058181227e18b08e6ea3520cf5fc5d796888d33b7cb0f33f984b7c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "12.3.0"
-  device_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: device_info_plus_platform_interface
-      sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.3"
   diff_match_patch:
     dependency: transitive
     description:
@@ -371,13 +347,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.3"
-  feature_flags_repository:
-    dependency: "direct main"
-    description:
-      path: "packages/feature_flags_repository"
-      relative: true
-    source: path
-    version: "0.1.0+1"
   ffi:
     dependency: transitive
     description:
@@ -402,30 +371,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.0"
-  firebase_analytics:
-    dependency: "direct main"
-    description:
-      name: firebase_analytics
-      sha256: "8170273394694efdf567e7e30c26457ff346377a52eb679c278f97b36b786d70"
-      url: "https://pub.dev"
-    source: hosted
-    version: "12.1.3"
-  firebase_analytics_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_analytics_platform_interface
-      sha256: "2c25cd85f640a47fcc15e970a04a50470f0a4d0e76f23c5bc5ec93a3d48d8775"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.7"
-  firebase_analytics_web:
-    dependency: transitive
-    description:
-      name: firebase_analytics_web
-      sha256: e0eb2b21eccb18109af2c1d3154f9e69b45abf4816e3290a6251008e0503aca9
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.1+3"
   firebase_app_check:
     dependency: "direct main"
     description:
@@ -680,14 +625,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  hooks:
-    dependency: transitive
-    description:
-      name: hooks
-      sha256: "7a08a0d684cb3b8fb604b78455d5d352f502b68079f7b80b831c62220ab0a4f6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   html:
     dependency: transitive
     description:
@@ -752,14 +689,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  jni:
-    dependency: transitive
-    description:
-      name: jni
-      sha256: d2c361082d554d4593c3012e26f6b188f902acd291330f13d6427641a92b3da1
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.14.2"
   json_annotation:
     dependency: transitive
     description:
@@ -912,14 +841,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  mockito:
-    dependency: "direct dev"
-    description:
-      name: mockito
-      sha256: a45d1aa065b796922db7b9e7e7e45f921aed17adf3a8318a1f47097e7e695566
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.6.3"
   mocktail:
     dependency: "direct dev"
     description:
@@ -936,22 +857,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  nanoid2:
-    dependency: transitive
-    description:
-      name: nanoid2
-      sha256: "35b5048f836652a1d711db0d716bdee59fcaaa4c37792db8b3568da4f7feb2f9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
-  native_toolchain_c:
-    dependency: transitive
-    description:
-      name: native_toolchain_c
-      sha256: "89e83885ba09da5fdf2cdacc8002a712ca238c28b7f717910b34bcd27b0d03ac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.17.4"
   nested:
     dependency: transitive
     description:
@@ -968,14 +873,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  objective_c:
-    dependency: transitive
-    description:
-      name: objective_c
-      sha256: "100a1c87616ab6ed41ec263b083c0ef3261ee6cd1dc3b0f35f8ddfa4f996fe52"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.3.0"
   ollama_dart:
     dependency: transitive
     description:
@@ -1000,22 +897,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.0.0"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.1"
   pana:
     dependency: transitive
     description:
@@ -1040,30 +921,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  path_provider:
-    dependency: transitive
-    description:
-      name: path_provider
-      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.5"
-  path_provider_android:
-    dependency: transitive
-    description:
-      name: path_provider_android
-      sha256: f2c65e21139ce2c3dad46922be8272bb5963516045659e71bb16e151c93b580e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.22"
-  path_provider_foundation:
-    dependency: transitive
-    description:
-      name: path_provider_foundation
-      sha256: "2a376b7d6392d80cd3705782d2caa734ca4727776db0b6ec36ef3f1855197699"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.0"
   path_provider_linux:
     dependency: transitive
     description:
@@ -1192,6 +1049,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  rive:
+    dependency: "direct main"
+    description:
+      name: rive
+      sha256: "2d7f0b0dd6c8368c3e5a47d0a38ee68306896920aa665b5bf59e7c589a6d35a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.4"
+  rive_native:
+    dependency: transitive
+    description:
+      name: rive_native
+      sha256: fad6aac822340fa14a2cbcdc8cd064da4b4c74d22a5f6c827a59538d67f200e4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4"
   rxdart:
     dependency: "direct main"
     description:
@@ -1208,22 +1081,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
-  sentry:
-    dependency: transitive
-    description:
-      name: sentry
-      sha256: "605ad1f6f1ae5b72018cbe8fc20f490fa3bd53e58882e5579566776030d8c8c1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.14.0"
-  sentry_flutter:
-    dependency: "direct main"
-    description:
-      name: sentry_flutter
-      sha256: "7fd0fb80050c1f6a77ae185bda997a76d384326d6777cf5137a6c38952c4ac7d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.14.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1317,14 +1174,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      sha256: "1d562a3c1f713904ebbed50d2760217fd8a51ca170ac4b05b0db490699dbac17"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.0"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -1645,23 +1494,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
-  win32_registry:
-    dependency: transitive
-    description:
-      name: win32_registry
-      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  wiredash:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: dc5595a500b7e8419b2efe4889b5fc745582b493
-      resolved-ref: dc5595a500b7e8419b2efe4889b5fc745582b493
-      url: "https://github.com/brianegan/wiredash-sdk.git"
-    source: git
-    version: "2.6.0"
   xdg_directories:
     dependency: transitive
     description:
@@ -1688,4 +1520,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.11.0 <4.0.0"
-  flutter: ">=3.38.4 <4.0.0"
+  flutter: ">=3.41.4 <4.0.0"

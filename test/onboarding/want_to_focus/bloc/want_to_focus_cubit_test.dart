@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/onboarding/want_to_focus/bloc/want_to_focus_cubit.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/bloc/want_to_focus_cubit.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/models/focus_option.dart';
 
 void main() {
   group(WantToFocusCubit, () {

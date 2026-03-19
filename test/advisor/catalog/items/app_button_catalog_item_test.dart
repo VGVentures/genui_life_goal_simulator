@@ -1,17 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:finance_app/advisor/catalog/items/app_button_catalog_item.dart';
-import 'package:finance_app/chat/bloc/bloc.dart';
-import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/advisor.dart';
+import 'package:vgv_genui_financial_advisor/l10n/gen/app_localizations.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-class _MockChatBloc extends MockBloc<ChatEvent, ChatState>
-    implements ChatBloc {}
+class _MockAdvisorBloc extends MockBloc<AdvisorEvent, AdvisorState>
+    implements AdvisorBloc {}
 
 const _defaultAction = {
   'event': {'name': 'button_pressed'},
@@ -56,10 +55,10 @@ Future<void> _pump(
   Map<String, Object?> data, {
   void Function(UiEvent)? dispatchEvent,
 }) async {
-  final bloc = _MockChatBloc();
-  when(() => bloc.state).thenReturn(const ChatState());
+  final bloc = _MockAdvisorBloc();
+  when(() => bloc.state).thenReturn(const AdvisorState());
   await tester.pumpWidget(
-    BlocProvider<ChatBloc>.value(
+    BlocProvider<AdvisorBloc>.value(
       value: bloc,
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
