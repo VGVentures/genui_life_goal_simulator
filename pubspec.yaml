@@ -52,7 +52,7 @@ dependency_overrides:
       path: packages/genai_primitives
 
 dev_dependencies:
-  bloc_lint: ^0.3.7
+  bloc_lint: ^0.4.0
   bloc_test: ^10.0.0
   bloc_tools: ^0.1.0-dev.20
   build_runner: ^2.12.2
