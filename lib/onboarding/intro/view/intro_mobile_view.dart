@@ -108,11 +108,16 @@ class IntroMobileView extends StatelessWidget {
               height: 12,
             ),
           ),
+          const Positioned(
+            top: 420,
+            left: 0,
+            right: 0,
+            child: Center(child: IntroBadges()),
+          ),
           SafeArea(
             child: Column(
               children: [
                 const Spacer(),
-                const IntroBadges(),
                 const SizedBox(height: 55),
                 Row(
                   mainAxisSize: MainAxisSize.min,

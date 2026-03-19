@@ -20,51 +20,84 @@ class IntroBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 1.15,
-      child: Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Transform.translate(
-          offset: _yearOffset,
-          child: Transform.rotate(
-            angle: _yearAngle,
-            child: _buildYearPill(context),
-          ),
-        ),
-        Transform.translate(
-          offset: _genUiOffset,
-          child: Transform.rotate(
-            angle: _genUiAngle,
-            child: _buildGenUiPill(context),
-          ),
-        ),
-      ],
-    ),
+    return ResponsiveScaffold(
+      mobile: _buildBadges(
+        context,
+        textStyle: AppTextStyles.bodyLargeMobile,
+        yearHorizontalPadding: 30,
+        yearVerticalPadding: 10,
+      ),
+      desktop: _buildBadges(
+        context,
+        textStyle: AppTextStyles.bodyLargeMobile.copyWith(fontSize: 18),
+        yearVerticalPadding: 7,
+      ),
     );
   }
 
-  Widget _buildYearPill(BuildContext context) {
+  Widget _buildBadges(
+    BuildContext context, {
+    required TextStyle textStyle,
+    required double yearVerticalPadding,
+    double yearHorizontalPadding = 26,
+  }) {
+    return Transform.scale(
+      scale: 1.15,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Transform.translate(
+            offset: _yearOffset,
+            child: Transform.rotate(
+              angle: _yearAngle,
+              child: _buildYearPill(
+                context,
+                textStyle: textStyle,
+                verticalPadding: yearVerticalPadding,
+                horizontalPadding: yearHorizontalPadding,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: _genUiOffset,
+            child: Transform.rotate(
+              angle: _genUiAngle,
+              child: _buildGenUiPill(context, textStyle: textStyle),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildYearPill(
+    BuildContext context, {
+    required TextStyle textStyle,
+    required double verticalPadding,
+    double horizontalPadding = 26,
+  }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 7),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: verticalPadding,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).extension<AppColors>()?.primary,
-        borderRadius: BorderRadius.all(Radius.circular(150)),
+        borderRadius: const BorderRadius.all(Radius.circular(150)),
       ),
       child: Text(
         '2026',
-        style: AppTextStyles.bodyLargeMobile.copyWith(
-          fontSize: 18,
+        style: textStyle.copyWith(
           color: const Color(0xCC000000),
         ),
       ),
     );
   }
 
-  Widget _buildGenUiPill(BuildContext context) {
+  Widget _buildGenUiPill(BuildContext context, {required TextStyle textStyle}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(150)),
@@ -82,8 +115,7 @@ class IntroBadges extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             context.l10n.genUILabel,
-            style: AppTextStyles.bodyLargeMobile.copyWith(
-              fontSize: 18,
+            style: textStyle.copyWith(
               color: const Color(0xCC000000),
             ),
           ),
