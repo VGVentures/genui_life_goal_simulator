@@ -33,72 +33,82 @@ class KickOffPage extends StatelessWidget {
     required TextStyle descriptionStyle,
     required String descriptionText,
     Alignment alignment = Alignment.center,
+    double? descriptionWidth,
+    double trustBadgeTop = 5,
+    double trustBadgeIconSize = 30,
+    double? badgesToTitleGap,
   }) {
     return Align(
       alignment: alignment,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: KickOffValues.maxContentWidth,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: KickOffValues.badgesStackHeight,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    child: Transform.rotate(
-                      angle: -KickOffValues.badgeRotationAngleSmall,
-                      child: TrustBadge(
-                        text: l10n.notHardcodedBadgeText,
-                        backgroundColor: appColors.primaryStrong,
-                        textColor: Colors.white,
-                        textStyle: badgeLargeStyle,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 5,
-                    child: Transform.rotate(
-                      angle: KickOffValues.badgeRotationAngle,
-                      child: TrustBadge(
-                        text: l10n.trustBadgeText,
-                        backgroundColor: const Color(0xFFF0F0F0),
-                        textColor: appColors.onPrimaryContainer,
-                        icon: SvgPicture.asset(
-                          'assets/icons_kick_off/trust_icon.svg',
-                          width: 30,
-                          height: 30,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: KickOffValues.maxContentWidth,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: KickOffValues.badgesStackHeight,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: Transform.rotate(
+                          angle: -KickOffValues.badgeRotationAngleSmall,
+                          child: TrustBadge(
+                            text: l10n.notHardcodedBadgeText,
+                            backgroundColor: appColors.primaryStrong,
+                            textColor: Colors.white,
+                            textStyle: badgeLargeStyle,
+                          ),
                         ),
-                        textStyle: badgeMediumStyle,
                       ),
-                    ),
+                      Positioned(
+                        top: trustBadgeTop,
+                        child: Transform.rotate(
+                          angle: KickOffValues.badgeRotationAngle,
+                          child: TrustBadge(
+                            text: l10n.trustBadgeText,
+                            backgroundColor: const Color(0xFFF0F0F0),
+                            textColor: appColors.onPrimaryContainer,
+                            icon: SvgPicture.asset(
+                              'assets/icons_kick_off/trust_icon.svg',
+                              width: trustBadgeIconSize,
+                              height: trustBadgeIconSize,
+                            ),
+                            textStyle: badgeMediumStyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: badgesToTitleGap ?? KickOffValues.titleTopGap),
+                Text(
+                  l10n.kickOffTitle,
+                  style: titleStyle.copyWith(
+                    color: const Color(0xFFF9FAFB),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            const SizedBox(height: KickOffValues.titleTopGap),
-            Text(
-              l10n.kickOffTitle,
-              style: titleStyle.copyWith(
-                color: const Color(0xFFF9FAFB),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: KickOffValues.titleDescriptionGap),
-            Text(
+          ),
+          const SizedBox(height: KickOffValues.titleDescriptionGap),
+          SizedBox(
+            width: descriptionWidth,
+            child: Text(
               descriptionText,
-              style: descriptionStyle.copyWith(
-                color: const Color(0xFFF9FAFB),
-              ),
+              style: descriptionStyle,
               textAlign: TextAlign.center,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -114,12 +124,18 @@ class KickOffPage extends StatelessWidget {
       child: _buildBody(
         l10n: l10n,
         appColors: appColors,
-        badgeLargeStyle: AppTextStyles.titleLargeMobile,
-        badgeMediumStyle: AppTextStyles.titleMediumMobile,
-        titleStyle: AppTextStyles.displayLargeDesktop,
-        descriptionStyle: AppTextStyles.titleSmallDesktop,
-        descriptionText: l10n.kickOffDescriptionMobile,
+        badgeLargeStyle: AppTextStyles.bodyLargeMobile,
+        badgeMediumStyle: AppTextStyles.bodyMediumMobile,
+        titleStyle: AppTextStyles.displayLargeDesktop.copyWith(
+          color: appColors.onPrimary,
+        ),
+        descriptionStyle: AppTextStyles.titleMediumMobile.copyWith(
+          color: appColors.onInverseSurface,
+        ),
+        descriptionText: l10n.kickOffDescription,
         alignment: const Alignment(0, -0.2),
+        trustBadgeTop: 15,
+        trustBadgeIconSize: 24,
       ),
     );
 
@@ -133,15 +149,21 @@ class KickOffPage extends StatelessWidget {
         fontSize: 64,
         height: 80 / 64,
         letterSpacing: -1,
+        color: const Color(0xFFF9FAFB),
       ),
-      descriptionStyle: AppTextStyles.headlineLargeDesktop,
+      descriptionStyle: AppTextStyles.headlineLargeMobile.copyWith(
+        color: appColors.onInverseSurface,
+        fontWeight: FontWeight.w500,
+      ),
       descriptionText: l10n.kickOffDescription,
+      descriptionWidth: 1000,
+      badgesToTitleGap: 60,
     );
 
     final baseButton = OnboardingNextButton(
       onPressed: () => _onNextPressed(context),
-      borderColor: Colors.white,
-      iconColor: Colors.white,
+      borderColor: appColors.onPrimary,
+      iconColor: appColors.onPrimary,
     );
 
     return ResponsiveScaffold(
