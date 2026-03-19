@@ -89,6 +89,7 @@ class _TransactionListRow extends StatelessWidget {
       ),
       child: Row(
         spacing: Spacing.md,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
@@ -102,6 +103,8 @@ class _TransactionListRow extends StatelessWidget {
                 ),
                 Text(
                   item.description,
+                  softWrap: true,
+                  overflow: TextOverflow.clip,
                   style: textTheme.bodyMedium?.copyWith(
                     color: colors?.onSurfaceMuted,
                   ),
