@@ -6,9 +6,7 @@ Future<void> _pump(
   WidgetTester tester, {
   required String label,
   VoidCallback? onPressed,
-  double height = 80,
-  double fontSize = 24,
-  FontWeight fontWeight = FontWeight.w600,
+  double height = 48,
 }) {
   return tester.pumpWidget(
     MaterialApp(
@@ -17,8 +15,6 @@ Future<void> _pump(
           label: label,
           onPressed: onPressed,
           height: height,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
         ),
       ),
     ),

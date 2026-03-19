@@ -1,4 +1,4 @@
-import 'package:finance_app/feature_flag/widgets/dev_menu_drawer.dart';
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
@@ -33,20 +33,6 @@ class IntroDesktopView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      endDrawer: const DevMenuDrawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-                icon: const Icon(Icons.bug_report),
-              );
-            },
-          ),
-        ],
-      ),
       backgroundColor: _backgroundColor,
       body: Stack(
         fit: StackFit.expand,
@@ -167,14 +153,6 @@ class IntroDesktopView extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 290,
-            top: 500,
-            child: Assets.images.intro.softstar.svg(
-              width: 24,
-              height: 24,
-            ),
-          ),
-          Positioned(
             right: 150,
             top: 700,
             child: Assets.images.intro.star9.svg(
@@ -240,7 +218,13 @@ class IntroDesktopView extends StatelessWidget {
                                     bounds.height,
                                   ),
                                 ),
-                            child: const Text('VGV', style: _titleStyle),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('x ', style: _titleStyle),
+                                Text('VGV', style: _titleStyle),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -253,20 +237,17 @@ class IntroDesktopView extends StatelessWidget {
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Color(0xB3FFFFFF),
-                      fontSize: 32,
-                      fontWeight: FontWeight.w400,
+                    style: AppTextStyles.headlineMediumDesktop.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
                 const SizedBox(height: 48),
-                SizedBox(
-                  width: 400,
+                IntrinsicWidth(
                   child: GetStartedButton(
                     onPressed: onGetStarted,
-                    label: l10n.introGetStartedLabel.toUpperCase(),
+                    label: l10n.introGetStartedLabel,
                   ),
                 ),
               ],

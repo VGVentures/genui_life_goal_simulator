@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
@@ -121,7 +122,13 @@ class IntroMobileView extends StatelessWidget {
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       ),
-                      child: const Text('VGV', style: _titleStyle),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('x ', style: _titleStyle),
+                          Text('VGV', style: _titleStyle),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -131,25 +138,17 @@ class IntroMobileView extends StatelessWidget {
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Color(0xCCFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                      letterSpacing: -0.5,
+                    style: AppTextStyles.headlineMediumMobile.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
                 const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                IntrinsicWidth(
                   child: GetStartedButton(
                     onPressed: onGetStarted,
                     label: l10n.introGetStartedLabel,
-                    height: 56,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 const SizedBox(height: 32),

@@ -56,9 +56,9 @@
     "@genUILabel": {
         "description": "Etiqueta para el texto Gen UI"
     },
-    "introTitlePrefix": "Gen UI x ",
+    "introTitlePrefix": "Gen UI ",
     "@introTitlePrefix": {
-        "description": "Prefijo del título de la pantalla de introducción (antes del texto VGV con degradado)"
+        "description": "Prefijo del título de la pantalla de introducción (antes del texto x VGV con degradado)"
     },
     "introDescription": "Esta demo muestra cómo la UI Generativa transforma los productos financieros de paneles estáticos en experiencias adaptativas. La UI se adapta según objetivos, comportamiento y contexto.",
     "@introDescription": {
