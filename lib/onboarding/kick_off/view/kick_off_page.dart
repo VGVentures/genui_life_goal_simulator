@@ -132,7 +132,7 @@ class KickOffPage extends StatelessWidget {
         descriptionStyle: AppTextStyles.titleMediumMobile.copyWith(
           color: appColors.onInverseSurface,
         ),
-        descriptionText: l10n.kickOffDescriptionMobile,
+        descriptionText: l10n.kickOffDescription,
         alignment: const Alignment(0, -0.2),
         trustBadgeTop: 15,
         trustBadgeIconSize: 24,

@@ -100,10 +100,6 @@
     "@kickOffDescription": {
         "description": "Description text on the KickOff onboarding page (desktop)"
     },
-    "kickOffDescriptionMobile": "For this demo, we're using VGV\nFinances as our hypothetical app.\nWe've set up two user profiles—\nchoose one, set your preferences, and watch Gen UI build the experience\naround you in real time.",
-    "@kickOffDescriptionMobile": {
-        "description": "Description text on the KickOff onboarding page (mobile)"
-    },
     "trustBadgeText": "You can trust us",
     "@trustBadgeText": {
         "description": "Text for the trust badge on the KickOff page"
