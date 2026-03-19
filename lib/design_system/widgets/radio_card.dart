@@ -32,57 +32,98 @@ class RadioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _RadioCardContent(
+      label: label,
+      isSelected: isSelected,
+      onTap: onTap,
+    );
+  }
+}
+
+class _RadioCardContent extends StatefulWidget {
+  const _RadioCardContent({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  State<_RadioCardContent> createState() => _RadioCardContentState();
+}
+
+class _RadioCardContentState extends State<_RadioCardContent> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     final themeOf = Theme.of(context);
     final colorExtension = themeOf.extension<AppColors>();
     final textTheme = themeOf.textTheme;
 
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(Spacing.xs),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
+    final Color backgroundColor;
+    final Color borderColor;
+
+    if (widget.isSelected) {
+      backgroundColor = colorExtension?.primaryContainer ?? Colors.transparent;
+      borderColor = colorExtension?.primary ?? Colors.transparent;
+    } else if (_isHovered) {
+      backgroundColor = Color.alphaBlend(
+        colorExtension?.primary.withValues(alpha: 0.05) ?? Colors.transparent,
+        colorExtension?.surfaceVariant ?? Colors.white,
+      );
+      borderColor = colorExtension?.outlineVariant ?? Colors.transparent;
+    } else {
+      backgroundColor = colorExtension?.surfaceVariant ?? Colors.transparent;
+      borderColor = colorExtension?.surfaceVariant ?? Colors.transparent;
+    }
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(Spacing.xs),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: isSelected
-                ? colorExtension?.primaryContainer
-                : colorExtension?.onPrimary,
-            borderRadius: BorderRadius.circular(Spacing.xs),
-            border: Border.all(
-              color: isSelected
-                  ? colorExtension?.primary ?? Colors.transparent
-                  : Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(Spacing.xs),
+          child: Ink(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(Spacing.xs),
+              border: Border.all(color: borderColor),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: Spacing.sm,
-              horizontal: Spacing.sm,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  label,
-                  style: textTheme.labelLarge?.copyWith(
-                    color: colorExtension?.onSurface,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: Spacing.sm,
+                horizontal: Spacing.sm,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    widget.label,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: colorExtension?.onSurface,
+                    ),
                   ),
-                ),
-                const SizedBox(height: Spacing.md),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IgnorePointer(
+                  const SizedBox(height: Spacing.md),
+                  Align(
+                    alignment: Alignment.centerLeft,
                     child: RadioGroup(
-                      groupValue: isSelected,
-                      onChanged: (_) {},
+                      groupValue: widget.isSelected,
+                      onChanged: (_) => widget.onTap(),
                       child: const Radio(
                         value: true,
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
