@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/chat/view/chat_page.dart';
-import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/want_to_focus.dart';
-import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vgv_genui_financial_advisor/advisor/view/advisor_page.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/want_to_focus.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/widgets/widgets.dart';
 
 class WantToFocusPage extends StatelessWidget {
   const WantToFocusPage({required this.profileType, super.key});
@@ -48,7 +48,7 @@ class WantToFocusPage extends StatelessWidget {
                     unawaited(
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute<void>(
-                          builder: (_) => ChatPage(
+                          builder: (_) => AdvisorPage(
                             profileType: profileType,
                             focusOptions: state.selectedOptions,
                             customOption: state.customOption,

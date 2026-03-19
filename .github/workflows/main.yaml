@@ -1,4 +1,4 @@
-name: finance_app
+name: vgv_genui_financial_advisor
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,16 +41,10 @@ jobs:
   verify_and_test:
     name: Verify and Test
     needs: setup
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - .
-          - packages/feature_flags_repository
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
-      working_directory: ${{ matrix.package }}
+      working_directory: .
       run_bloc_lint: true
       min_coverage: 85
 
@@ -58,15 +52,9 @@ jobs:
     name: License Check
     needs: setup
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - .
-          - packages/feature_flags_repository
     defaults:
       run:
-        working-directory: ${{ matrix.package }}
+        working-directory: .
     steps:
       - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
@@ -85,8 +73,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Generate Firebase config
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+      - name: Verify Firebase config
+        run: |
+          echo "--- firebase_options.dart (first 3 lines) ---"
+          head -3 lib/firebase_options.dart
+          echo "--- firebase.json ---"
+          cat firebase.json
       - run: flutter pub get
-      - run: flutter build web --wasm --target lib/main_production.dart
+      - run: flutter build web --wasm --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -104,8 +102,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Generate Firebase config
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+      - name: Verify Firebase config
+        run: |
+          echo "--- firebase_options.dart (first 3 lines) ---"
+          head -3 lib/firebase_options.dart
+          echo "--- firebase.json ---"
+          cat firebase.json
       - run: flutter pub get
-      - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }}
+      - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }} --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -131,13 +139,16 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
 
+      - name: Generate Firebase config
+        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+
       - run: flutter pub get
 
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$GITHUB_WORKSPACE/release.jks"
 
       - name: Build release APK
-        run: flutter build apk --release --flavor production --target lib/main_production.dart
+        run: flutter build apk --release --flavor production --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}

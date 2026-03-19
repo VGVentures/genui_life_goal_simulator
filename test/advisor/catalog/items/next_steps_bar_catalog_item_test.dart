@@ -1,5 +1,5 @@
-import 'package:finance_app/advisor/catalog/items/next_steps_bar_catalog_item.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/next_steps_bar_catalog_item.dart';
 
 void main() {
   group(nextStepsBarItem, () {

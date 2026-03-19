@@ -1,9 +1,9 @@
-import 'package:finance_app/advisor/catalog/items/ranked_table.dart';
-import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/ranked_table.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 

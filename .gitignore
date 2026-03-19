@@ -121,3 +121,9 @@ app.*.map.json
 lib/l10n/gen/
 
 .claude/*
+
+# Local environment variables (symlinked by tool/setup_local.dart)
+.env
+
+# Firebase config (generated at build time / via flutterfire configure)
+firebase.json

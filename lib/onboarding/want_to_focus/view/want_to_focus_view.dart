@@ -1,8 +1,8 @@
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
-import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';
 
 class WantToFocusView extends StatelessWidget {
   const WantToFocusView({super.key});

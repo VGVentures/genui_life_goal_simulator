@@ -1,7 +1,7 @@
-import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 final _schema = S.object(
   description:

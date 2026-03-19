@@ -1,8 +1,8 @@
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/dev_menu/dev_menu.dart';
-import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
 Future<void> _pumpPage(WidgetTester tester) {
   return tester.pumpWidget(

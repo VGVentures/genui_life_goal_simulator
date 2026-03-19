@@ -1,5 +1,5 @@
-import 'package:finance_app/onboarding/kick_off/view/kick_off_values.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/kick_off_values.dart';
 
 class MobileKickOffView extends StatelessWidget {
   const MobileKickOffView({

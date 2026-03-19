@@ -1,10 +1,10 @@
-import 'package:finance_app/advisor/catalog/items/comparison_table_catalog_item.dart';
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vgv_genui_financial_advisor/advisor/catalog/items/comparison_table_catalog_item.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/l10n/gen/app_localizations.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 

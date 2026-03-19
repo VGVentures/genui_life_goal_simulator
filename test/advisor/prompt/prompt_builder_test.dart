@@ -1,7 +1,7 @@
-import 'package:finance_app/advisor/prompt/prompt_builder.dart';
-import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
-import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vgv_genui_financial_advisor/advisor/prompt/prompt.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/models/focus_option.dart';
 
 void main() {
   group('PromptBuilder', () {

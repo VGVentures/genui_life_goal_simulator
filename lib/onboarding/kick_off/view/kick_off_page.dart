@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/kick_off/view/desktop_kick_off_view.dart';
-import 'package:finance_app/onboarding/kick_off/view/kick_off_values.dart';
-import 'package:finance_app/onboarding/kick_off/view/mobile_kick_off_view.dart';
-import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
-import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
-import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/desktop_kick_off_view.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/kick_off_values.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/mobile_kick_off_view.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/widgets/trust_badge.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_page.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/widgets/widgets.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});

@@ -1,8 +1,8 @@
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/gen/assets.gen.dart';
-import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
+import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/widgets.dart';
 
 /// {@template intro_desktop_view}
 /// Desktop layout for the intro screen.
@@ -233,7 +233,7 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 800,
+                  width: 650,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
@@ -245,11 +245,11 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 48),
                 SizedBox(
-                  width: 230,
+                  width: 400,
                   child: GetStartedButton(
                     onPressed: onGetStarted,
                     label: l10n.introGetStartedLabel,
-                    height: 50,
+                    height: 80,
                   ),
                 ),
               ],
