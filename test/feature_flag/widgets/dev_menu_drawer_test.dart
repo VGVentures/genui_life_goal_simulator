@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:feature_flags_repository/feature_flags_repository.dart';
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/dev_menu/dev_menu.dart';
-import 'package:finance_app/feature_flag/widgets/dev_menu_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
+import 'package:vgv_genui_financial_advisor/feature_flags/feature_flags.dart';
 
 class _MockFeatureFlagsRepository extends Mock
     implements FeatureFlagsRepository {}
