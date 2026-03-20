@@ -52,19 +52,19 @@
     "@whatWouldYouLikeToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
     },
-    "genUILabel": "Gen UI",
+    "genUILabel": "GenUI",
     "@genUILabel": {
         "description": "Label for the Gen UI text"
     },
-    "introTitlePrefix": "Gen UI x ",
+    "introTitlePrefix": "GenUI ",
     "@introTitlePrefix": {
-        "description": "Prefix of the intro screen title (before the gradient VGV text)"
+        "description": "Prefix of the intro screen title (before the gradient x VGV text)"
     },
     "introDescription": "This demo shows how Generative UI transforms financial products from static dashboards into adaptive experiences. The UI reshapes itself based on goals, behavior, and context.",
     "@introDescription": {
         "description": "Description text on the intro screen"
     },
-    "introGetStartedLabel": "Get started",
+    "introGetStartedLabel": "Get Started",
     "@introGetStartedLabel": {
         "description": "Label for the get started button on the intro screen"
     },

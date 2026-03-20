@@ -66,8 +66,11 @@ class OnboardingNextButton extends StatelessWidget {
                   return Colors.transparent;
                 }),
               ),
-          child: Assets.images.onboarding.rightArrow.image(
-            color: effectiveIconColor,
+          child: Assets.images.onboarding.rightArrow.svg(
+            colorFilter: ColorFilter.mode(
+              effectiveIconColor,
+              BlendMode.srcIn,
+            ),
             width: iconSize,
             height: iconSize,
           ),

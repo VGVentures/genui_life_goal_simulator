@@ -101,8 +101,6 @@ class _ActionItemInfo extends StatelessWidget {
           style: textTheme.titleSmall?.copyWith(
             color: colors?.onSurface ?? _ActionItemColors.title,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
         Text(
@@ -110,8 +108,6 @@ class _ActionItemInfo extends StatelessWidget {
           style: textTheme.bodyMedium?.copyWith(
             color: colors?.onSurfaceVariant ?? _ActionItemColors.subtitle,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

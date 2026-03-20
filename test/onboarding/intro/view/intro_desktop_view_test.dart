@@ -29,7 +29,7 @@ void main() {
         await _pump(tester);
         await tester.pumpAndSettle();
 
-        expect(find.text('Gen UI x '), findsOneWidget);
+        expect(find.text('GenUI '), findsOneWidget);
       });
 
       testWidgets('VGV gradient text', (tester) async {
@@ -65,7 +65,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(GetStartedButton), findsOneWidget);
-        expect(find.text('GET STARTED'), findsOneWidget);
+        expect(find.text('Get Started'), findsOneWidget);
       });
     });
 
