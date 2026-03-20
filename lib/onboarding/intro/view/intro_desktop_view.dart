@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/view/widgets/dev_menu_drawer.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/widgets.dart';
@@ -33,20 +33,6 @@ class IntroDesktopView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      endDrawer: const DevMenuDrawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-                icon: const Icon(Icons.bug_report),
-              );
-            },
-          ),
-        ],
-      ),
       backgroundColor: _backgroundColor,
       body: Stack(
         fit: StackFit.expand,
@@ -167,14 +153,6 @@ class IntroDesktopView extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 290,
-            top: 500,
-            child: Assets.images.intro.softstar.svg(
-              width: 24,
-              height: 24,
-            ),
-          ),
-          Positioned(
             right: 150,
             top: 700,
             child: Assets.images.intro.star9.svg(
@@ -214,12 +192,17 @@ class IntroDesktopView extends StatelessWidget {
               height: 10,
             ),
           ),
-          Center(
+          const Positioned(
+            top: 220,
+            left: 0,
+            right: 0,
+            child: Center(child: IntroBadges()),
+          ),
+          Align(
+            alignment: const Alignment(0, 0.3),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const IntroBadges(),
-                const SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: SizedBox(
@@ -240,7 +223,13 @@ class IntroDesktopView extends StatelessWidget {
                                     bounds.height,
                                   ),
                                 ),
-                            child: const Text('VGV', style: _titleStyle),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('x ', style: _titleStyle),
+                                Text('VGV', style: _titleStyle),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -249,24 +238,24 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 1000,
+                  width: 970,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Color(0xB3FFFFFF),
-                      fontSize: 32,
+                    style: AppTextStyles.headlineLargeDesktop.copyWith(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
                 const SizedBox(height: 48),
                 SizedBox(
-                  width: 400,
+                  width: 280,
                   child: GetStartedButton(
                     onPressed: onGetStarted,
-                    label: l10n.introGetStartedLabel.toUpperCase(),
+                    label: l10n.introGetStartedLabel,
+                    height: 64,
                   ),
                 ),
               ],

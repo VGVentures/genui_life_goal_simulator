@@ -1,38 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 /// {@template get_started_button}
 /// A gradient pill button used on the intro screen.
 ///
-/// Wrap with a [SizedBox] to control the width.
 /// {@endtemplate}
 class GetStartedButton extends StatelessWidget {
   /// {@macro get_started_button}
   const GetStartedButton({
     required this.onPressed,
-    this.label = 'Get started',
-    this.height = 80,
-    this.fontSize = 24,
-    this.fontWeight = FontWeight.w600,
+    this.label = 'Get Started',
+    this.height = 65,
     super.key,
   });
 
   /// Called when the button is tapped.
   final VoidCallback? onPressed;
 
-  /// Button label text. Defaults to `'Get started'`.
+  /// Button label text. Defaults to `'Get Started'`.
   final String label;
 
-  /// Button height. Defaults to `80`.
+  /// Button height. Defaults to `48`.
   final double height;
 
-  /// Font size. Defaults to `24`.
-  final double fontSize;
-
-  /// Font weight. Defaults to [FontWeight.w600].
-  final FontWeight fontWeight;
-
   static const _gradient = LinearGradient(
-    colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
+    colors: [Color.fromRGBO(36, 97, 235, 1), Color(0xFFD4C6FB)],
   );
 
   @override
@@ -48,17 +40,33 @@ class GetStartedButton extends StatelessWidget {
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: onPressed,
+          overlayColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return Colors.black.withValues(alpha: 0.2);
+            }
+            if (states.contains(WidgetState.pressed)) {
+              return Colors.black.withValues(alpha: 0.3);
+            }
+            return null;
+          }),
           child: SizedBox(
             height: height,
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontSize: fontSize,
-                  fontWeight: fontWeight,
-                  height: 1.5,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 70),
+              child: Center(
+                child: ResponsiveScaffold(
+                  mobile: Text(
+                    label,
+                    style: AppTextStyles.labelLargeMobile.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  desktop: Text(
+                    label,
+                    style: AppTextStyles.labelLargeDesktop.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
