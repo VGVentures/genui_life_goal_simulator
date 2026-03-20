@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/write_your_own_option_card.dart';
@@ -31,7 +32,7 @@ void main() {
           find.text('Write your own...'),
           findsOneWidget,
         );
-        expect(find.byType(Image), findsOneWidget);
+        expect(find.byType(SvgPicture), findsOneWidget);
       },
     );
 
@@ -71,7 +72,7 @@ void main() {
 
         expect(find.byType(TextField), findsNothing);
         expect(find.text('my goal'), findsOneWidget);
-        expect(find.byType(Image), findsNothing);
+        expect(find.byType(SvgPicture), findsNothing);
       },
     );
 

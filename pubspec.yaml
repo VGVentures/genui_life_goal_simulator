@@ -23,7 +23,7 @@ dependencies:
   firebase_ai: ^3.9.0
   firebase_app_check: ^0.4.1+4
   firebase_core: ^4.5.0
-  fl_chart: ^1.1.1
+  fl_chart: ^1.2.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -52,10 +52,10 @@ dependency_overrides:
       path: packages/genai_primitives
 
 dev_dependencies:
-  bloc_lint: ^0.3.7
+  bloc_lint: ^0.4.0
   bloc_test: ^10.0.0
   bloc_tools: ^0.1.0-dev.20
-  build_runner: ^2.12.2
+  build_runner: ^2.13.0
   flutter_gen_runner: ^5.13.0
   flutter_test:
     sdk: flutter
