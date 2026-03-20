@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_page.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_view.dart';
@@ -45,8 +46,8 @@ void main() {
 
       await tester.pumpApp(const PickProfilePage());
 
-      // Find Image widgets (cards have star icons, fab has Next image)
-      expect(find.byType(Image), findsWidgets);
+      // Find SvgPicture widgets (cards have star icons, fab has Next arrow)
+      expect(find.byType(SvgPicture), findsWidgets);
     });
 
     testWidgets('can select a profile card', (tester) async {

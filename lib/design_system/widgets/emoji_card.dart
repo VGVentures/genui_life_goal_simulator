@@ -57,7 +57,7 @@ class EmojiCard extends StatelessWidget {
   }
 }
 
-class _EmojiCardContent extends StatelessWidget {
+class _EmojiCardContent extends StatefulWidget {
   const _EmojiCardContent({
     required this.emoji,
     required this.label,
@@ -69,46 +69,64 @@ class _EmojiCardContent extends StatelessWidget {
   final bool isSelected;
 
   @override
+  State<_EmojiCardContent> createState() => _EmojiCardContentState();
+}
+
+class _EmojiCardContentState extends State<_EmojiCardContent> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>();
     final textTheme = Theme.of(context).textTheme;
 
-    final backgroundColor = isSelected
+    final backgroundColor = widget.isSelected
         ? (colors?.primaryContainer ?? _EmojiCardColors.selectedBackground)
-        : (colors?.surface ?? _EmojiCardColors.background);
+        : _isHovered
+        ? Color.alphaBlend(
+            colors?.primary.withValues(alpha: 0.05) ?? Colors.transparent,
+            colors?.surfaceVariant ?? Colors.white,
+          )
+        : (colors?.surfaceVariant ?? _EmojiCardColors.background);
 
-    final borderColor = isSelected
+    final borderColor = widget.isSelected
         ? (colors?.primary ?? _EmojiCardColors.selectedBorder)
+        : _isHovered
+        ? (colors?.outlineVariant ?? _EmojiCardColors.border)
         : _EmojiCardColors.border;
 
-    return Container(
-      padding: const EdgeInsets.all(Spacing.md),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-        border: Border.all(
-          color: borderColor,
-          width: _Dimensions.borderWidth,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Container(
+        padding: const EdgeInsets.all(Spacing.md),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+          border: Border.all(
+            color: borderColor,
+            width: _Dimensions.borderWidth,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: _Dimensions.emojiSize),
-          ),
-          const SizedBox(height: Spacing.xs),
-          Text(
-            label,
-            style: textTheme.labelLarge?.copyWith(
-              color: colors?.onSurface ?? _EmojiCardColors.label,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.emoji,
+              style: const TextStyle(fontSize: _Dimensions.emojiSize),
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            const SizedBox(height: Spacing.xs),
+            Text(
+              widget.label,
+              style: textTheme.labelLarge?.copyWith(
+                color: colors?.onSurface ?? _EmojiCardColors.label,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

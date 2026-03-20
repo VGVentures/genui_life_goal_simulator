@@ -52,13 +52,13 @@
     "@whatWouldYouLikeToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
     },
-    "genUILabel": "Gen UI",
+    "genUILabel": "GenUI",
     "@genUILabel": {
         "description": "Etiqueta para el texto Gen UI"
     },
-    "introTitlePrefix": "Gen UI x ",
+    "introTitlePrefix": "GenUI ",
     "@introTitlePrefix": {
-        "description": "Prefijo del título de la pantalla de introducción (antes del texto VGV con degradado)"
+        "description": "Prefijo del título de la pantalla de introducción (antes del texto x VGV con degradado)"
     },
     "introDescription": "Esta demo muestra cómo la UI Generativa transforma los productos financieros de paneles estáticos en experiencias adaptativas. La UI se adapta según objetivos, comportamiento y contexto.",
     "@introDescription": {
@@ -99,10 +99,6 @@
     "kickOffDescription": "Para esta demo, estamos usando VGV Finances como nuestra aplicación hipotética. Hemos configurado dos perfiles de usuario — elige uno, establece tus preferencias y observa cómo Gen UI construye la experiencia a tu alrededor en tiempo real.",
     "@kickOffDescription": {
         "description": "Texto de descripción en la página de onboarding KickOff"
-    },
-    "kickOffDescriptionMobile": "Estamos usando VGV Finances como nuestra aplicación hipotética.\nHemos configurado dos perfiles de usuario, elige uno, establece tus preferencias y observa cómo Gen UI construye la experiencia en tiempo real.",
-    "@kickOffDescriptionMobile": {
-        "description": "Texto de descripción en la página de onboarding KickOff (móvil)"
     },
     "trustBadgeText": "Puedes confiar en nosotros",
     "@trustBadgeText": {

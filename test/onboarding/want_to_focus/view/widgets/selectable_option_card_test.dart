@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/selectable_option_card.dart';
@@ -36,9 +37,9 @@ void main() {
         );
 
         expect(find.text('Option 1'), findsOneWidget);
-        expect(find.byType(Image), findsOneWidget);
+        expect(find.byType(SvgPicture), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
-        expect(text.style?.fontWeight, FontWeight.w600);
+        expect(text.style?.fontWeight, FontWeight.w500);
         expect(text.style?.fontSize, 32);
       },
     );
@@ -56,9 +57,9 @@ void main() {
         );
 
         expect(find.text('Option 1'), findsOneWidget);
-        expect(find.byType(Image), findsNothing);
+        expect(find.byType(SvgPicture), findsNothing);
         final text = tester.widget<Text>(find.text('Option 1'));
-        expect(text.style?.fontWeight, FontWeight.w400);
+        expect(text.style?.fontWeight, FontWeight.w500);
         expect(text.style?.fontSize, 32);
       },
     );
@@ -77,9 +78,9 @@ void main() {
           size: const Size(400, 800),
         );
 
-        expect(find.byType(Image), findsOneWidget);
+        expect(find.byType(SvgPicture), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
-        expect(text.style?.fontSize, 16);
+        expect(text.style?.fontSize, 18);
       },
     );
 

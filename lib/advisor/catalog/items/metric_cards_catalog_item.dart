@@ -92,11 +92,7 @@ final metricCardsItem = CatalogItem(
       );
     }).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: Spacing.md,
-      children: cards,
-    );
+    return MetricCardsLayout(cards: cards);
   },
 );
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/widgets.dart';
@@ -40,7 +41,7 @@ class IntroMobileView extends StatelessWidget {
             left: 0,
             right: 0,
             child: Assets.images.intro.waveline3.svg(
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fill,
             ),
           ),
           Positioned(
@@ -107,12 +108,17 @@ class IntroMobileView extends StatelessWidget {
               height: 12,
             ),
           ),
+          const Positioned(
+            top: 420,
+            left: 0,
+            right: 0,
+            child: Center(child: IntroBadges()),
+          ),
           SafeArea(
             child: Column(
               children: [
-                const Spacer(flex: 3),
-                const IntroBadges(),
-                const SizedBox(height: 24),
+                const Spacer(),
+                const SizedBox(height: 55),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -121,7 +127,13 @@ class IntroMobileView extends StatelessWidget {
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       ),
-                      child: const Text('VGV', style: _titleStyle),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('x ', style: _titleStyle),
+                          Text('VGV', style: _titleStyle),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -131,25 +143,17 @@ class IntroMobileView extends StatelessWidget {
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Color(0xCCFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                      letterSpacing: -0.5,
+                    style: AppTextStyles.titleMediumMobile.copyWith(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: Spacing.xxl),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
                   child: GetStartedButton(
                     onPressed: onGetStarted,
                     label: l10n.introGetStartedLabel,
-                    height: 56,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 const SizedBox(height: 32),
