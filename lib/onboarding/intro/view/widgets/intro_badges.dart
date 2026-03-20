@@ -1,6 +1,7 @@
 import 'dart:math' show pi;
 
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 
@@ -19,50 +20,84 @@ class IntroBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Transform.translate(
-          offset: _yearOffset,
-          child: Transform.rotate(
-            angle: _yearAngle,
-            child: _buildYearPill(),
-          ),
-        ),
-        Transform.translate(
-          offset: _genUiOffset,
-          child: Transform.rotate(
-            angle: _genUiAngle,
-            child: _buildGenUiPill(context),
-          ),
-        ),
-      ],
+    return ResponsiveScaffold(
+      mobile: _buildBadges(
+        context,
+        textStyle: AppTextStyles.bodyLargeMobile,
+        yearHorizontalPadding: 30,
+        yearVerticalPadding: 10,
+      ),
+      desktop: _buildBadges(
+        context,
+        textStyle: AppTextStyles.bodyLargeMobile.copyWith(fontSize: 18),
+        yearVerticalPadding: 7,
+      ),
     );
   }
 
-  Widget _buildYearPill() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 11),
-      decoration: const BoxDecoration(
-        color: Color(0xFF9DB6F8),
-        borderRadius: BorderRadius.all(Radius.circular(150)),
+  Widget _buildBadges(
+    BuildContext context, {
+    required TextStyle textStyle,
+    required double yearVerticalPadding,
+    double yearHorizontalPadding = 26,
+  }) {
+    return Transform.scale(
+      scale: 1.15,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Transform.translate(
+            offset: _yearOffset,
+            child: Transform.rotate(
+              angle: _yearAngle,
+              child: _buildYearPill(
+                context,
+                textStyle: textStyle,
+                verticalPadding: yearVerticalPadding,
+                horizontalPadding: yearHorizontalPadding,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: _genUiOffset,
+            child: Transform.rotate(
+              angle: _genUiAngle,
+              child: _buildGenUiPill(context, textStyle: textStyle),
+            ),
+          ),
+        ],
       ),
-      child: const Text(
+    );
+  }
+
+  Widget _buildYearPill(
+    BuildContext context, {
+    required TextStyle textStyle,
+    required double verticalPadding,
+    double horizontalPadding = 26,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: verticalPadding,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).extension<AppColors>()?.primary,
+        borderRadius: const BorderRadius.all(Radius.circular(150)),
+      ),
+      child: Text(
         '2026',
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          color: Color(0xCC000000),
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+        style: textStyle.copyWith(
+          color: const Color(0xCC000000),
         ),
       ),
     );
   }
 
-  Widget _buildGenUiPill(BuildContext context) {
+  Widget _buildGenUiPill(BuildContext context, {required TextStyle textStyle}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(150)),
@@ -70,18 +105,18 @@ class IntroBadges extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Assets.images.intro.softstargradient.svg(
-            width: 22,
-            height: 22,
+          Transform.rotate(
+            angle: -0.3,
+            child: Assets.images.intro.softstargradient.svg(
+              width: 28,
+              height: 28,
+            ),
           ),
           const SizedBox(width: 6),
           Text(
             context.l10n.genUILabel,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              color: Color(0xCC000000),
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            style: textStyle.copyWith(
+              color: const Color(0xCC000000),
             ),
           ),
         ],

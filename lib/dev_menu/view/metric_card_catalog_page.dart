@@ -29,43 +29,46 @@ class _MetricCardCatalogPageState extends State<MetricCardCatalogPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MetricCardsLayout(
-              cards: [
-                MetricCard(
-                  label: 'Fixed costs',
-                  value: r'$4,319',
-                  delta: r'$4,319',
-                  deltaDirection: MetricDeltaDirection.negative,
-                  subtitle: 'vs last month',
-                  isSelected: _selected.contains(5),
-                  onTap: () => _toggle(5),
-                ),
-                MetricCard(
-                  label: '% of income',
-                  value: r'$45%',
-                  delta: '+1.2%',
-                  deltaDirection: MetricDeltaDirection.negative,
-                  subtitle: 'benchmark 38%',
-                  isSelected: _selected.contains(6),
-                  onTap: () => _toggle(6),
-                ),
-                MetricCard(
-                  label: 'Negotiable',
-                  value: r'$645',
-                  delta: '+12%',
-                  deltaDirection: MetricDeltaDirection.positive,
-                  subtitle: r'+$40 above 3mo avg',
-                  isSelected: _selected.contains(7),
-                  onTap: () => _toggle(7),
-                ),
-                MetricCard(
-                  label: 'Potential Savings',
-                  value: r'$94/mo',
-                  subtitle: 'vs benchmarks',
-                  isSelected: _selected.contains(8),
-                  onTap: () => _toggle(8),
-                ),
-              ],
+            SizedBox(
+              width: 800,
+              child: MetricCardsLayout(
+                cards: [
+                  MetricCard(
+                    label: 'Fixed costs',
+                    value: r'$4,319',
+                    delta: r'$4,319',
+                    deltaDirection: MetricDeltaDirection.negative,
+                    subtitle: 'vs last month',
+                    isSelected: _selected.contains(5),
+                    onTap: () => _toggle(5),
+                  ),
+                  MetricCard(
+                    label: '% of income',
+                    value: r'$45%',
+                    delta: '+1.2%',
+                    deltaDirection: MetricDeltaDirection.negative,
+                    subtitle: 'benchmark 38%',
+                    isSelected: _selected.contains(6),
+                    onTap: () => _toggle(6),
+                  ),
+                  MetricCard(
+                    label: 'Negotiable',
+                    value: r'$645',
+                    delta: '+12%',
+                    deltaDirection: MetricDeltaDirection.positive,
+                    subtitle: r'+$40 above 3mo avg',
+                    isSelected: _selected.contains(7),
+                    onTap: () => _toggle(7),
+                  ),
+                  MetricCard(
+                    label: 'Potential Savings',
+                    value: r'$94/mo',
+                    subtitle: 'vs benchmarks',
+                    isSelected: _selected.contains(8),
+                    onTap: () => _toggle(8),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -6,9 +6,7 @@ Future<void> _pump(
   WidgetTester tester, {
   required String label,
   VoidCallback? onPressed,
-  double height = 80,
-  double fontSize = 24,
-  FontWeight fontWeight = FontWeight.w600,
+  double height = 65,
 }) {
   return tester.pumpWidget(
     MaterialApp(
@@ -17,8 +15,6 @@ Future<void> _pump(
           label: label,
           onPressed: onPressed,
           height: height,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
         ),
       ),
     ),
@@ -51,13 +47,13 @@ void main() {
     });
 
     testWidgets('respects custom height', (tester) async {
-      await _pump(tester, label: 'Get started', height: 56);
+      await _pump(tester, label: 'Get started', height: 72);
 
       final sizedBox = tester
           .widgetList<SizedBox>(find.byType(SizedBox))
-          .firstWhere((w) => w.height == 56);
+          .firstWhere((w) => w.height == 72);
 
-      expect(sizedBox.height, 56);
+      expect(sizedBox.height, 72);
     });
 
     testWidgets('renders uppercase label when provided', (tester) async {
