@@ -224,15 +224,30 @@ class AppButton extends StatelessWidget {
       textStyle: WidgetStateProperty.all(_Dimensions.labelTextStyle),
       elevation: WidgetStateProperty.all(0),
       backgroundBuilder: variant == AppButtonVariant.gradient
-          ? (context, states, child) => DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: states.contains(WidgetState.disabled)
-                    ? null
-                    : gradient,
-                borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
-              ),
-              child: child,
-            )
+          ? (context, states, child) {
+              final isDisabled = states.contains(WidgetState.disabled);
+              final isHovered = states.contains(WidgetState.hovered);
+              final isPressed = states.contains(WidgetState.pressed);
+              final isFocused = states.contains(WidgetState.focused);
+
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: isDisabled ? null : gradient,
+                  borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                ),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: isPressed || isFocused
+                        ? Colors.black.withValues(alpha: 0.2)
+                        : isHovered
+                        ? Colors.black.withValues(alpha: 0.1)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                  ),
+                  child: child,
+                ),
+              );
+            }
           : null,
     );
   }
