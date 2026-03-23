@@ -1,4 +1,4 @@
-package com.example.verygoodcore.vgv_genui_financial_advisor
+package ventures.verygood.genui.financial.advisor
 
 import io.flutter.embedding.android.FlutterActivity
 

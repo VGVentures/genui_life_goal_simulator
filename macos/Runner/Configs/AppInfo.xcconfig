@@ -8,7 +8,7 @@
 PRODUCT_NAME = my_app
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.myApp
+PRODUCT_BUNDLE_IDENTIFIER = ventures.verygood.genui.financial.advisor.macos
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 Very Good Ventures. All rights reserved.

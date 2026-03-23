@@ -127,3 +127,6 @@ lib/l10n/gen/
 
 # Firebase config (generated at build time / via flutterfire configure)
 firebase.json
+**/android/app/google-services.json
+**/ios/**/GoogleService-Info.plist
+**/macos/**/GoogleService-Info.plist

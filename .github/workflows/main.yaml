@@ -90,7 +90,7 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
-          projectId: finance-app-4a537
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
 
   deploy_preview:
     name: Deploy Preview
@@ -118,7 +118,7 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: finance-app-4a537
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
 
   distribute_android:
     name: Distribute Android APK
@@ -167,6 +167,6 @@ jobs:
         run: |
           firebase appdistribution:distribute \
             build/app/outputs/flutter-apk/app-production-release.apk \
-            --app "1:283633165905:android:ae52554bdcf77adecdba70" \
+            --app "${{ secrets.FIREBASE_ANDROID_APP_ID }}" \
             --release-notes "${{ github.event.head_commit.message }}" \
-            --project "finance-app-4a537"
+            --project "${{ secrets.FIREBASE_PROJECT_ID }}"
