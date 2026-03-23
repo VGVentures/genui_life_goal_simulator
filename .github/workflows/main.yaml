@@ -131,7 +131,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web --wasm --target lib/main_dev_menu.dart
+      - run: flutter build web --wasm --target lib/main_development.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
