@@ -17,7 +17,7 @@ class App extends StatelessWidget {
         );
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: <Locale>[Locale('en')],
       home: const _IntroPage(),
     );
   }
