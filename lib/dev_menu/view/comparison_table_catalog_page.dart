@@ -51,12 +51,12 @@ class ComparisonTableCatalogPage extends StatelessWidget {
                     actualMonthAmount: 140,
                   ),
                   ComparisonTableItem(
-                    label: 'Groceries',
+                    label: 'Grocery Spending',
                     lastMonthAmount: 300,
                     actualMonthAmount: 315,
                   ),
                   ComparisonTableItem(
-                    label: 'Dining',
+                    label: 'Total Debt Surplus',
                     lastMonthAmount: 190,
                     actualMonthAmount: 140,
                   ),
