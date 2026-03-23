@@ -1,6 +1,6 @@
 {
-    "name": "Finance App",
-    "short_name": "Finance App",
+    "name": "VGVxGenUI Financial Advisor",
+    "short_name": "VGVxGenUI Financial Advisor",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

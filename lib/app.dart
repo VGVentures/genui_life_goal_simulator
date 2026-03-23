@@ -9,6 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateTitle: (context) => context.l10n.appName,
       themeMode: ThemeMode.light,
       builder: (context, child) {
         return Theme(

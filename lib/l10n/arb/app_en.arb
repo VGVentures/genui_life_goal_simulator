@@ -3,7 +3,7 @@
     "@appName": {
         "description": "The display name of the application."
     },
-    "appName": "Finance App",
+    "appName": "VGVxGenUI Financial Advisor",
     "homeAppBarTitle": "Financial Advisor",
     "@homeAppBarTitle": {
         "description": "Text shown in the AppBar of the Home Page"
