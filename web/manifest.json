@@ -1,6 +1,6 @@
 {
-    "name": "VGVxGenUI Financial Advisor",
-    "short_name": "VGVxGenUI Financial Advisor",
+    "name": "GenUIxVGV Financial Advisor",
+    "short_name": "GenUIxVGV Financial Advisor",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

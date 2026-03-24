@@ -3,7 +3,7 @@
     "@appName": {
         "description": "El nombre para mostrar de la aplicación."
     },
-    "appName": "VGVxGenUI Asesor Financiero",
+    "appName": "GenUIxVGV Asesor Financiero",
     "homeAppBarTitle": "Asesor Financiero",
     "@homeAppBarTitle": {
         "description": "Texto mostrado en la barra de aplicaciones de la página de inicio"
