@@ -3,8 +3,8 @@
     "@appName": {
         "description": "El nombre para mostrar de la aplicación."
     },
-    "appName": "GenUIxVGV Asesor Financiero",
-    "homeAppBarTitle": "Asesor Financiero",
+    "appName": "GenUIxVGV Simulador de Objetivos de Vida",
+    "homeAppBarTitle": "Simulador de Objetivos de Vida",
     "@homeAppBarTitle": {
         "description": "Texto mostrado en la barra de aplicaciones de la página de inicio"
     },
