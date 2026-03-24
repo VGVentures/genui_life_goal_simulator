@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/widgets/line_chart.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/design_system/widgets/line_chart.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 
 extension _PumpApp on WidgetTester {
   Future<void> pumpApp(Widget widget) {

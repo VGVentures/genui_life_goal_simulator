@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
-import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
+import 'package:genui_life_goal_simulator/design_system/app_colors.dart';
+import 'package:genui_life_goal_simulator/dev_menu/dev_menu.dart';
 
 /// {@template design_system_catalog_page}
 /// Index screen listing all design system components available for preview.

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:vgv_genui_financial_advisor/design_system/breakpoints.dart';
+import 'package:genui_life_goal_simulator/design_system/breakpoints.dart';
 
 /// A scaffold that conditionally renders mobile or desktop layouts
 /// based on screen width.

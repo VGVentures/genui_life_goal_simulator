@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/pick_profile.dart';
 
 import '../../../../helpers/helpers.dart';
 

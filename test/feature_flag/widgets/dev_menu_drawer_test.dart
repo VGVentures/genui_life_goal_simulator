@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/dev_menu/dev_menu.dart';
+import 'package:genui_life_goal_simulator/feature_flags/feature_flags.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/feature_flags.dart';
 
 class _MockFeatureFlagsRepository extends Mock
     implements FeatureFlagsRepository {}

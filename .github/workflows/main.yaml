@@ -1,4 +1,4 @@
-name: vgv_genui_financial_advisor
+name: genui_life_goal_simulator
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

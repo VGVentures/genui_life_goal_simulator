@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/feature_flags/repository/feature_flags_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/repository/feature_flags_repository.dart';
 
 class MockStreamingSharedPreferences extends Mock
     implements StreamingSharedPreferences {}

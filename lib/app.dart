@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/intro.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -14,6 +14,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateTitle: (context) => context.l10n.appName,
       themeMode: ThemeMode.light,
       builder: (context, child) {
         return Theme(

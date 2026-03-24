@@ -1,4 +1,4 @@
-# Very Good Financial Advisor
+# Very Good Life Goal Simulator
 
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
@@ -17,7 +17,7 @@ A multi-platform Flutter demo app built for **Google Cloud Next 2026**, showcasi
 
 ## Features
 
-- **AI Financial Advisor** — chat-powered insights using Firebase AI and structured output via [Dartantic](https://github.com/brianegan/dartantic)
+- **AI Financial Simulator** — chat-powered insights using Firebase AI and structured output via [Dartantic](https://github.com/brianegan/dartantic)
 - **Generative UI** — AI responses rendered as interactive Flutter widgets (charts, tables, chips) via [GenUI](https://github.com/flutter/genui)
 - **Dashboard** — sparkline cards, portfolio overview, and responsive layouts
 - **Rive Animations** — loading screens and thinking indicators
@@ -68,7 +68,6 @@ The app follows VGV's [layered architecture](https://engineering.verygood.ventur
 
 ```
 lib/
-  advisor/         — AI financial advisor (the GenUI feature — see below)
   app.dart         — Root MaterialApp widget
   app_check/       — Firebase App Check debug token helpers
   bootstrap.dart   — App initialization (Firebase, providers, error handling)
@@ -78,6 +77,7 @@ lib/
   feature_flags/   — Feature flag repository, cubit, and dev menu drawer
   l10n/            — Localization (English, Spanish)
   onboarding/      — Intro, profile selection, and focus selection screens
+  simulator/       — AI Life Goal Simulator (the GenUI feature — see below)
 ```
 
 Key dependencies:
@@ -87,32 +87,32 @@ Key dependencies:
 - **flutter_bloc** — State management
 - **dartantic_ai / dartantic_firebase_ai** — Structured output schemas for AI
 
-### Advisor: GenUI behind a layered architecture
+### Simulator: GenUI behind a layered architecture
 
-The `advisor/` directory is the heart of the app. It demonstrates how to integrate [GenUI](https://github.com/flutter/genui) — where an LLM generates entire Flutter UIs as structured JSON — while keeping the complexity hidden behind clean architectural boundaries.
+The `simulator/` directory is the heart of the app. It demonstrates how to integrate [GenUI](https://github.com/flutter/genui) — where an LLM generates entire Flutter UIs as structured JSON — while keeping the complexity hidden behind clean architectural boundaries.
 
-The key insight: **the `AdvisorRepository` encapsulates all GenUI plumbing** (catalog, surface controller, transport adapter, prompt builder, and chat model) behind a two-method API: `startConversation()` and `sendMessage()`. The bloc and UI layers never touch GenUI directly.
+The key insight: **the `SimulatorRepository` encapsulates all GenUI plumbing** (catalog, surface controller, transport adapter, prompt builder, and chat model) behind a two-method API: `startConversation()` and `sendMessage()`. The bloc and UI layers never touch GenUI directly.
 
 ```mermaid
 graph TD
-    presentation["<b>Presentation Layer</b> — advisor/view/
-    AdvisorPage → AdvisorView → AdvisorMessageBubble
+    presentation["<b>Presentation Layer</b> — simulator/view/
+    SimulatorPage → SimulatorView → SimulatorMessageBubble
     Renders pages of messages and animates between pages"]
 
-    bloc["<b>Business Logic Layer</b> — advisor/bloc/
-    AdvisorBloc
+    bloc["<b>Business Logic Layer</b> — simulator/bloc/
+    SimulatorBloc
     Manages conversation state, loading, and navigation.
     Subscribes to repository events. No GenUI or Firebase imports."]
 
-    repo["<b>Repository Layer</b> — advisor/repository/
-    AdvisorRepository
+    repo["<b>Repository Layer</b> — simulator/repository/
+    SimulatorRepository
     The boundary where GenUI lives. Owns Catalog, SurfaceController,
     transport adapter, chat history, and prompt. Exposes a stream
     of simple events and a SurfaceHost for rendering."]
 
-    data["<b>Data Layer</b> — advisor/catalog/ + advisor/prompt/
+    data["<b>Data Layer</b> — simulator/catalog/ + simulator/prompt/
     Finance Catalog — ~24 custom widgets registered as GenUI CatalogItems
-    Prompt Builder — system prompt with advisor persona,
+    Prompt Builder — system prompt with simulator persona,
     conversation rules, and widget schemas"]
 
     presentation --> bloc --> repo --> data
@@ -120,11 +120,11 @@ graph TD
 
 #### How it works
 
-1. **User completes onboarding** — profile type and focus areas flow into `AdvisorBloc` via `AdvisorStarted`.
+1. **User completes onboarding** — profile type and focus areas flow into `SimulatorBloc` via `SimulatorStarted`.
 2. **Bloc calls the repository** — `startConversation()` wires up GenUI internals; `sendMessage()` sends the initial prompt.
 3. **Repository streams to the LLM** — the system prompt (persona + widget schemas) and chat history go to `FirebaseAIChatModel`. Responses stream back as chunks.
 4. **GenUI parses the response** — `A2uiTransportAdapter` extracts JSON describing surfaces and components. `SurfaceController` instantiates widgets from the catalog.
-5. **Repository emits events** — simple types like `AdvisorConversationSurfaceAdded` and `AdvisorConversationTextReceived` bubble up to the bloc.
+5. **Repository emits events** — simple types like `SimulatorConversationSurfaceAdded` and `SimulatorConversationTextReceived` bubble up to the bloc.
 6. **Bloc updates state** — each new surface becomes a page. The view animates to it and renders it via `SurfaceHost`.
 7. **User interacts with a surface** — input widgets (sliders, radio cards, filter chips) write values to GenUI's reactive `DataContext`. When the user taps an action button, the interaction data is sent back to the LLM as the next message, and the cycle repeats.
 
@@ -132,11 +132,11 @@ graph TD
 
 | Directory | What to look at | Why |
 |---|---|---|
-| `advisor/repository/` | `AdvisorRepository` | Start here. This is the integration boundary — see how GenUI's catalog, controller, adapter, and chat model are composed and hidden behind a stream of simple events. |
-| `advisor/bloc/` | `AdvisorBloc`, `AdvisorState` | See how repository events map to a paginated conversation state (`List<List<DisplayMessage>>`). Note: no GenUI imports. |
-| `advisor/view/` | `AdvisorPage`, `AdvisorView`, `AdvisorMessageBubble` | See how surfaces are rendered and how page transitions are animated. The view only knows about `SurfaceHost` — it never constructs GenUI objects. |
-| `advisor/catalog/items/` | Any catalog item (e.g., `gcn_slider_catalog_item.dart`) | See how a single widget is defined as a `CatalogItem` with a JSON schema and a `widgetBuilder`. This is how you add new components the LLM can use. |
-| `advisor/prompt/` | `PromptBuilder` | See the system prompt that defines the advisor persona, conversation rules, and widget usage guidelines. This is where you shape the LLM's behavior. |
+| `simulator/repository/` | `SimulatorRepository` | Start here. This is the integration boundary — see how GenUI's catalog, controller, adapter, and chat model are composed and hidden behind a stream of simple events. |
+| `simulator/bloc/` | `SimulatorBloc`, `SimulatorState` | See how repository events map to a paginated conversation state (`List<List<DisplayMessage>>`). Note: no GenUI imports. |
+| `simulator/view/` | `SimulatorPage`, `SimulatorView`, `SimulatorMessageBubble` | See how surfaces are rendered and how page transitions are animated. The view only knows about `SurfaceHost` — it never constructs GenUI objects. |
+| `simulator/catalog/items/` | Any catalog item (e.g., `gcn_slider_catalog_item.dart`) | See how a single widget is defined as a `CatalogItem` with a JSON schema and a `widgetBuilder`. This is how you add new components the LLM can use. |
+| `simulator/prompt/` | `PromptBuilder` | See the system prompt that defines the simulator persona, conversation rules, and widget usage guidelines. This is where you shape the LLM's behavior. |
 
 ## Running Tests
 

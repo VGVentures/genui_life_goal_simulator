@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
 class DonutChart extends StatelessWidget {
   const DonutChart({
@@ -8,6 +8,7 @@ class DonutChart extends StatelessWidget {
     required this.selectedIndex,
     required this.onSegmentHover,
     required this.onHoverExit,
+    required this.onSegmentTap,
     required this.amount,
     required this.label,
     required this.percentage,
@@ -18,6 +19,7 @@ class DonutChart extends StatelessWidget {
   final int? selectedIndex;
   final ValueChanged<int> onSegmentHover;
   final VoidCallback onHoverExit;
+  final ValueChanged<int> onSegmentTap;
   final String amount;
   final String label;
   final String? percentage;
@@ -77,11 +79,14 @@ class DonutChart extends StatelessWidget {
   }
 
   List<PieChartSectionData> _buildSections() {
+    final hasSelection = selectedIndex != null;
     return [
       for (var i = 0; i < items.length; i++)
         PieChartSectionData(
           value: items[i].value,
-          color: items[i].color,
+          color: hasSelection && i != selectedIndex
+              ? items[i].color?.withValues(alpha: _Dimensions.dimmedOpacity)
+              : items[i].color,
           radius: i == selectedIndex
               ? _Dimensions.strokeWidth + _Dimensions.selectedStrokeExtra
               : _Dimensions.strokeWidth,
@@ -98,14 +103,19 @@ class DonutChart extends StatelessWidget {
 
     final touchedIndex = response?.touchedSection?.touchedSectionIndex ?? -1;
     if (touchedIndex >= 0 && touchedIndex < items.length) {
-      onSegmentHover(touchedIndex);
-    } else {
+      if (event is FlTapUpEvent) {
+        onSegmentTap(touchedIndex);
+      } else {
+        onSegmentHover(touchedIndex);
+      }
+    } else if (event is! FlTapUpEvent) {
       onHoverExit();
     }
   }
 }
 
 abstract final class _Dimensions {
+  static const double dimmedOpacity = 0.4;
   static const double donutSize = 210;
   static const double strokeWidth = 41;
   static const double selectedStrokeExtra = 8;
