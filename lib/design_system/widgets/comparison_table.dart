@@ -104,13 +104,13 @@ class _ComparisonTableRow extends StatelessWidget {
       spacing: Spacing.md,
       children: [
         Expanded(
+          flex: 2,
           child: Text(
             item.label,
             style: textTheme.bodyMedium?.copyWith(
               color: colors?.onSurface ?? Colors.transparent,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.visible,
           ),
         ),
         _AmountColumn(

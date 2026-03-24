@@ -79,7 +79,7 @@ class LineChart extends StatefulWidget {
 class _LineChartState extends State<LineChart> {
   // Reserved pixel sizes matching fl_chart's AxisTitles reservedSize values.
   static const double _leftReserved = 48;
-  static const double _bottomReserved = 22;
+  static const double _bottomReserved = 44;
 
   int? _selectedIndex;
 
@@ -118,7 +118,7 @@ class _LineChartState extends State<LineChart> {
     final yLabelStyle = theme.textTheme.labelSmall?.copyWith(
       color: colors?.onSurfaceMuted ?? _LineChartColors.label,
     );
-    final xLabelStyle = theme.textTheme.labelMedium?.copyWith(
+    final xLabelStyle = theme.textTheme.labelSmall?.copyWith(
       color: colors?.onSurfaceMuted ?? _LineChartColors.label,
     );
 
@@ -145,82 +145,85 @@ class _LineChartState extends State<LineChart> {
       ),
     );
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final chartWidth = constraints.maxWidth - _leftReserved;
-        final chartHeight = constraints.maxHeight - _bottomReserved;
-        final n = widget.points.length;
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: Spacing.xs,
+        right: Spacing.sm,
+        top: Spacing.xs,
+        bottom: Spacing.xs,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final chartWidth = constraints.maxWidth - _leftReserved;
+          final chartHeight = constraints.maxHeight - _bottomReserved;
+          final n = widget.points.length;
 
-        double spotX(int i) =>
-            _leftReserved + (n <= 1 ? 0.0 : (i / (n - 1)) * chartWidth);
+          double spotX(int i) =>
+              _leftReserved + (n <= 1 ? 0.0 : (i / (n - 1)) * chartWidth);
 
-        double spotY(int i) {
-          final range = widget.maxValue - widget.minValue;
-          final normalized = range == 0
-              ? 0.5
-              : (widget.points[i].value - widget.minValue) / range;
-          return (1 - normalized) * chartHeight;
-        }
+          double spotY(int i) {
+            final range = widget.maxValue - widget.minValue;
+            final normalized = range == 0
+                ? 0.5
+                : (widget.points[i].value - widget.minValue) / range;
+            return (1 - normalized) * chartHeight;
+          }
 
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            if (_selectedIndex != null)
-              Positioned(
-                left: spotX(_selectedIndex!) - 0.5,
-                top: 0,
-                width: 1,
-                height: chartHeight,
-                child: IgnorePointer(
-                  child: ColoredBox(color: indicatorColor),
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              if (_selectedIndex != null)
+                Positioned(
+                  left: spotX(_selectedIndex!) - 0.5,
+                  top: 0,
+                  width: 1,
+                  height: chartHeight,
+                  child: IgnorePointer(
+                    child: ColoredBox(color: indicatorColor),
+                  ),
+                ),
+              fl.LineChart(
+                fl.LineChartData(
+                  minX: 0,
+                  maxX: max<double>(1, (n - 1).toDouble()),
+                  minY: widget.minValue,
+                  maxY: widget.maxValue,
+                  lineBarsData: [lineBarData],
+                  gridData: _buildGridData(gridColor),
+                  extraLinesData: fl.ExtraLinesData(
+                    extraLinesOnTop: false,
+                    horizontalLines: [
+                      fl.HorizontalLine(
+                        y: widget.minValue,
+                        color: gridColor,
+                        strokeWidth: 1,
+                        dashArray: [4, 4],
+                      ),
+                    ],
+                  ),
+                  titlesData: _buildTitlesData(xLabelStyle, yLabelStyle),
+                  borderData: fl.FlBorderData(show: false),
+                  lineTouchData: fl.LineTouchData(
+                    handleBuiltInTouches: false,
+                    touchSpotThreshold: 100,
+                    touchCallback: _handleTouch,
+                  ),
                 ),
               ),
-            fl.LineChart(
-              fl.LineChartData(
-                minX: 0,
-                maxX: max<double>(1, (n - 1).toDouble()),
-                minY: widget.minValue,
-                maxY: widget.maxValue,
-                lineBarsData: [lineBarData],
-                gridData: _buildGridData(gridColor),
-                extraLinesData: fl.ExtraLinesData(
-                  horizontalLines: [
-                    fl.HorizontalLine(
-                      y: widget.minValue,
-                      color: gridColor,
-                      strokeWidth: 1,
-                      dashArray: [4, 4],
-                    ),
-                    fl.HorizontalLine(
-                      y: widget.maxValue,
-                      color: gridColor,
-                      strokeWidth: 1,
-                      dashArray: [4, 4],
-                    ),
-                  ],
+              if (_selectedIndex != null)
+                _TooltipCard(
+                  point: widget.points[_selectedIndex!],
+                  selectedX: spotX(_selectedIndex!),
+                  selectedY: spotY(_selectedIndex!),
+                  chartWidth: constraints.maxWidth,
+                  chartHeight: chartHeight,
+                  colors: colors,
+                  textTheme: theme.textTheme,
                 ),
-                titlesData: _buildTitlesData(xLabelStyle, yLabelStyle),
-                borderData: fl.FlBorderData(show: false),
-                lineTouchData: fl.LineTouchData(
-                  handleBuiltInTouches: false,
-                  touchSpotThreshold: 100,
-                  touchCallback: _handleTouch,
-                ),
-              ),
-            ),
-            if (_selectedIndex != null)
-              _TooltipCard(
-                point: widget.points[_selectedIndex!],
-                selectedX: spotX(_selectedIndex!),
-                selectedY: spotY(_selectedIndex!),
-                chartWidth: constraints.maxWidth,
-                chartHeight: chartHeight,
-                colors: colors,
-                textTheme: theme.textTheme,
-              ),
-          ],
-        );
-      },
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -255,15 +258,29 @@ class _LineChartState extends State<LineChart> {
       bottomTitles: fl.AxisTitles(
         sideTitles: fl.SideTitles(
           showTitles: widget.points.isNotEmpty,
+          reservedSize: _bottomReserved,
           interval: 1,
           getTitlesWidget: (value, meta) {
             final i = value.round();
             if (i < 0 || i >= widget.points.length || value != i.toDouble()) {
               return const SizedBox.shrink();
             }
+            final isFirst = i == 0;
+            final isLast = i == widget.points.length - 1;
+            // Shift first label right so it starts at the point,
+            // shift last label left so it ends at the point.
+            final offset = isFirst
+                ? const Offset(0.5, 0)
+                : isLast
+                ? const Offset(-0.5, 0)
+                : Offset.zero;
             return fl.SideTitleWidget(
               meta: meta,
-              child: Text(widget.points[i].xLabel, style: xStyle),
+              space: Spacing.sm,
+              child: FractionalTranslation(
+                translation: offset,
+                child: Text(widget.points[i].xLabel, style: xStyle),
+              ),
             );
           },
         ),
@@ -281,8 +298,13 @@ class _LineChartState extends State<LineChart> {
             if (i < 0 || i >= widget.yAxisLabels.length) {
               return const SizedBox.shrink();
             }
+            final expectedValue = widget.minValue + i * yInterval;
+            if ((value - expectedValue).abs() > yInterval * 0.01) {
+              return const SizedBox.shrink();
+            }
             return fl.SideTitleWidget(
               meta: meta,
+              space: Spacing.sm,
               child: Text(widget.yAxisLabels[i], style: yStyle),
             );
           },
@@ -367,8 +389,8 @@ abstract final class _LineChartDimensions {
   static const double tooltipWidth = 130;
   static const double tooltipHeight = 44;
   static const double tooltipRadius = 8;
-  static const double tooltipOffsetX = 8;
-  static const double tooltipOffsetY = 8;
+  static const double tooltipOffsetX = Spacing.xs;
+  static const double tooltipOffsetY = Spacing.xs;
 }
 
 abstract final class _LineChartColors {

@@ -17,8 +17,16 @@ class PickProfileView extends StatelessWidget {
     return BlocBuilder<PickProfileCubit, PickProfileState>(
       builder: (context, state) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: Spacing.xxxl,
+          mainAxisAlignment: responsiveValue<MainAxisAlignment>(
+            context,
+            mobile: MainAxisAlignment.start,
+            desktop: MainAxisAlignment.center,
+          ),
+          spacing: responsiveValue<double>(
+            context,
+            mobile: Spacing.xl,
+            desktop: Spacing.xxxl * 2,
+          ),
           children: [
             Text(
               l10n.pickProfileTitle,
@@ -30,12 +38,35 @@ class PickProfileView extends StatelessWidget {
               ).copyWith(color: colorScheme.onSurface),
             ),
             if (isMobile)
-              MobileCards(selectedProfile: state.selectedProfile)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: MobileCards(selectedProfile: state.selectedProfile),
+                ),
+              )
             else
-              DesktopCards(selectedProfile: state.selectedProfile),
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: SizedBox(
+                      width: _DesktopCardsSize.width,
+                      height: _DesktopCardsSize.height,
+                      child: DesktopCards(
+                        selectedProfile: state.selectedProfile,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         );
       },
     );
   }
+}
+
+abstract final class _DesktopCardsSize {
+  static const double width = 1084;
+  static const double height = 610;
 }

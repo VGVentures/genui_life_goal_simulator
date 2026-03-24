@@ -29,14 +29,14 @@ void main() {
   });
 
   group(DarkTheme, () {
-    test('produces a $ThemeData with light brightness', () {
+    test('produces a $ThemeData with dark brightness', () {
       final theme = DarkTheme();
-      expect(theme.themeData.colorScheme.brightness, Brightness.light);
+      expect(theme.themeData.colorScheme.brightness, Brightness.dark);
     });
 
     test('themeData includes $AppColors extension', () {
       final themeData = DarkTheme().themeData.themeData;
-      expect(themeData.extension<AppColors>(), isA<LightThemeColors>());
+      expect(themeData.extension<AppColors>(), isA<DarkThemeColors>());
     });
   });
 }

@@ -23,6 +23,6 @@ class LightTheme extends AppThemeMode {
 class DarkTheme extends AppThemeMode {
   DarkTheme()
     : super(
-        themeData: AppTheme(LightThemeColors()),
+        themeData: AppTheme(DarkThemeColors()),
       );
 }
