@@ -63,6 +63,8 @@ Use ProgressBar to show spending categories vs. a fixed budget limit. Set value 
 
 Use the SparklineCard widget to display a financial category with its amount and a trend sparkline. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
 
+Use PieChart when showing part-to-whole relationships (e.g. spending by category, portfolio allocation). Provide 3–7 segments and assign a distinct color to each. Always set totalLabel and totalAmount to show the aggregate in the donut center.
+
 Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount. Optionally include an "action" on each item to show a View button — when tapped, it dispatches the specified event with the item's data as context.
 ''';
 
@@ -105,6 +107,7 @@ Catalog buildFinanceCatalog() {
           gcnSliderItem,
           lineChartItem,
           nextStepsBarItem,
+          pieChartItem,
           progressBarItem,
           questionContainerItem,
           metricCardsItem,

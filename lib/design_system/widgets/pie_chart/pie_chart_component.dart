@@ -92,6 +92,14 @@ class _PieChartComponentState extends State<PieChartComponent> {
     widget.onSelectedIndexChanged?.call(null);
   }
 
+  void _handleTap(int index) {
+    if (_effectiveSelectedIndex == index) {
+      _handleHoverExit();
+    } else {
+      _handleHover(index);
+    }
+  }
+
   @override
   void didUpdateWidget(PieChartComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -123,6 +131,7 @@ class _PieChartComponentState extends State<PieChartComponent> {
       selectedIndex: _effectiveSelectedIndex,
       onSegmentHover: _handleHover,
       onHoverExit: _handleHoverExit,
+      onSegmentTap: _handleTap,
       amount: amount,
       label: label,
       percentage: percentage,
@@ -134,6 +143,7 @@ class _PieChartComponentState extends State<PieChartComponent> {
       selectedIndex: _effectiveSelectedIndex,
       onItemHover: _handleHover,
       onHoverExit: _handleHoverExit,
+      onItemTap: _handleTap,
     );
 
     return ResponsiveScaffold(
