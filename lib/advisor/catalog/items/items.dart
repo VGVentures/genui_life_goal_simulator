@@ -12,6 +12,7 @@ export 'horizontal_bar_catalog_item.dart';
 export 'line_chart_catalog_item.dart';
 export 'metric_cards_catalog_item.dart';
 export 'next_steps_bar_catalog_item.dart';
+export 'pie_chart_catalog_item.dart';
 export 'progress_bar_catalog_item.dart';
 export 'question_container_catalog_item.dart';
 export 'radio_card_catalog_item.dart';
