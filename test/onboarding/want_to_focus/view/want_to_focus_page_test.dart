@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/want_to_focus.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/widgets/widgets.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/want_to_focus.dart';
+import 'package:genui_life_goal_simulator/onboarding/widgets/widgets.dart';
 
 Future<void> _pump(
   WidgetTester tester, {

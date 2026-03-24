@@ -4,7 +4,7 @@
         "description": "The display name of the application."
     },
     "appName": "Finance App",
-    "homeAppBarTitle": "Financial Advisor",
+    "homeAppBarTitle": "Financial Simulator",
     "@homeAppBarTitle": {
         "description": "Text shown in the AppBar of the Home Page"
     },

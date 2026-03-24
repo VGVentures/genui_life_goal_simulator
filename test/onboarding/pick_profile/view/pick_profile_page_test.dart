@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_page.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_view.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/widgets/profile_card.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_page.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_view.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/widgets/profile_card.dart';
 
 import '../../../helpers/helpers.dart';
 

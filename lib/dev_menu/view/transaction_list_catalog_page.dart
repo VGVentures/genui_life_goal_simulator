@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
 /// A dev-menu page that showcases the [TransactionList] widget with sample
 /// data.

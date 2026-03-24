@@ -1,6 +1,6 @@
+import 'package:genui_life_goal_simulator/feature_flags/repository/src/exceptions/feature_flags_exception.dart';
+import 'package:genui_life_goal_simulator/feature_flags/repository/src/feature_flag.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/repository/src/exceptions/feature_flags_exception.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/repository/src/feature_flag.dart';
 
 /// {@template feature_flags_repository}
 /// A repository for managing feature flags, backed by

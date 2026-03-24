@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/want_to_focus_page.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/widgets/widgets.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/pick_profile.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/view/want_to_focus_page.dart';
+import 'package:genui_life_goal_simulator/onboarding/widgets/widgets.dart';
 
 class PickProfilePage extends StatelessWidget {
   const PickProfilePage({super.key});

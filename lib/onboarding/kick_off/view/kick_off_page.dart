@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/desktop_kick_off_view.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/kick_off_values.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/mobile_kick_off_view.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/widgets/trust_badge.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/view/pick_profile_page.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/widgets/widgets.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/kick_off/view/desktop_kick_off_view.dart';
+import 'package:genui_life_goal_simulator/onboarding/kick_off/view/kick_off_values.dart';
+import 'package:genui_life_goal_simulator/onboarding/kick_off/view/mobile_kick_off_view.dart';
+import 'package:genui_life_goal_simulator/onboarding/kick_off/view/widgets/trust_badge.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_page.dart';
+import 'package:genui_life_goal_simulator/onboarding/widgets/widgets.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});

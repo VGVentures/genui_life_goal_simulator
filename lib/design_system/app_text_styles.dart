@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/gen/fonts.gen.dart';
+import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
 
 /// Typography system based on Figma specs.
 /// Provides both desktop and mobile text styles.

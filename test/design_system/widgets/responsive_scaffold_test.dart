@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/breakpoints.dart';
-import 'package:vgv_genui_financial_advisor/design_system/widgets/responsive_scaffold.dart';
+import 'package:genui_life_goal_simulator/design_system/breakpoints.dart';
+import 'package:genui_life_goal_simulator/design_system/widgets/responsive_scaffold.dart';
 
 void main() {
   group(Breakpoints, () {

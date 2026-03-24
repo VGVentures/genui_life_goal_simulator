@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
 class DonutChart extends StatelessWidget {
   const DonutChart({

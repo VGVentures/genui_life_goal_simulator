@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/app.dart';
+import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/intro.dart';
 import 'package:provider/provider.dart';
-import 'package:vgv_genui_financial_advisor/app.dart';
-import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
 
 void main() {
   group(App, () {

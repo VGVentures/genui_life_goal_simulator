@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
 /// {@template radio_card}
 /// A tappable card that displays a [label] with a [Radio] indicator.
