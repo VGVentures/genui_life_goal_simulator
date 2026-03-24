@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/dev_menu/dev_menu.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/feature_flags.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/dev_menu/dev_menu.dart';
+import 'package:genui_life_goal_simulator/feature_flags/feature_flags.dart';
 
 /// {@template dev_menu_drawer}
 /// A debug drawer that displays all feature flags and allows toggling them.

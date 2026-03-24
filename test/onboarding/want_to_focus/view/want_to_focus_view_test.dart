@@ -2,12 +2,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/want_to_focus.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/want_to_focus/want_to_focus.dart';
 
 class _MockWantToFocusCubit extends MockCubit<WantToFocusState>
     implements WantToFocusCubit {}

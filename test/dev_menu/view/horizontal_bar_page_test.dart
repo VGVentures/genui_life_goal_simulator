@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/dev_menu/view/horizontal_bar_catalog_page.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/dev_menu/view/horizontal_bar_catalog_page.dart';
 
 Future<void> _pump(WidgetTester tester) {
   return tester.pumpWidget(

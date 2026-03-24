@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
-import 'package:vgv_genui_financial_advisor/design_system/app_theme.dart';
-import 'package:vgv_genui_financial_advisor/design_system/radio_theme.dart';
+import 'package:genui_life_goal_simulator/design_system/app_colors.dart';
+import 'package:genui_life_goal_simulator/design_system/app_theme.dart';
+import 'package:genui_life_goal_simulator/design_system/radio_theme.dart';
 
 void main() {
   group('RadioThemeData', () {

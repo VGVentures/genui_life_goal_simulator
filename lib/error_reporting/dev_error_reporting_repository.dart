@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:vgv_genui_financial_advisor/error_reporting/error_reporting.dart';
+import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
 
 /// {@template DevErrorReportingRepository}
 /// Development implementation of [ErrorReportingRepository].

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/view/intro_desktop_view.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/view/intro_mobile_view.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/kick_off/view/kick_off_page.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_desktop_view.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_mobile_view.dart';
+import 'package:genui_life_goal_simulator/onboarding/kick_off/view/kick_off_page.dart';
 
 /// {@template intro_page}
 /// Entry point for the intro screen.

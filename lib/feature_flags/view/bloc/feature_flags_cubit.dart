@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:genui_life_goal_simulator/feature_flags/repository/feature_flags_repository.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:vgv_genui_financial_advisor/feature_flags/repository/feature_flags_repository.dart';
 
 part 'feature_flags_state.dart';
 
