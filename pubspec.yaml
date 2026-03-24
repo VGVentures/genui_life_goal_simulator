@@ -76,6 +76,7 @@ flutter:
     - assets/animations/
     - assets/icons_kick_off/
     - assets/images/
+    - assets/images/advisor/
     - assets/images/intro/
     - assets/images/onboarding/
     - assets/images/sparkline_cards/

@@ -127,7 +127,7 @@ class ProfileCard extends StatelessWidget {
 
 extension on ProfileType {
   Widget iconWidget({required double size}) => switch (this) {
-    ProfileType.beginner => Assets.images.onboarding.starBegginer.svg(
+    ProfileType.beginner => Assets.images.onboarding.starBeginner.svg(
       width: size,
       height: size,
     ),

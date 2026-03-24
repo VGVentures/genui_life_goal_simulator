@@ -27,7 +27,9 @@ class IntroPage extends StatelessWidget {
     }
 
     return ResponsiveScaffold(
-      mobile: IntroMobileView(onGetStarted: onGetStarted ?? backupOnGetStarted),
+      mobile: IntroMobileView(
+        onGetStarted: onGetStarted ?? backupOnGetStarted,
+      ),
       desktop: IntroDesktopView(
         onGetStarted: onGetStarted ?? backupOnGetStarted,
       ),

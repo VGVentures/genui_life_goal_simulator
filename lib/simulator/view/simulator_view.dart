@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
 import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_page.dart';
@@ -90,13 +91,9 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(64);
 
-  String get _profileLabel => switch (profileType) {
-    ProfileType.beginner => 'The Beginner',
-    ProfileType.optimizer => 'The Optimizer',
-  };
-
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = Theme.of(context).extension<AppColors>();
     final gradient =
         colors?.geniusGradient ??
@@ -131,273 +128,51 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             // Logo — smaller on mobile
-            _LogoIcon(gradient: gradient, size: isMobile ? 24 : 40),
+            LogoIcon(size: isMobile ? 24 : 40),
             const SizedBox(width: Spacing.xs),
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
-                    text: context.l10n.chatAppBarTitleFirstPart,
+                    text: l10n.chatAppBarTitleFirstPart,
                     style: TextStyle(
                       fontFamily: FontFamily.poppins,
                       fontWeight: FontWeight.w700,
-                      fontSize: isMobile ? 18 : 24,
+                      fontSize: isMobile ? 16 : 24,
                       letterSpacing: isMobile ? -0.36 : -0.48,
-                      color: const Color(0xFF232326),
+                      color: colors?.onSurface,
                     ),
                   ),
                   TextSpan(
-                    text: context.l10n.chatAppBarTitleSecondPart,
+                    text: l10n.chatAppBarTitleSecondPart,
                     style: TextStyle(
                       fontFamily: FontFamily.poppins,
                       fontWeight: FontWeight.w400,
-                      fontSize: isMobile ? 18 : 24,
+                      fontSize: isMobile ? 16 : 24,
                       letterSpacing: isMobile ? -0.36 : -0.48,
-                      color: const Color(0xFF232326),
+                      color: colors?.onSurface,
                     ),
                   ),
                 ],
               ),
             ),
             const Spacer(),
-            if (isMobile) ...[
-              // Mobile: icon-only chips
-              _IconChip(
-                icon: Icons.person,
-                borderColor: colors?.pinkColor ?? const Color(0xFFE98AD4),
-                onTap: () {},
-              ),
-              const SizedBox(width: Spacing.xs),
-              _IconChip(
-                icon: Icons.refresh,
-                gradient: gradient,
-                onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const IntroPage(),
-                  ),
+            ProfileChip(
+              profileType: profileType,
+              onTap: () {},
+            ),
+            const SizedBox(width: Spacing.sm),
+            GradientChip(
+              gradient: gradient,
+              asset: Assets.images.advisor.restartIcon,
+              label: !isMobile ? l10n.restartDemoLabel : null,
+              onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (_) => const IntroPage(),
                 ),
-              ),
-            ] else ...[
-              // Desktop: labelled chips
-              _GradientChip(
-                gradient: gradient,
-                icon: Icons.refresh,
-                label: 'Restart Demo',
-                onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const IntroPage(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: Spacing.sm),
-              _ProfileChip(
-                label: _profileLabel,
-                backgroundColor:
-                    colors?.pinkContainer ?? const Color(0x26E98AD4),
-                textColor: colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LogoIcon extends StatelessWidget {
-  const _LogoIcon({required this.gradient, this.size = 40});
-
-  final LinearGradient gradient;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final scale = size / 40;
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(8.571 * scale),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        spacing: 2.143 * scale,
-        children: [
-          Container(
-            width: 5.833 * scale,
-            height: 12.5 * scale,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429 * scale),
-            ),
-          ),
-          Container(
-            width: 5 * scale,
-            height: 16.667 * scale,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429 * scale),
-            ),
-          ),
-          Container(
-            width: 5 * scale,
-            height: 20.833 * scale,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429 * scale),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GradientChip extends StatelessWidget {
-  const _GradientChip({
-    required this.gradient,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final LinearGradient gradient;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Spacing.md,
-          vertical: Spacing.xs,
-        ),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4,
-          children: [
-            SizedBox(
-              height: 16,
-              width: 24,
-              child: FittedBox(
-                child: Icon(icon, color: Colors.white),
-              ),
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                fontFamily: FontFamily.poppins,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                height: 1,
-                letterSpacing: -0.15,
-                color: Colors.white,
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileChip extends StatelessWidget {
-  const _ProfileChip({
-    required this.label,
-    required this.backgroundColor,
-    required this.textColor,
-  });
-
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.md,
-        vertical: Spacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 4,
-        children: [
-          SizedBox(
-            height: 16,
-            width: 16,
-            child: FittedBox(
-              child: Icon(Icons.person, color: textColor),
-            ),
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: FontFamily.poppins,
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              height: 1,
-              letterSpacing: -0.15,
-              color: textColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _IconChip extends StatelessWidget {
-  const _IconChip({
-    required this.icon,
-    required this.onTap,
-    this.gradient,
-    this.borderColor,
-  });
-
-  final IconData icon;
-  final VoidCallback onTap;
-  final LinearGradient? gradient;
-  final Color? borderColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          gradient: gradient,
-          shape: BoxShape.circle,
-          border: borderColor != null ? Border.all(color: borderColor!) : null,
-        ),
-        child: Center(
-          child: SizedBox(
-            height: 16,
-            width: 16,
-            child: FittedBox(
-              child: Icon(
-                icon,
-                color: gradient != null
-                    ? Colors.white
-                    : borderColor ?? Colors.black,
-              ),
-            ),
-          ),
         ),
       ),
     );

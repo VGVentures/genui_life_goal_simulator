@@ -123,5 +123,9 @@
     "thisMonthLabel": "Este mes",
     "@thisMonthLabel": {
         "description": "Etiqueta para ver el monto del mes actual"
+    },
+    "restartDemoLabel": "Reiniciar Demo",
+    "@restartDemoLabel": {
+        "description": "Etiqueta para ver un texto en la barra de la aplicación del chat"
     }
 }

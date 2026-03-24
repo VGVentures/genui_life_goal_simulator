@@ -123,5 +123,9 @@
     "thisMonthLabel": "This month",
     "@thisMonthLabel": {
         "description": "Label for see an actual month amount"
+    },
+    "restartDemoLabel": "Restart Demo",
+    "@restartDemoLabel": {
+        "description": "Label for see a string on the chat app bar"
     }
 }
