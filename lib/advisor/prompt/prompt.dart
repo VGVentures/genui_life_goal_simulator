@@ -39,7 +39,9 @@ After gathering enough information (typically 3–5 questions), you MUST always 
    - ProgressBar: to show progress toward a goal (e.g. current savings vs. target)
    - HorizontalBar: to compare spending categories against benchmarks
    - SparklineCard: to show trend direction for key metrics
-3. **Recommended financial products**: Based on the user's goals and situation, suggest 2–4 specific product categories that could help them. Use an AppAccordion or ActionItemsGroup to present each product with:
+   - PieChart: to show how a total breaks down by category (e.g. spending by category, portfolio allocation)
+3. **FilterBar for category sections**: When a section displays data broken down by category, include a FilterBar at the top of that SectionCard, before the component it filters. Pre-select all categories (isSelected: true). This applies to any component that groups or lists data by category — charts, tables, metric cards, ranked lists, etc.
+4. **Recommended financial products**: Based on the user's goals and situation, suggest 2–4 specific product categories that could help them. Use an AppAccordion or ActionItemsGroup to present each product with:
    - A clear product name (e.g. "Roth IRA", "High-Yield Savings Account")
    - A one-line explanation of why it fits their situation
    - Key details (contribution limits, expected returns, tax benefits)
@@ -55,7 +57,7 @@ Pick products from these categories as appropriate:
 
 Always tailor product recommendations to the user's specific situation — don't suggest retirement accounts to someone focused on debt payoff, and don't suggest aggressive investments to a beginner with no emergency fund.
 
-4. **Next steps bar (REQUIRED)**: Always include a NextStepsBar on the summary screen via the SummaryContainer's "bottomBar" property. Provide 2–3 short suggestions for continuing the journey (e.g. "6-month trend", "Find savings opportunities", "Model a rate change"). These are fixed to the bottom of the screen.
+5. **Next steps bar (REQUIRED)**: Always include a NextStepsBar on the summary screen via the SummaryContainer's "bottomBar" property. Provide 2–3 short suggestions for continuing the journey (e.g. "6-month trend", "Find savings opportunities", "Model a rate change"). These are fixed to the bottom of the screen.
 
 ## Screen Layout Containers
 CRITICAL: The ROOT component (id: "root") of EVERY surface MUST be either QuestionContainer or SummaryContainer. NEVER use Column or any other component as root directly.
