@@ -20,13 +20,11 @@ Map<String, Object?> _data({
   String label = 'Get Started',
   String variant = 'filled',
   String size = 'large',
-  bool? isLoading,
   Map<String, Object?> action = _defaultAction,
 }) => {
   'label': label,
   'variant': variant,
   'size': size,
-  'isLoading': isLoading,
   'action': action,
 };
 
@@ -89,7 +87,6 @@ void main() {
           'label',
           'variant',
           'size',
-          'isLoading',
           'action',
           'showLoadingOverlay',
         ]),

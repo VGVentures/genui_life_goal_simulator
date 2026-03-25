@@ -21,9 +21,6 @@ final _schema = S.object(
       description: 'Size of the button.',
       enumValues: ['large', 'small'],
     ),
-    'isLoading': S.boolean(
-      description: 'Whether the button shows a loading indicator.',
-    ),
     'action': A2uiSchemas.action(
       description: 'The action to perform when the button is pressed.',
     ),
@@ -150,13 +147,17 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
                 onPressed: _tapped ? null : _onPressed,
               ),
             ),
-            if (showThinking)
-              const Padding(
-                padding: EdgeInsets.only(top: Spacing.sm),
-                child: ThinkingAnimation(
+            Padding(
+              padding: const EdgeInsets.only(top: Spacing.md),
+              child: AnimatedOpacity(
+                opacity: showThinking ? 1 : 0,
+                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 400),
+                child: const ThinkingAnimation(
                   alignment: Alignment.topLeft,
                 ),
               ),
+            ),
           ],
         );
       },

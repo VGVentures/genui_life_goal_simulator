@@ -50,14 +50,24 @@ final class SimulatorState {
   /// The index of the page currently being built by the AI.
   final int currentPageIndex;
 
+  /// Whether the LLM is currently processing a request.
   final bool isLoading;
+
+  /// Whether a new surface has been received but navigation has been deferred
+  /// until the LLM finishes loading. This keeps the current page visible
+  /// (with its button's thinking animation) while the next page's content is
+  /// being generated. The view uses this to show the outer thinking animation
+  /// during the initial load.
   final bool hasPendingNavigation;
+
+  /// Whether the full-screen loading overlay with the large Rive animation
+  /// should be shown. Set to `true` when an AppButton with
+  /// `showLoadingOverlay` is pressed, and cleared when the pending navigation
+  /// completes.
   final bool showLoadingOverlay;
+
   final SurfaceHost? host;
   final String? error;
-
-  bool get isContentReady =>
-      status == SimulatorStatus.active && pages.isNotEmpty && host != null;
 
   SimulatorState copyWith({
     SimulatorStatus? status,

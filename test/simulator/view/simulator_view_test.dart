@@ -102,6 +102,51 @@ void main() {
       expect(find.byType(ThinkingAnimation), findsOneWidget);
     });
 
+    testWidgets(
+      'shows thinking animation during initial pending navigation',
+      (tester) async {
+        final host = _MockSurfaceHost();
+        when(() => bloc.state).thenReturn(
+          SimulatorState(
+            status: SimulatorStatus.active,
+            pages: const [
+              [AiTextDisplayMessage('Hello')],
+            ],
+            isLoading: true,
+            hasPendingNavigation: true,
+            host: host,
+          ),
+        );
+        await tester.pumpSimulatorView(bloc);
+
+        // Only one page — user hasn't seen content yet, show thinking.
+        expect(find.byType(ThinkingAnimation), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'hides thinking animation during subsequent pending navigation',
+      (tester) async {
+        final host = _MockSurfaceHost();
+        when(() => bloc.state).thenReturn(
+          SimulatorState(
+            status: SimulatorStatus.active,
+            pages: const [
+              [AiTextDisplayMessage('Hello')],
+              [AiTextDisplayMessage('World')],
+            ],
+            isLoading: true,
+            hasPendingNavigation: true,
+            host: host,
+          ),
+        );
+        await tester.pumpSimulatorView(bloc);
+
+        // Multiple pages — user is viewing the first, no outer thinking.
+        expect(find.byType(ThinkingAnimation), findsNothing);
+      },
+    );
+
     testWidgets('rebuilds when pages change', (tester) async {
       final host = _MockSurfaceHost();
       whenListen(

@@ -82,9 +82,6 @@ class _SimulatorViewState extends State<SimulatorView> {
                               return _SimulatorPage(
                                 messages: messages,
                                 host: state.host!,
-                                isLoading:
-                                    state.isLoading &&
-                                    pageIndex == state.currentPageIndex,
                               );
                             },
                           ),
@@ -259,98 +256,37 @@ class _FadingPageView extends StatelessWidget {
   }
 }
 
-class _SimulatorPage extends StatefulWidget {
+class _SimulatorPage extends StatelessWidget {
   const _SimulatorPage({
     required this.messages,
     required this.host,
-    required this.isLoading,
   });
 
   final List<DisplayMessage> messages;
   final SurfaceHost host;
-  final bool isLoading;
-
-  @override
-  State<_SimulatorPage> createState() => _SimulatorPageState();
-}
-
-class _SimulatorPageState extends State<_SimulatorPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _fadeController;
-  late final Animation<double> _contentOpacity;
-  bool _hasFinishedLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _contentOpacity = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    );
-    // If not loading from the start, show content immediately.
-    if (!widget.isLoading) {
-      _hasFinishedLoading = true;
-      _fadeController.value = 1.0;
-    }
-  }
-
-  @override
-  void didUpdateWidget(_SimulatorPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Detect transition from loading → done.
-    if (oldWidget.isLoading && !widget.isLoading && !_hasFinishedLoading) {
-      _hasFinishedLoading = true;
-      unawaited(_fadeController.forward(from: 0));
-    }
-  }
-
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Content — always laid out, visibility controlled by fade.
-        FadeTransition(
-          opacity: _contentOpacity,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              top: 40,
-              bottom: 100,
-              left: Spacing.md,
-              right: Spacing.md,
-            ),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final message in widget.messages)
-                    if (message is! UserDisplayMessage)
-                      SimulatorMessageBubble(
-                        message: message,
-                        host: widget.host,
-                      ),
-                ],
-              ),
-            ),
-          ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(
+        top: 40,
+        bottom: 100,
+        left: Spacing.md,
+        right: Spacing.md,
+      ),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final message in messages)
+              if (message is! UserDisplayMessage)
+                SimulatorMessageBubble(
+                  message: message,
+                  host: host,
+                ),
+          ],
         ),
-        // Spinner — fades out as content fades in.
-        if (widget.isLoading || !_hasFinishedLoading)
-          AnimatedOpacity(
-            opacity: _hasFinishedLoading ? 0.0 : 1.0,
-            duration: const Duration(milliseconds: 200),
-            child: const SizedBox.shrink(),
-          ),
-      ],
+      ),
     );
   }
 }

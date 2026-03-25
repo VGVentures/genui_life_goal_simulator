@@ -23,6 +23,13 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
 
   final SimulatorRepository _repository;
   StreamSubscription<SimulatorConversationEvent>? _eventSubscription;
+
+  /// Index of a page whose navigation has been deferred until loading finishes.
+  ///
+  /// When a new surface arrives while `isLoading` is `true`, the page is added
+  /// to `pages` but `currentPageIndex` is not updated. Instead, this field
+  /// records the target index. When loading completes, `currentPageIndex` is
+  /// updated and this field is cleared, triggering the page transition.
   int? _pendingPageIndex;
 
   Future<void> _onStarted(
