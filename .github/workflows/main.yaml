@@ -130,6 +130,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Generate Firebase config
+        run: |
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+          echo "${{ secrets.FIREBASERC }}" | base64 -d > .firebaserc
       - run: flutter pub get
       - run: flutter build web --wasm --target lib/main_development.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -138,7 +142,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
           target: develop
-          projectId: finance-app-4a537
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
 
   distribute_android:
     name: Distribute Android APK
