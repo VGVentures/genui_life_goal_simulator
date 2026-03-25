@@ -20,18 +20,14 @@ class IntroMobileView extends StatelessWidget {
     colors: [Color(0xFF93A0F5), Color(0xFFBBB7F9)],
   );
 
-  static const _titleStyle = TextStyle(
-    fontFamily: 'Poppins',
-    color: Colors.white,
-    fontSize: 48,
-    fontWeight: FontWeight.w700,
-    height: 1,
-    letterSpacing: -2,
-  );
+  static TextStyle _getTitleStyle({Color? color}) =>
+      AppTextStyles.displayLargeDesktop.copyWith(color: color);
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final colors = Theme.of(context).extension<AppColors>();
+
     return Scaffold(
       backgroundColor: _backgroundColor,
       body: Stack(
@@ -108,36 +104,40 @@ class IntroMobileView extends StatelessWidget {
               height: 12,
             ),
           ),
-          const Positioned(
-            top: 420,
-            left: 0,
-            right: 0,
-            child: Center(child: IntroBadges()),
-          ),
           SafeArea(
             child: Column(
               children: [
                 const Spacer(),
-                const SizedBox(height: 55),
+                const IntroBadges(),
+                const SizedBox(height: Spacing.md),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(l10n.introTitlePrefix, style: _titleStyle),
+                    Text(
+                      l10n.introTitlePrefix,
+                      style: _getTitleStyle(color: colors?.onPrimary),
+                    ),
                     ShaderMask(
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('x ', style: _titleStyle),
-                          Text('VGV', style: _titleStyle),
+                          Text(
+                            'x ',
+                            style: _getTitleStyle(color: colors?.onPrimary),
+                          ),
+                          Text(
+                            'VGV',
+                            style: _getTitleStyle(color: colors?.onPrimary),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Spacing.md),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
@@ -156,7 +156,7 @@ class IntroMobileView extends StatelessWidget {
                     label: l10n.introGetStartedLabel,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: Spacing.xxxl),
               ],
             ),
           ),
