@@ -131,12 +131,51 @@ class _ActionItemTrailing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final isMobile = Breakpoints.isMobile(MediaQuery.sizeOf(context).width);
+    final amountAndDelta = Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        Text(
+          amount,
+          style: textTheme.bodyLarge?.copyWith(
+            color: colors?.onSurface ?? _ActionItemColors.title,
+          ),
+        ),
+        if (delta != null) ...[
+          const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
+          Text(
+            delta!,
+            style: textTheme.labelMedium?.copyWith(
+              color: colors?.success ?? _ActionItemColors.delta,
+            ),
+          ),
+        ],
+      ],
+    );
+
+    if (trailing == null) return amountAndDelta;
+
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          trailing!,
+          const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
+          amountAndDelta,
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
               amount,
@@ -144,20 +183,18 @@ class _ActionItemTrailing extends StatelessWidget {
                 color: colors?.onSurface ?? _ActionItemColors.title,
               ),
             ),
-            if (delta != null) ...[
-              const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
-              Text(
-                delta!,
-                style: textTheme.labelMedium?.copyWith(
-                  color: colors?.success ?? _ActionItemColors.delta,
-                ),
-              ),
-            ],
+            const SizedBox(width: Spacing.md),
+            trailing!,
           ],
         ),
-        if (trailing != null) ...[
-          const SizedBox(width: Spacing.md),
-          trailing!,
+        if (delta != null) ...[
+          const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
+          Text(
+            delta!,
+            style: textTheme.labelMedium?.copyWith(
+              color: colors?.success ?? _ActionItemColors.delta,
+            ),
+          ),
         ],
       ],
     );
