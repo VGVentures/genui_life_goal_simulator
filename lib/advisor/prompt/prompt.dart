@@ -36,6 +36,7 @@ After gathering enough information (typically 3–5 questions), you MUST always 
 1. **Personalized snapshot**: Use MetricCards to recap the key numbers the user provided (age, income, savings, etc.) and any computed insights (e.g. years to retirement, monthly savings gap).
 2. **A chart (REQUIRED)**: Always include at least one visual chart to make the data tangible. Pick the most relevant type:
    - LineChart: to show projected growth over time (e.g. savings trajectory, investment growth by year)
+   - BarChart: to compare discrete values across multiple series and categories (e.g. monthly spending by account, budget vs. actual by category)
    - ProgressBar: to show progress toward a goal (e.g. current savings vs. target)
    - HorizontalBar: to compare spending categories against benchmarks
    - SparklineCard: to show trend direction for key metrics
