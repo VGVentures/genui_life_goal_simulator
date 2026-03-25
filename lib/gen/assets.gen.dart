@@ -106,16 +106,16 @@ class $AssetsImagesGen {
 class $AssetsImagesAdvisorGen {
   const $AssetsImagesAdvisorGen();
 
-  /// File path: assets/images/advisor/advisor_logo.svg
-  SvgGenImage get advisorLogo =>
-      const SvgGenImage('assets/images/advisor/advisor_logo.svg');
-
   /// File path: assets/images/advisor/restart_icon.svg
   SvgGenImage get restartIcon =>
       const SvgGenImage('assets/images/advisor/restart_icon.svg');
 
+  /// File path: assets/images/advisor/vgvunicorn_appbar.svg
+  SvgGenImage get vgvunicornAppbar =>
+      const SvgGenImage('assets/images/advisor/vgvunicorn_appbar.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [advisorLogo, restartIcon];
+  List<SvgGenImage> get values => [restartIcon, vgvunicornAppbar];
 }
 
 class $AssetsImagesIntroGen {

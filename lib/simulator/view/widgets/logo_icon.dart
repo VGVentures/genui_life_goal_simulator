@@ -11,7 +11,7 @@ class LogoIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Assets.images.advisor.advisorLogo.svg(
+    return Assets.images.advisor.vgvunicornAppbar.svg(
       width: size,
       height: size,
     );
