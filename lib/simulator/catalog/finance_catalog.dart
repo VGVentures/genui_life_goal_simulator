@@ -61,7 +61,7 @@ Use HorizontalBar to compare spending categories against a prior period or exter
 
 Use ProgressBar to show spending categories vs. a fixed budget limit. Set value to actual spend and total to the budget. Do not use when the reference is a prior period — use HorizontalBar instead.
 
-Use the SparklineCard widget to display a financial category with its amount and a trend sparkline. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
+Use the SparklineCard widget to display financial categories, each with an amount and a trend sparkline — arranged in a horizontal row on desktop or stacked vertically on mobile. Always provide at least 2 cards in the "cards" array. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
 
 Use PieChart when showing part-to-whole relationships (e.g. spending by category, portfolio allocation). Provide 3–7 segments and assign a distinct color to each. Always set totalLabel and totalAmount to show the aggregate in the donut center.
 

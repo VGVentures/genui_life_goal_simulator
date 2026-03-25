@@ -53,4 +53,55 @@ void main() {
       });
     });
   });
+
+  group(SparklineCardsLayout, () {
+    const cards = [
+      SparklineCard(
+        label: 'Savings',
+        amount: r'$12,500',
+        trend: TrendType.positive,
+      ),
+      SparklineCard(
+        label: 'Spending',
+        amount: r'$3,200',
+        trend: TrendType.negative,
+      ),
+    ];
+
+    testWidgets('renders all cards side by side on desktop', (tester) async {
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme(LightThemeColors()).themeData,
+          home: const Scaffold(body: SparklineCardsLayout(cards: cards)),
+        ),
+      );
+
+      expect(find.byType(SparklineCard), findsNWidgets(2));
+      expect(find.text('Savings'), findsOneWidget);
+      expect(find.text('Spending'), findsOneWidget);
+    });
+
+    testWidgets('stacks cards vertically on mobile', (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme(LightThemeColors()).themeData,
+          home: const Scaffold(body: SparklineCardsLayout(cards: cards)),
+        ),
+      );
+
+      expect(find.byType(SparklineCard), findsNWidgets(2));
+      expect(find.text('Savings'), findsOneWidget);
+      expect(find.text('Spending'), findsOneWidget);
+    });
+  });
 }

@@ -47,55 +47,104 @@ class SparklineCard extends StatelessWidget {
       TrendType.positive => Assets.images.sparklineCards.positiveLine.svg(),
     };
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: _Dimensions.cardWidthSize,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors?.surface,
+        borderRadius: BorderRadius.circular(Spacing.xs),
       ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: colors?.surface,
-          borderRadius: BorderRadius.circular(Spacing.xs),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.sm),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colors?.onSurfaceVariant,
-                      ),
+      child: Padding(
+        padding: const EdgeInsets.all(Spacing.sm),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colors?.onSurfaceVariant,
                     ),
-                    Text(
-                      amount,
-                      style: textTheme.headlineSmall?.copyWith(
-                        color: colors?.onSurface,
-                      ),
+                  ),
+                  Text(
+                    amount,
+                    style: textTheme.headlineSmall?.copyWith(
+                      color: colors?.onSurface,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    trendLine,
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  trendLine,
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-abstract final class _Dimensions {
-  static const double cardWidthSize = 296;
+/// {@template sparkline_cards_layout}
+/// A responsive layout for a collection of [SparklineCard] widgets.
+///
+/// - **Desktop** (screen width ≥ 600 px): cards in a single horizontal row,
+///   each taking equal width via [Expanded].
+/// - **Mobile** (screen width < 600 px): cards stacked vertically, each
+///   stretching to full width.
+/// {@endtemplate}
+class SparklineCardsLayout extends StatelessWidget {
+  /// {@macro sparkline_cards_layout}
+  const SparklineCardsLayout({required this.cards, super.key});
+
+  /// The cards to display.
+  final List<SparklineCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveScaffold(
+      mobile: _MobileSparklineCardsLayout(cards: cards),
+      desktop: _DesktopSparklineCardsLayout(cards: cards),
+    );
+  }
+}
+
+class _DesktopSparklineCardsLayout extends StatelessWidget {
+  const _DesktopSparklineCardsLayout({required this.cards});
+
+  final List<SparklineCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          Expanded(child: cards[i]),
+          if (i < cards.length - 1) const SizedBox(width: Spacing.sm),
+        ],
+      ],
+    );
+  }
+}
+
+class _MobileSparklineCardsLayout extends StatelessWidget {
+  const _MobileSparklineCardsLayout({required this.cards});
+
+  final List<SparklineCard> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children:
+          cards.expand((c) => [c, const SizedBox(height: Spacing.sm)]).toList()
+            ..removeLast(),
+    );
+  }
 }
