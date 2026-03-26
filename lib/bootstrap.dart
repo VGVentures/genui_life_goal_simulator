@@ -40,6 +40,7 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
+  bool showDevMenu = false,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -85,7 +86,9 @@ Future<void> bootstrap({
           value: featureFlagsRepository,
         ),
       ],
-      child: const App(),
+      child: App(
+        showDevMenu: showDevMenu,
+      ),
     ),
   );
 }
