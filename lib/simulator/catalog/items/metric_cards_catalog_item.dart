@@ -28,7 +28,12 @@ final _schema = S.object(
             description: 'Optional delta text (e.g. "+1.2%").',
           ),
           'deltaDirection': S.string(
-            description: 'Colour direction of the delta indicator.',
+            description:
+                'Colour of the delta indicator based on whether the change '
+                'is financially favorable or unfavorable — NOT based on the '
+                'sign of the number. '
+                '"positive" = green (good outcome, e.g. savings up, spending down, debt reduced). '
+                '"negative" = red (bad outcome, e.g. overspent, savings down, income dropped).',
             enumValues: ['positive', 'negative'],
           ),
           'isSelected': S.boolean(
