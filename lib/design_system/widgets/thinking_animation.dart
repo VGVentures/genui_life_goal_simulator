@@ -64,7 +64,8 @@ class _ThinkingAnimationState extends State<ThinkingAnimation> {
         fileLoader: fileLoader,
         builder: (context, state) => switch (state) {
           RiveLoaded(:final controller) => AspectRatio(
-            aspectRatio: controller.artboard.bounds.width /
+            aspectRatio:
+                controller.artboard.bounds.width /
                 controller.artboard.bounds.height,
             child: RiveWidget(
               controller: controller,
