@@ -100,7 +100,7 @@ String _resolveString(Object? value) {
   return value?.toString() ?? '';
 }
 
-/// CatalogItem that renders a [BarChart] widget.
+/// CatalogItem that renders a [AppBarChart] widget.
 ///
 /// Series string fields (`label`) and point string fields (`xLabel`,
 /// `tooltipLabel`, `tooltipValue`) support data model bindings via
@@ -142,7 +142,7 @@ final barChartItem = CatalogItem(
 
         return SizedBox(
           height: 291,
-          child: BarChart(
+          child: AppBarChart(
             series: series,
             yAxisLabels: yAxisLabels,
             minValue: 0,

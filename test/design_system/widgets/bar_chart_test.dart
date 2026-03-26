@@ -105,7 +105,7 @@ const _series = [
   ),
 ];
 
-const _chart = BarChart(
+const _chart = AppBarChart(
   series: _series,
   yAxisLabels: _yLabels,
   minValue: 0,
@@ -113,7 +113,7 @@ const _chart = BarChart(
 );
 
 void main() {
-  group(BarChart, () {
+  group(AppBarChart, () {
     testWidgets('renders without error', (tester) async {
       await tester.pumpApp(
         const Scaffold(
@@ -121,7 +121,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(BarChart), findsOneWidget);
+      expect(find.byType(AppBarChart), findsOneWidget);
     });
 
     testWidgets('renders x-axis labels', (tester) async {
@@ -180,13 +180,13 @@ void main() {
         ),
       );
 
-      final chartPos = tester.getTopLeft(find.byType(BarChart));
+      final chartPos = tester.getTopLeft(find.byType(AppBarChart));
       await tester.tapAt(chartPos + const Offset(80, 160));
       await tester.pumpAndSettle();
 
       debugDefaultTargetPlatformOverride = null;
 
-      expect(find.byType(BarChart), findsOneWidget);
+      expect(find.byType(AppBarChart), findsOneWidget);
     });
 
     testWidgets('renders with empty series list without error', (tester) async {
@@ -195,7 +195,7 @@ void main() {
           body: SizedBox(
             width: 617,
             height: 291,
-            child: BarChart(
+            child: AppBarChart(
               series: [],
               yAxisLabels: _yLabels,
               minValue: 0,
@@ -205,7 +205,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(BarChart), findsOneWidget);
+      expect(find.byType(AppBarChart), findsOneWidget);
     });
 
     testWidgets('renders with single series without error', (tester) async {
@@ -214,7 +214,7 @@ void main() {
           body: SizedBox(
             width: 617,
             height: 291,
-            child: BarChart(
+            child: AppBarChart(
               series: [
                 BarChartSeries(
                   label: 'Reference 1',
@@ -237,7 +237,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(BarChart), findsOneWidget);
+      expect(find.byType(AppBarChart), findsOneWidget);
       expect(find.text('Reference 1'), findsOneWidget);
     });
   });

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:fl_chart/fl_chart.dart' as fl;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
@@ -41,7 +41,7 @@ class BarChartPoint {
   int get hashCode => Object.hash(xLabel, value, tooltipLabel, tooltipValue);
 }
 
-/// A data series rendered as a set of bars in [BarChart].
+/// A data series rendered as a set of bars in [AppBarChart].
 @immutable
 class BarChartSeries {
   /// Creates a [BarChartSeries].
@@ -79,9 +79,9 @@ class BarChartSeries {
 /// (desktop) or tapping (mobile) a bar shows a tooltip with
 /// [BarChartPoint.tooltipLabel] and [BarChartPoint.tooltipValue].
 /// The touched bar stays at full opacity; all other bars dim to 40%.
-class BarChart extends StatefulWidget {
-  /// Creates a [BarChart].
-  const BarChart({
+class AppBarChart extends StatefulWidget {
+  /// Creates a [AppBarChart].
+  const AppBarChart({
     required this.series,
     required this.yAxisLabels,
     required this.minValue,
@@ -103,10 +103,10 @@ class BarChart extends StatefulWidget {
   final double maxValue;
 
   @override
-  State<BarChart> createState() => _BarChartState();
+  State<AppBarChart> createState() => _BarChartState();
 }
 
-class _BarChartState extends State<BarChart> {
+class _BarChartState extends State<AppBarChart> {
   int? _touchedGroupIndex;
   int? _touchedRodIndex;
 
@@ -117,22 +117,22 @@ class _BarChartState extends State<BarChart> {
     return widget.series.map((s) => s.points.length).reduce(max);
   }
 
-  void _handleTouch(fl.FlTouchEvent event, fl.BarTouchResponse? response) {
+  void _handleTouch(FlTouchEvent event, BarTouchResponse? response) {
     final spot = response?.spot;
     final groupIndex = spot?.touchedBarGroupIndex;
     final rodIndex = spot?.touchedRodDataIndex;
 
-    if (event is fl.FlPointerHoverEvent) {
+    if (event is FlPointerHoverEvent) {
       setState(() {
         _touchedGroupIndex = groupIndex;
         _touchedRodIndex = rodIndex;
       });
-    } else if (event is fl.FlPointerExitEvent) {
+    } else if (event is FlPointerExitEvent) {
       setState(() {
         _touchedGroupIndex = null;
         _touchedRodIndex = null;
       });
-    } else if (event is fl.FlTapUpEvent && _isMobile) {
+    } else if (event is FlTapUpEvent && _isMobile) {
       setState(() {
         if (_touchedGroupIndex == groupIndex && _touchedRodIndex == rodIndex) {
           _touchedGroupIndex = null;
@@ -145,7 +145,7 @@ class _BarChartState extends State<BarChart> {
     }
   }
 
-  List<fl.BarChartGroupData> _buildGroups(
+  List<BarChartGroupData> _buildGroups(
     double barWidth,
     BorderRadius borderRadius,
   ) {
@@ -153,7 +153,7 @@ class _BarChartState extends State<BarChart> {
     final hasSelection = _touchedGroupIndex != null && _touchedRodIndex != null;
 
     return List.generate(numGroups, (groupIndex) {
-      return fl.BarChartGroupData(
+      return BarChartGroupData(
         x: groupIndex,
         barRods: List.generate(widget.series.length, (rodIndex) {
           final s = widget.series[rodIndex];
@@ -165,7 +165,7 @@ class _BarChartState extends State<BarChart> {
           final color = hasSelection && !isSelected
               ? s.color.withValues(alpha: 0.4)
               : s.color;
-          return fl.BarChartRodData(
+          return BarChartRodData(
             toY: value,
             color: color,
             width: barWidth,
@@ -264,32 +264,32 @@ class _BarChartState extends State<BarChart> {
                 final gridColor =
                     colors?.outlineVariant ?? _BarChartColors.grid;
 
-                return fl.BarChart(
-                  fl.BarChartData(
+                return BarChart(
+                  BarChartData(
                     minY: widget.minValue,
                     maxY: widget.maxValue,
                     barGroups: _buildGroups(barWidth, barBorderRadius),
-                    alignment: fl.BarChartAlignment.spaceEvenly,
-                    gridData: fl.FlGridData(
+                    alignment: BarChartAlignment.spaceEvenly,
+                    gridData: FlGridData(
                       show: widget.yAxisLabels.length >= 2 && yInterval != null,
                       drawVerticalLine: false,
                       horizontalInterval: yInterval,
-                      getDrawingHorizontalLine: (_) => fl.FlLine(
+                      getDrawingHorizontalLine: (_) => FlLine(
                         color: gridColor,
                         strokeWidth: 1,
                         dashArray: [4, 4],
                       ),
                     ),
-                    extraLinesData: fl.ExtraLinesData(
+                    extraLinesData: ExtraLinesData(
                       extraLinesOnTop: false,
                       horizontalLines: [
-                        fl.HorizontalLine(
+                        HorizontalLine(
                           y: widget.minValue,
                           color: gridColor,
                           strokeWidth: 1,
                           dashArray: [4, 4],
                         ),
-                        fl.HorizontalLine(
+                        HorizontalLine(
                           y: widget.maxValue,
                           color: gridColor,
                           strokeWidth: 1,
@@ -297,11 +297,11 @@ class _BarChartState extends State<BarChart> {
                         ),
                       ],
                     ),
-                    titlesData: fl.FlTitlesData(
-                      topTitles: const fl.AxisTitles(),
-                      rightTitles: const fl.AxisTitles(),
-                      bottomTitles: fl.AxisTitles(
-                        sideTitles: fl.SideTitles(
+                    titlesData: FlTitlesData(
+                      topTitles: const AxisTitles(),
+                      rightTitles: const AxisTitles(),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
                           showTitles: numGroups > 0,
                           reservedSize: responsiveValue(
                             context,
@@ -323,7 +323,7 @@ class _BarChartState extends State<BarChart> {
                             final isMobile = Breakpoints.isMobile(
                               MediaQuery.sizeOf(context).width,
                             );
-                            return fl.SideTitleWidget(
+                            return SideTitleWidget(
                               meta: meta,
                               space: Spacing.sm,
                               child: isMobile
@@ -341,8 +341,8 @@ class _BarChartState extends State<BarChart> {
                           },
                         ),
                       ),
-                      leftTitles: fl.AxisTitles(
-                        sideTitles: fl.SideTitles(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
                           showTitles: widget.yAxisLabels.isNotEmpty,
                           reservedSize: _BarChartDimensions.leftReserved,
                           interval: yInterval,
@@ -360,7 +360,7 @@ class _BarChartState extends State<BarChart> {
                             if ((value - expected).abs() > yInterval * 0.01) {
                               return const SizedBox.shrink();
                             }
-                            return fl.SideTitleWidget(
+                            return SideTitleWidget(
                               meta: meta,
                               space: Spacing.sm,
                               child: Text(
@@ -372,11 +372,11 @@ class _BarChartState extends State<BarChart> {
                         ),
                       ),
                     ),
-                    borderData: fl.FlBorderData(show: false),
-                    barTouchData: fl.BarTouchData(
+                    borderData: FlBorderData(show: false),
+                    barTouchData: BarTouchData(
                       handleBuiltInTouches: true,
                       touchCallback: _handleTouch,
-                      touchTooltipData: fl.BarTouchTooltipData(
+                      touchTooltipData: BarTouchTooltipData(
                         getTooltipColor: (_) =>
                             colors?.surfaceContainer ??
                             _BarChartColors.tooltipBg,
@@ -394,7 +394,7 @@ class _BarChartState extends State<BarChart> {
                           final s = widget.series[rodIndex];
                           if (groupIndex >= s.points.length) return null;
                           final point = s.points[groupIndex];
-                          return fl.BarTooltipItem(
+                          return BarTooltipItem(
                             '${point.tooltipLabel}\n',
                             (theme.textTheme.bodySmall ?? const TextStyle())
                                 .copyWith(

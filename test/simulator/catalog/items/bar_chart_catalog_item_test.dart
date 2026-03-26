@@ -104,7 +104,7 @@ void main() {
       testWidgets('BarChart widget', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.byType(BarChart), findsOneWidget);
+        expect(find.byType(AppBarChart), findsOneWidget);
       });
 
       testWidgets('legend labels', (tester) async {
@@ -126,7 +126,7 @@ void main() {
 
         final sizedBox = tester.widget<SizedBox>(
           find.ancestor(
-            of: find.byType(BarChart),
+            of: find.byType(AppBarChart),
             matching: find.byType(SizedBox),
           ),
         );
@@ -169,7 +169,7 @@ void main() {
             ),
           );
 
-          expect(find.byType(BarChart), findsOneWidget);
+          expect(find.byType(AppBarChart), findsOneWidget);
         });
       }
 
@@ -194,7 +194,7 @@ void main() {
           ),
         );
 
-        expect(find.byType(BarChart), findsOneWidget);
+        expect(find.byType(AppBarChart), findsOneWidget);
       });
     });
   });
