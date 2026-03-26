@@ -179,7 +179,7 @@ jobs:
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$GITHUB_WORKSPACE/release.jks"
 
       - name: Build release APK
-        run: flutter build apk --release --flavor production --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+        run: flutter build apk --release --flavor production --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.APP_DISTRIBUTION_APP_CHECK_DEBUG_TOKEN }}
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
