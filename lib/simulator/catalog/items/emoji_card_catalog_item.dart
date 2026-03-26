@@ -163,9 +163,7 @@ class _StatefulEmojiCardsState extends State<_StatefulEmojiCards> {
       children: [
         Text(
           widget.callToAction,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Theme.of(context).extension<AppColors>()?.onSurfaceVariant,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: Spacing.sm),
         layout,
