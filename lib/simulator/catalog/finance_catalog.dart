@@ -35,6 +35,8 @@ Use the EmojiCard widget to display a set of categorized options or highlights a
 
 Use the LineChart widget to visualize trends over time (e.g. monthly spending, account balance history).
 
+Use the BarChart widget to compare discrete values across multiple series and categories (e.g. monthly spending by account, budget vs. actual by category). Use 1–3 series and assign a distinct color to each. Always provide yAxisLabels ordered bottom to top.
+
 Use the MetricCard widget to highlight key financial metrics (e.g. total spending, savings rate, net worth).
 
 Use the RadioCard widget to present a set of mutually exclusive choices (e.g. profile type, plan selection). Exactly one option should have isSelected: true.
@@ -123,6 +125,7 @@ Catalog buildFinanceCatalog() {
           filterBarItem,
           horizontalBarItem,
           gcnSliderItem,
+          barChartItem,
           lineChartItem,
           nextStepsBarItem,
           pieChartItem,

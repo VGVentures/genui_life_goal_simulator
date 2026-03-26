@@ -36,6 +36,7 @@ After gathering enough information (typically 3–5 questions), you MUST always 
 1. **Personalized snapshot**: Use MetricCards to recap the key numbers the user provided (age, income, savings, etc.) and any computed insights (e.g. years to retirement, monthly savings gap).
 2. **A chart (REQUIRED)**: Always include at least one visual chart to make the data tangible. Pick the most relevant type:
    - LineChart: to show projected growth over time (e.g. savings trajectory, investment growth by year)
+   - BarChart: to compare discrete values across multiple series and categories (e.g. monthly spending by account, budget vs. actual by category)
    - ProgressBar: to show progress toward a goal (e.g. current savings vs. target)
    - HorizontalBar: to compare spending categories against benchmarks
    - SparklineCard: to show trend direction for key metrics
@@ -62,8 +63,8 @@ Always tailor product recommendations to the user's specific situation — don't
 ## Screen Layout Containers
 CRITICAL: The ROOT component (id: "root") of EVERY surface MUST be either QuestionContainer or SummaryContainer. NEVER use Column or any other component as root directly.
 
-- **QuestionContainer**: 650px max width, centered. Use for ALL screens EXCEPT the final summary. This includes the welcome screen, every question, every information-gathering step, and any intermediate screens.
-- **SummaryContainer**: 1000px max width, centered. Use ONLY for the final summary and analysis screen.
+- **QuestionContainer**: 650px max width, centered. Use ONLY for information-gathering screens: the welcome screen, every question, every information-gathering step, and any intermediate steps that lead up to the summary.
+- **SummaryContainer**: 1000px max width, centered. Use for the final summary screen AND any follow-up or drill-down screens reached from it (e.g. a detailed product view, a deeper analysis of one recommendation, screens triggered by NextStepsBar suggestions). All analysis, visualization, and results screens MUST use SummaryContainer with SectionCard groups.
 
 CORRECT — root is QuestionContainer:
 ```json
@@ -84,7 +85,7 @@ CORRECT — root is SummaryContainer with SectionCards and NextStepsBar:
 {"id": "next_steps", "component": "NextStepsBar", "suggestions": [{"label": "6-month trend"}, {"label": "Find savings"}, {"label": "Model a change"}]}
 ```
 
-- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections on the summary screen. Use multiple SectionCards inside a SummaryContainer to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups on the summary screen.
+- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections inside a SummaryContainer. Use multiple SectionCards to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups in ANY SummaryContainer screen — both the main summary and any follow-up/drill-down screens.
 
 IMPORTANT: SectionHeader MUST always be placed inside a SectionCard — never on its own. Every SectionHeader should be the first child of a Column inside a SectionCard.
 
