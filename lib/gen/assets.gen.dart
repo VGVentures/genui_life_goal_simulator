@@ -110,12 +110,25 @@ class $AssetsImagesAdvisorGen {
   SvgGenImage get advisorLogo =>
       const SvgGenImage('assets/images/advisor/advisor_logo.svg');
 
+  /// File path: assets/images/advisor/error_skeleton.svg
+  SvgGenImage get errorSkeleton =>
+      const SvgGenImage('assets/images/advisor/error_skeleton.svg');
+
+  /// File path: assets/images/advisor/go_back_button.svg
+  SvgGenImage get goBackButton =>
+      const SvgGenImage('assets/images/advisor/go_back_button.svg');
+
   /// File path: assets/images/advisor/restart_icon.svg
   SvgGenImage get restartIcon =>
       const SvgGenImage('assets/images/advisor/restart_icon.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [advisorLogo, restartIcon];
+  List<SvgGenImage> get values => [
+    advisorLogo,
+    errorSkeleton,
+    goBackButton,
+    restartIcon,
+  ];
 }
 
 class $AssetsImagesIntroGen {
