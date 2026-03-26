@@ -32,8 +32,10 @@ final _schema = S.object(
                 'Colour of the delta indicator based on whether the change '
                 'is financially favorable or unfavorable — NOT based on the '
                 'sign of the number. '
-                '"positive" = green (good outcome, e.g. savings up, spending down, debt reduced). '
-                '"negative" = red (bad outcome, e.g. overspent, savings down, income dropped).',
+                '"positive" = green (good outcome, e.g. savings up, '
+                'spending down, debt reduced). '
+                '"negative" = red (bad outcome, e.g. overspent, '
+                'savings down, income dropped).',
             enumValues: ['positive', 'negative'],
           ),
           'isSelected': S.boolean(
