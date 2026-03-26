@@ -105,15 +105,11 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return Container(
-      decoration: responsiveValue<BoxDecoration?>(
-        context,
-        mobile: null,
-        desktop: BoxDecoration(
-          color: const Color(0xFFF9FAFB),
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.black.withValues(alpha: 0.2),
-            ),
+      decoration: BoxDecoration(
+        color: colors?.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black.withValues(alpha: 0.2),
           ),
         ),
       ),
@@ -128,7 +124,7 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             // Logo — smaller on mobile
-            LogoIcon(size: isMobile ? 24 : 40),
+            LogoIcon(size: isMobile ? 30 : 40),
             const SizedBox(width: Spacing.xs),
             Text.rich(
               TextSpan(
