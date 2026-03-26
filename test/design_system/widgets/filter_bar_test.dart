@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/design_system/app_colors.dart';
-import 'package:vgv_genui_financial_advisor/design_system/widgets/category_filter_chip.dart';
-import 'package:vgv_genui_financial_advisor/design_system/widgets/filter_bar.dart';
+import 'package:genui_life_goal_simulator/design_system/app_colors.dart';
+import 'package:genui_life_goal_simulator/design_system/widgets/category_filter_chip.dart';
+import 'package:genui_life_goal_simulator/design_system/widgets/filter_bar.dart';
 
 void main() {
   final colors = LightThemeColors();

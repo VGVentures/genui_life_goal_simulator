@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/gen/fonts.gen.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 
 /// Visual variant for [AppButton].
 enum AppButtonVariant {
@@ -10,6 +10,9 @@ enum AppButtonVariant {
 
   /// Outlined button with primary blue 1.5px border and dark text.
   outlined,
+
+  /// Gradient button with a linear gradient background and white text.
+  gradient,
 }
 
 /// Size variant for [AppButton].
@@ -70,11 +73,13 @@ class AppButton extends StatelessWidget {
     final primary = colors?.primary ?? _Colors.primary;
     final onPrimary = colors?.onPrimary ?? _Colors.onPrimary;
     final onSurface = colors?.onSurface ?? _Colors.onSurface;
+    final gradient = colors?.geniusGradient;
 
     final style = _buttonStyle(
       primary: primary,
       onPrimary: onPrimary,
       onSurface: onSurface,
+      gradient: gradient,
     );
 
     // When loading, disable the button entirely.
@@ -93,6 +98,11 @@ class AppButton extends StatelessWidget {
         child: child,
       ),
       AppButtonVariant.outlined => OutlinedButton(
+        onPressed: effectiveOnPressed,
+        style: style,
+        child: child,
+      ),
+      AppButtonVariant.gradient => FilledButton(
         onPressed: effectiveOnPressed,
         style: style,
         child: child,
@@ -129,11 +139,11 @@ class AppButton extends StatelessWidget {
       children: [
         if (leadingIcon != null) ...[
           leadingIcon!,
-          const SizedBox(width: Spacing.xs),
+          SizedBox(width: label.isNotEmpty ? Spacing.xs : 0),
         ],
         Text(label),
         if (trailingIcon != null) ...[
-          const SizedBox(width: Spacing.xs),
+          SizedBox(width: label.isNotEmpty ? Spacing.xs : 0),
           trailingIcon!,
         ],
       ],
@@ -144,6 +154,7 @@ class AppButton extends StatelessWidget {
     required Color primary,
     required Color onPrimary,
     required Color onSurface,
+    required LinearGradient? gradient,
   }) {
     final height = size == AppButtonSize.large
         ? _Dimensions.largeHeight
@@ -163,6 +174,7 @@ class AppButton extends StatelessWidget {
             states,
             primary,
           ),
+          AppButtonVariant.gradient => Colors.transparent,
         };
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -172,6 +184,7 @@ class AppButton extends StatelessWidget {
         return switch (variant) {
           AppButtonVariant.filled => onPrimary,
           AppButtonVariant.outlined => onSurface,
+          AppButtonVariant.gradient => onPrimary,
         };
       }),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
@@ -210,6 +223,32 @@ class AppButton extends StatelessWidget {
       tapTargetSize: MaterialTapTargetSize.padded,
       textStyle: WidgetStateProperty.all(_Dimensions.labelTextStyle),
       elevation: WidgetStateProperty.all(0),
+      backgroundBuilder: variant == AppButtonVariant.gradient
+          ? (context, states, child) {
+              final isDisabled = states.contains(WidgetState.disabled);
+              final isHovered = states.contains(WidgetState.hovered);
+              final isPressed = states.contains(WidgetState.pressed);
+              final isFocused = states.contains(WidgetState.focused);
+
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: isDisabled ? null : gradient,
+                  borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                ),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: isPressed || isFocused
+                        ? Colors.black.withValues(alpha: 0.2)
+                        : isHovered
+                        ? Colors.black.withValues(alpha: 0.1)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                  ),
+                  child: child,
+                ),
+              );
+            }
+          : null,
     );
   }
 

@@ -3,8 +3,8 @@
     "@appName": {
         "description": "El nombre para mostrar de la aplicación."
     },
-    "appName": "Aplicación Financiera",
-    "homeAppBarTitle": "Asesor Financiero",
+    "appName": "GenUIxVGV Simulador de Objetivos de Vida",
+    "homeAppBarTitle": "Simulador de Objetivos de Vida",
     "@homeAppBarTitle": {
         "description": "Texto mostrado en la barra de aplicaciones de la página de inicio"
     },
@@ -123,5 +123,9 @@
     "thisMonthLabel": "Este mes",
     "@thisMonthLabel": {
         "description": "Etiqueta para ver el monto del mes actual"
+    },
+    "restartDemoLabel": "Reiniciar Demo",
+    "@restartDemoLabel": {
+        "description": "Etiqueta para ver un texto en la barra de la aplicación del chat"
     }
 }

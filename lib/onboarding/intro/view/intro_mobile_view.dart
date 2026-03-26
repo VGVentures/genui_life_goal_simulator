@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
-import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/widgets.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/view/widgets/widgets.dart';
 
 /// {@template intro_mobile_view}
 /// Mobile layout for the intro screen.
@@ -20,18 +20,14 @@ class IntroMobileView extends StatelessWidget {
     colors: [Color(0xFF93A0F5), Color(0xFFBBB7F9)],
   );
 
-  static const _titleStyle = TextStyle(
-    fontFamily: 'Poppins',
-    color: Colors.white,
-    fontSize: 48,
-    fontWeight: FontWeight.w700,
-    height: 1,
-    letterSpacing: -2,
-  );
+  static TextStyle _getTitleStyle({Color? color}) =>
+      AppTextStyles.displayLargeDesktop.copyWith(color: color);
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final colors = Theme.of(context).extension<AppColors>();
+
     return Scaffold(
       backgroundColor: _backgroundColor,
       body: Stack(
@@ -108,36 +104,40 @@ class IntroMobileView extends StatelessWidget {
               height: 12,
             ),
           ),
-          const Positioned(
-            top: 420,
-            left: 0,
-            right: 0,
-            child: Center(child: IntroBadges()),
-          ),
           SafeArea(
             child: Column(
               children: [
                 const Spacer(),
-                const SizedBox(height: 55),
+                const IntroBadges(),
+                const SizedBox(height: Spacing.md),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(l10n.introTitlePrefix, style: _titleStyle),
+                    Text(
+                      l10n.introTitlePrefix,
+                      style: _getTitleStyle(color: colors?.onPrimary),
+                    ),
                     ShaderMask(
                       shaderCallback: (bounds) => _vgvGradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('x ', style: _titleStyle),
-                          Text('VGV', style: _titleStyle),
+                          Text(
+                            'x ',
+                            style: _getTitleStyle(color: colors?.onPrimary),
+                          ),
+                          Text(
+                            'VGV',
+                            style: _getTitleStyle(color: colors?.onPrimary),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Spacing.md),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
@@ -156,7 +156,7 @@ class IntroMobileView extends StatelessWidget {
                     label: l10n.introGetStartedLabel,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: Spacing.xxxl),
               ],
             ),
           ),

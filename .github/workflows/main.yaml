@@ -1,4 +1,4 @@
-name: vgv_genui_financial_advisor
+name: genui_life_goal_simulator
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -77,6 +77,7 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
           echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+          echo "${{ secrets.FIREBASERC }}" | base64 -d > .firebaserc
       - name: Verify Firebase config
         run: |
           echo "--- firebase_options.dart (first 3 lines) ---"
@@ -90,6 +91,7 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
+          target: production
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
 
   deploy_preview:
@@ -106,6 +108,7 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
           echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+          echo "${{ secrets.FIREBASERC }}" | base64 -d > .firebaserc
       - name: Verify Firebase config
         run: |
           echo "--- firebase_options.dart (first 3 lines) ---"
@@ -118,6 +121,32 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          target: production
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+  deploy_development:
+    name: Deploy Development
+    needs: [setup, verify_and_test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Generate Firebase config
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 -d > firebase.json
+          echo "${{ secrets.FIREBASERC }}" | base64 -d > .firebaserc
+      - run: flutter pub get
+      - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_development.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          target: develop
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
 
   distribute_android:

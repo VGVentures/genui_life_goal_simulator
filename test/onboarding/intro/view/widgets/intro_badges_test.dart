@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/view/widgets/intro_badges.dart';
+import 'package:genui_life_goal_simulator/l10n/l10n.dart';
+import 'package:genui_life_goal_simulator/onboarding/intro/view/widgets/intro_badges.dart';
 
 Future<void> _pump(WidgetTester tester) {
   return tester.pumpWidget(

@@ -2,6 +2,7 @@ export 'accordion.dart';
 export 'action_item.dart';
 export 'ai_button.dart';
 export 'app_button.dart';
+export 'bar_chart.dart';
 export 'category_filter_chip.dart';
 export 'comparison_table.dart';
 export 'emoji_card.dart';

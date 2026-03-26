@@ -1,5 +1,5 @@
-name: vgv_genui_financial_advisor
-description: Very Good Ventures Financial Advisor, powered by GenUI.
+name: genui_life_goal_simulator
+description: Very Good Ventures Life Goal Simulator, powered by GenUI.
 version: 1.0.0+1
 publish_to: none
 
@@ -76,6 +76,7 @@ flutter:
     - assets/animations/
     - assets/icons_kick_off/
     - assets/images/
+    - assets/images/advisor/
     - assets/images/intro/
     - assets/images/onboarding/
     - assets/images/sparkline_cards/

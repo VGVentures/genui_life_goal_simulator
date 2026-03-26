@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
 import 'package:rive/rive.dart';
-import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 
 /// {@template thinking_animation_catalog_page}
 /// Catalog page for previewing the AI thinking Rive animation.
