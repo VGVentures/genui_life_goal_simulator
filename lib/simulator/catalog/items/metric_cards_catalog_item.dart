@@ -31,15 +31,9 @@ final _schema = S.object(
             description: 'Colour direction of the delta indicator.',
             enumValues: ['positive', 'negative'],
           ),
-          'isSelected': S.boolean(
-            description: 'Whether the card is in the selected state.',
-          ),
         },
         required: ['label', 'value'],
       ),
-    ),
-    'action': A2uiSchemas.action(
-      description: 'The action to perform when a metric card is tapped.',
     ),
   },
   required: ['cards'],
@@ -63,7 +57,6 @@ final metricCardsItem = CatalogItem(
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
     final rawCards = json['cards']! as List;
-    final action = json['action'] as Map<String, Object?>?;
 
     final cards = rawCards.cast<Map<String, Object?>>().indexed.map((entry) {
       final (index, c) = entry;
@@ -72,23 +65,6 @@ final metricCardsItem = CatalogItem(
         dataContext: ctx.dataContext,
         cardData: c,
         deltaDirection: _parseDeltaDirection(c['deltaDirection'] as String?),
-        isSelected: c['isSelected'] as bool? ?? false,
-        onTap: action == null
-            ? null
-            : () {
-                if (action case {'event': final Map<String, Object?> event}) {
-                  ctx.dispatchEvent(
-                    UserActionEvent(
-                      name: event['name']! as String,
-                      sourceComponentId: ctx.id,
-                      context: {
-                        ...event['context'] as Map<String, Object?>? ?? {},
-                        'index': index,
-                      },
-                    ),
-                  );
-                }
-              },
       );
     }).toList();
 
@@ -101,16 +77,12 @@ class _BoundMetricCard extends StatelessWidget {
     required this.dataContext,
     required this.cardData,
     required this.deltaDirection,
-    required this.isSelected,
-    required this.onTap,
     super.key,
   });
 
   final DataContext dataContext;
   final Map<String, Object?> cardData;
   final MetricDeltaDirection? deltaDirection;
-  final bool isSelected;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +105,6 @@ class _BoundMetricCard extends StatelessWidget {
                     value: value ?? '',
                     subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
                     deltaDirection: deltaDirection,
-                    isSelected: isSelected,
-                    onTap: onTap,
                   );
                 }
                 return BoundString(
@@ -147,8 +117,6 @@ class _BoundMetricCard extends StatelessWidget {
                       subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
                       delta: delta,
                       deltaDirection: deltaDirection,
-                      isSelected: isSelected,
-                      onTap: onTap,
                     );
                   },
                 );

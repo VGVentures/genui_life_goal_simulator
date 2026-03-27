@@ -36,7 +36,7 @@ void main() {
         expect(find.byType(Text), findsNWidgets(2));
       });
 
-      testWidgets('is non-interactive when onTap is null', (tester) async {
+      testWidgets('is non-interactive', (tester) async {
         await _pumpCard(
           tester,
           const MetricCard(label: 'Fixed costs', value: r'$4,319'),
@@ -186,87 +186,6 @@ void main() {
         expect(positiveColor, isNotNull);
         expect(negativeColor, isNotNull);
         expect(positiveColor, isNot(negativeColor));
-      });
-    });
-
-    group('selected variant', () {
-      testWidgets('renders without error in selected state', (tester) async {
-        await _pumpCard(
-          tester,
-          const MetricCard(
-            label: 'Fixed costs',
-            value: r'$4,319',
-            subtitle: 'vs last month',
-            isSelected: true,
-          ),
-        );
-
-        expect(find.text('Fixed costs'), findsOneWidget);
-        expect(find.text(r'$4,319'), findsOneWidget);
-        expect(find.text('vs last month'), findsOneWidget);
-      });
-
-      testWidgets(
-        'selected and unselected cards have different border colours',
-        (tester) async {
-          Color? selectedBorderColor;
-          Color? unselectedBorderColor;
-
-          Future<Color?> borderColorOf({required bool selected}) async {
-            await _pumpCard(
-              tester,
-              MetricCard(
-                label: 'A',
-                value: '1',
-                isSelected: selected,
-              ),
-            );
-            final container = tester.widget<Container>(
-              find.byType(Container).first,
-            );
-            final decoration = container.decoration as BoxDecoration?;
-            return (decoration?.border as Border?)?.top.color;
-          }
-
-          selectedBorderColor = await borderColorOf(selected: true);
-          unselectedBorderColor = await borderColorOf(selected: false);
-
-          expect(selectedBorderColor, isNotNull);
-          expect(unselectedBorderColor, isNotNull);
-          expect(selectedBorderColor, isNot(unselectedBorderColor));
-        },
-      );
-    });
-
-    group('interaction', () {
-      testWidgets('calls onTap when tapped', (tester) async {
-        var tapped = false;
-        await _pumpCard(
-          tester,
-          MetricCard(
-            label: 'Fixed costs',
-            value: r'$4,319',
-            onTap: () => tapped = true,
-          ),
-        );
-
-        await tester.tap(find.byType(MetricCard));
-        expect(tapped, isTrue);
-      });
-
-      testWidgets('wraps content in InkWell when onTap is provided', (
-        tester,
-      ) async {
-        await _pumpCard(
-          tester,
-          MetricCard(
-            label: 'Fixed costs',
-            value: r'$4,319',
-            onTap: () {},
-          ),
-        );
-
-        expect(find.byType(InkWell), findsOneWidget);
       });
     });
   });
