@@ -15,12 +15,18 @@ class ThinkingAnimation extends StatefulWidget {
   /// {@macro thinking_animation}
   const ThinkingAnimation({
     this.width = 200,
+    this.height,
     this.alignment = Alignment.center,
     super.key,
   });
 
-  /// The width of the animation.
+  /// The width of the animation. Ignored when [height] is set (width is
+  /// derived from the artboard's aspect ratio instead).
   final double width;
+
+  /// Optional fixed height. When set, the width is derived from the
+  /// artboard's aspect ratio, keeping the animation contained.
+  final double? height;
 
   /// The alignment of the animation.
   final Alignment alignment;
@@ -55,11 +61,15 @@ class _ThinkingAnimationState extends State<ThinkingAnimation> {
   Widget build(BuildContext context) {
     final fileLoader = _fileLoader;
     if (fileLoader == null) {
-      return SizedBox(width: widget.width);
+      return SizedBox(
+        width: widget.height != null ? null : widget.width,
+        height: widget.height,
+      );
     }
 
     return SizedBox(
-      width: widget.width,
+      width: widget.height != null ? null : widget.width,
+      height: widget.height,
       child: RiveWidgetBuilder(
         fileLoader: fileLoader,
         builder: (context, state) => switch (state) {

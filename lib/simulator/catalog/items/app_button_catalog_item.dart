@@ -134,24 +134,29 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
+        final button = AppButton(
+          label: label ?? '',
+          variant: widget.variant,
+          size: widget.size,
+          onPressed: _tapped || state.isLoading ? null : _onPressed,
+        );
+
         return Padding(
           padding: const EdgeInsets.only(top: Spacing.md),
-          child: AnimatedSwitcher(
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            duration: const Duration(milliseconds: 500),
-            child: showThinking
-                ? const ThinkingAnimation(
-                    alignment: Alignment.topLeft,
-                    width: 150,
-                  )
-                : AppButton(
-                    label: label ?? '',
-                    variant: widget.variant,
-                    size: widget.size,
-                    onPressed: _tapped || state.isLoading ? null : _onPressed,
-                  ),
-          ),
+          child: showThinking
+              ? Stack(
+                  children: [
+                    Visibility(
+                      visible: false,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: button,
+                    ),
+                    ThinkingAnimation(height: widget.size.height),
+                  ],
+                )
+              : button,
         );
       },
     );
