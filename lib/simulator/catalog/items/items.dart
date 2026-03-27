@@ -10,6 +10,7 @@ export 'filter_bar_catalog_item.dart';
 export 'gcn_slider_catalog_item.dart';
 export 'header_selector_catalog_item.dart';
 export 'horizontal_bar_catalog_item.dart';
+export 'insight_card_catalog_item.dart';
 export 'line_chart_catalog_item.dart';
 export 'metric_cards_catalog_item.dart';
 export 'next_steps_bar_catalog_item.dart';

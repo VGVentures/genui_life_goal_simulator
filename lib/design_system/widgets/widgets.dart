@@ -10,6 +10,7 @@ export 'filter_bar.dart';
 export 'gcn_slider.dart';
 export 'header_selector.dart';
 export 'horizontal_bar.dart';
+export 'insight_card.dart';
 export 'line_chart.dart';
 export 'metric_cards.dart';
 export 'pie_chart/widgets.dart';
