@@ -60,8 +60,8 @@ CORRECT — button and content in the same item:
   {"title": "Mortgage Pre-approval", "subtitle": "Lock in a rate and confirm your buying power.", "amount": "Required", "child": "view_rates_btn"},
   {"title": "High-Yield Savings Account", "subtitle": "Best for your \$70,000 down payment fund.", "amount": "4.50% APY", "child": "top_picks_btn"}
 ]}},
-{"id": "view_rates_btn", "component": "AppButton", "label": "View Rates", "variant": "outlined", "size": "small"},
-{"id": "top_picks_btn", "component": "AppButton", "label": "Top Picks", "variant": "outlined", "size": "small"}
+{"id": "view_rates_btn", "component": "AppButton", "label": "View Rates", "variant": "outlined", "size": "small", "action": {"event": {"name": "view_rates"}}},
+{"id": "top_picks_btn", "component": "AppButton", "label": "Top Picks", "variant": "outlined", "size": "small", "action": {"event": {"name": "top_picks"}}}
 ```
 
 WRONG — never split a button into its own separate item:

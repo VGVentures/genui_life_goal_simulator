@@ -93,6 +93,15 @@ class _OneTapAppButton extends StatefulWidget {
 class _OneTapAppButtonState extends State<_OneTapAppButton> {
   bool _tapped = false;
 
+  @override
+  void didUpdateWidget(covariant _OneTapAppButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.action != oldWidget.action ||
+        widget.labelValue != oldWidget.labelValue) {
+      _tapped = false;
+    }
+  }
+
   void _onPressed() {
     if (_tapped) return;
     setState(() => _tapped = true);
