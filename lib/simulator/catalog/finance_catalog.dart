@@ -35,6 +35,8 @@ Use the EmojiCard widget to display a set of categorized options or highlights a
 
 Use the LineChart widget to visualize trends over time (e.g. monthly spending, account balance history).
 
+Use the BarChart widget to compare discrete values across multiple series and categories (e.g. monthly spending by account, budget vs. actual by category). Use 1–3 series and assign a distinct color to each. Always provide yAxisLabels ordered bottom to top.
+
 Use the MetricCard widget to highlight key financial metrics (e.g. total spending, savings rate, net worth).
 
 Use the RadioCard widget to present a set of mutually exclusive choices (e.g. profile type, plan selection). Exactly one option should have isSelected: true.
@@ -47,7 +49,25 @@ Use the RankedTable widget to display items ranked from highest to lowest (e.g. 
 
 Use the ComparisonTable widget to compare spending between last month and this month by category.
 
-Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) to render as a trailing widget for per-item actions.
+Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) to render as a trailing widget alongside the item's title, subtitle, and amount — all in the same row. CRITICAL: the "child" button and the "title"/"subtitle"/"amount" fields MUST all belong to the SAME item entry. Never create a separate item just for a button.
+
+CORRECT — button and content in the same item:
+```json
+{"id": "products", "component": "ActionItemsGroup", "data": {"items": [
+  {"title": "Mortgage Pre-approval", "subtitle": "Lock in a rate and confirm your buying power.", "amount": "Required", "child": "view_rates_btn"},
+  {"title": "High-Yield Savings Account", "subtitle": "Best for your \$70,000 down payment fund.", "amount": "4.50% APY", "child": "top_picks_btn"}
+]}},
+{"id": "view_rates_btn", "component": "AppButton", "label": "View Rates", "variant": "outlined", "size": "small"},
+{"id": "top_picks_btn", "component": "AppButton", "label": "Top Picks", "variant": "outlined", "size": "small"}
+```
+
+WRONG — never split a button into its own separate item:
+```json
+{"id": "products", "component": "ActionItemsGroup", "data": {"items": [
+  {"title": "", "subtitle": "", "amount": "", "child": "view_rates_btn"},
+  {"title": "Mortgage Pre-approval", "subtitle": "Lock in a rate...", "amount": "Required"}
+]}}
+```
 
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) for per-item actions.
 
@@ -105,6 +125,7 @@ Catalog buildFinanceCatalog() {
           filterBarItem,
           horizontalBarItem,
           gcnSliderItem,
+          barChartItem,
           lineChartItem,
           nextStepsBarItem,
           pieChartItem,
