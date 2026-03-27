@@ -141,23 +141,20 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
           onPressed: _tapped || state.isLoading ? null : _onPressed,
         );
 
-        return Padding(
-          padding: const EdgeInsets.only(top: Spacing.md),
-          child: showThinking
-              ? Stack(
-                  children: [
-                    Visibility(
-                      visible: false,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: button,
-                    ),
-                    ThinkingAnimation(height: widget.size.height),
-                  ],
-                )
-              : button,
-        );
+        return showThinking
+            ? Stack(
+                children: [
+                  Visibility(
+                    visible: false,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: button,
+                  ),
+                  ThinkingAnimation(height: widget.size.height),
+                ],
+              )
+            : button;
       },
     );
   }
