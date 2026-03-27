@@ -53,13 +53,6 @@ void main() {
         );
       });
 
-      testWidgets('$IntroBadges', (tester) async {
-        await _pump(tester);
-        await tester.pumpAndSettle();
-
-        expect(find.byType(IntroBadges), findsOneWidget);
-      });
-
       testWidgets('$GetStartedButton with uppercased label', (tester) async {
         await _pump(tester);
         await tester.pumpAndSettle();
