@@ -192,11 +192,16 @@ class IntroDesktopView extends StatelessWidget {
               height: 10,
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 220,
             left: 0,
             right: 0,
-            child: Center(child: IntroBadges()),
+            child: Center(
+              child: Assets.images.intro.vgvunicorn.svg(
+                width: 120,
+                height: 120,
+              ),
+            ),
           ),
           Align(
             alignment: const Alignment(0, 0.3),

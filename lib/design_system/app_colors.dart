@@ -289,79 +289,79 @@ class DarkThemeColors extends AppColors {
 
   /// Primary
   @override
-  Color get primary => const Color(0xFF8EAAF7);
+  Color get primary => const Color(0xFF9DB6F8);
   @override
-  Color get onPrimary => const Color(0xFF0A1A3E);
+  Color get onPrimary => const Color(0xFF002890);
   @override
-  Color get primaryContainer => const Color(0xFF1C2D5A);
+  Color get primaryContainer => const Color(0x406D92F5);
   @override
-  Color get onPrimaryContainer => const Color(0xFFD6E0FF);
+  Color get onPrimaryContainer => const Color(0xFFCDDAFB);
   @override
-  Color get primarySurface => const Color(0xFF1A2744);
+  Color get primarySurface => const Color(0x336D92F5);
   @override
-  Color get primaryStrong => const Color(0xFF5B8AF3);
+  Color get primaryStrong => const Color(0xFF85A4F7);
 
   /// Surface
   @override
-  Color get surface => const Color(0xFF121212);
+  Color get surface => const Color(0xFF1A1C1C);
   @override
-  Color get surfaceVariant => const Color(0xFF1E1E1E);
+  Color get surfaceVariant => const Color(0xFF2F3131);
   @override
-  Color get surfaceContainer => const Color(0xFF252525);
+  Color get surfaceContainer => const Color(0xFF2F3131);
   @override
-  Color get surfaceContainerHigh => const Color(0xFF3A3A3A);
+  Color get surfaceContainerHigh => const Color(0xFF454747);
   @override
-  Color get surfaceContainerHighest => const Color(0xFF4E4E4E);
+  Color get surfaceContainerHighest => const Color(0xFF5D5F5F);
   @override
-  Color get onSurface => const Color(0xFFE4E4E4);
+  Color get onSurface => const Color(0xFFF0F1F1);
   @override
-  Color get onSurfaceVariant => const Color(0xFFBDBDBD);
+  Color get onSurfaceVariant => const Color(0xFFC6C6C7);
   @override
-  Color get onSurfaceMuted => const Color(0xFF8A8A8A);
+  Color get onSurfaceMuted => const Color(0xFF909191);
   @override
-  Color get onSurfaceDisabled => const Color(0xFF5E5E5E);
+  Color get onSurfaceDisabled => const Color(0xFF5D5F5F);
   @override
-  Color get inverseSurface => const Color(0xFF8EAAF7);
+  Color get inverseSurface => const Color(0xFF9DB6F8);
   @override
-  Color get onInverseSurface => const Color(0xFF0A1A3E);
+  Color get onInverseSurface => const Color(0xFF2F3131);
 
   /// Outline
   @override
-  Color get outline => const Color(0xFF2E2E2E);
+  Color get outline => const Color(0xFF454747);
   @override
-  Color get outlineVariant => const Color(0xFF3A3A3A);
+  Color get outlineVariant => const Color(0xFF2F3131);
   @override
-  Color get outlineStrong => const Color(0xFF5E5E5E);
+  Color get outlineStrong => const Color(0xFF909191);
 
   /// Error
   @override
-  Color get error => const Color(0xFFFF6B5E);
+  Color get error => const Color(0xFFEF8A7B);
   @override
-  Color get onError => const Color(0xFF3B0907);
+  Color get onError => const Color(0xFF690003);
   @override
-  Color get errorContainer => const Color(0xFF5C1410);
+  Color get errorContainer => const Color(0xFF930007);
   @override
   Color get onErrorContainer => const Color(0xFFFFDAD5);
 
   /// Success
   @override
-  Color get success => const Color(0xFF33C07F);
+  Color get success => const Color(0xFF39C277);
   @override
   Color get onSuccess => const Color(0xFF00391D);
   @override
-  Color get successContainer => const Color(0xFF004D2B);
+  Color get successContainer => const Color(0xFF00522C);
   @override
-  Color get onSuccessContainer => const Color(0xFFC2FFD1);
+  Color get onSuccessContainer => const Color(0xFF79FCAB);
 
   /// Warning
   @override
-  Color get warning => const Color(0xFFF8A94E);
+  Color get warning => const Color(0xFFFFB876);
   @override
-  Color get onWarning => const Color(0xFF3D2200);
+  Color get onWarning => const Color(0xFF4B2800);
   @override
-  Color get warningContainer => const Color(0xFF5C3600);
+  Color get warningContainer => const Color(0xFF6B3B00);
   @override
-  Color get onWarningContainer => const Color(0xFFFFEEE1);
+  Color get onWarningContainer => const Color(0xFFFFDCCC);
 
   /// Gradient
   @override
