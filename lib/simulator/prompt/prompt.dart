@@ -80,12 +80,15 @@ CORRECT — root is SummaryContainer with SectionCards and NextStepsBar:
 {"id": "metrics_col", "component": "Column", "children": ["metrics_header", "metrics"]},
 {"id": "chart_section", "component": "SectionCard", "child": "chart_col"},
 {"id": "chart_col", "component": "Column", "children": ["chart_header", "chart"]},
+{"id": "chart_header", "component": "SectionHeader", "title": "Savings Growth", "subtitle": "Projected over time", "selectorOptions": ["1M", "3M", "6M", "1Y"], "selectedIndex": 1, "selectorAction": {"event": {"name": "period_changed"}}},
 {"id": "products_section", "component": "SectionCard", "child": "products_col"},
 {"id": "products_col", "component": "Column", "children": ["products_header", "products"]},
 {"id": "next_steps", "component": "NextStepsBar", "suggestions": [{"label": "6-month trend"}, {"label": "Find savings"}, {"label": "Model a change"}]}
 ```
 
-- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections inside a SummaryContainer. Use multiple SectionCards to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups in ANY SummaryContainer screen — both the main summary and any follow-up/drill-down screens.
+IMPORTANT: For sections with time-based data (metrics, charts, spending), include `selectorOptions` AND `selectorAction` in the SectionHeader. This lets users switch time periods and immediately triggers a new interaction so you can regenerate the content with updated data for the selected period.
+
+- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections on the summary screen. Use multiple SectionCards inside a SummaryContainer to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups on the summary screen.
 
 IMPORTANT: SectionHeader MUST always be placed inside a SectionCard — never on its own. Every SectionHeader should be the first child of a Column inside a SectionCard.
 

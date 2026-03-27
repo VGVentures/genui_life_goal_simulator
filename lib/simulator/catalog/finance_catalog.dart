@@ -41,7 +41,10 @@ Use the MetricCard widget to highlight key financial metrics (e.g. total spendin
 
 Use the RadioCard widget to present a set of mutually exclusive choices (e.g. profile type, plan selection). Exactly one option should have isSelected: true.
 
-Use the FilterBar widget to let the user filter data by category (e.g. spending categories, account types).
+Use the FilterBar widget to let the user filter data by category (e.g. spending categories, account types). Include an "action" to refresh content when filters change. Example:
+{"id": "category_filter", "component": "FilterBar", "categories": [{"label": "Food", "color": "pink", "isSelected": true}, {"label": "Transport", "color": "aqua", "isSelected": true}], "action": {"event": {"name": "filter_changed"}}}
+
+IMPORTANT: When using FilterBar to filter charts or data, ALWAYS include an "action" so the LLM can regenerate content with the new filter selection.
 
 Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Set divisions and splitLabels for discrete steps.
 
@@ -71,11 +74,15 @@ WRONG — never split a button into its own separate item:
 
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) for per-item actions.
 
-Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
+Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state. Include an "action" to refresh content when toggled.
 
-Use SectionHeader to label a section with a title and subtitle. Optionally include selectorOptions to show a HeaderSelector alongside the title for time period switching (e.g. title: "Your spending this month", subtitle: "February 2026 • 19 days tracked", selectorOptions: ["1M", "3M", "6M"], selectedIndex: 0).
+Use SectionHeader to label a section with a title and subtitle. Optionally include selectorOptions to show a HeaderSelector alongside the title for time period switching. The selected option is written to the data model at "/<componentId>/selectedOption". Include a "selectorAction" to automatically refresh content when the user changes the selection. Example:
+{"id": "spending_header", "component": "SectionHeader", "title": "Your Spending", "subtitle": "February 2026", "selectorOptions": ["1M", "3M", "6M"], "selectedIndex": 0, "selectorAction": {"event": {"name": "period_changed"}}}
 
-Use HeaderSelector to show chip-style toggles for switching between views or time periods (e.g. ["1M", "3M", "6M"]). Set selectedIndex to highlight the currently relevant option.
+IMPORTANT: On the summary screen, ALWAYS include a SectionHeader with selectorOptions AND selectorAction when displaying time-based data (charts, metrics, spending breakdowns). This lets users switch between time periods (e.g. "1M", "3M", "6M", "1Y") and immediately see updated data. Place the SectionHeader at the top of each SectionCard that contains time-sensitive content.
+
+Use HeaderSelector as a standalone component when you need chip-style toggles without a section header (e.g. inside a card or inline with other content). Set options to the list of labels and selectedIndex to highlight the current selection. The selected option is written to "/<componentId>/selectedOption". Include an "action" to refresh content when the selection changes. Example:
+{"id": "period_selector", "component": "HeaderSelector", "options": ["1M", "3M", "6M"], "selectedIndex": 0, "action": {"event": {"name": "period_changed"}}}
 
 Use HorizontalBar to compare spending categories against a prior period or external benchmark (e.g. last month, category average). Set progress as actual ÷ reference. Use ProgressBar instead when the reference is a fixed budget limit.
 

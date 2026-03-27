@@ -107,8 +107,12 @@ class IntroMobileView extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
+                const Spacer(flex: 15),
+                Assets.images.intro.vgvunicorn.svg(
+                  width: 90,
+                  height: 90,
+                ),
                 const Spacer(),
-                const IntroBadges(),
                 const SizedBox(height: Spacing.md),
                 Row(
                   mainAxisSize: MainAxisSize.min,

@@ -13,7 +13,9 @@ final _schema = S.object(
       '(e.g. spending categories or tags). '
       'The selected state is written to the data model at '
       '"/<componentId>/isSelected" so it is included automatically '
-      'in the next interaction.',
+      'in the next interaction. '
+      'Optionally provide an "action" to dispatch an event when toggled, '
+      'allowing the LLM to regenerate content.',
   properties: {
     'label': S.string(description: 'Text displayed inside the chip.'),
     'color': S.string(
@@ -28,6 +30,11 @@ final _schema = S.object(
           'Whether the chip is interactive. Defaults to true. '
           'Set to false to render the chip in a disabled/muted state.',
     ),
+    'action': A2uiSchemas.action(
+      description:
+          'Optional action to dispatch when the chip is toggled. '
+          'Use this to trigger the LLM to regenerate content.',
+    ),
   },
   required: ['label', 'color'],
 );
@@ -37,6 +44,9 @@ final _schema = S.object(
 /// The selected state is managed locally and written to the data model at
 /// `/<componentId>/isSelected` so it is available when the user triggers
 /// a subsequent action.
+///
+/// If an `action` is provided, it will be dispatched when the chip is toggled,
+/// allowing the LLM to regenerate content.
 final categoryFilterChipItem = CatalogItem(
   name: 'CategoryFilterChip',
   dataSchema: _schema,
@@ -47,6 +57,7 @@ final categoryFilterChipItem = CatalogItem(
     final colorRaw = json['color']! as String;
     final initialSelected = json['isSelected'] as bool? ?? false;
     final isEnabled = json['isEnabled'] as bool? ?? true;
+    final action = json['action'] as Map<String, Object?>?;
 
     final color = FilterChipColor.values.firstWhere(
       (e) => e.name == colorRaw,
@@ -58,7 +69,9 @@ final categoryFilterChipItem = CatalogItem(
       color: color,
       initialSelected: initialSelected,
       isEnabled: isEnabled,
+      action: action,
       dataContext: ctx.dataContext,
+      dispatchEvent: ctx.dispatchEvent,
       componentId: ctx.id,
     );
   },
@@ -70,7 +83,9 @@ class _StatefulCategoryFilterChip extends StatefulWidget {
     required this.color,
     required this.initialSelected,
     required this.isEnabled,
+    required this.action,
     required this.dataContext,
+    required this.dispatchEvent,
     required this.componentId,
   });
 
@@ -78,7 +93,9 @@ class _StatefulCategoryFilterChip extends StatefulWidget {
   final FilterChipColor color;
   final bool initialSelected;
   final bool isEnabled;
+  final Map<String, Object?>? action;
   final DataContext dataContext;
+  final DispatchEventCallback dispatchEvent;
   final String componentId;
 
   @override
@@ -96,6 +113,31 @@ class _StatefulCategoryFilterChipState
     _isSelected = widget.initialSelected;
   }
 
+  void _onTap() {
+    setState(() => _isSelected = !_isSelected);
+    widget.dataContext.update(
+      DataPath('/${widget.componentId}/isSelected'),
+      _isSelected,
+    );
+
+    final action = widget.action;
+    if (action case {'event': final Map<String, Object?> event}) {
+      final dataModel = widget.dataContext.dataModel
+          .getValue<Map<String, Object?>>(DataPath.root);
+
+      widget.dispatchEvent(
+        UserActionEvent(
+          name: event['name']! as String,
+          sourceComponentId: widget.componentId,
+          context: {
+            ...event['context'] as Map<String, Object?>? ?? {},
+            if (dataModel != null) ...dataModel,
+          },
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CategoryFilterChip(
@@ -103,13 +145,7 @@ class _StatefulCategoryFilterChipState
       color: widget.color,
       isSelected: _isSelected,
       isEnabled: widget.isEnabled,
-      onTap: () {
-        setState(() => _isSelected = !_isSelected);
-        widget.dataContext.update(
-          DataPath('/${widget.componentId}/isSelected'),
-          _isSelected,
-        );
-      },
+      onTap: _onTap,
     );
   }
 }

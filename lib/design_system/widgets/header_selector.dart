@@ -31,17 +31,20 @@ class HeaderSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: Spacing.xs,
-      runSpacing: Spacing.xs,
-      children: [
-        for (final (i, label) in options.indexed)
-          _HeaderSelectorChip(
-            label: label,
-            isSelected: i == selectedIndex,
-            onTap: () => onChanged(i),
-          ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.sm),
+      child: Wrap(
+        spacing: Spacing.xs,
+        runSpacing: Spacing.xs,
+        children: [
+          for (final (i, label) in options.indexed)
+            _HeaderSelectorChip(
+              label: label,
+              isSelected: i == selectedIndex,
+              onTap: () => onChanged(i),
+            ),
+        ],
+      ),
     );
   }
 }

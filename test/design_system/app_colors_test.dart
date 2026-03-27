@@ -148,53 +148,53 @@ void main() {
     });
 
     test('primary colors are defined', () {
-      expect(colors.primary, const Color(0xFF8EAAF7));
-      expect(colors.onPrimary, const Color(0xFF0A1A3E));
-      expect(colors.primaryContainer, const Color(0xFF1C2D5A));
-      expect(colors.onPrimaryContainer, const Color(0xFFD6E0FF));
-      expect(colors.primarySurface, const Color(0xFF1A2744));
-      expect(colors.primaryStrong, const Color(0xFF5B8AF3));
+      expect(colors.primary, const Color(0xFF9DB6F8));
+      expect(colors.onPrimary, const Color(0xFF002890));
+      expect(colors.primaryContainer, const Color(0x406D92F5));
+      expect(colors.onPrimaryContainer, const Color(0xFFCDDAFB));
+      expect(colors.primarySurface, const Color(0x336D92F5));
+      expect(colors.primaryStrong, const Color(0xFF85A4F7));
     });
 
     test('surface colors are defined', () {
-      expect(colors.surface, const Color(0xFF121212));
-      expect(colors.surfaceVariant, const Color(0xFF1E1E1E));
-      expect(colors.surfaceContainer, const Color(0xFF252525));
-      expect(colors.surfaceContainerHigh, const Color(0xFF3A3A3A));
-      expect(colors.surfaceContainerHighest, const Color(0xFF4E4E4E));
-      expect(colors.onSurface, const Color(0xFFE4E4E4));
-      expect(colors.onSurfaceVariant, const Color(0xFFBDBDBD));
-      expect(colors.onSurfaceMuted, const Color(0xFF8A8A8A));
-      expect(colors.onSurfaceDisabled, const Color(0xFF5E5E5E));
-      expect(colors.inverseSurface, const Color(0xFF8EAAF7));
-      expect(colors.onInverseSurface, const Color(0xFF0A1A3E));
+      expect(colors.surface, const Color(0xFF1A1C1C));
+      expect(colors.surfaceVariant, const Color(0xFF2F3131));
+      expect(colors.surfaceContainer, const Color(0xFF2F3131));
+      expect(colors.surfaceContainerHigh, const Color(0xFF454747));
+      expect(colors.surfaceContainerHighest, const Color(0xFF5D5F5F));
+      expect(colors.onSurface, const Color(0xFFF0F1F1));
+      expect(colors.onSurfaceVariant, const Color(0xFFC6C6C7));
+      expect(colors.onSurfaceMuted, const Color(0xFF909191));
+      expect(colors.onSurfaceDisabled, const Color(0xFF5D5F5F));
+      expect(colors.inverseSurface, const Color(0xFF9DB6F8));
+      expect(colors.onInverseSurface, const Color(0xFF2F3131));
     });
 
     test('outline colors are defined', () {
-      expect(colors.outline, const Color(0xFF2E2E2E));
-      expect(colors.outlineVariant, const Color(0xFF3A3A3A));
-      expect(colors.outlineStrong, const Color(0xFF5E5E5E));
+      expect(colors.outline, const Color(0xFF454747));
+      expect(colors.outlineVariant, const Color(0xFF2F3131));
+      expect(colors.outlineStrong, const Color(0xFF909191));
     });
 
     test('error colors are defined', () {
-      expect(colors.error, const Color(0xFFFF6B5E));
-      expect(colors.onError, const Color(0xFF3B0907));
-      expect(colors.errorContainer, const Color(0xFF5C1410));
+      expect(colors.error, const Color(0xFFEF8A7B));
+      expect(colors.onError, const Color(0xFF690003));
+      expect(colors.errorContainer, const Color(0xFF930007));
       expect(colors.onErrorContainer, const Color(0xFFFFDAD5));
     });
 
     test('success colors are defined', () {
-      expect(colors.success, const Color(0xFF33C07F));
+      expect(colors.success, const Color(0xFF39C277));
       expect(colors.onSuccess, const Color(0xFF00391D));
-      expect(colors.successContainer, const Color(0xFF004D2B));
-      expect(colors.onSuccessContainer, const Color(0xFFC2FFD1));
+      expect(colors.successContainer, const Color(0xFF00522C));
+      expect(colors.onSuccessContainer, const Color(0xFF79FCAB));
     });
 
     test('warning colors are defined', () {
-      expect(colors.warning, const Color(0xFFF8A94E));
-      expect(colors.onWarning, const Color(0xFF3D2200));
-      expect(colors.warningContainer, const Color(0xFF5C3600));
-      expect(colors.onWarningContainer, const Color(0xFFFFEEE1));
+      expect(colors.warning, const Color(0xFFFFB876));
+      expect(colors.onWarning, const Color(0xFF4B2800));
+      expect(colors.warningContainer, const Color(0xFF6B3B00));
+      expect(colors.onWarningContainer, const Color(0xFFFFDCCC));
     });
 
     test('genius gradient is defined', () {

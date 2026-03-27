@@ -23,7 +23,9 @@ final _schema = S.object(
       '(e.g. spending categories, account types). '
       'The selected categories are written to the data model at '
       '"/<componentId>/selectedCategories" so they are included '
-      'automatically in the next interaction.',
+      'automatically in the next interaction. '
+      'Optionally provide an "action" to dispatch an event when the '
+      'selection changes, allowing the LLM to regenerate content.',
   properties: {
     'categories': S.list(
       description: 'List of filter category chips to display.',
@@ -40,6 +42,12 @@ final _schema = S.object(
         },
         required: ['label', 'color', 'isSelected'],
       ),
+    ),
+    'action': A2uiSchemas.action(
+      description:
+          'Optional action to dispatch when the filter selection changes. '
+          'Use this to trigger the LLM to regenerate content for the '
+          'new filter selection.',
     ),
   },
   required: ['categories'],
@@ -66,6 +74,9 @@ FilterChipColor _parseColor(String value) {
 /// The selected categories are managed locally and written to the data model at
 /// `/<componentId>/selectedCategories` so they are available when the user
 /// triggers a subsequent action.
+///
+/// If an `action` is provided, it will be dispatched when the filter selection
+/// changes, allowing the LLM to regenerate content for the new selection.
 final filterBarItem = CatalogItem(
   name: 'FilterBar',
   dataSchema: _schema,
@@ -79,10 +90,13 @@ final filterBarItem = CatalogItem(
         isSelected: c['isSelected']! as bool,
       );
     }).toList();
+    final action = json['action'] as Map<String, Object?>?;
 
     return _StatefulFilterBar(
       categories: parsed,
+      action: action,
       dataContext: ctx.dataContext,
+      dispatchEvent: ctx.dispatchEvent,
       componentId: ctx.id,
     );
   },
@@ -91,13 +105,17 @@ final filterBarItem = CatalogItem(
 class _StatefulFilterBar extends StatefulWidget {
   const _StatefulFilterBar({
     required this.categories,
+    required this.action,
     required this.dataContext,
+    required this.dispatchEvent,
     required this.componentId,
   });
 
   final List<({String label, FilterChipColor color, bool isSelected})>
   categories;
+  final Map<String, Object?>? action;
   final DataContext dataContext;
+  final DispatchEventCallback dispatchEvent;
   final String componentId;
 
   @override
@@ -124,6 +142,30 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
     );
   }
 
+  void _dispatchAction() {
+    final action = widget.action;
+    if (action case {'event': final Map<String, Object?> event}) {
+      final dataModel = widget.dataContext.dataModel
+          .getValue<Map<String, Object?>>(DataPath.root);
+
+      widget.dispatchEvent(
+        UserActionEvent(
+          name: event['name']! as String,
+          sourceComponentId: widget.componentId,
+          context: {
+            ...event['context'] as Map<String, Object?>? ?? {},
+            if (dataModel != null) ...dataModel,
+          },
+        ),
+      );
+    }
+  }
+
+  void _onFilterChanged() {
+    _writeToDataModel();
+    _dispatchAction();
+  }
+
   @override
   Widget build(BuildContext context) {
     final categories = [
@@ -139,7 +181,7 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
       categories: categories,
       onCategoryToggled: (index) {
         setState(() => _selected[index] = !_selected[index]);
-        _writeToDataModel();
+        _onFilterChanged();
       },
       onAllToggled: () {
         final allSelected = _selected.every((s) => s);
@@ -148,7 +190,7 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
             _selected[i] = !allSelected;
           }
         });
-        _writeToDataModel();
+        _onFilterChanged();
       },
     );
   }

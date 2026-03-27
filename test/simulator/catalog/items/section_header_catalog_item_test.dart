@@ -19,7 +19,11 @@ Map<String, Object?> _data({
   'selectedIndex': ?selectedIndex,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  DataModel? dataModel,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
@@ -27,7 +31,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? _MockDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -37,15 +41,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  DataModel? dataModel,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              sectionHeaderItem.widgetBuilder(_context(context, data)),
+          builder: (context) => sectionHeaderItem.widgetBuilder(
+            _context(context, data, dataModel: dataModel),
+          ),
         ),
       ),
     ),
@@ -109,6 +115,42 @@ void main() {
 
       final widget = tester.widget<SectionHeader>(find.byType(SectionHeader));
       expect(widget.selectedIndex, 0);
+    });
+
+    testWidgets('writes selectedOption to data model on selector tap', (
+      tester,
+    ) async {
+      registerFallbackValue(DataPath.root);
+
+      final mockDataModel = _MockDataModel();
+      final capturedPaths = <DataPath>[];
+      final capturedValues = <Object?>[];
+
+      when(
+        () => mockDataModel.update(
+          any(that: isA<DataPath>()),
+          any<Object?>(),
+        ),
+      ).thenAnswer((invocation) {
+        capturedPaths.add(invocation.positionalArguments[0] as DataPath);
+        capturedValues.add(invocation.positionalArguments[1]);
+      });
+
+      await _pump(
+        tester,
+        _data(selectorOptions: ['1M', '3M', '6M'], selectedIndex: 0),
+        dataModel: mockDataModel,
+      );
+
+      // Tap the '3M' chip
+      await tester.tap(find.text('3M'));
+      await tester.pump();
+
+      expect(
+        capturedPaths.any((p) => p.toString() == '/test/selectedOption'),
+        isTrue,
+      );
+      expect(capturedValues, contains('3M'));
     });
   });
 }
