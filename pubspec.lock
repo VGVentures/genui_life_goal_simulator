@@ -276,29 +276,27 @@ packages:
   dartantic_ai:
     dependency: "direct main"
     description:
-      path: "packages/dartantic_ai"
-      ref: "76fab07b7381dc0f8d4c55109798da80867c60d3"
-      resolved-ref: "76fab07b7381dc0f8d4c55109798da80867c60d3"
-      url: "https://github.com/brianegan/dartantic.git"
-    source: git
-    version: "3.2.0"
+      name: dartantic_ai
+      sha256: "613dec7c2ec14d571af248b8642c05c23f3e930a94ce2fb3932d02d93bbdffca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   dartantic_firebase_ai:
     dependency: "direct main"
     description:
-      path: "packages/dartantic_firebase_ai"
-      ref: "76fab07b7381dc0f8d4c55109798da80867c60d3"
-      resolved-ref: "76fab07b7381dc0f8d4c55109798da80867c60d3"
-      url: "https://github.com/brianegan/dartantic.git"
-    source: git
-    version: "0.1.0"
+      name: dartantic_firebase_ai
+      sha256: feb66f60f35cff93fb2e4d93cbcfeeb9eb9cb4a8c50476a159fcfdff19cbfead
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   dartantic_interface:
     dependency: transitive
     description:
       name: dartantic_interface
-      sha256: "0784e7bd03fc66d2623885c8453e87efbf552b7cd37d4fc35a31ed8198982cd6"
+      sha256: b21a1867da49335b1004cae5b97abeff75e3421ec7c3fee144bcc5e6f463dc63
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   dartx:
     dependency: transitive
     description:
