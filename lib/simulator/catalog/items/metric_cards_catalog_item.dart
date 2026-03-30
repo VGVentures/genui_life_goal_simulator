@@ -22,13 +22,33 @@ final _schema = S.object(
           ),
           'subtitle': A2uiSchemas.stringReference(
             description:
-                'Optional context line below the value (e.g. "vs last month").',
+                'Optional context line below the value '
+                '(e.g. "vs last month").',
           ),
-          'delta': A2uiSchemas.stringReference(
-            description: 'Optional delta text (e.g. "+1.2%").',
+          'delta': S.string(
+            description:
+                'Optional short numeric delta including sign and unit. '
+                'Must be a number with a sign and unit ONLY — no words or '
+                r'descriptions (e.g. "+1.2%", "-$80", "+3k"). '
+                r'Wrong: "Commodity hedge needed", "Drawdown: -$61k". '
+                'Use subtitle for any descriptive context instead.',
           ),
           'deltaDirection': S.string(
-            description: 'Colour direction of the delta indicator.',
+            description:
+                'Whether the delta is favorable or unfavorable for the user. '
+                'Controls the colour: "positive" = green, "negative" = red. '
+                'Ignore the sign of the number. Instead ask: '
+                'is the user in a better or worse position because of this? '
+                '"positive" (green): improvement achieved, goal met, '
+                'savings realised, high coverage or utilisation '
+                '(e.g. "-95%" tax-advantaged coverage is green — '
+                'sheltering 95% of surplus is great). '
+                '"negative" (red): problem still exists, gap or deficit '
+                'remaining, target not yet met, overspending '
+                '(e.g. "-18.9%" gap-to-close is red — the shortfall '
+                'still exists; "+7%" fixed-cost ratio above goal is red). '
+                'When in doubt: would a financial advisor highlight this '
+                'in green (good news) or red (needs attention)?',
             enumValues: ['positive', 'negative'],
           ),
           'isSelected': S.boolean(
@@ -55,8 +75,9 @@ MetricDeltaDirection? _parseDeltaDirection(String? value) {
 
 /// CatalogItem that renders a [MetricCardsLayout] of [MetricCard] widgets.
 ///
-/// String fields (`label`, `value`, `subtitle`, `delta`) support data model
+/// String fields (`label`, `value`, `subtitle`) support data model
 /// bindings via `{"path": "..."}` for reactive values.
+/// The `delta` field must be a pre-formatted literal string (e.g. "+1.2%").
 final metricCardsItem = CatalogItem(
   name: 'MetricCard',
   dataSchema: _schema,
@@ -71,6 +92,7 @@ final metricCardsItem = CatalogItem(
         key: ValueKey('metric_card_$index'),
         dataContext: ctx.dataContext,
         cardData: c,
+        delta: c['delta'] as String?,
         deltaDirection: _parseDeltaDirection(c['deltaDirection'] as String?),
         isSelected: c['isSelected'] as bool? ?? false,
         onTap: action == null
@@ -100,6 +122,7 @@ class _BoundMetricCard extends StatelessWidget {
   const _BoundMetricCard({
     required this.dataContext,
     required this.cardData,
+    required this.delta,
     required this.deltaDirection,
     required this.isSelected,
     required this.onTap,
@@ -108,6 +131,7 @@ class _BoundMetricCard extends StatelessWidget {
 
   final DataContext dataContext;
   final Map<String, Object?> cardData;
+  final String? delta;
   final MetricDeltaDirection? deltaDirection;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -126,31 +150,14 @@ class _BoundMetricCard extends StatelessWidget {
               dataContext: dataContext,
               value: cardData['subtitle'] ?? '',
               builder: (context, subtitle) {
-                final deltaValue = cardData['delta'];
-                if (deltaValue == null) {
-                  return MetricCard(
-                    label: label ?? '',
-                    value: value ?? '',
-                    subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
-                    deltaDirection: deltaDirection,
-                    isSelected: isSelected,
-                    onTap: onTap,
-                  );
-                }
-                return BoundString(
-                  dataContext: dataContext,
-                  value: deltaValue,
-                  builder: (context, delta) {
-                    return MetricCard(
-                      label: label ?? '',
-                      value: value ?? '',
-                      subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
-                      delta: delta,
-                      deltaDirection: deltaDirection,
-                      isSelected: isSelected,
-                      onTap: onTap,
-                    );
-                  },
+                return MetricCard(
+                  label: label ?? '',
+                  value: value ?? '',
+                  subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
+                  delta: delta,
+                  deltaDirection: deltaDirection,
+                  isSelected: isSelected,
+                  onTap: onTap,
                 );
               },
             );
