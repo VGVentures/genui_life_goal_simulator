@@ -34,6 +34,7 @@ class InsightCard extends StatelessWidget {
   const InsightCard({
     required this.title,
     required this.description,
+    this.emoji,
     this.variant = InsightCardVariant.neutral,
     super.key,
   });
@@ -43,6 +44,10 @@ class InsightCard extends StatelessWidget {
 
   /// Supporting body text.
   final String description;
+
+  /// Emoji shown in the badge for the [InsightCardVariant.neutral] variant.
+  /// Ignored for all other variants, which use a fixed emoji.
+  final String? emoji;
 
   /// Visual variant controlling colours and border.
   final InsightCardVariant variant;
@@ -72,8 +77,12 @@ class InsightCard extends StatelessWidget {
 
     const badgeColor = Colors.white;
 
-    final emoji = switch (variant) {
-      InsightCardVariant.neutral => '💡',
+    final badgeBorderColor = variant == InsightCardVariant.neutral
+        ? colors?.outline ?? const Color(0xFFF0F1F1)
+        : Colors.transparent;
+
+    final resolvedEmoji = switch (variant) {
+      InsightCardVariant.neutral => emoji ?? '💡',
       InsightCardVariant.success => '✅',
       InsightCardVariant.warning => '⚠️',
       InsightCardVariant.error => '🚨',
@@ -100,9 +109,10 @@ class InsightCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 _Dimensions.badgeBorderRadius,
               ),
+              border: Border.all(color: badgeBorderColor),
             ),
             child: Text(
-              emoji,
+              resolvedEmoji,
               style: const TextStyle(
                 fontSize: _Dimensions.emojiSize,
                 height: 1,

@@ -20,6 +20,11 @@ final _schema = S.object(
           'Defaults to "neutral" if omitted.',
       enumValues: ['neutral', 'success', 'warning', 'error'],
     ),
+    'emoji': A2uiSchemas.stringReference(
+      description:
+          'A single emoji shown in the badge for the neutral variant. '
+          'Ignored for success, warning, and error variants.',
+    ),
     'title': A2uiSchemas.stringReference(
       description:
           'Primary headline text '
@@ -78,16 +83,23 @@ class _BoundInsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BoundString(
       dataContext: dataContext,
-      value: cardData['title'],
-      builder: (context, title) {
+      value: cardData['emoji'],
+      builder: (context, emoji) {
         return BoundString(
           dataContext: dataContext,
-          value: cardData['description'],
-          builder: (context, description) {
-            return InsightCard(
-              title: title ?? '',
-              description: description ?? '',
-              variant: variant,
+          value: cardData['title'],
+          builder: (context, title) {
+            return BoundString(
+              dataContext: dataContext,
+              value: cardData['description'],
+              builder: (context, description) {
+                return InsightCard(
+                  emoji: emoji,
+                  title: title ?? '',
+                  description: description ?? '',
+                  variant: variant,
+                );
+              },
             );
           },
         );
