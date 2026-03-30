@@ -93,6 +93,8 @@ Use the SparklineCard widget to display financial categories, each with an amoun
 Use PieChart when showing part-to-whole relationships (e.g. spending by category, portfolio allocation). Provide 3–7 segments and assign a distinct color to each. Always set totalLabel and totalAmount to show the aggregate in the donut center.
 
 Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount. Optionally include an "action" on each item to show a View button — when tapped, it dispatches the specified event with the item's data as context.
+
+Use the InsightCard widget to highlight a key contextual insight alongside financial data — place it directly inside a SummaryContainer layout, never inside a QuestionContainer. CRITICAL: never wrap InsightCard in a SectionCard; it has its own card styling and must render without any white container around it.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -131,6 +133,7 @@ Catalog buildFinanceCatalog() {
           emojiCardItem,
           filterBarItem,
           horizontalBarItem,
+          insightCardItem,
           gcnSliderItem,
           barChartItem,
           lineChartItem,
