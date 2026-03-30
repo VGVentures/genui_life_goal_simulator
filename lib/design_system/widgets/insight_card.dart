@@ -89,6 +89,7 @@ class InsightCard extends StatelessWidget {
     };
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         color: backgroundColor,

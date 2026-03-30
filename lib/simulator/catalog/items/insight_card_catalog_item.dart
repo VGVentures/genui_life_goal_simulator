@@ -12,7 +12,11 @@ final _schema = S.object(
       '"success" for positive outcomes, '
       '"warning" for cautionary messages, and '
       '"error" for critical or negative findings. '
-      'String fields support data model bindings via {"path": "..."}.',
+      'String fields support data model bindings via {"path": "..."}. '
+      'Use InsightCard inside a SummaryContainer to surface insights '
+      'alongside financial data — never inside a QuestionContainer. '
+      'IMPORTANT: Do NOT wrap InsightCard in a SectionCard — it already has '
+      'its own card styling and background.',
   properties: {
     'variant': S.string(
       description:
@@ -60,10 +64,13 @@ final insightCardItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final variant = _parseVariant(json['variant'] as String?);
 
-    return _BoundInsightCard(
-      dataContext: ctx.dataContext,
-      cardData: json,
-      variant: variant,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.md),
+      child: _BoundInsightCard(
+        dataContext: ctx.dataContext,
+        cardData: json,
+        variant: variant,
+      ),
     );
   },
 );
