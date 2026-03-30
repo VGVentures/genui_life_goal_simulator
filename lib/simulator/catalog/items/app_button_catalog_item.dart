@@ -21,11 +21,14 @@ final _schema = S.object(
       description: 'Size of the button.',
       enumValues: ['large', 'small'],
     ),
-    'isLoading': S.boolean(
-      description: 'Whether the button shows a loading indicator.',
-    ),
     'action': A2uiSchemas.action(
       description: 'The action to perform when the button is pressed.',
+    ),
+    'showLoadingOverlay': S.boolean(
+      description:
+          'Whether to show the full-screen loading animation when this '
+          'button is pressed. Use for major transitions like navigating '
+          'to the summary dashboard.',
     ),
   },
   required: ['label', 'variant', 'size', 'action'],
@@ -49,15 +52,15 @@ final appButtonItem = CatalogItem(
       'small' => AppButtonSize.small,
       _ => AppButtonSize.large,
     };
-    final isLoading = json['isLoading'] as bool? ?? false;
     final action = json['action'] as Map<String, Object?>?;
+    final showLoadingOverlay = json['showLoadingOverlay'] as bool? ?? false;
 
     return _OneTapAppButton(
       labelValue: labelValue,
       variant: variant,
       size: size,
-      isLoading: isLoading,
       action: action,
+      showLoadingOverlay: showLoadingOverlay,
       dataContext: ctx.dataContext,
       dispatchEvent: ctx.dispatchEvent,
       componentId: ctx.id,
@@ -70,8 +73,8 @@ class _OneTapAppButton extends StatefulWidget {
     required this.labelValue,
     required this.variant,
     required this.size,
-    required this.isLoading,
     required this.action,
+    required this.showLoadingOverlay,
     required this.dataContext,
     required this.dispatchEvent,
     required this.componentId,
@@ -80,8 +83,8 @@ class _OneTapAppButton extends StatefulWidget {
   final Object labelValue;
   final AppButtonVariant variant;
   final AppButtonSize size;
-  final bool isLoading;
   final Map<String, Object?>? action;
+  final bool showLoadingOverlay;
   final DataContext dataContext;
   final DispatchEventCallback dispatchEvent;
   final String componentId;
@@ -96,6 +99,12 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
   void _onPressed() {
     if (_tapped) return;
     setState(() => _tapped = true);
+
+    if (widget.showLoadingOverlay) {
+      context.read<SimulatorBloc>().add(
+        const SimulatorLoadingOverlayRequested(),
+      );
+    }
 
     final action = widget.action;
     if (action case {'event': final Map<String, Object?> event}) {
@@ -117,23 +126,37 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final blocLoading = context.select<SimulatorBloc, bool>(
-      (bloc) => bloc.state.isLoading,
-    );
+    final state = context.watch<SimulatorBloc>().state;
+    final showThinking =
+        _tapped && state.isLoading && !widget.showLoadingOverlay;
 
     return BoundString(
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
+        final button = AppButton(
+          label: label ?? '',
+          variant: widget.variant,
+          size: widget.size,
+          onPressed: _tapped || state.isLoading ? null : _onPressed,
+        );
+
         return Padding(
           padding: const EdgeInsets.only(top: Spacing.md),
-          child: AppButton(
-            label: label ?? '',
-            variant: widget.variant,
-            size: widget.size,
-            isLoading: widget.isLoading || (_tapped && blocLoading),
-            onPressed: _tapped ? null : _onPressed,
-          ),
+          child: showThinking
+              ? Stack(
+                  children: [
+                    Visibility(
+                      visible: false,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: button,
+                    ),
+                    ThinkingAnimation(height: widget.size.height),
+                  ],
+                )
+              : button,
         );
       },
     );

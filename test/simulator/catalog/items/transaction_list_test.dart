@@ -1,13 +1,18 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/widgets/app_button.dart';
 import 'package:genui_life_goal_simulator/design_system/widgets/transaction_list.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
-import 'package:genui_life_goal_simulator/simulator/catalog/items/transaction_list.dart';
+import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
+
+class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
+    implements SimulatorBloc {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? items,
@@ -53,15 +58,21 @@ Future<void> _pump(
   Map<String, Object?> data, {
   DispatchEventCallback? dispatchEvent,
 }) async {
+  final bloc = _MockSimulatorBloc();
+  when(() => bloc.state).thenReturn(const SimulatorState());
+
   await tester.pumpWidget(
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Builder(
-            builder: (context) => transactionListItem.widgetBuilder(
-              _context(context, data, dispatchEvent: dispatchEvent),
+    BlocProvider<SimulatorBloc>.value(
+      value: bloc,
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: Builder(
+              builder: (context) => transactionListItem.widgetBuilder(
+                _context(context, data, dispatchEvent: dispatchEvent),
+              ),
             ),
           ),
         ),

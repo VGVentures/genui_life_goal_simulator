@@ -23,6 +23,8 @@ final _schema = S.object(
 /// A 1000px-wide centered container for summary/analysis screens.
 ///
 /// When `bottomBar` is provided, it renders after the main content.
+/// The `NextStepsBar` handles its own viewport-sticky positioning via
+/// an `Overlay`.
 final CatalogItem summaryContainerItem = CatalogItem(
   name: 'SummaryContainer',
   dataSchema: _schema,

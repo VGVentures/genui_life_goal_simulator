@@ -9,16 +9,8 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
-  dartantic_ai:
-    git:
-      url: https://github.com/brianegan/dartantic.git
-      ref: 76fab07b7381dc0f8d4c55109798da80867c60d3
-      path: packages/dartantic_ai
-  dartantic_firebase_ai:
-    git:
-      url: https://github.com/brianegan/dartantic.git
-      ref: 76fab07b7381dc0f8d4c55109798da80867c60d3
-      path: packages/dartantic_firebase_ai
+  dartantic_ai: ^3.3.0
+  dartantic_firebase_ai: ^0.2.0
   equatable: ^2.0.8
   firebase_ai: ^3.9.0
   firebase_app_check: ^0.4.1+4

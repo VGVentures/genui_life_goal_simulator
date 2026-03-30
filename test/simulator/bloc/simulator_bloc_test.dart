@@ -50,6 +50,7 @@ void main() {
       expect(state.pages, isEmpty);
       expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
+      expect(state.showLoadingOverlay, isFalse);
       expect(state.host, isNull);
       expect(state.error, isNull);
     });
@@ -295,6 +296,94 @@ void main() {
       act: (bloc) => bloc.add(const SimulatorLoading(isLoading: true)),
       expect: () => [
         isA<SimulatorState>().having((s) => s.isLoading, 'isLoading', isTrue),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorLoadingOverlayRequested sets showLoadingOverlay to true',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      act: (bloc) => bloc.add(const SimulatorLoadingOverlayRequested()),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.showLoadingOverlay,
+          'showLoadingOverlay',
+          isTrue,
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived clears showLoadingOverlay',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(showLoadingOverlay: true),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('surface_1')),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.showLoadingOverlay,
+          'showLoadingOverlay',
+          isFalse,
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      'defers navigation when surface arrives while loading',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        status: SimulatorStatus.active,
+        pages: [
+          [AiSurfaceDisplayMessage('surface_1')],
+        ],
+        isLoading: true,
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('surface_2')),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.pages, 'pages', hasLength(2))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0)
+            .having(
+              (s) => s.pendingPageIndex,
+              'pendingPageIndex',
+              1,
+            ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      'navigates to pending page when loading finishes',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        status: SimulatorStatus.active,
+        pages: [
+          [AiSurfaceDisplayMessage('surface_1')],
+        ],
+        isLoading: true,
+        showLoadingOverlay: true,
+      ),
+      act: (bloc) {
+        // Surface arrives while loading → deferred.
+        // Then loading finishes → pending navigation flushes.
+        bloc
+          ..add(const SimulatorSurfaceReceived('surface_2'))
+          ..add(const SimulatorLoading(isLoading: false));
+      },
+      skip: 1,
+      expect: () => [
+        // Loading set to false.
+        isA<SimulatorState>().having((s) => s.isLoading, 'isLoading', isFalse),
+        // Pending navigation flushed.
+        isA<SimulatorState>()
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 1)
+            .having(
+              (s) => s.pendingPageIndex,
+              'pendingPageIndex',
+              isNull,
+            )
+            .having(
+              (s) => s.showLoadingOverlay,
+              'showLoadingOverlay',
+              isFalse,
+            ),
       ],
     );
 

@@ -17,6 +17,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     on<SimulatorSurfaceReceived>(_onSurfaceReceived);
     on<SimulatorContentReceived>(_onContentReceived);
     on<SimulatorLoading>(_onLoading);
+    on<SimulatorLoadingOverlayRequested>(_onLoadingOverlayRequested);
     on<SimulatorErrorOccurred>(_onErrorOccurred);
   }
 
@@ -71,14 +72,35 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     );
 
     if (existingPageIndex != -1) {
-      emit(state.copyWith(currentPageIndex: existingPageIndex));
+      emit(
+        state.copyWith(
+          currentPageIndex: existingPageIndex,
+          pendingPageIndex: clearPendingPageIndex,
+          showLoadingOverlay: false,
+        ),
+      );
     } else {
       final message = AiSurfaceDisplayMessage(event.surfaceId);
       final pages = [
         ...state.pages,
         <DisplayMessage>[message],
       ];
-      emit(state.copyWith(pages: pages, currentPageIndex: pages.length - 1));
+      final newIndex = pages.length - 1;
+
+      // Defer navigation until loading finishes so the current page
+      // stays visible with the thinking animation until content is ready.
+      if (state.isLoading) {
+        emit(state.copyWith(pages: pages, pendingPageIndex: newIndex));
+      } else {
+        emit(
+          state.copyWith(
+            pages: pages,
+            currentPageIndex: newIndex,
+            pendingPageIndex: clearPendingPageIndex,
+            showLoadingOverlay: false,
+          ),
+        );
+      }
     }
   }
 
@@ -134,6 +156,24 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     Emitter<SimulatorState> emit,
   ) {
     emit(state.copyWith(isLoading: event.isLoading));
+
+    // If loading just finished and there's a deferred page, navigate now.
+    if (!event.isLoading && state.hasPendingNavigation) {
+      emit(
+        state.copyWith(
+          currentPageIndex: state.pendingPageIndex,
+          pendingPageIndex: clearPendingPageIndex,
+          showLoadingOverlay: false,
+        ),
+      );
+    }
+  }
+
+  void _onLoadingOverlayRequested(
+    SimulatorLoadingOverlayRequested event,
+    Emitter<SimulatorState> emit,
+  ) {
+    emit(state.copyWith(showLoadingOverlay: true));
   }
 
   Future<void> _onMessageSent(

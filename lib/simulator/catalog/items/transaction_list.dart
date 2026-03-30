@@ -1,5 +1,8 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
@@ -36,36 +39,47 @@ final transactionListItem = CatalogItem(
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
     final rawItems = json['items']! as List;
+    final castItems = rawItems.cast<Map<String, Object?>>();
 
-    final items = rawItems.cast<Map<String, Object?>>().map((item) {
-      final action = item['action'] as Map<String, Object?>?;
+    return Builder(
+      builder: (context) {
+        final isLoading = context.select<SimulatorBloc, bool>(
+          (bloc) => bloc.state.isLoading,
+        );
 
-      return TransactionListItem(
-        title: _resolveString(item['title']),
-        description: _resolveString(item['description']),
-        amount: _resolveString(item['amount']),
-        onViewDetails: action == null
-            ? null
-            : () {
-                if (action case {'event': final Map<String, Object?> event}) {
-                  ctx.dispatchEvent(
-                    UserActionEvent(
-                      name: event['name']! as String,
-                      sourceComponentId: ctx.id,
-                      context: {
-                        ...event['context'] as Map<String, Object?>? ?? {},
-                        'title': _resolveString(item['title']),
-                        'description': _resolveString(item['description']),
-                        'amount': _resolveString(item['amount']),
-                      },
-                    ),
-                  );
-                }
-              },
-      );
-    }).toList();
+        final items = castItems.map((item) {
+          final action = item['action'] as Map<String, Object?>?;
 
-    return TransactionList(items: items);
+          return TransactionListItem(
+            title: _resolveString(item['title']),
+            description: _resolveString(item['description']),
+            amount: _resolveString(item['amount']),
+            onViewDetails: action == null || isLoading
+                ? null
+                : () {
+                    if (action case {
+                      'event': final Map<String, Object?> event,
+                    }) {
+                      ctx.dispatchEvent(
+                        UserActionEvent(
+                          name: event['name']! as String,
+                          sourceComponentId: ctx.id,
+                          context: {
+                            ...event['context'] as Map<String, Object?>? ?? {},
+                            'title': _resolveString(item['title']),
+                            'description': _resolveString(item['description']),
+                            'amount': _resolveString(item['amount']),
+                          },
+                        ),
+                      );
+                    }
+                  },
+          );
+        }).toList();
+
+        return TransactionList(items: items);
+      },
+    );
   },
 );
 
