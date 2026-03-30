@@ -18,6 +18,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     on<SimulatorContentReceived>(_onContentReceived);
     on<SimulatorLoading>(_onLoading);
     on<SimulatorErrorOccurred>(_onErrorOccurred);
+    on<SimulatorRetried>(_onRetried);
   }
 
   final SimulatorRepository _repository;
@@ -148,6 +149,31 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     Emitter<SimulatorState> emit,
   ) {
     emit(state.copyWith(status: SimulatorStatus.error, error: event.message));
+  }
+
+  Future<void> _onRetried(
+    SimulatorRetried event,
+    Emitter<SimulatorState> emit,
+  ) async {
+    // Find the last page with content
+    final pages = state.pages;
+    var lastGoodIndex = 0;
+    for (var i = pages.length - 1; i >= 0; i--) {
+      final hasContent = pages[i].any((m) => m is! AiSurfaceDisplayMessage);
+      if (hasContent) {
+        lastGoodIndex = i;
+        break;
+      }
+    }
+
+    emit(
+      state.copyWith(
+        status: SimulatorStatus.active,
+        isLoading: true,
+        currentPageIndex: lastGoodIndex,
+      ),
+    );
+    await _repository.sendMessage('Please continue where you left off.');
   }
 
   @override

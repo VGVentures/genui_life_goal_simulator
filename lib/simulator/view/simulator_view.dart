@@ -53,12 +53,15 @@ class _SimulatorViewState extends State<SimulatorView> {
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
             previous.host != current.host ||
-            previous.isLoading != current.isLoading,
+            previous.isLoading != current.isLoading ||
+            previous.status != current.status,
         builder: (context, state) {
           return Column(
             children: [
               Expanded(
-                child: state.pages.isEmpty || state.host == null
+                child: state.status == SimulatorStatus.error
+                    ? const _ErrorView()
+                    : state.pages.isEmpty || state.host == null
                     ? const Center(child: CircularProgressIndicator())
                     : _FadingPageView(
                         controller: _pageController,
@@ -226,6 +229,55 @@ class _FadingPageView extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = AppTextStyles.getResponsiveTextTheme(context);
+    final onSurfaceVariant =
+        colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Assets.images.advisor.errorSkeleton.svg(),
+            const SizedBox(height: Spacing.xxxl),
+            Text(
+              l10n.errorViewTitle,
+              style: textTheme.headlineMedium?.copyWith(
+                color: onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: Spacing.sm),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Text(
+                l10n.errorViewBody,
+                style: textTheme.bodyLarge?.copyWith(color: onSurfaceVariant),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: Spacing.lg),
+            AppButton(
+              label: l10n.errorViewTryAgainLabel,
+              variant: AppButtonVariant.gradient,
+              onPressed: () =>
+                  context.read<SimulatorBloc>().add(const SimulatorRetried()),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

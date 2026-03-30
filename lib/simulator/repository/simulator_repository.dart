@@ -101,15 +101,20 @@ class SimulatorRepository {
     final adapter = _conversation!.transport as A2uiTransportAdapter;
     final buffer = StringBuffer();
 
-    await for (final result in _chatModel.sendStream(messages)) {
-      final text = result.output.text;
-      if (text.isNotEmpty) {
-        buffer.write(text);
-        adapter.addChunk(text);
+    try {
+      await for (final result in _chatModel.sendStream(messages)) {
+        final text = result.output.text;
+        if (text.isNotEmpty) {
+          buffer.write(text);
+          adapter.addChunk(text);
+        }
+      }
+    } finally {
+      /// Always commit whatever was streamed so retry has full context.
+      if (buffer.isNotEmpty) {
+        _history.add(ChatMessage.model(buffer.toString()));
       }
     }
-
-    _history.add(ChatMessage.model(buffer.toString()));
   }
 
   ChatMessage _convertDataPartsToText(ChatMessage message) {

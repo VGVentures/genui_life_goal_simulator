@@ -127,5 +127,17 @@
     "restartDemoLabel": "Reiniciar Demo",
     "@restartDemoLabel": {
         "description": "Etiqueta para ver un texto en la barra de la aplicación del chat"
+    },
+    "errorViewTitle": "Algo salió mal",
+    "@errorViewTitle": {
+        "description": "Título mostrado en la vista de error"
+    },
+    "errorViewBody": "Hubo un problema al crear los componentes de tu panel. No se perdió nada—inténtalo de nuevo.",
+    "@errorViewBody": {
+        "description": "Texto del cuerpo mostrado en la vista de error"
+    },
+    "errorViewTryAgainLabel": "Intentar de nuevo",
+    "@errorViewTryAgainLabel": {
+        "description": "Etiqueta del botón para intentar de nuevo en la vista de error"
     }
 }
