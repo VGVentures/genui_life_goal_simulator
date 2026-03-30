@@ -192,24 +192,20 @@ class IntroDesktopView extends StatelessWidget {
               height: 10,
             ),
           ),
-          Positioned(
-            top: 220,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Assets.images.intro.vgvunicorn.svg(
-                width: 120,
-                height: 120,
-              ),
-            ),
-          ),
           Align(
-            alignment: const Alignment(0, 0.3),
+            alignment: const Alignment(0, 0.1),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Assets.images.intro.vgvunicorn.svg(
+                  width: _Dimensions.unicornSize,
+                  height: _Dimensions.unicornSize,
+                ),
+                const SizedBox(height: _Dimensions.extraLargeHeight),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: _Dimensions.largeHeight,
+                  ),
                   child: SizedBox(
                     width: double.infinity,
                     child: FittedBox(
@@ -241,7 +237,7 @@ class IntroDesktopView extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: _Dimensions.mediumHeight),
                 SizedBox(
                   width: 970,
                   child: Text(
@@ -254,7 +250,7 @@ class IntroDesktopView extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: _Dimensions.largeHeight),
                 SizedBox(
                   width: 280,
                   child: GetStartedButton(
@@ -270,4 +266,11 @@ class IntroDesktopView extends StatelessWidget {
       ),
     );
   }
+}
+
+abstract final class _Dimensions {
+  static const double extraLargeHeight = 48;
+  static const double largeHeight = 40;
+  static const double mediumHeight = 24;
+  static const double unicornSize = 120;
 }

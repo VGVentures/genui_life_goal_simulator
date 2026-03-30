@@ -108,9 +108,15 @@ class IntroMobileView extends StatelessWidget {
             child: Column(
               children: [
                 const Spacer(flex: 15),
-                Assets.images.intro.vgvunicorn.svg(
-                  width: 90,
-                  height: 90,
+                DecoratedBox(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _backgroundColor,
+                  ),
+                  child: Assets.images.intro.vgvunicorn.svg(
+                    width: 90,
+                    height: 90,
+                  ),
                 ),
                 const Spacer(),
                 const SizedBox(height: Spacing.md),
