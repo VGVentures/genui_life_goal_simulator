@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 const _colorValues = [
@@ -124,6 +126,7 @@ class _StatefulFilterBar extends StatefulWidget {
 
 class _StatefulFilterBarState extends State<_StatefulFilterBar> {
   late List<bool> _selected;
+  bool _tapped = false;
 
   @override
   void initState() {
@@ -162,23 +165,40 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
   }
 
   void _onFilterChanged() {
+    if (_tapped) return;
+    setState(() => _tapped = true);
     _writeToDataModel();
     _dispatchAction();
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<SimulatorBloc, SimulatorState>(
+      listenWhen: (previous, current) =>
+          previous.isLoading && !current.isLoading,
+      listener: (context, state) => setState(() => _tapped = false),
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    final state = context.watch<SimulatorBloc>().state;
+    final isDisabled = _tapped || state.isLoading;
+    final showThinking = _tapped && state.isLoading;
+
     final categories = [
       for (var i = 0; i < widget.categories.length; i++)
         FilterCategory(
           label: widget.categories[i].label,
           color: widget.categories[i].color,
           isSelected: _selected[i],
+          isEnabled: !isDisabled,
         ),
     ];
 
-    return FilterBar(
+    final filterBar = FilterBar(
       categories: categories,
+      isAllEnabled: !isDisabled,
       onCategoryToggled: (index) {
         setState(() => _selected[index] = !_selected[index]);
         _onFilterChanged();
@@ -192,6 +212,21 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
         });
         _onFilterChanged();
       },
+    );
+
+    if (!showThinking) return filterBar;
+
+    return Stack(
+      children: [
+        Visibility(
+          visible: false,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: filterBar,
+        ),
+        const ThinkingAnimation(),
+      ],
     );
   }
 }
