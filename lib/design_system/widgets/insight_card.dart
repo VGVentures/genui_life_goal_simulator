@@ -32,15 +32,11 @@ enum InsightCardVariant {
 class InsightCard extends StatelessWidget {
   /// Creates an [InsightCard].
   const InsightCard({
-    required this.emoji,
     required this.title,
     required this.description,
     this.variant = InsightCardVariant.neutral,
     super.key,
   });
-
-  /// The emoji character shown in the icon badge.
-  final String emoji;
 
   /// Primary headline text.
   final String title;
@@ -74,12 +70,13 @@ class InsightCard extends StatelessWidget {
       InsightCardVariant.error => colors?.error ?? const Color(0xFFFF5446),
     };
 
-    final badgeColor = switch (variant) {
-      InsightCardVariant.neutral =>
-        colors?.surfaceContainerHigh ?? const Color(0xFFC6C6C7),
-      InsightCardVariant.success => colors?.success ?? const Color(0xFF00A65F),
-      InsightCardVariant.warning => colors?.warning ?? const Color(0xFFF69426),
-      InsightCardVariant.error => colors?.error ?? const Color(0xFFFF5446),
+    const badgeColor = Colors.white;
+
+    final emoji = switch (variant) {
+      InsightCardVariant.neutral => '💡',
+      InsightCardVariant.success => '✅',
+      InsightCardVariant.warning => '⚠️',
+      InsightCardVariant.error => '🚨',
     };
 
     return Container(

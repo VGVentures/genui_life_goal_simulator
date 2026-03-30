@@ -20,9 +20,6 @@ final _schema = S.object(
           'Defaults to "neutral" if omitted.',
       enumValues: ['neutral', 'success', 'warning', 'error'],
     ),
-    'emoji': A2uiSchemas.stringReference(
-      description: 'A single emoji character shown in the icon badge.',
-    ),
     'title': A2uiSchemas.stringReference(
       description:
           'Primary headline text '
@@ -34,7 +31,7 @@ final _schema = S.object(
           r'(e.g. "You spent \$420 on dining this month").',
     ),
   },
-  required: ['emoji', 'title', 'description'],
+  required: ['title', 'description'],
 );
 
 InsightCardVariant _parseVariant(String? value) {
@@ -81,23 +78,16 @@ class _BoundInsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BoundString(
       dataContext: dataContext,
-      value: cardData['emoji'],
-      builder: (context, emoji) {
+      value: cardData['title'],
+      builder: (context, title) {
         return BoundString(
           dataContext: dataContext,
-          value: cardData['title'],
-          builder: (context, title) {
-            return BoundString(
-              dataContext: dataContext,
-              value: cardData['description'],
-              builder: (context, description) {
-                return InsightCard(
-                  emoji: emoji ?? '',
-                  title: title ?? '',
-                  description: description ?? '',
-                  variant: variant,
-                );
-              },
+          value: cardData['description'],
+          builder: (context, description) {
+            return InsightCard(
+              title: title ?? '',
+              description: description ?? '',
+              variant: variant,
             );
           },
         );
