@@ -172,12 +172,14 @@ jobs:
         run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 -d > lib/firebase_options.dart
 
       - run: flutter pub get
+      - name: Setup Rive Native
+        run: dart run rive_native:setup --platform android
 
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$GITHUB_WORKSPACE/release.jks"
 
       - name: Build release APK
-        run: flutter build apk --release --flavor production --target lib/main_production.dart --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+        run: flutter build apk --release --flavor production --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.APP_DISTRIBUTION_APP_CHECK_DEBUG_TOKEN }}
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}

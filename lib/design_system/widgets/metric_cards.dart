@@ -13,14 +13,13 @@ enum MetricDeltaDirection {
 /// A card molecule that displays a key financial metric with an optional
 /// delta indicator and subtitle.
 ///
-/// Supports five visual variants depending on the parameters provided:
+/// Supports four visual variants depending on the parameters provided:
 ///
 /// - **Plain** – [label], [value], and optional [subtitle]; no delta.
 /// - **Delta+** – adds a green [delta] via [MetricDeltaDirection.positive].
 /// - **Delta-** – adds a red [delta] via [MetricDeltaDirection.negative].
 /// - **Delta+Text** – like Delta+, but [subtitle] contains extended
 ///   comparison text (e.g. "+$40 above 3mo avg").
-/// - **Selected** – any of the above with [isSelected] set to `true`.
 ///
 /// Use [MetricCardsLayout] to display a collection of cards with a responsive
 /// horizontal-row (desktop) or vertical-stack (mobile) arrangement.
@@ -32,8 +31,6 @@ class MetricCard extends StatelessWidget {
     this.subtitle,
     this.delta,
     this.deltaDirection,
-    this.isSelected = false,
-    this.onTap,
     super.key,
   });
 
@@ -56,12 +53,6 @@ class MetricCard extends StatelessWidget {
   /// Has no visual effect when [delta] is null.
   final MetricDeltaDirection? deltaDirection;
 
-  /// Whether this card renders in the selected/active state.
-  final bool isSelected;
-
-  /// Optional tap callback. When `null` the card is non-interactive.
-  final VoidCallback? onTap;
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>();
@@ -73,23 +64,11 @@ class MetricCard extends StatelessWidget {
       subtitle: subtitle,
       delta: delta,
       deltaColor: _deltaColor(colors),
-      isSelected: isSelected,
       textTheme: textTheme,
       colors: colors,
     );
 
-    if (onTap == null) return content;
-
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-        child: content,
-      ),
-    );
+    return content;
   }
 
   Color _deltaColor(AppColors? colors) {
@@ -110,7 +89,6 @@ class _MetricCardContent extends StatelessWidget {
     required this.subtitle,
     required this.delta,
     required this.deltaColor,
-    required this.isSelected,
     required this.textTheme,
     required this.colors,
   });
@@ -120,27 +98,16 @@ class _MetricCardContent extends StatelessWidget {
   final String? subtitle;
   final String? delta;
   final Color deltaColor;
-  final bool isSelected;
   final TextTheme textTheme;
   final AppColors? colors;
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isSelected
-        ? (colors?.primaryContainer ?? _MetricCardColors.selectedBackground)
-        : (colors?.surface ?? _MetricCardColors.background);
-
     return Container(
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: colors?.surface ?? _MetricCardColors.background,
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-        border: Border.all(
-          color: isSelected
-              ? (colors?.primary ?? _MetricCardColors.selectedBorder)
-              : Colors.transparent,
-          width: _Dimensions.selectedBorderWidth,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,15 +289,12 @@ class _MobileMetricCardsLayout extends StatelessWidget {
 
 abstract final class _Dimensions {
   static const double borderRadius = 8;
-  static const double selectedBorderWidth = 1.5;
   static const double deltaSpacing = 4;
   static const double subtitleTopSpacing = 2;
 }
 
 abstract final class _MetricCardColors {
   static const Color background = Color(0xFFFFFFFF);
-  static const Color selectedBackground = Color(0xFFE3F2FD);
-  static const Color selectedBorder = Color(0xFF2196F3);
   static const Color label = Color(0xFF616161);
   static const Color value = Color(0xFF212121);
   static const Color subtitle = Color(0xFF757575);

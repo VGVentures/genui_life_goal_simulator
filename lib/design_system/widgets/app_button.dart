@@ -18,10 +18,16 @@ enum AppButtonVariant {
 /// Size variant for [AppButton].
 enum AppButtonSize {
   /// Large: 48px height, 16px horizontal padding.
-  large,
+  large(height: 48),
 
   /// Small: 40px height, 12px horizontal padding.
-  small,
+  small(height: 40)
+  ;
+
+  const AppButtonSize({required this.height});
+
+  /// The fixed height for this button size.
+  final double height;
 }
 
 /// {@template app_button}
@@ -156,9 +162,7 @@ class AppButton extends StatelessWidget {
     required Color onSurface,
     required LinearGradient? gradient,
   }) {
-    final height = size == AppButtonSize.large
-        ? _Dimensions.largeHeight
-        : _Dimensions.smallHeight;
+    final height = size.height;
     final horizontalPadding = size == AppButtonSize.large
         ? _Dimensions.largePadding
         : _Dimensions.smallPadding;
@@ -286,8 +290,6 @@ class AppButton extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  static const double largeHeight = 48;
-  static const double smallHeight = 40;
   static const double largePadding = 16;
   static const double smallPadding = 12;
   static const double pillRadius = 100;

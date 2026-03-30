@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:genui/genui.dart';
+import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
 import 'package:genui_life_goal_simulator/simulator/catalog/catalog.dart';
 import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart'
     as app_prompt;
@@ -17,10 +18,14 @@ import 'package:genui_life_goal_simulator/simulator/repository/simulator_convers
 /// {@endtemplate}
 class SimulatorRepository {
   /// {@macro simulator_repository}
-  SimulatorRepository({required FirebaseAIChatModel chatModel})
-    : _chatModel = chatModel;
+  SimulatorRepository({
+    required FirebaseAIChatModel chatModel,
+    required ErrorReportingRepository errorReporting,
+  }) : _chatModel = chatModel,
+       _errorReporting = errorReporting;
 
   final FirebaseAIChatModel _chatModel;
+  final ErrorReportingRepository _errorReporting;
   Conversation? _conversation;
   StreamSubscription<ConversationEvent>? _eventSubscription;
   final List<ChatMessage> _history = [];
@@ -59,20 +64,33 @@ class SimulatorRepository {
       transport: adapter,
     );
 
-    _eventSubscription = _conversation!.events.listen((event) {
-      switch (event) {
-        case ConversationWaiting():
-          _controller.add(const SimulatorConversationWaiting(isWaiting: true));
-        case ConversationContentReceived(:final text):
-          _controller.add(SimulatorConversationTextReceived(text));
-        case ConversationSurfaceAdded(:final surfaceId):
-          _controller.add(SimulatorConversationSurfaceAdded(surfaceId));
-        case ConversationError(:final error):
-          _controller.add(SimulatorConversationError(error.toString()));
-        case _:
-          break;
-      }
-    });
+    _eventSubscription = _conversation!.events.listen(
+      (event) {
+        switch (event) {
+          case ConversationWaiting():
+            _controller.add(
+              const SimulatorConversationWaiting(isWaiting: true),
+            );
+          case ConversationContentReceived(:final text):
+            _controller.add(SimulatorConversationTextReceived(text));
+          case ConversationSurfaceAdded(:final surfaceId):
+            _controller.add(SimulatorConversationSurfaceAdded(surfaceId));
+          case ConversationError(:final error):
+            unawaited(
+              _errorReporting.recordError(error, null, reason: 'GenUI error'),
+            );
+            _controller.add(SimulatorConversationError(error.toString()));
+          case _:
+            break;
+        }
+      },
+      onError: (Object error, StackTrace st) {
+        unawaited(
+          _errorReporting.recordError(error, st, reason: 'GenUI stream error'),
+        );
+        _controller.add(SimulatorConversationError('Stream error: $error'));
+      },
+    );
 
     _conversation!.state.addListener(_onStateChanged);
   }
@@ -101,15 +119,19 @@ class SimulatorRepository {
     final adapter = _conversation!.transport as A2uiTransportAdapter;
     final buffer = StringBuffer();
 
-    await for (final result in _chatModel.sendStream(messages)) {
-      final text = result.output.text;
-      if (text.isNotEmpty) {
-        buffer.write(text);
-        adapter.addChunk(text);
+    try {
+      await for (final result in _chatModel.sendStream(messages)) {
+        final text = result.output.text;
+        if (text.isNotEmpty) {
+          buffer.write(text);
+          adapter.addChunk(text);
+        }
       }
+      _history.add(ChatMessage.model(buffer.toString()));
+    } on Object catch (e, st) {
+      await _errorReporting.recordError(e, st, reason: 'AI sendStream error');
+      _controller.add(SimulatorConversationError('AI error: $e'));
     }
-
-    _history.add(ChatMessage.model(buffer.toString()));
   }
 
   ChatMessage _convertDataPartsToText(ChatMessage message) {

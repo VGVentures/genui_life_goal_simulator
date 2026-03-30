@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
@@ -30,9 +32,12 @@ final _schema = S.object(
 
 /// A bottom bar with 2–3 AiButton suggestions for next steps.
 ///
-/// Uses an [Overlay] to render fixed at the bottom of the screen.
-/// The bar shrinks with the screen and the buttons scroll horizontally
-/// if they don't fit.
+/// Uses an [Overlay] to render fixed at the bottom of the viewport,
+/// independent of scroll position. The overlay is removed when the
+/// widget is disposed (i.e., when the page navigates away).
+///
+/// When the LLM is loading, the buttons are replaced with a
+/// [ThinkingAnimation] and the container animates to fit.
 final nextStepsBarItem = CatalogItem(
   name: 'NextStepsBar',
   dataSchema: _schema,
@@ -66,6 +71,7 @@ class _NextStepsBarOverlay extends StatefulWidget {
 class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
   OverlayEntry? _overlayEntry;
   bool _tapped = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -98,8 +104,35 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
 
   void _showOverlay() {
     _overlayEntry = OverlayEntry(
-      builder: (context) {
+      builder: (_) {
         final colors = Theme.of(context).extension<AppColors>();
+        final showThinking = _tapped;
+        final isDisabledByLoading = !_tapped && _isLoading;
+
+        Widget buttons = SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: Spacing.md,
+            children: widget.suggestions.map((s) {
+              final label = s['label']! as String;
+              return AiButton(
+                text: label,
+                onTap: () => _onTap(label),
+              );
+            }).toList(),
+          ),
+        );
+
+        if (isDisabledByLoading) {
+          buttons = IgnorePointer(
+            child: Opacity(
+              opacity: 0.5,
+              child: buttons,
+            ),
+          );
+        }
+
         return Positioned(
           left: Spacing.md,
           right: Spacing.md,
@@ -109,41 +142,29 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: Spacing.md),
               child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: Spacing.sm,
-                    horizontal: Spacing.md,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colors?.surfaceVariant ?? Colors.white,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x4D6D92F5),
-                        blurRadius: 40,
-                        offset: Offset(0, 18),
-                      ),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: Spacing.md,
-                      children: widget.suggestions.map((s) {
-                        final label = s['label']! as String;
-                        return IgnorePointer(
-                          ignoring: _tapped,
-                          child: Opacity(
-                            opacity: _tapped ? 0.5 : 1.0,
-                            child: AiButton(
-                              text: label,
-                              onTap: () => _onTap(label),
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Spacing.sm,
+                      horizontal: Spacing.md,
                     ),
+                    decoration: BoxDecoration(
+                      color: colors?.surfaceVariant ?? Colors.white,
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x4D6D92F5),
+                          blurRadius: 40,
+                          offset: Offset(0, 18),
+                        ),
+                      ],
+                    ),
+                    child: showThinking
+                        ? const ThinkingAnimation(width: 150)
+                        : buttons,
                   ),
                 ),
               ),
@@ -157,6 +178,14 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.shrink();
+    return BlocListener<SimulatorBloc, SimulatorState>(
+      listenWhen: (previous, current) =>
+          previous.isLoading != current.isLoading,
+      listener: (context, state) {
+        _isLoading = state.isLoading;
+        _overlayEntry?.markNeedsBuild();
+      },
+      child: const SizedBox.shrink(),
+    );
   }
 }

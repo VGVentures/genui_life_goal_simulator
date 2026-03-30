@@ -1,11 +1,16 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
-import 'package:genui_life_goal_simulator/simulator/catalog/items/metric_cards_catalog_item.dart';
+import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
+
+class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
+    implements SimulatorBloc {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? cards,
@@ -49,12 +54,18 @@ Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data,
 ) async {
+  final bloc = _MockSimulatorBloc();
+  when(() => bloc.state).thenReturn(const SimulatorState());
+
   await tester.pumpWidget(
-    MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) =>
-              metricCardsItem.widgetBuilder(_context(context, data)),
+    BlocProvider<SimulatorBloc>.value(
+      value: bloc,
+      child: MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) =>
+                metricCardsItem.widgetBuilder(_context(context, data)),
+          ),
         ),
       ),
     ),

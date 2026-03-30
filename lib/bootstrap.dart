@@ -50,24 +50,31 @@ Future<void> bootstrap({
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // App Check
   const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
+  const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+
   if (debugToken.isNotEmpty) {
     setAppCheckDebugToken(debugToken);
   }
 
-  const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
-  if (recaptchaSiteKey.isNotEmpty) {
-    await FirebaseAppCheck.instance.activate(
-      providerWeb: ReCaptchaV3Provider(recaptchaSiteKey),
-    );
-  }
+  await FirebaseAppCheck.instance.activate(
+    providerWeb: recaptchaSiteKey.isNotEmpty
+        ? ReCaptchaV3Provider(recaptchaSiteKey)
+        : null,
+    providerAndroid: debugToken.isNotEmpty
+        ? const AndroidDebugProvider(debugToken: debugToken)
+        : const AndroidPlayIntegrityProvider(),
+  );
 
+  // Feature Flags
   final streamingPrefs = await StreamingSharedPreferences.instance;
   final featureFlagsRepository = FeatureFlagsRepository(
     streamingSharedPreferences: streamingPrefs,
     featureFlags: activeFeatureFlags,
   );
 
+  // Error Reporting
   FlutterError.onError = errorReportingRepository.handleFlutterError;
   binding.platformDispatcher.onError =
       errorReportingRepository.handlePlatformError;

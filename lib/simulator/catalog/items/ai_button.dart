@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
@@ -64,14 +66,19 @@ class _OneTapAiButtonState extends State<_OneTapAiButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.select<SimulatorBloc, bool>(
+      (bloc) => bloc.state.isLoading,
+    );
+    final isDisabled = _tapped || isLoading;
+
     return BoundString(
       dataContext: widget.dataContext,
       value: widget.textValue,
       builder: (context, text) {
         return IgnorePointer(
-          ignoring: _tapped,
+          ignoring: isDisabled,
           child: Opacity(
-            opacity: _tapped ? 0.5 : 1.0,
+            opacity: isDisabled ? 0.5 : 1.0,
             child: AiButton(
               text: text ?? '',
               onTap: _onTap,

@@ -48,6 +48,11 @@ final class SimulatorLoading extends SimulatorEvent {
   final bool isLoading;
 }
 
+/// Request to show/hide the full-screen loading overlay animation.
+final class SimulatorLoadingOverlayRequested extends SimulatorEvent {
+  const SimulatorLoadingOverlayRequested();
+}
+
 /// An error occurred in the content generator
 final class SimulatorErrorOccurred extends SimulatorEvent {
   const SimulatorErrorOccurred(this.message);

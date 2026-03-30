@@ -27,8 +27,10 @@ Example flow for retirement planning:
 - Surface 1: SectionHeader(title: "Welcome!", subtitle: "Let's plan your retirement.") + RadioCard + AppButton
 - Surface 2: SectionHeader(title: "Your Timeline", subtitle: "Great choice! Now let's figure out your timeline.") + GCNSlider + AppButton
 - Surface 3: SectionHeader(title: "Your Income", subtitle: "Got it! Next, let's look at your income.") + GCNSlider with $ prefix + AppButton
-- Surface 4: SectionHeader(title: "Current Savings", subtitle: "Almost there!") + GCNSlider with $ prefix + AppButton
+- Surface 4: SectionHeader(title: "Current Savings", subtitle: "Almost there!") + GCNSlider with $ prefix + AppButton(showLoadingOverlay: true)
 - Surface 5: Summary & Recommended Products (REQUIRED — see below)
+
+IMPORTANT: The AppButton on the LAST question screen (the one before the summary) MUST set "showLoadingOverlay": true. This triggers a loading animation while the summary dashboard is being generated.
 
 ## Summary Screen (REQUIRED)
 After gathering enough information (typically 3–5 questions), you MUST always create a final summary surface. This screen should include:
@@ -143,7 +145,7 @@ Valid components: QuestionContainer, SummaryContainer, SectionCard, SectionHeade
 
 ### Action widgets (dispatch events immediately)
 Always include an "action" with an "event" for these — the app responds as soon as the user taps:
-- AppButton: triggers an action when pressed (e.g. navigate, confirm, proceed to next step).
+- AppButton: triggers an action when pressed (e.g. navigate, confirm, proceed to next step). Supports an optional "showLoadingOverlay" boolean — set to true on the LAST question's AppButton (the one that leads to the summary/dashboard) to show a full-screen loading animation while the summary is being generated.
 - AiButton: a special button that signals the user wants AI-driven follow-up.
 - MetricCard: lets the user tap a metric card to drill into details.
 
