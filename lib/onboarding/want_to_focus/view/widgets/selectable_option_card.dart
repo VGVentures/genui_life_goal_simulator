@@ -25,7 +25,7 @@ class SelectableOptionCard extends StatelessWidget {
     );
 
     return Material(
-      color: colorExtension?.onPrimary,
+      color: colorExtension?.surfaceVariant,
       borderRadius: BorderRadius.circular(Spacing.lg),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -36,7 +36,7 @@ class SelectableOptionCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? colorExtension?.primary.withValues(alpha: 0.1)
-                : colorExtension?.onPrimary,
+                : colorExtension?.surfaceVariant,
             borderRadius: BorderRadius.circular(Spacing.lg),
             border: Border.all(
               color: isSelected

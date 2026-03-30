@@ -11,7 +11,11 @@ class LogoIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Assets.images.advisor.vgvunicornAppbar.svg(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final image = isDark
+        ? Assets.images.advisor.vgvunicornAppbarDarkmode
+        : Assets.images.advisor.vgvunicornAppbar;
+    return image.svg(
       width: size,
       height: size,
     );

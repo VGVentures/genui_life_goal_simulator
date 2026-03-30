@@ -114,8 +114,17 @@ class $AssetsImagesAdvisorGen {
   SvgGenImage get vgvunicornAppbar =>
       const SvgGenImage('assets/images/advisor/vgvunicorn_appbar.svg');
 
+  /// File path: assets/images/advisor/vgvunicorn_appbar_darkmode.svg
+  SvgGenImage get vgvunicornAppbarDarkmode => const SvgGenImage(
+    'assets/images/advisor/vgvunicorn_appbar_darkmode.svg',
+  );
+
   /// List of all assets
-  List<SvgGenImage> get values => [restartIcon, vgvunicornAppbar];
+  List<SvgGenImage> get values => [
+    restartIcon,
+    vgvunicornAppbar,
+    vgvunicornAppbarDarkmode,
+  ];
 }
 
 class $AssetsImagesIntroGen {

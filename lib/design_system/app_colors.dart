@@ -25,6 +25,7 @@ abstract class AppColors extends ThemeExtension<AppColors> {
   Color get surfaceContainer;
   Color get surfaceContainerHigh;
   Color get surfaceContainerHighest;
+  Color get surfaceTinted;
   Color get onSurface;
   Color get onSurfaceVariant;
   Color get onSurfaceMuted;
@@ -140,6 +141,8 @@ class LightThemeColors extends AppColors {
   Color get surfaceContainerHigh => const Color(0xFFC6C6C7);
   @override
   Color get surfaceContainerHighest => const Color(0xFFAAABAB);
+  @override
+  Color get surfaceTinted => const Color(0xFFF3F6FF);
   @override
   Color get onSurface => const Color(0xFF1A1C1C);
   @override
@@ -312,6 +315,8 @@ class DarkThemeColors extends AppColors {
   Color get surfaceContainerHigh => const Color(0xFF454747);
   @override
   Color get surfaceContainerHighest => const Color(0xFF5D5F5F);
+  @override
+  Color get surfaceTinted => const Color(0xFF020F30);
   @override
   Color get onSurface => const Color(0xFFF0F1F1);
   @override

@@ -18,11 +18,16 @@ class GradientChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorExtension = Theme.of(context).extension<AppColors>();
     return AppButton(
       label: label ?? '',
       leadingIcon: asset.svg(
         height: _Dimensions.iconHeight,
         width: Spacing.md,
+        colorFilter: ColorFilter.mode(
+          colorExtension?.onInverseSurface ?? Colors.white,
+          BlendMode.srcIn,
+        ),
       ),
       onPressed: onTap,
       variant: AppButtonVariant.gradient,

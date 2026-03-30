@@ -20,7 +20,7 @@ class WantToFocusPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => WantToFocusCubit(),
       child: Scaffold(
-        backgroundColor: colorExtensions?.primarySurface,
+        backgroundColor: colorExtensions?.surfaceTinted,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
