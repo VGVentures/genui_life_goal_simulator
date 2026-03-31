@@ -328,6 +328,23 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
+              'InsightCard',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Contextual insight card with neutral, success, warning, and'
+              ' error variants',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const InsightCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
               'Loading Animation',
               style: TextStyle(color: Colors.black),
             ),

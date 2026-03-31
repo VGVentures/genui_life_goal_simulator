@@ -9,6 +9,7 @@ export 'emoji_card_catalog_page.dart';
 export 'filter_bar_catalog_page.dart';
 export 'header_selector_catalog_page.dart';
 export 'horizontal_bar_catalog_page.dart';
+export 'insight_card_catalog_page.dart';
 export 'line_chart_catalog_page.dart';
 export 'loading_animation_catalog_page.dart';
 export 'metric_card_catalog_page.dart';
