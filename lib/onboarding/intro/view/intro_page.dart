@@ -33,12 +33,15 @@ class IntroPage extends StatelessWidget {
       );
     }
 
-    return ResponsiveScaffold(
-      mobile: IntroMobileView(
-        onGetStarted: onGetStarted ?? backupOnGetStarted,
-      ),
-      desktop: IntroDesktopView(
-        onGetStarted: onGetStarted ?? backupOnGetStarted,
+    return Theme(
+      data: AppThemes.light.themeData.getThemeData(context),
+      child: ResponsiveScaffold(
+        mobile: IntroMobileView(
+          onGetStarted: onGetStarted ?? backupOnGetStarted,
+        ),
+        desktop: IntroDesktopView(
+          onGetStarted: onGetStarted ?? backupOnGetStarted,
+        ),
       ),
     );
   }

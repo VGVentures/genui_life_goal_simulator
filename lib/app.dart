@@ -15,10 +15,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
-      themeMode: ThemeMode.light,
+      theme: AppThemes.light.themeData.themeData,
+      darkTheme: AppThemes.dark.themeData.themeData,
       builder: (context, child) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final appTheme = isDark
+            ? AppThemes.dark.themeData
+            : AppThemes.light.themeData;
         return Theme(
-          data: AppThemes.light.themeData.getThemeData(context),
+          data: appTheme.getThemeData(context),
           child: child ?? const SizedBox.shrink(),
         );
       },
