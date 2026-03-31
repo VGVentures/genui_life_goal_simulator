@@ -1,0 +1,11 @@
+<svg width="342" height="283" viewBox="0 0 342 283" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.5" y="0.5" width="135" height="135" rx="16" fill="black" fill-opacity="0.1"/>
+<rect x="0.5" y="0.5" width="135" height="135" rx="16" stroke="black" stroke-opacity="0.4" stroke-dasharray="4 4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M88 56.8154L76.3154 68.5L88 80.1846L79.6846 88.5L68 76.8154L56.3154 88.5L48 80.1846L59.6846 68.5L48 56.8154L56.3154 48.5L68 60.1846L79.6846 48.5L88 56.8154Z" fill="black" fill-opacity="0.2"/>
+<rect x="147.5" y="0.5" width="194" height="135" rx="16" fill="black" fill-opacity="0.1"/>
+<rect x="147.5" y="0.5" width="194" height="135" rx="16" stroke="black" stroke-opacity="0.4" stroke-dasharray="4 4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M266 56.8154L254.315 68.5L266 80.1846L257.685 88.5L246 76.8154L234.315 88.5L226 80.1846L237.685 68.5L226 56.8154L234.315 48.5L246 60.1846L257.685 48.5L266 56.8154Z" fill="black" fill-opacity="0.2"/>
+<rect x="0.5" y="147.5" width="341" height="135" rx="16" fill="black" fill-opacity="0.1"/>
+<rect x="0.5" y="147.5" width="341" height="135" rx="16" stroke="black" stroke-opacity="0.4" stroke-dasharray="4 4"/>
+<path d="M191 203.815L179.315 215.5L191 227.185L182.685 235.5L171 223.815L159.315 235.5L151 227.185L162.685 215.5L151 203.815L159.315 195.5L171 207.185L182.685 195.5L191 203.815Z" fill="black" fill-opacity="0.2"/>
+</svg>

@@ -54,9 +54,14 @@ class _SimulatorViewState extends State<SimulatorView> {
             previous.pages != current.pages ||
             previous.host != current.host ||
             previous.isLoading != current.isLoading ||
+            previous.status != current.status ||
             previous.hasPendingNavigation != current.hasPendingNavigation ||
             previous.showLoadingOverlay != current.showLoadingOverlay,
         builder: (context, state) {
+          if (state.status == SimulatorStatus.error) {
+            return const _ErrorView();
+          }
+
           // The user has visible content if they've already navigated
           // to a page (i.e., there are older pages beyond the pending one).
           final hasVisibleContent =
@@ -244,6 +249,74 @@ class _FadingPageView extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = AppTextStyles.getResponsiveTextTheme(context);
+    final onSurfaceVariant =
+        colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F);
+
+    return Stack(
+      children: [
+        Positioned(
+          top: Spacing.md,
+          left: Spacing.md,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => const IntroPage(),
+              ),
+            ),
+            child: Assets.images.advisor.goBackButton.svg(),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Assets.images.advisor.errorSkeleton.svg(),
+                const SizedBox(height: Spacing.xxxl),
+                Text(
+                  l10n.errorViewTitle,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Spacing.sm),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Text(
+                    l10n.errorViewBody,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: Spacing.lg),
+                AppButton(
+                  label: l10n.errorViewTryAgainLabel,
+                  variant: AppButtonVariant.gradient,
+                  onPressed: () => context.read<SimulatorBloc>().add(
+                    const SimulatorRetried(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -116,7 +116,8 @@ class KickOffPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final appColors = Theme.of(context).extension<AppColors>()!;
+    final lightThemeData = AppThemes.light.themeData.getThemeData(context);
+    final appColors = lightThemeData.extension<AppColors>()!;
     final bgColor = appColors.primary;
 
     final mobileBody = Padding(
@@ -167,16 +168,19 @@ class KickOffPage extends StatelessWidget {
       backgroundColor: appColors.primary,
     );
 
-    return ResponsiveScaffold(
-      mobile: MobileKickOffView(
-        body: mobileBody,
-        backgroundColor: bgColor,
-        floatingActionButton: baseButton,
-      ),
-      desktop: DesktopKickOffView(
-        body: desktopBody,
-        backgroundColor: bgColor,
-        floatingActionButton: baseButton,
+    return Theme(
+      data: lightThemeData,
+      child: ResponsiveScaffold(
+        mobile: MobileKickOffView(
+          body: mobileBody,
+          backgroundColor: bgColor,
+          floatingActionButton: baseButton,
+        ),
+        desktop: DesktopKickOffView(
+          body: desktopBody,
+          backgroundColor: bgColor,
+          floatingActionButton: baseButton,
+        ),
       ),
     );
   }

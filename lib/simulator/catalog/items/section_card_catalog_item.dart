@@ -32,7 +32,7 @@ final sectionCardItem = CatalogItem(
           padding: const EdgeInsets.only(bottom: Spacing.md),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: colors?.onPrimary ?? const Color(0xFFFFFFFF),
+              color: colors?.surfaceVariant ?? const Color(0xFFFFFFFF),
               borderRadius: BorderRadius.circular(Spacing.xl),
             ),
             child: Padding(

@@ -11,7 +11,7 @@ class WantToFocusView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final themeOf = Theme.of(context);
-    final colorScheme = themeOf.colorScheme;
+    final colorExtension = themeOf.extension<AppColors>();
 
     return Center(
       child: Column(
@@ -28,7 +28,7 @@ class WantToFocusView extends StatelessWidget {
               context,
               mobile: AppTextStyles.displaySmallMobile,
               desktop: AppTextStyles.displayLargeDesktop,
-            ).copyWith(color: colorScheme.onPrimaryContainer),
+            ).copyWith(color: colorExtension?.onSurface),
             textAlign: TextAlign.center,
           ),
           const ResponsiveScaffold(

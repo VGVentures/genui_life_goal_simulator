@@ -106,6 +106,14 @@ class $AssetsImagesGen {
 class $AssetsImagesAdvisorGen {
   const $AssetsImagesAdvisorGen();
 
+  /// File path: assets/images/advisor/error_skeleton.svg
+  SvgGenImage get errorSkeleton =>
+      const SvgGenImage('assets/images/advisor/error_skeleton.svg');
+
+  /// File path: assets/images/advisor/go_back_button.svg
+  SvgGenImage get goBackButton =>
+      const SvgGenImage('assets/images/advisor/go_back_button.svg');
+
   /// File path: assets/images/advisor/restart_icon.svg
   SvgGenImage get restartIcon =>
       const SvgGenImage('assets/images/advisor/restart_icon.svg');
@@ -114,8 +122,18 @@ class $AssetsImagesAdvisorGen {
   SvgGenImage get vgvunicornAppbar =>
       const SvgGenImage('assets/images/advisor/vgvunicorn_appbar.svg');
 
+  /// File path: assets/images/advisor/vgvunicorn_appbar_darkmode.svg
+  SvgGenImage get vgvunicornAppbarDarkmode =>
+      const SvgGenImage('assets/images/advisor/vgvunicorn_appbar_darkmode.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [restartIcon, vgvunicornAppbar];
+  List<SvgGenImage> get values => [
+    errorSkeleton,
+    goBackButton,
+    restartIcon,
+    vgvunicornAppbar,
+    vgvunicornAppbarDarkmode,
+  ];
 }
 
 class $AssetsImagesIntroGen {
@@ -145,6 +163,10 @@ class $AssetsImagesIntroGen {
   /// File path: assets/images/intro/star9.svg
   SvgGenImage get star9 => const SvgGenImage('assets/images/intro/star9.svg');
 
+  /// File path: assets/images/intro/vgvunicorn.svg
+  SvgGenImage get vgvunicorn =>
+      const SvgGenImage('assets/images/intro/vgvunicorn.svg');
+
   /// File path: assets/images/intro/waveline1.svg
   SvgGenImage get waveline1 =>
       const SvgGenImage('assets/images/intro/waveline1.svg');
@@ -152,10 +174,6 @@ class $AssetsImagesIntroGen {
   /// File path: assets/images/intro/waveline2.svg
   SvgGenImage get waveline2 =>
       const SvgGenImage('assets/images/intro/waveline2.svg');
-
-  /// File path: assets/images/intro/vgvunicorn.svg
-  SvgGenImage get vgvunicorn =>
-      const SvgGenImage('assets/images/intro/vgvunicorn.svg');
 
   /// File path: assets/images/intro/waveline3.svg
   SvgGenImage get waveline3 =>
