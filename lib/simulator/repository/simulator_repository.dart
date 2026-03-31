@@ -129,6 +129,10 @@ class SimulatorRepository {
       }
       _history.add(ChatMessage.model(buffer.toString()));
     } on Object catch (e, st) {
+      // Save whatever was streamed so retry has full context.
+      if (buffer.isNotEmpty) {
+        _history.add(ChatMessage.model(buffer.toString()));
+      }
       await _errorReporting.recordError(e, st, reason: 'AI sendStream error');
       _controller.add(SimulatorConversationError('AI error: $e'));
     }

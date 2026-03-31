@@ -59,3 +59,8 @@ final class SimulatorErrorOccurred extends SimulatorEvent {
 
   final String message;
 }
+
+/// The user tapped "Try again" after an error — resume from last page.
+final class SimulatorRetried extends SimulatorEvent {
+  const SimulatorRetried();
+}

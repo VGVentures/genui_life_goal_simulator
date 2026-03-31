@@ -127,5 +127,17 @@
     "restartDemoLabel": "Restart Demo",
     "@restartDemoLabel": {
         "description": "Label for see a string on the chat app bar"
+    },
+    "errorViewTitle": "Something went wrong",
+    "@errorViewTitle": {
+        "description": "Title shown on the error view"
+    },
+    "errorViewBody": "There was a problem while creating your dashboard components. Nothing's lost—try again.",
+    "@errorViewBody": {
+        "description": "Body text shown on the error view"
+    },
+    "errorViewTryAgainLabel": "Try again",
+    "@errorViewTryAgainLabel": {
+        "description": "Label for the try again button on the error view"
     }
 }
