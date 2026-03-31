@@ -9,7 +9,11 @@ class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? cards,
+  String callToAction = 'Select all that apply',
+  String? selectionMode,
 }) => {
+  'callToAction': callToAction,
+  'selectionMode': selectionMode,
   'cards':
       cards ??
       [
@@ -58,10 +62,10 @@ void main() {
       final schema = emojiCardItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, contains('cards'));
+      expect(props, containsAll(['callToAction', 'selectionMode', 'cards']));
 
       final required = schema.value['required']! as List;
-      expect(required, contains('cards'));
+      expect(required, containsAll(['callToAction', 'cards']));
     });
 
     group('renders', () {
@@ -92,6 +96,80 @@ void main() {
 
         expect(find.text('📊'), findsOneWidget);
         expect(find.text('Budget'), findsOneWidget);
+      });
+
+      testWidgets('call-to-action text', (tester) async {
+        await _pump(
+          tester,
+          _data(),
+        );
+
+        expect(find.text('Select all that apply'), findsOneWidget);
+      });
+
+      testWidgets('no call-to-action text when empty', (tester) async {
+        await _pump(tester, _data(callToAction: ''));
+
+        expect(find.text('Select all that apply'), findsNothing);
+      });
+    });
+
+    group('single selection mode', () {
+      testWidgets('selecting a card deselects others', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            selectionMode: 'single',
+            cards: [
+              {'emoji': '👍', 'label': 'Yes'},
+              {'emoji': '👎', 'label': 'No'},
+            ],
+          ),
+        );
+
+        await tester.tap(find.text('Yes'));
+        await tester.pump();
+        await tester.tap(find.text('No'));
+        await tester.pump();
+
+        final yesCard = tester.widget<EmojiCard>(
+          find.ancestor(
+            of: find.text('Yes'),
+            matching: find.byType(EmojiCard),
+          ),
+        );
+        final noCard = tester.widget<EmojiCard>(
+          find.ancestor(
+            of: find.text('No'),
+            matching: find.byType(EmojiCard),
+          ),
+        );
+
+        expect(yesCard.isSelected, isFalse);
+        expect(noCard.isSelected, isTrue);
+      });
+
+      testWidgets('tapping selected card deselects it', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            selectionMode: 'single',
+            cards: [
+              {'emoji': '👍', 'label': 'Yes', 'isSelected': true},
+            ],
+          ),
+        );
+
+        await tester.tap(find.text('Yes'));
+        await tester.pump();
+
+        final card = tester.widget<EmojiCard>(
+          find.ancestor(
+            of: find.text('Yes'),
+            matching: find.byType(EmojiCard),
+          ),
+        );
+        expect(card.isSelected, isFalse);
       });
     });
   });
