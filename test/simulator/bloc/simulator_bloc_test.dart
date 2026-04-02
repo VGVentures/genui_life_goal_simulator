@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
 import 'package:genui_life_goal_simulator/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
@@ -11,8 +10,6 @@ import 'package:genui_life_goal_simulator/simulator/repository/simulator_reposit
 import 'package:mocktail/mocktail.dart';
 
 class _MockSimulatorRepository extends Mock implements SimulatorRepository {}
-
-class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
 const _simulatorStarted = SimulatorStarted(
   profileType: ProfileType.beginner,
@@ -35,7 +32,6 @@ void main() {
     when(() => repository.events).thenAnswer((_) => eventsController.stream);
     when(() => repository.startConversation()).thenAnswer((_) async {});
     when(() => repository.sendMessage(any())).thenAnswer((_) async {});
-    when(() => repository.surfaceHost).thenReturn(_MockSurfaceHost());
     when(() => repository.dispose()).thenAnswer((_) async {});
   });
 
@@ -51,7 +47,6 @@ void main() {
       expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
       expect(state.showLoadingOverlay, isFalse);
-      expect(state.host, isNull);
       expect(state.error, isNull);
     });
 
@@ -152,12 +147,11 @@ void main() {
     });
 
     blocTest<SimulatorBloc, SimulatorState>(
-      '$SimulatorStarted emits loading, then active with host',
+      '$SimulatorStarted emits loading, then active',
       build: () => SimulatorBloc(simulatorRepository: repository),
       act: (bloc) => bloc.add(_simulatorStarted),
       verify: (bloc) {
         expect(bloc.state.status, SimulatorStatus.active);
-        expect(bloc.state.host, isNotNull);
         verify(() => repository.startConversation()).called(1);
         verify(
           () => repository.sendMessage(any()),
@@ -405,6 +399,92 @@ void main() {
       verify: (_) {
         verify(() => repository.sendMessage('hello')).called(1);
       },
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorRetried resets to last page with content and clears error',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        status: SimulatorStatus.error,
+        error: 'something failed',
+        pages: [
+          [AiTextDisplayMessage('Welcome')],
+          [AiSurfaceDisplayMessage('surface_1')],
+        ],
+        currentPageIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const SimulatorRetried()),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.status, 'status', SimulatorStatus.active)
+            .having((s) => s.isLoading, 'isLoading', isTrue)
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0)
+            .having((s) => s.error, 'error', isNull),
+      ],
+      verify: (_) {
+        verify(
+          () => repository.sendMessage('Please continue where you left off.'),
+        ).called(1);
+      },
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived merges consecutive text messages with space',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiTextDisplayMessage('Hello')],
+        ],
+      ),
+      act: (bloc) => bloc.add(
+        const SimulatorContentReceived(AiTextDisplayMessage('world')),
+      ),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => (s.pages.first.first as AiTextDisplayMessage).text,
+          'merged text',
+          'Hello world',
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived skips space when text ends with newline',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiTextDisplayMessage('Hello\n')],
+        ],
+      ),
+      act: (bloc) => bloc.add(
+        const SimulatorContentReceived(AiTextDisplayMessage('world')),
+      ),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => (s.pages.first.first as AiTextDisplayMessage).text,
+          'merged text',
+          'Hello\nworld',
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived does not merge surface with text',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+        ],
+      ),
+      act: (bloc) =>
+          bloc.add(const SimulatorContentReceived(AiTextDisplayMessage('hi'))),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.pages.first,
+          'first page',
+          hasLength(2),
+        ),
+      ],
     );
 
     test('close disposes repository', () async {

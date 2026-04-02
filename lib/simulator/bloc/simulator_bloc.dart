@@ -47,12 +47,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
 
     await _repository.startConversation();
 
-    emit(
-      state.copyWith(
-        status: SimulatorStatus.active,
-        host: _repository.surfaceHost,
-      ),
-    );
+    emit(state.copyWith(status: SimulatorStatus.active));
 
     final initialMessage = app_prompt.PromptBuilder.buildInitialUserMessage(
       profileType: event.profileType,
@@ -211,6 +206,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
         status: SimulatorStatus.active,
         isLoading: true,
         currentPageIndex: lastGoodIndex,
+        error: clearError,
       ),
     );
     await _repository.sendMessage('Please continue where you left off.');

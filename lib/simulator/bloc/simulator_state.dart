@@ -1,39 +1,20 @@
-import 'package:genui/genui.dart';
+import 'package:equatable/equatable.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/display_message.dart';
 
-/// A message to display in the chat UI.
-sealed class DisplayMessage {
-  const DisplayMessage();
-}
-
-/// A message sent by the user.
-final class UserDisplayMessage extends DisplayMessage {
-  const UserDisplayMessage(this.text);
-
-  final String text;
-}
-
-/// A text response from the AI.
-final class AiTextDisplayMessage extends DisplayMessage {
-  const AiTextDisplayMessage(this.text);
-
-  final String text;
-}
-
-/// An AI-generated UI surface.
-final class AiSurfaceDisplayMessage extends DisplayMessage {
-  const AiSurfaceDisplayMessage(this.surfaceId);
-
-  final String surfaceId;
-}
+export 'display_message.dart';
 
 /// Sentinel used by `SimulatorState.copyWith` to explicitly clear
 /// `pendingPageIndex` to `null`.
 const clearPendingPageIndex = -1;
 
+/// Sentinel used by `SimulatorState.copyWith` to explicitly clear
+/// `error` to `null`.
+const clearError = '__clear_error__';
+
 /// {@template simulator_state}
 /// State for the simulator bloc.
 /// {@endtemplate}
-final class SimulatorState {
+final class SimulatorState extends Equatable {
   /// {@macro simulator_state}
   const SimulatorState({
     this.status = SimulatorStatus.initial,
@@ -42,7 +23,6 @@ final class SimulatorState {
     this.isLoading = false,
     this.pendingPageIndex,
     this.showLoadingOverlay = false,
-    this.host,
     this.error,
   });
 
@@ -76,12 +56,12 @@ final class SimulatorState {
   /// completes.
   final bool showLoadingOverlay;
 
-  final SurfaceHost? host;
   final String? error;
 
   /// Returns a copy of this state with the given fields replaced.
   ///
   /// To clear [pendingPageIndex] to `null`, pass [clearPendingPageIndex].
+  /// To clear [error] to `null`, pass [clearError].
   SimulatorState copyWith({
     SimulatorStatus? status,
     List<List<DisplayMessage>>? pages,
@@ -89,7 +69,6 @@ final class SimulatorState {
     bool? isLoading,
     int? pendingPageIndex,
     bool? showLoadingOverlay,
-    SurfaceHost? host,
     String? error,
   }) {
     return SimulatorState(
@@ -101,10 +80,20 @@ final class SimulatorState {
           ? null
           : pendingPageIndex ?? this.pendingPageIndex,
       showLoadingOverlay: showLoadingOverlay ?? this.showLoadingOverlay,
-      host: host ?? this.host,
-      error: error ?? this.error,
+      error: error == clearError ? null : error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    status,
+    pages,
+    currentPageIndex,
+    isLoading,
+    pendingPageIndex,
+    showLoadingOverlay,
+    error,
+  ];
 }
 
 enum SimulatorStatus { initial, loading, active, error }

@@ -1,7 +1,9 @@
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
+import 'package:genui_life_goal_simulator/simulator/catalog/catalog.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_repository.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,11 +16,15 @@ class _MockErrorReportingRepository extends Mock
 void main() {
   late _MockFirebaseAIChatModel chatModel;
   late _MockErrorReportingRepository errorReporting;
+  late Catalog catalog;
+  late SurfaceController surfaceController;
   late SimulatorRepository repository;
 
   setUp(() {
     chatModel = _MockFirebaseAIChatModel();
     errorReporting = _MockErrorReportingRepository();
+    catalog = buildFinanceCatalog();
+    surfaceController = SurfaceController(catalogs: [catalog]);
 
     when(() => chatModel.sendStream(any())).thenAnswer(
       (_) => Stream.fromIterable([
@@ -38,6 +44,8 @@ void main() {
     repository = SimulatorRepository(
       chatModel: chatModel,
       errorReporting: errorReporting,
+      catalog: catalog,
+      surfaceController: surfaceController,
     );
   });
 
@@ -47,19 +55,8 @@ void main() {
 
   group('$SimulatorRepository', () {
     group('initial state', () {
-      test('surfaceHost is null before startConversation', () {
-        expect(repository.surfaceHost, isNull);
-      });
-
       test('events stream is accessible before startConversation', () {
         expect(repository.events, isA<Stream<SimulatorConversationEvent>>());
-      });
-    });
-
-    group('startConversation', () {
-      test('sets surfaceHost', () async {
-        await repository.startConversation();
-        expect(repository.surfaceHost, isNotNull);
       });
     });
 
@@ -225,6 +222,8 @@ void main() {
         final localRepo = SimulatorRepository(
           chatModel: chatModel,
           errorReporting: errorReporting,
+          catalog: catalog,
+          surfaceController: surfaceController,
         );
         await localRepo.startConversation();
         await localRepo.dispose();
@@ -236,6 +235,8 @@ void main() {
         final localRepo = SimulatorRepository(
           chatModel: chatModel,
           errorReporting: errorReporting,
+          catalog: catalog,
+          surfaceController: surfaceController,
         );
         await localRepo.dispose();
 

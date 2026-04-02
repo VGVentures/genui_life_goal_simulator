@@ -17,7 +17,10 @@ class _MockSurfaceHost extends Mock implements SurfaceHost {}
 const _testSurfaceSize = Size(1200, 800);
 
 extension on WidgetTester {
-  Future<void> pumpSimulatorView(SimulatorBloc bloc) async {
+  Future<void> pumpSimulatorView(
+    SimulatorBloc bloc, {
+    required SurfaceHost surfaceHost,
+  }) async {
     view.physicalSize = _testSurfaceSize;
     view.devicePixelRatio = 1.0;
     addTearDown(view.resetPhysicalSize);
@@ -28,7 +31,10 @@ extension on WidgetTester {
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SimulatorBloc>.value(
           value: bloc,
-          child: const SimulatorView(profileType: ProfileType.optimizer),
+          child: SimulatorView(
+            profileType: ProfileType.optimizer,
+            surfaceHost: surfaceHost,
+          ),
         ),
       ),
     );
@@ -37,6 +43,7 @@ extension on WidgetTester {
 
 void main() {
   late _MockSimulatorBloc bloc;
+  late _MockSurfaceHost surfaceHost;
 
   setUpAll(() {
     registerFallbackValue(const SimulatorMessageSent(''));
@@ -44,6 +51,7 @@ void main() {
 
   setUp(() {
     bloc = _MockSimulatorBloc();
+    surfaceHost = _MockSurfaceHost();
     when(() => bloc.state).thenReturn(const SimulatorState());
   });
 
@@ -51,7 +59,7 @@ void main() {
     testWidgets('shows loading indicator when pages are empty', (
       tester,
     ) async {
-      await tester.pumpSimulatorView(bloc);
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
 
       expect(find.byType(ThinkingAnimation), findsOneWidget);
     });
@@ -59,17 +67,15 @@ void main() {
     testWidgets('renders message bubbles in PageView when pages exist', (
       tester,
     ) async {
-      final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
-        SimulatorState(
+        const SimulatorState(
           status: SimulatorStatus.active,
-          pages: const [
+          pages: [
             [AiTextDisplayMessage('Hello')],
           ],
-          host: host,
         ),
       );
-      await tester.pumpSimulatorView(bloc);
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
 
       expect(find.byType(PageView), findsOneWidget);
       expect(find.byType(SimulatorMessageBubble), findsOneWidget);
@@ -78,7 +84,7 @@ void main() {
     });
 
     testWidgets('shows app bar with logo and profile chip', (tester) async {
-      await tester.pumpSimulatorView(bloc);
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
       expect(find.textContaining('VGV'), findsOneWidget);
       expect(find.text('The Optimizer'), findsOneWidget);
       expect(find.text('Restart Demo'), findsOneWidget);
@@ -87,17 +93,15 @@ void main() {
     testWidgets('shows loading indicator on current page when loading', (
       tester,
     ) async {
-      final host = _MockSurfaceHost();
       when(() => bloc.state).thenReturn(
-        SimulatorState(
+        const SimulatorState(
           status: SimulatorStatus.active,
-          pages: const [[]],
+          pages: [[]],
           isLoading: true,
           pendingPageIndex: 0,
-          host: host,
         ),
       );
-      await tester.pumpSimulatorView(bloc);
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
 
       expect(find.byType(ThinkingAnimation), findsOneWidget);
     });
@@ -105,19 +109,17 @@ void main() {
     testWidgets(
       'shows thinking animation during initial pending navigation',
       (tester) async {
-        final host = _MockSurfaceHost();
         when(() => bloc.state).thenReturn(
-          SimulatorState(
+          const SimulatorState(
             status: SimulatorStatus.active,
-            pages: const [
+            pages: [
               [AiTextDisplayMessage('Hello')],
             ],
             isLoading: true,
             pendingPageIndex: 0,
-            host: host,
           ),
         );
-        await tester.pumpSimulatorView(bloc);
+        await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
 
         // Only one page — user hasn't seen content yet, show thinking.
         expect(find.byType(ThinkingAnimation), findsOneWidget);
@@ -127,20 +129,18 @@ void main() {
     testWidgets(
       'hides thinking animation during subsequent pending navigation',
       (tester) async {
-        final host = _MockSurfaceHost();
         when(() => bloc.state).thenReturn(
-          SimulatorState(
+          const SimulatorState(
             status: SimulatorStatus.active,
-            pages: const [
+            pages: [
               [AiTextDisplayMessage('Hello')],
               [AiTextDisplayMessage('World')],
             ],
             isLoading: true,
             pendingPageIndex: 0,
-            host: host,
           ),
         );
-        await tester.pumpSimulatorView(bloc);
+        await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
 
         // Multiple pages — user is viewing the first, no outer thinking.
         expect(find.byType(ThinkingAnimation), findsNothing);
@@ -148,28 +148,53 @@ void main() {
     );
 
     testWidgets('rebuilds when pages change', (tester) async {
-      final host = _MockSurfaceHost();
       whenListen(
         bloc,
         Stream.fromIterable([
-          SimulatorState(
+          const SimulatorState(
             status: SimulatorStatus.active,
-            pages: const [
+            pages: [
               [AiTextDisplayMessage('Hello')],
             ],
-            host: host,
           ),
         ]),
-        initialState: SimulatorState(
-          status: SimulatorStatus.active,
-          host: host,
-        ),
+        initialState: const SimulatorState(status: SimulatorStatus.active),
       );
 
-      await tester.pumpSimulatorView(bloc);
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
       await tester.pump();
 
       expect(find.byType(SimulatorMessageBubble), findsOneWidget);
+    });
+
+    testWidgets('renders error view when status is error', (tester) async {
+      when(() => bloc.state).thenReturn(
+        const SimulatorState(
+          status: SimulatorStatus.error,
+          error: 'something failed',
+        ),
+      );
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
+
+      expect(find.text('Something went wrong'), findsOneWidget);
+      expect(find.text('Try again'), findsOneWidget);
+    });
+
+    testWidgets('shows loading overlay when showLoadingOverlay is true', (
+      tester,
+    ) async {
+      when(() => bloc.state).thenReturn(
+        const SimulatorState(
+          status: SimulatorStatus.active,
+          pages: [
+            [AiTextDisplayMessage('Hello')],
+          ],
+          showLoadingOverlay: true,
+        ),
+      );
+      await tester.pumpSimulatorView(bloc, surfaceHost: surfaceHost);
+
+      expect(find.byType(LoadingOverlay), findsOneWidget);
     });
   });
 }
