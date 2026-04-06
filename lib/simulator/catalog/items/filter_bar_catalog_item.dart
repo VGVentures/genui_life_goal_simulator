@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 const _colorValues = [
@@ -124,6 +126,7 @@ class _StatefulFilterBar extends StatefulWidget {
 
 class _StatefulFilterBarState extends State<_StatefulFilterBar> {
   late List<bool> _selected;
+  bool _tapped = false;
 
   @override
   void initState() {
@@ -162,35 +165,66 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
   }
 
   void _onFilterChanged() {
+    if (_tapped) return;
     _writeToDataModel();
+    if (widget.action != null) {
+      setState(() => _tapped = true);
+    }
     _dispatchAction();
   }
 
   @override
   Widget build(BuildContext context) {
-    final categories = [
-      for (var i = 0; i < widget.categories.length; i++)
-        FilterCategory(
-          label: widget.categories[i].label,
-          color: widget.categories[i].color,
-          isSelected: _selected[i],
-        ),
-    ];
+    return BlocConsumer<SimulatorBloc, SimulatorState>(
+      listenWhen: (previous, current) =>
+          previous.isLoading && !current.isLoading,
+      listener: (context, state) => setState(() => _tapped = false),
+      builder: (context, state) {
+        final isDisabled = _tapped || state.isLoading;
+        final showThinking = _tapped;
 
-    return FilterBar(
-      categories: categories,
-      onCategoryToggled: (index) {
-        setState(() => _selected[index] = !_selected[index]);
-        _onFilterChanged();
-      },
-      onAllToggled: () {
-        final allSelected = _selected.every((s) => s);
-        setState(() {
-          for (var i = 0; i < _selected.length; i++) {
-            _selected[i] = !allSelected;
-          }
-        });
-        _onFilterChanged();
+        final categories = [
+          for (var i = 0; i < widget.categories.length; i++)
+            FilterCategory(
+              label: widget.categories[i].label,
+              color: widget.categories[i].color,
+              isSelected: _selected[i],
+              isEnabled: !isDisabled,
+            ),
+        ];
+
+        final filterBar = FilterBar(
+          categories: categories,
+          isAllEnabled: !isDisabled,
+          onCategoryToggled: (index) {
+            setState(() => _selected[index] = !_selected[index]);
+            _onFilterChanged();
+          },
+          onAllToggled: () {
+            final allSelected = _selected.every((s) => s);
+            setState(() {
+              for (var i = 0; i < _selected.length; i++) {
+                _selected[i] = !allSelected;
+              }
+            });
+            _onFilterChanged();
+          },
+        );
+
+        if (!showThinking) return filterBar;
+
+        return Stack(
+          children: [
+            Visibility(
+              visible: false,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: filterBar,
+            ),
+            const ThinkingAnimation(),
+          ],
+        );
       },
     );
   }

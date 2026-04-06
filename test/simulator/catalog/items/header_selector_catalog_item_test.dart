@@ -1,11 +1,16 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
-import 'package:genui_life_goal_simulator/simulator/catalog/items/header_selector_catalog_item.dart';
+import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
+
+class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
+    implements SimulatorBloc {}
 
 Map<String, Object?> _data({
   List<String> options = const ['1M', '3M', '6M'],
@@ -30,15 +35,21 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  SimulatorState state = const SimulatorState(),
+}) async {
+  final bloc = _MockSimulatorBloc();
+  when(() => bloc.state).thenReturn(state);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: AppTheme(LightThemeColors()).themeData,
-      home: Scaffold(
-        body: Builder(
-          builder: (context) =>
-              headerSelectorItem.widgetBuilder(_context(context, data)),
+    BlocProvider<SimulatorBloc>.value(
+      value: bloc,
+      child: MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
+        home: Scaffold(
+          body: Builder(
+            builder: (context) =>
+                headerSelectorItem.widgetBuilder(_context(context, data)),
+          ),
         ),
       ),
     ),

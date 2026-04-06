@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
@@ -87,6 +89,7 @@ class _StatefulHeaderSelector extends StatefulWidget {
 
 class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
   late int _selectedIndex;
+  bool _tapped = false;
 
   @override
   void initState() {
@@ -95,6 +98,7 @@ class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
   }
 
   void _onChanged(int index) {
+    if (_tapped) return;
     setState(() => _selectedIndex = index);
 
     final selectedOption = widget.options[index];
@@ -105,6 +109,8 @@ class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
 
     final action = widget.action;
     if (action case {'event': final Map<String, Object?> event}) {
+      setState(() => _tapped = true);
+
       final dataModel = widget.dataContext.dataModel
           .getValue<Map<String, Object?>>(DataPath.root);
 
@@ -123,10 +129,35 @@ class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return HeaderSelector(
-      options: widget.options,
-      selectedIndex: _selectedIndex,
-      onChanged: _onChanged,
+    return BlocConsumer<SimulatorBloc, SimulatorState>(
+      listenWhen: (previous, current) =>
+          previous.isLoading && !current.isLoading,
+      listener: (context, state) => setState(() => _tapped = false),
+      builder: (context, state) {
+        final isDisabled = _tapped || state.isLoading;
+        final showThinking = _tapped;
+
+        final selector = HeaderSelector(
+          options: widget.options,
+          selectedIndex: _selectedIndex,
+          onChanged: isDisabled ? (_) {} : _onChanged,
+        );
+
+        if (!showThinking) return selector;
+
+        return Stack(
+          children: [
+            Visibility(
+              visible: false,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: selector,
+            ),
+            const ThinkingAnimation(),
+          ],
+        );
+      },
     );
   }
 }
