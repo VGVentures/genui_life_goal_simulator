@@ -23,11 +23,7 @@ dependencies:
     sdk: flutter
   flutter_markdown_plus: ^1.0.7
   flutter_svg: ^2.2.4
-  genui:
-    git:
-      url: https://github.com/flutter/genui.git
-      ref: 60c25b073fc7a47e1f356528cb96cc60ef60c5d5
-      path: packages/genui
+  genui: 0.8.0
   intl: ^0.20.2
   json_schema_builder: ^0.1.3
   provider: ^6.1.2
