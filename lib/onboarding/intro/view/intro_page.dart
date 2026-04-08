@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/feature_flags/view/view.dart';
-import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_desktop_view.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_mobile_view.dart';
-import 'package:genui_life_goal_simulator/onboarding/kick_off/view/kick_off_page.dart';
+import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_page.dart';
 
 /// {@template intro_page}
 /// Entry point for the intro screen.
@@ -28,12 +27,12 @@ class IntroPage extends StatelessWidget {
     Future<void> backupOnGetStarted() {
       return Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          builder: (_) => _IntroView(showDevMenu: showDevMenu),
+          builder: (_) => const PickProfilePage(),
         ),
       );
     }
 
-    return Theme(
+    final introContent = Theme(
       data: AppThemes.light.themeData.getThemeData(context),
       child: ResponsiveScaffold(
         mobile: IntroMobileView(
@@ -44,38 +43,28 @@ class IntroPage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
 
-class _IntroView extends StatelessWidget {
-  const _IntroView({this.showDevMenu = false});
-
-  final bool showDevMenu;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!showDevMenu) {
-      return const Scaffold(body: KickOffPage());
-    }
-
-    final l10n = context.l10n;
+    if (!showDevMenu) return introContent;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.homeAppBarTitle),
-        actions: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.bug_report),
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-              );
-            },
+      endDrawer: const DevMenuDrawer(),
+      body: Stack(
+        children: [
+          introContent,
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + Spacing.xs,
+            right: Spacing.xs,
+            child: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: const Icon(Icons.bug_report, color: Colors.white),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                );
+              },
+            ),
           ),
         ],
       ),
-      endDrawer: const DevMenuDrawer(),
-      body: const KickOffPage(),
     );
   }
 }

@@ -92,22 +92,6 @@
     "@writeYourOwnLabel": {
         "description": "Option label for a custom user-entered focus"
     },
-    "kickOffTitle": "Let's kick things off!",
-    "@kickOffTitle": {
-        "description": "Title text on the KickOff onboarding page"
-    },
-    "kickOffDescription": "For this demo, we're using VGV Finances as our hypothetical app. We've set up two user profiles — choose one, set your preferences, and watch Gen UI build the experience around you in real time.",
-    "@kickOffDescription": {
-        "description": "Description text on the KickOff onboarding page (desktop)"
-    },
-    "trustBadgeText": "You can trust us",
-    "@trustBadgeText": {
-        "description": "Text for the trust badge on the KickOff page"
-    },
-    "notHardcodedBadgeText": "Nothing is hardcoded!",
-    "@notHardcodedBadgeText": {
-        "description": "Text for the 'not hardcoded' badge on the KickOff page"
-    },
     "viewLabel": "View",
     "@viewLabel": {
         "description": "Label for see a transaction detail"

@@ -62,7 +62,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/animations/
-    - assets/icons_kick_off/
     - assets/images/
     - assets/images/advisor/
     - assets/images/intro/
