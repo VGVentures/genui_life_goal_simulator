@@ -39,6 +39,13 @@ class SimulatorRepository {
   final List<ChatMessage> _history = [];
   late String _systemPrompt;
 
+  /// The current step index for history tracking.
+  ///
+  /// Set this when navigating between steps so that [_handleSend] can
+  /// truncate stale future history entries when continuing from a revisited
+  /// step.
+  int currentStep = 0;
+
   final _controller = StreamController<SimulatorConversationEvent>.broadcast();
 
   /// Stream of conversation events (text, surfaces, errors, waiting state).
@@ -108,6 +115,13 @@ class SimulatorRepository {
   }
 
   Future<void> _handleSend(ChatMessage message) async {
+    // If continuing from a revisited step, truncate future history so the
+    // LLM only sees the conversation up to the current step.
+    final expectedLength = (currentStep + 1) * 2;
+    if (_history.length > expectedLength) {
+      _history.removeRange(expectedLength, _history.length);
+    }
+
     _history.add(_convertDataPartsToText(message));
 
     final messages = [

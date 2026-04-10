@@ -44,12 +44,19 @@ class _SimulatorViewState extends State<SimulatorView> {
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
           if (mounted && _pageController.hasClients && state.pages.isNotEmpty) {
+            final bloc = context.read<SimulatorBloc>();
             unawaited(
-              _pageController.animateToPage(
-                state.currentPageIndex,
-                duration: const Duration(milliseconds: 1200),
-                curve: Curves.easeInOutCubic,
-              ),
+              _pageController
+                  .animateToPage(
+                    state.currentPageIndex,
+                    duration: const Duration(milliseconds: 1200),
+                    curve: Curves.easeInOutCubic,
+                  )
+                  .then((_) {
+                    if (state.isNavigatingBack && mounted) {
+                      bloc.add(const SimulatorForwardPagesTruncated());
+                    }
+                  }),
             );
           }
         },
@@ -57,6 +64,8 @@ class _SimulatorViewState extends State<SimulatorView> {
             previous.pages != current.pages ||
             previous.isLoading != current.isLoading ||
             previous.status != current.status ||
+            previous.currentPageIndex != current.currentPageIndex ||
+            previous.isNavigatingBack != current.isNavigatingBack ||
             previous.hasPendingNavigation != current.hasPendingNavigation ||
             previous.showLoadingOverlay != current.showLoadingOverlay,
         builder: (context, state) {
@@ -220,6 +229,7 @@ class _FadingPageView extends StatelessWidget {
       animation: controller,
       builder: (context, child) {
         return PageView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           controller: controller,
           itemCount: itemCount,
           itemBuilder: (context, pageIndex) {

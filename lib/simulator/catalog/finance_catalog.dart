@@ -30,6 +30,7 @@ Use the AppButton widget to present clear calls-to-action, such as navigating to
 - variant: "filled" for primary actions, "outlined" for secondary actions.
 - size: "large" for prominent actions, "small" for inline or less prominent actions.
 - isLoading: Set to true only when an async operation is in progress.
+- For back navigation, use variant "outlined" with the exact action: {"event": {"name": "go_back"}}.
 
 Use the EmojiCard widget to display a set of categorized options or highlights as emoji-labelled cards in a responsive grid.
 
