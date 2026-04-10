@@ -95,27 +95,6 @@ SliderFormatter? _parseFormatter(String? raw) {
   };
 }
 
-String _formatSliderDisplayValue(
-  BuildContext context,
-  double value,
-  SliderFormatter formatter,
-) {
-  final locale = Localizations.maybeLocaleOf(context)?.toString();
-  return switch (formatter) {
-    SliderFormatter.usd => NumberFormat.simpleCurrency(
-      locale: locale,
-      decimalDigits: 0,
-    ).format(value.round()),
-    SliderFormatter.percentage =>
-      value == value.roundToDouble()
-          ? '${value.round()}%'
-          : '${value.toStringAsFixed(1)}%',
-    SliderFormatter.integer => NumberFormat.decimalPattern(
-      locale,
-    ).format(value.round()),
-  };
-}
-
 /// CatalogItem that renders a [GCNSlider] with the value bound to
 /// [DataContext].
 ///
@@ -215,6 +194,24 @@ class _BoundGCNSliderState extends State<_BoundGCNSlider> {
     widget.dataContext.update(DataPath(widget.valueStoragePath), newValue);
   }
 
+  String _formatDisplayValue(BuildContext context, double value) {
+    final formatter = widget.formatter!;
+    final locale = Localizations.maybeLocaleOf(context)?.toString();
+    return switch (formatter) {
+      SliderFormatter.usd => NumberFormat.simpleCurrency(
+        locale: locale,
+        decimalDigits: 0,
+      ).format(value.round()),
+      SliderFormatter.percentage =>
+        value == value.roundToDouble()
+            ? '${value.round()}%'
+            : '${value.toStringAsFixed(1)}%',
+      SliderFormatter.integer => NumberFormat.decimalPattern(
+        locale,
+      ).format(value.round()),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BoundNumber(
@@ -243,11 +240,7 @@ class _BoundGCNSliderState extends State<_BoundGCNSlider> {
                   min: widget.min,
                   max: widget.max,
                   valueLabel: widget.formatter != null
-                      ? _formatSliderDisplayValue(
-                          context,
-                          thumb,
-                          widget.formatter!,
-                        )
+                      ? _formatDisplayValue(context, thumb)
                       : null,
                   minLabel: widget.minLabel,
                   maxLabel: widget.maxLabel,

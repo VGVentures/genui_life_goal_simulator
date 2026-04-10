@@ -34,19 +34,6 @@ final _schema = S.object(
   required: ['options', 'selectedIndex'],
 );
 
-int _headerSelectedIndex(
-  List<String> options,
-  String? selectedOption,
-  int initialSelectedIndex,
-) {
-  if (selectedOption != null) {
-    final idx = options.indexOf(selectedOption);
-    if (idx >= 0) return idx;
-  }
-  if (options.isEmpty) return 0;
-  return initialSelectedIndex.clamp(0, options.length - 1);
-}
-
 /// CatalogItem that renders a [HeaderSelector].
 ///
 /// The selection is bound to `/<componentId>/selectedOption` via [BoundString].
@@ -115,6 +102,15 @@ class _ActionLockHeaderSelectorState extends State<_ActionLockHeaderSelector> {
     widget.dataContext.update(path, widget.options[i]);
   }
 
+  int _selectedIndex(String? selectedOption) {
+    if (selectedOption != null) {
+      final idx = widget.options.indexOf(selectedOption);
+      if (idx >= 0) return idx;
+    }
+    if (widget.options.isEmpty) return 0;
+    return widget.initialSelectedIndex.clamp(0, widget.options.length - 1);
+  }
+
   void _onChanged(int index) {
     if (_tapped) return;
 
@@ -154,11 +150,7 @@ class _ActionLockHeaderSelectorState extends State<_ActionLockHeaderSelector> {
         final showThinking = _tapped;
 
         Widget selectorBuilder(BuildContext context, String? selectedOption) {
-          final idx = _headerSelectedIndex(
-            widget.options,
-            selectedOption,
-            widget.initialSelectedIndex,
-          );
+          final idx = _selectedIndex(selectedOption);
 
           return HeaderSelector(
             options: widget.options,

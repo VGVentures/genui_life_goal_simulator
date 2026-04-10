@@ -62,39 +62,6 @@ enum EmojiCardSelectionMode {
   single,
 }
 
-void _toggleEmojiSelection({
-  required DataContext dataContext,
-  required String componentId,
-  required EmojiCardSelectionMode mode,
-  required List<String> currentList,
-  required String toggledLabel,
-}) {
-  if (toggledLabel.isEmpty) return;
-  final path = DataPath('/$componentId/selectedLabels');
-  if (mode == EmojiCardSelectionMode.single) {
-    final already = currentList.contains(toggledLabel);
-    dataContext.update(
-      path,
-      already ? <String>[] : <String>[toggledLabel],
-    );
-    return;
-  }
-  final next = List<String>.from(currentList);
-  if (next.contains(toggledLabel)) {
-    next.remove(toggledLabel);
-  } else {
-    next.add(toggledLabel);
-  }
-  dataContext.update(path, next);
-}
-
-List<String> _selectedLabelsFromRaw(List<Object?>? raw) {
-  return [
-    for (final e in raw ?? const <Object?>[])
-      if (e != null) e.toString(),
-  ];
-}
-
 /// CatalogItem that renders an [EmojiCardLayout].
 ///
 /// Selection is bound to `/<componentId>/selectedLabels` via [BoundList].
@@ -165,7 +132,10 @@ class _EmojiCardSurfaceState extends State<_EmojiCardSurface> {
       dataContext: widget.dataContext,
       value: {'path': path},
       builder: (context, rawSelected) {
-        final currentList = _selectedLabelsFromRaw(rawSelected);
+        final currentList = [
+          for (final e in rawSelected ?? const <Object?>[])
+            if (e != null) e.toString(),
+        ];
         return EmojiCardLayout(
           cards: widget.cards.indexed.map((entry) {
             final (index, c) = entry;
@@ -217,6 +187,26 @@ class _BoundEmojiCard extends StatelessWidget {
   final EmojiCardSelectionMode selectionMode;
   final String componentId;
 
+  void _toggleSelection(String label) {
+    if (label.isEmpty) return;
+    final path = DataPath('/$componentId/selectedLabels');
+    if (selectionMode == EmojiCardSelectionMode.single) {
+      final already = selectedLabels.contains(label);
+      dataContext.update(
+        path,
+        already ? <String>[] : <String>[label],
+      );
+      return;
+    }
+    final next = List<String>.from(selectedLabels);
+    if (next.contains(label)) {
+      next.remove(label);
+    } else {
+      next.add(label);
+    }
+    dataContext.update(path, next);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BoundString(
@@ -234,17 +224,7 @@ class _BoundEmojiCard extends StatelessWidget {
               emoji: emoji ?? '',
               label: label,
               isSelected: isSelected,
-              onTap: label.isEmpty
-                  ? null
-                  : () {
-                      _toggleEmojiSelection(
-                        dataContext: dataContext,
-                        componentId: componentId,
-                        mode: selectionMode,
-                        currentList: selectedLabels,
-                        toggledLabel: label,
-                      );
-                    },
+              onTap: label.isEmpty ? null : () => _toggleSelection(label),
             );
           },
         );

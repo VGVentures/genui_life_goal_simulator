@@ -71,13 +71,6 @@ FilterChipColor _parseColor(String value) {
   };
 }
 
-List<String> _selectedCategoriesFromRaw(List<Object?>? raw) {
-  return [
-    for (final e in raw ?? const <Object?>[])
-      if (e != null) e.toString(),
-  ];
-}
-
 /// CatalogItem that renders a [FilterBar].
 ///
 /// Selection is bound to `/<componentId>/selectedCategories` via [BoundList].
@@ -191,7 +184,10 @@ class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
           BuildContext context,
           List<Object?>? rawSelected,
         ) {
-          final currentList = _selectedCategoriesFromRaw(rawSelected);
+          final currentList = [
+            for (final e in rawSelected ?? const <Object?>[])
+              if (e != null) e.toString(),
+          ];
           final selectedSet = currentList.toSet();
 
           final categories = [

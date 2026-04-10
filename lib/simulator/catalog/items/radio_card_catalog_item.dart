@@ -27,21 +27,6 @@ final _schema = S.object(
   required: ['options'],
 );
 
-int _radioSelectedIndex(
-  List<Map<String, Object?>> options,
-  String? selectedLabel,
-) {
-  if (selectedLabel != null) {
-    final idx = options.indexWhere(
-      (o) => o['label']! as String == selectedLabel,
-    );
-    if (idx >= 0) return idx;
-  }
-  final fallback = options.indexWhere((o) => o['isSelected'] == true);
-  if (fallback >= 0) return fallback;
-  return 0;
-}
-
 /// CatalogItem that renders a list of [RadioCard] widgets.
 ///
 /// Selection is bound to `/<componentId>/selectedLabel` via [BoundString].
@@ -92,13 +77,25 @@ class _BoundRadioCardsState extends State<_BoundRadioCards> {
     widget.dataContext.update(path, label);
   }
 
+  int _selectedIndex(String? selectedLabel) {
+    if (selectedLabel != null) {
+      final idx = widget.options.indexWhere(
+        (o) => o['label']! as String == selectedLabel,
+      );
+      if (idx >= 0) return idx;
+    }
+    final fallback = widget.options.indexWhere((o) => o['isSelected'] == true);
+    if (fallback >= 0) return fallback;
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BoundString(
       dataContext: widget.dataContext,
       value: {'path': '/${widget.componentId}/selectedLabel'},
       builder: (context, selectedLabel) {
-        final index = _radioSelectedIndex(widget.options, selectedLabel);
+        final index = _selectedIndex(selectedLabel);
         return Column(
           mainAxisSize: MainAxisSize.min,
           spacing: Spacing.xl,

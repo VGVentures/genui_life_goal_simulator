@@ -46,19 +46,6 @@ final _schema = S.object(
   required: ['title', 'subtitle'],
 );
 
-int _sectionSelectorIndex(
-  List<String> options,
-  String? selectedOption,
-  int initialSelectedIndex,
-) {
-  if (selectedOption != null) {
-    final idx = options.indexOf(selectedOption);
-    if (idx >= 0) return idx;
-  }
-  if (options.isEmpty) return 0;
-  return initialSelectedIndex.clamp(0, options.length - 1);
-}
-
 /// CatalogItem that renders a [SectionHeader] with an optional selector.
 ///
 /// The `title` and `subtitle` properties support data model bindings via
@@ -140,6 +127,16 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
     widget.dataContext.update(path, options[i]);
   }
 
+  int _selectedIndex(String? selectedOption) {
+    final options = widget.selectorOptions!;
+    if (selectedOption != null) {
+      final idx = options.indexOf(selectedOption);
+      if (idx >= 0) return idx;
+    }
+    if (options.isEmpty) return 0;
+    return widget.initialSelectedIndex.clamp(0, options.length - 1);
+  }
+
   void _onSelectorChanged(int index) {
     if (_tapped) return;
 
@@ -183,11 +180,7 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
       );
     }
 
-    final idx = _sectionSelectorIndex(
-      options,
-      selectedOption,
-      widget.initialSelectedIndex,
-    );
+    final idx = _selectedIndex(selectedOption);
 
     return SectionHeader(
       title: title ?? '',
