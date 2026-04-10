@@ -102,6 +102,8 @@ class _BoundCategoryFilterChip extends StatefulWidget {
 }
 
 class _BoundCategoryFilterChipState extends State<_BoundCategoryFilterChip> {
+  DataPath get _path => DataPath('/${widget.componentId}/isSelected');
+
   @override
   void initState() {
     super.initState();
@@ -109,16 +111,15 @@ class _BoundCategoryFilterChipState extends State<_BoundCategoryFilterChip> {
   }
 
   void _seedIfNeeded() {
-    final path = DataPath('/${widget.componentId}/isSelected');
-    if (widget.dataContext.getValue<Object?>(path) != null) return;
-    widget.dataContext.update(path, widget.initialSelected);
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    widget.dataContext.update(_path, widget.initialSelected);
   }
 
   @override
   Widget build(BuildContext context) {
     return BoundBool(
       dataContext: widget.dataContext,
-      value: {'path': '/${widget.componentId}/isSelected'},
+      value: {'path': _path.toString()},
       builder: (context, isSelected) {
         final selected = isSelected ?? false;
         return CategoryFilterChip(
@@ -127,10 +128,7 @@ class _BoundCategoryFilterChipState extends State<_BoundCategoryFilterChip> {
           isSelected: selected,
           isEnabled: widget.isEnabled,
           onTap: () {
-            widget.dataContext.update(
-              DataPath('/${widget.componentId}/isSelected'),
-              !selected,
-            );
+            widget.dataContext.update(_path, !selected);
 
             final action = widget.action;
             if (action case {'event': final Map<String, Object?> event}) {

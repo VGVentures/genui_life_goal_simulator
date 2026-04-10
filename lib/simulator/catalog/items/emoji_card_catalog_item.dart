@@ -107,6 +107,8 @@ class _EmojiCardSurface extends StatefulWidget {
 }
 
 class _EmojiCardSurfaceState extends State<_EmojiCardSurface> {
+  DataPath get _path => DataPath('/${widget.componentId}/selectedLabels');
+
   @override
   void initState() {
     super.initState();
@@ -114,23 +116,20 @@ class _EmojiCardSurfaceState extends State<_EmojiCardSurface> {
   }
 
   void _seedIfNeeded() {
-    final path = DataPath('/${widget.componentId}/selectedLabels');
-    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
     final initial = <String>[
       for (final c in widget.cards)
         if (c['isSelected'] == true && c['label'] is String)
           c['label']! as String,
     ];
-    widget.dataContext.update(path, initial);
+    widget.dataContext.update(_path, initial);
   }
 
   @override
   Widget build(BuildContext context) {
-    final path = '/${widget.componentId}/selectedLabels';
-
     final layout = BoundList(
       dataContext: widget.dataContext,
-      value: {'path': path},
+      value: {'path': _path.toString()},
       builder: (context, rawSelected) {
         final currentList = [
           for (final e in rawSelected ?? const <Object?>[])

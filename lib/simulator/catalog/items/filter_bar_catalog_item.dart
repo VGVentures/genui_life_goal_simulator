@@ -125,6 +125,8 @@ class _ActionLockFilterBar extends StatefulWidget {
 class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
   bool _tapped = false;
 
+  DataPath get _path => DataPath('/${widget.componentId}/selectedCategories');
+
   @override
   void initState() {
     super.initState();
@@ -132,13 +134,12 @@ class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
   }
 
   void _seedIfNeeded() {
-    final path = DataPath('/${widget.componentId}/selectedCategories');
-    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
     final labels = [
       for (final c in widget.categories)
         if (c.isSelected) c.label,
     ];
-    widget.dataContext.update(path, labels);
+    widget.dataContext.update(_path, labels);
   }
 
   void _dispatchAction() {
@@ -178,8 +179,6 @@ class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
         final isDisabled = _tapped || state.isLoading;
         final showThinking = _tapped;
 
-        final path = '/${widget.componentId}/selectedCategories';
-
         Widget listBuilder(
           BuildContext context,
           List<Object?>? rawSelected,
@@ -201,7 +200,7 @@ class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
           ];
 
           void writeList(List<String> next) {
-            widget.dataContext.update(DataPath(path), next);
+            widget.dataContext.update(_path, next);
           }
 
           return FilterBar(
@@ -238,7 +237,7 @@ class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
 
         final filterBar = BoundList(
           dataContext: widget.dataContext,
-          value: {'path': path},
+          value: {'path': _path.toString()},
           builder: listBuilder,
         );
 

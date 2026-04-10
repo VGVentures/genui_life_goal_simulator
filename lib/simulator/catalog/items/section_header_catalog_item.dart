@@ -112,6 +112,8 @@ class _ActionLockSectionHeader extends StatefulWidget {
 class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
   bool _tapped = false;
 
+  DataPath get _path => DataPath('/${widget.componentId}/selectedOption');
+
   @override
   void initState() {
     super.initState();
@@ -121,10 +123,9 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
   void _seedIfNeeded() {
     final options = widget.selectorOptions;
     if (options == null || options.isEmpty) return;
-    final path = DataPath('/${widget.componentId}/selectedOption');
-    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
     final i = widget.initialSelectedIndex.clamp(0, options.length - 1);
-    widget.dataContext.update(path, options[i]);
+    widget.dataContext.update(_path, options[i]);
   }
 
   int _selectedIndex(String? selectedOption) {
@@ -141,10 +142,7 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
     if (_tapped) return;
 
     final options = widget.selectorOptions!;
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedOption'),
-      options[index],
-    );
+    widget.dataContext.update(_path, options[index]);
 
     final action = widget.selectorAction;
     if (action case {'event': final Map<String, Object?> event}) {
@@ -219,9 +217,7 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
                 }
                 return BoundString(
                   dataContext: widget.dataContext,
-                  value: {
-                    'path': '/${widget.componentId}/selectedOption',
-                  },
+                  value: {'path': _path.toString()},
                   builder: (context, selectedOption) {
                     return _buildSectionHeader(
                       title: title,

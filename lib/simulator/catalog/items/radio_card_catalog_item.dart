@@ -62,6 +62,8 @@ class _BoundRadioCards extends StatefulWidget {
 }
 
 class _BoundRadioCardsState extends State<_BoundRadioCards> {
+  DataPath get _path => DataPath('/${widget.componentId}/selectedLabel');
+
   @override
   void initState() {
     super.initState();
@@ -69,12 +71,11 @@ class _BoundRadioCardsState extends State<_BoundRadioCards> {
   }
 
   void _seedIfNeeded() {
-    final path = DataPath('/${widget.componentId}/selectedLabel');
-    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
     final idx = widget.options.indexWhere((o) => o['isSelected'] == true);
     final i = idx >= 0 ? idx : 0;
     final label = widget.options[i]['label']! as String;
-    widget.dataContext.update(path, label);
+    widget.dataContext.update(_path, label);
   }
 
   int _selectedIndex(String? selectedLabel) {
@@ -93,7 +94,7 @@ class _BoundRadioCardsState extends State<_BoundRadioCards> {
   Widget build(BuildContext context) {
     return BoundString(
       dataContext: widget.dataContext,
-      value: {'path': '/${widget.componentId}/selectedLabel'},
+      value: {'path': _path.toString()},
       builder: (context, selectedLabel) {
         final index = _selectedIndex(selectedLabel);
         return Column(
@@ -106,7 +107,7 @@ class _BoundRadioCardsState extends State<_BoundRadioCards> {
                 isSelected: i == index,
                 onTap: () {
                   widget.dataContext.update(
-                    DataPath('/${widget.componentId}/selectedLabel'),
+                    _path,
                     widget.options[i]['label']! as String,
                   );
                 },
