@@ -71,19 +71,6 @@ FilterChipColor _parseColor(String value) {
   };
 }
 
-void _seedFilterBarIfNeeded(
-  CatalogItemContext ctx,
-  List<({String label, FilterChipColor color, bool isSelected})> categories,
-) {
-  final path = DataPath('/${ctx.id}/selectedCategories');
-  if (ctx.dataContext.getValue<Object?>(path) != null) return;
-  final labels = [
-    for (final c in categories)
-      if (c.isSelected) c.label,
-  ];
-  ctx.dataContext.update(path, labels);
-}
-
 List<String> _selectedCategoriesFromRaw(List<Object?>? raw) {
   return [
     for (final e in raw ?? const <Object?>[])
@@ -111,8 +98,6 @@ final filterBarItem = CatalogItem(
       );
     }).toList();
     final action = json['action'] as Map<String, Object?>?;
-
-    _seedFilterBarIfNeeded(ctx, parsed);
 
     return _ActionLockFilterBar(
       categories: parsed,
@@ -146,6 +131,22 @@ class _ActionLockFilterBar extends StatefulWidget {
 
 class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
   bool _tapped = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _seedIfNeeded();
+  }
+
+  void _seedIfNeeded() {
+    final path = DataPath('/${widget.componentId}/selectedCategories');
+    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    final labels = [
+      for (final c in widget.categories)
+        if (c.isSelected) c.label,
+    ];
+    widget.dataContext.update(path, labels);
+  }
 
   void _dispatchAction() {
     final action = widget.action;

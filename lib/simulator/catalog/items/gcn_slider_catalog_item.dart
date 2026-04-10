@@ -116,21 +116,6 @@ String _formatSliderDisplayValue(
   };
 }
 
-/// Seeds the value path when the LLM sent a literal and the model is empty.
-void _seedSliderModelIfNeeded({
-  required CatalogItemContext ctx,
-  required Object valueRef,
-  required String valueStoragePath,
-  required double min,
-  required double max,
-}) {
-  if (valueRef is! num) return;
-  final path = DataPath(valueStoragePath);
-  if (ctx.dataContext.getValue<Object?>(path) != null) return;
-  final v = valueRef.toDouble().clamp(min, max);
-  ctx.dataContext.update(path, v);
-}
-
 /// CatalogItem that renders a [GCNSlider] with the value bound to
 /// [DataContext].
 ///
@@ -154,14 +139,6 @@ final gcnSliderItem = CatalogItem(
     final rawSplitLabels = json['splitLabels'] as List?;
     final formatter = _parseFormatter(json['formatter'] as String?);
 
-    _seedSliderModelIfNeeded(
-      ctx: ctx,
-      valueRef: valueRef,
-      valueStoragePath: valueStoragePath,
-      min: min,
-      max: max,
-    );
-
     return _BoundGCNSlider(
       titleValue: json['title']!,
       subtitleValue: json['subtitle']!,
@@ -181,7 +158,7 @@ final gcnSliderItem = CatalogItem(
   },
 );
 
-class _BoundGCNSlider extends StatelessWidget {
+class _BoundGCNSlider extends StatefulWidget {
   const _BoundGCNSlider({
     required this.titleValue,
     required this.subtitleValue,
@@ -214,40 +191,68 @@ class _BoundGCNSlider extends StatelessWidget {
   final DataContext dataContext;
   final String componentId;
 
+  @override
+  State<_BoundGCNSlider> createState() => _BoundGCNSliderState();
+}
+
+class _BoundGCNSliderState extends State<_BoundGCNSlider> {
+  @override
+  void initState() {
+    super.initState();
+    _seedIfNeeded();
+  }
+
+  void _seedIfNeeded() {
+    final valueRef = widget.valueRef;
+    if (valueRef is! num) return;
+    final path = DataPath(widget.valueStoragePath);
+    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    final v = valueRef.toDouble().clamp(widget.min, widget.max);
+    widget.dataContext.update(path, v);
+  }
+
   void _writeValuesToModel(double newValue) {
-    dataContext.update(DataPath(valueStoragePath), newValue);
+    widget.dataContext.update(DataPath(widget.valueStoragePath), newValue);
   }
 
   @override
   Widget build(BuildContext context) {
     return BoundNumber(
-      dataContext: dataContext,
-      value: boundNumberValue,
+      dataContext: widget.dataContext,
+      value: widget.boundNumberValue,
       builder: (context, boundValue) {
         final effective =
-            boundValue ?? (valueRef is num ? valueRef as num : null);
-        final thumb = (effective?.toDouble() ?? min).clamp(min, max);
+            boundValue ??
+            (widget.valueRef is num ? widget.valueRef as num : null);
+        final thumb = (effective?.toDouble() ?? widget.min).clamp(
+          widget.min,
+          widget.max,
+        );
         return BoundString(
-          dataContext: dataContext,
-          value: titleValue,
+          dataContext: widget.dataContext,
+          value: widget.titleValue,
           builder: (context, title) {
             return BoundString(
-              dataContext: dataContext,
-              value: subtitleValue,
+              dataContext: widget.dataContext,
+              value: widget.subtitleValue,
               builder: (context, subtitle) {
                 return GCNSlider(
                   title: title ?? '',
                   subtitle: subtitle ?? '',
                   value: thumb,
-                  min: min,
-                  max: max,
-                  valueLabel: formatter != null
-                      ? _formatSliderDisplayValue(context, thumb, formatter!)
+                  min: widget.min,
+                  max: widget.max,
+                  valueLabel: widget.formatter != null
+                      ? _formatSliderDisplayValue(
+                          context,
+                          thumb,
+                          widget.formatter!,
+                        )
                       : null,
-                  minLabel: minLabel,
-                  maxLabel: maxLabel,
-                  divisions: divisions,
-                  splitLabels: splitLabels,
+                  minLabel: widget.minLabel,
+                  maxLabel: widget.maxLabel,
+                  divisions: widget.divisions,
+                  splitLabels: widget.splitLabels,
                   onChanged: _writeValuesToModel,
                 );
               },

@@ -62,20 +62,6 @@ enum EmojiCardSelectionMode {
   single,
 }
 
-void _seedEmojiSelectedLabelsIfNeeded(
-  CatalogItemContext ctx,
-  List<Map<String, Object?>> cards,
-) {
-  final path = DataPath('/${ctx.id}/selectedLabels');
-  if (ctx.dataContext.getValue<Object?>(path) != null) return;
-  final initial = <String>[
-    for (final c in cards)
-      if (c['isSelected'] == true && c['label'] is String)
-        c['label']! as String,
-  ];
-  ctx.dataContext.update(path, initial);
-}
-
 void _toggleEmojiSelection({
   required DataContext dataContext,
   required String componentId,
@@ -124,8 +110,6 @@ final emojiCardItem = CatalogItem(
         ? EmojiCardSelectionMode.single
         : EmojiCardSelectionMode.multi;
 
-    _seedEmojiSelectedLabelsIfNeeded(ctx, cards);
-
     return _EmojiCardSurface(
       cards: cards,
       callToAction: callToAction,
@@ -136,7 +120,7 @@ final emojiCardItem = CatalogItem(
   },
 );
 
-class _EmojiCardSurface extends StatelessWidget {
+class _EmojiCardSurface extends StatefulWidget {
   const _EmojiCardSurface({
     required this.cards,
     required this.callToAction,
@@ -152,38 +136,60 @@ class _EmojiCardSurface extends StatelessWidget {
   final String componentId;
 
   @override
+  State<_EmojiCardSurface> createState() => _EmojiCardSurfaceState();
+}
+
+class _EmojiCardSurfaceState extends State<_EmojiCardSurface> {
+  @override
+  void initState() {
+    super.initState();
+    _seedIfNeeded();
+  }
+
+  void _seedIfNeeded() {
+    final path = DataPath('/${widget.componentId}/selectedLabels');
+    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    final initial = <String>[
+      for (final c in widget.cards)
+        if (c['isSelected'] == true && c['label'] is String)
+          c['label']! as String,
+    ];
+    widget.dataContext.update(path, initial);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final path = '/$componentId/selectedLabels';
+    final path = '/${widget.componentId}/selectedLabels';
 
     final layout = BoundList(
-      dataContext: dataContext,
+      dataContext: widget.dataContext,
       value: {'path': path},
       builder: (context, rawSelected) {
         final currentList = _selectedLabelsFromRaw(rawSelected);
         return EmojiCardLayout(
-          cards: cards.indexed.map((entry) {
+          cards: widget.cards.indexed.map((entry) {
             final (index, c) = entry;
             return _BoundEmojiCard(
               key: ValueKey('emoji_card_$index'),
-              dataContext: dataContext,
+              dataContext: widget.dataContext,
               cardData: c,
               selectedLabels: currentList,
-              selectionMode: selectionMode,
-              componentId: componentId,
+              selectionMode: widget.selectionMode,
+              componentId: widget.componentId,
             );
           }).toList(),
         );
       },
     );
 
-    if (callToAction.isEmpty) return layout;
+    if (widget.callToAction.isEmpty) return layout;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         MarkdownBody(
-          data: callToAction,
+          data: widget.callToAction,
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
             p: Theme.of(context).textTheme.bodyMedium,
           ),

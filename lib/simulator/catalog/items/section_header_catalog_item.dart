@@ -46,18 +46,6 @@ final _schema = S.object(
   required: ['title', 'subtitle'],
 );
 
-void _seedSectionSelectedOptionIfNeeded(
-  CatalogItemContext ctx,
-  List<String> options,
-  int initialSelectedIndex,
-) {
-  final path = DataPath('/${ctx.id}/selectedOption');
-  if (ctx.dataContext.getValue<Object?>(path) != null) return;
-  if (options.isEmpty) return;
-  final i = initialSelectedIndex.clamp(0, options.length - 1);
-  ctx.dataContext.update(path, options[i]);
-}
-
 int _sectionSelectorIndex(
   List<String> options,
   String? selectedOption,
@@ -94,10 +82,6 @@ final sectionHeaderItem = CatalogItem(
     final selectorOptions = rawOptions?.map((e) => e! as String).toList();
     final selectedIndex = (json['selectedIndex'] as num?)?.toInt() ?? 0;
     final selectorAction = json['selectorAction'] as Map<String, Object?>?;
-
-    if (selectorOptions != null && selectorOptions.isNotEmpty) {
-      _seedSectionSelectedOptionIfNeeded(ctx, selectorOptions, selectedIndex);
-    }
 
     return _ActionLockSectionHeader(
       titleValue: titleValue,
@@ -140,6 +124,21 @@ class _ActionLockSectionHeader extends StatefulWidget {
 
 class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
   bool _tapped = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _seedIfNeeded();
+  }
+
+  void _seedIfNeeded() {
+    final options = widget.selectorOptions;
+    if (options == null || options.isEmpty) return;
+    final path = DataPath('/${widget.componentId}/selectedOption');
+    if (widget.dataContext.getValue<Object?>(path) != null) return;
+    final i = widget.initialSelectedIndex.clamp(0, options.length - 1);
+    widget.dataContext.update(path, options[i]);
+  }
 
   void _onSelectorChanged(int index) {
     if (_tapped) return;
