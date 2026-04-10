@@ -92,22 +92,6 @@
     "@writeYourOwnLabel": {
         "description": "Etiqueta de opción para un enfoque personalizado ingresado por el usuario"
     },
-    "kickOffTitle": "¡Empecemos!",
-    "@kickOffTitle": {
-        "description": "Texto del título en la página de onboarding KickOff"
-    },
-    "kickOffDescription": "Para esta demo, estamos usando VGV Finances como nuestra aplicación hipotética. Hemos configurado dos perfiles de usuario — elige uno, establece tus preferencias y observa cómo Gen UI construye la experiencia a tu alrededor en tiempo real.",
-    "@kickOffDescription": {
-        "description": "Texto de descripción en la página de onboarding KickOff"
-    },
-    "trustBadgeText": "Puedes confiar en nosotros",
-    "@trustBadgeText": {
-        "description": "Texto para la insignia de confianza en la página KickOff"
-    },
-    "notHardcodedBadgeText": "¡Nada está hardcodeado!",
-    "@notHardcodedBadgeText": {
-        "description": "Texto para la insignia 'no hardcodeado' en la página KickOff"
-    },
     "viewLabel": "Ver",
     "@viewLabel": {
         "description": "Etiqueta para ver el detalle de una transacción"
