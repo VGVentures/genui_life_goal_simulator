@@ -8,13 +8,13 @@ final _schema = S.object(
   description:
       'A slider control for adjusting a numeric value within a range, '
       'such as a budget limit or spending target. '
-      'The user adjusts the slider locally; the current value is written '
-      'to the data model at "/<componentId>/value" (raw number) and '
-      '"/<componentId>/formattedValue" (locale-formatted integer string '
-      r'with optional prefix, e.g. "$72,000") so they are included '
-      'automatically in the next interaction. Use formattedValue for '
-      'display bindings. '
-      'String fields support data model bindings via {"path": "..."}.',
+      'The current value is stored in the data model at default path '
+      '"/<componentId>/value" (raw number). Locale-aware display with '
+      'optional prefix (e.g. "${r'$72,000'}") is done in the widget only; '
+      'bind other components to "/<componentId>/value" if you need the raw '
+      'number reflected as text. '
+      'The value field may be a literal number, a binding {"path": "..."}, '
+      'or a function call. String fields use {"path": "..."} bindings.',
   properties: {
     'title': A2uiSchemas.stringReference(
       description: 'Header title displayed above the slider.',
@@ -22,18 +22,26 @@ final _schema = S.object(
     'subtitle': A2uiSchemas.stringReference(
       description: 'Subtitle shown below the title (e.g. "Dining • Feb 18").',
     ),
-    'value': S.number(
-      description: 'Current slider value. Must be between min and max.',
+    'value': A2uiSchemas.numberReference(
+      description:
+          'Current slider value: literal number, {"path": "..."}, or '
+          'function. Must stay between min and max. If omitted from the '
+          'model at the bound path, a literal (when provided) initializes '
+          'the default path "/<componentId>/value".',
     ),
     'min': S.number(description: 'Minimum slider value.'),
     'max': S.number(description: 'Maximum slider value.'),
     'prefix': S.string(
       description:
-          r'Optional prefix prepended to formattedValue (e.g. "$", "€").',
+          r'Optional prefix for the in-widget value label (e.g. "$", "€").',
     ),
     'valueLabel': A2uiSchemas.stringReference(
       description:
-          r'Formatted value label shown at the top-right (e.g. "$450").',
+          'Optional. When set (any literal or {"path": "..."}), the top-right '
+          'amount row is enabled and stays in sync via bindings. The text '
+          'shown is always computed from the current slider value, prefix, '
+          'and locale (the bound value is not drawn as-is). For basic '
+          'sliders, a non-empty prefix alone also enables this row.',
     ),
     'minLabel': S.string(
       description: r'Label below track at the minimum end (e.g. "$1").',
@@ -54,33 +62,89 @@ final _schema = S.object(
   required: ['title', 'subtitle', 'value', 'min', 'max'],
 );
 
-/// CatalogItem that renders a [GCNSlider] widget with local state management.
+/// Resolves where the raw numeric slider value is stored in the data model.
+String _sliderValueStoragePath(String componentId, Object valueRef) {
+  if (valueRef is Map && valueRef.containsKey('path')) {
+    return valueRef['path'] as String;
+  }
+  return '/$componentId/value';
+}
+
+/// What to pass to [BoundNumber.value]: bindings/calls as-is, else path map.
+Object _boundNumberSpec(Object valueRef, String storagePath) {
+  if (valueRef is Map &&
+      (valueRef.containsKey('path') || valueRef.containsKey('call'))) {
+    return valueRef;
+  }
+  return {'path': storagePath};
+}
+
+String _formatSliderDisplayValue(
+  BuildContext context,
+  double value,
+  String prefix,
+) {
+  final locale = Localizations.maybeLocaleOf(context)?.toString();
+  final number = NumberFormat.decimalPattern(locale).format(value.round());
+  return '$prefix$number';
+}
+
+/// Seeds the value path when the LLM sent a literal and the model is empty.
+void _seedSliderModelIfNeeded({
+  required CatalogItemContext ctx,
+  required Object valueRef,
+  required String valueStoragePath,
+  required double min,
+  required double max,
+}) {
+  if (valueRef is! num) return;
+  final path = DataPath(valueStoragePath);
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  final v = valueRef.toDouble().clamp(min, max);
+  ctx.dataContext.update(path, v);
+}
+
+/// CatalogItem that renders a [GCNSlider] with the value bound to
+/// [DataContext].
 ///
-/// The slider value is managed locally and written to the data model at
-/// `/<componentId>/value` so it is available when the user triggers a
-/// subsequent action (e.g. tapping a "Next" button).
+/// The thumb position reads from [BoundNumber] (literal, path, or function).
+/// User drags call [DataContext.update] for the numeric value path only;
+/// formatted currency and the top-right value label are computed in the
+/// widget (not stored on the data model).
 ///
-/// `title`, `subtitle`, and `valueLabel` support data model bindings.
+/// `title`, `subtitle`, and `valueLabel` support string model bindings.
 final gcnSliderItem = CatalogItem(
   name: 'GCNSlider',
   dataSchema: _schema,
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
 
-    final initialValue = (json['value']! as num).toDouble();
+    final valueRef = json['value']!;
+    final valueStoragePath = _sliderValueStoragePath(ctx.id, valueRef);
     final min = (json['min']! as num).toDouble();
     final max = (json['max']! as num).toDouble();
     final divisions = (json['divisions'] as num?)?.toInt();
     final rawSplitLabels = json['splitLabels'] as List?;
+    final prefix = json['prefix'] as String? ?? '';
 
-    return _StatefulGCNSlider(
+    _seedSliderModelIfNeeded(
+      ctx: ctx,
+      valueRef: valueRef,
+      valueStoragePath: valueStoragePath,
+      min: min,
+      max: max,
+    );
+
+    return _BoundGCNSlider(
       titleValue: json['title']!,
       subtitleValue: json['subtitle']!,
       valueLabelValue: json['valueLabel'],
-      initialValue: initialValue,
+      boundNumberValue: _boundNumberSpec(valueRef, valueStoragePath),
+      valueRef: valueRef,
+      valueStoragePath: valueStoragePath,
       min: min,
       max: max,
-      prefix: json['prefix'] as String? ?? '',
+      prefix: prefix,
       minLabel: json['minLabel'] as String?,
       maxLabel: json['maxLabel'] as String?,
       divisions: divisions,
@@ -91,11 +155,13 @@ final gcnSliderItem = CatalogItem(
   },
 );
 
-class _StatefulGCNSlider extends StatefulWidget {
-  const _StatefulGCNSlider({
+class _BoundGCNSlider extends StatelessWidget {
+  const _BoundGCNSlider({
     required this.titleValue,
     required this.subtitleValue,
-    required this.initialValue,
+    required this.boundNumberValue,
+    required this.valueRef,
+    required this.valueStoragePath,
     required this.min,
     required this.max,
     required this.dataContext,
@@ -111,7 +177,9 @@ class _StatefulGCNSlider extends StatefulWidget {
   final Object titleValue;
   final Object subtitleValue;
   final Object? valueLabelValue;
-  final double initialValue;
+  final Object boundNumberValue;
+  final Object valueRef;
+  final String valueStoragePath;
   final double min;
   final double max;
   final String prefix;
@@ -122,81 +190,101 @@ class _StatefulGCNSlider extends StatefulWidget {
   final DataContext dataContext;
   final String componentId;
 
-  @override
-  State<_StatefulGCNSlider> createState() => _StatefulGCNSliderState();
-}
-
-class _StatefulGCNSliderState extends State<_StatefulGCNSlider> {
-  late double _value;
-
-  bool _initialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.initialValue;
+  void _writeValuesToModel(double newValue) {
+    dataContext.update(DataPath(valueStoragePath), newValue);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      _initialized = true;
-      _writeToDataModel(_value);
-    }
-  }
+  /// Top-right amount: basic slider shows when [prefix] is non-empty or
+  /// [valueLabelValue] is provided; splits variant only when [valueLabelValue]
+  /// is set (opt-in).
+  bool get _showTopRightAmount => divisions == null
+      ? (valueLabelValue != null || prefix.isNotEmpty)
+      : valueLabelValue != null;
 
-  String _formatValue(double value) {
-    final locale = Localizations.maybeLocaleOf(context)?.toString();
-    final number = NumberFormat.decimalPattern(locale).format(value.round());
-    return '${widget.prefix}$number';
-  }
-
-  void _writeToDataModel(double value) {
-    final formatted = _formatValue(value);
-
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/value'),
-      value,
+  Widget _slider(
+    BuildContext context, {
+    required double thumb,
+    required String? title,
+    required String? subtitle,
+  }) {
+    return GCNSlider(
+      title: title ?? '',
+      subtitle: subtitle ?? '',
+      value: thumb,
+      min: min,
+      max: max,
+      valueLabel: _showTopRightAmount
+          ? _formatSliderDisplayValue(context, thumb, prefix)
+          : null,
+      minLabel: minLabel,
+      maxLabel: maxLabel,
+      divisions: divisions,
+      splitLabels: splitLabels,
+      onChanged: _writeValuesToModel,
     );
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/formattedValue'),
-      formatted,
+  }
+
+  Widget _boundTitleSubtitle(
+    BuildContext context,
+    double thumb, {
+    Object? valueLabelForBinding,
+  }) {
+    Widget withTitleSubtitle(String? title, String? subtitle) {
+      return _slider(context, thumb: thumb, title: title, subtitle: subtitle);
+    }
+
+    if (valueLabelForBinding != null) {
+      return BoundString(
+        dataContext: dataContext,
+        value: valueLabelForBinding,
+        builder: (context, _) {
+          return BoundString(
+            dataContext: dataContext,
+            value: titleValue,
+            builder: (context, title) {
+              return BoundString(
+                dataContext: dataContext,
+                value: subtitleValue,
+                builder: (context, subtitle) {
+                  return withTitleSubtitle(title, subtitle);
+                },
+              );
+            },
+          );
+        },
+      );
+    }
+
+    return BoundString(
+      dataContext: dataContext,
+      value: titleValue,
+      builder: (context, title) {
+        return BoundString(
+          dataContext: dataContext,
+          value: subtitleValue,
+          builder: (context, subtitle) {
+            return withTitleSubtitle(title, subtitle);
+          },
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BoundString(
-      dataContext: widget.dataContext,
-      value: widget.titleValue,
-      builder: (context, title) {
-        return BoundString(
-          dataContext: widget.dataContext,
-          value: widget.subtitleValue,
-          builder: (context, subtitle) {
-            // If the LLM provided a valueLabel (static or bound),
-            // always show the locally formatted value so it updates
-            // as the user drags.
-            final showValueLabel = widget.valueLabelValue != null;
-
-            return GCNSlider(
-              title: title ?? '',
-              subtitle: subtitle ?? '',
-              value: _value,
-              min: widget.min,
-              max: widget.max,
-              valueLabel: showValueLabel ? _formatValue(_value) : null,
-              minLabel: widget.minLabel,
-              maxLabel: widget.maxLabel,
-              divisions: widget.divisions,
-              splitLabels: widget.splitLabels,
-              onChanged: (newValue) {
-                setState(() => _value = newValue);
-                _writeToDataModel(newValue);
-              },
-            );
-          },
+    // BoundNumber must wrap BoundStrings so every value change re-reads bound
+    // strings (e.g. title/subtitle/valueLabel paths).
+    return BoundNumber(
+      dataContext: dataContext,
+      value: boundNumberValue,
+      builder: (context, boundValue) {
+        final effective =
+            boundValue ?? (valueRef is num ? valueRef as num : null);
+        final thumb = (effective?.toDouble() ?? min).clamp(min, max);
+        return _boundTitleSubtitle(
+          context,
+          thumb,
+          valueLabelForBinding: valueLabelValue,
         );
       },
     );

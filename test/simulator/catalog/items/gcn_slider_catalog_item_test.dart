@@ -3,14 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/catalog/items/gcn_slider_catalog_item.dart';
-import 'package:mocktail/mocktail.dart';
-
-class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   String title = 'Budget',
   String subtitle = 'Dining • Feb 18',
-  double value = 450,
+  Object value = 450.0,
   double min = 0,
   double max = 1000,
   String? valueLabel,
@@ -36,6 +33,7 @@ Map<String, Object?> _data({
 CatalogItemContext _context(
   BuildContext context,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
 }) {
   return CatalogItemContext(
@@ -45,7 +43,7 @@ CatalogItemContext _context(
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -56,6 +54,7 @@ CatalogItemContext _context(
 Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
 }) async {
   await tester.pumpWidget(
@@ -64,7 +63,12 @@ Future<void> _pump(
       home: Scaffold(
         body: Builder(
           builder: (context) => gcnSliderItem.widgetBuilder(
-            _context(context, data, dispatchEvent: dispatchEvent),
+            _context(
+              context,
+              data,
+              dataModel: dataModel,
+              dispatchEvent: dispatchEvent,
+            ),
           ),
         ),
       ),
@@ -82,7 +86,7 @@ void main() {
           .toList();
       expect(
         props,
-        containsAll([
+        containsAll(<String>[
           'title',
           'subtitle',
           'value',
@@ -118,8 +122,18 @@ void main() {
           _data(valueLabel: r'$450', prefix: r'$'),
         );
 
-        // The slider formats the value locally: prefix + formatted number
         expect(find.text(r'$450'), findsOneWidget);
+      });
+
+      testWidgets('shows formatted top-right amount with prefix only', (
+        tester,
+      ) async {
+        await _pump(
+          tester,
+          _data(prefix: r'$', value: 72.0),
+        );
+
+        expect(find.text(r'$72'), findsOneWidget);
       });
 
       testWidgets('with min and max labels', (tester) async {
@@ -147,15 +161,38 @@ void main() {
         expect(find.text('Max'), findsWidgets);
       });
 
-      testWidgets('updates value locally on drag', (tester) async {
-        await _pump(tester, _data(value: 0, max: 100));
+      testWidgets('updates bound data model value on drag', (tester) async {
+        final dataModel = InMemoryDataModel();
+        await _pump(
+          tester,
+          _data(value: 0, max: 100),
+          dataModel: dataModel,
+        );
 
-        // Drag the slider thumb to the right
         await tester.drag(find.byType(Slider), const Offset(100, 0));
         await tester.pump();
 
-        // Slider should still be rendered (state managed locally)
-        expect(find.byType(GCNSlider), findsOneWidget);
+        final stored = dataModel.getValue<num>(DataPath('/test/value'));
+        expect(stored, isNotNull);
+        expect(stored! > 0, isTrue);
+      });
+
+      testWidgets('reads initial value from explicit path binding', (
+        tester,
+      ) async {
+        final dataModel = InMemoryDataModel()
+          ..update(DataPath('/shared/budget'), 250.0);
+
+        await _pump(
+          tester,
+          _data(
+            value: {'path': '/shared/budget'},
+          ),
+          dataModel: dataModel,
+        );
+
+        final sliderWidget = tester.widget<GCNSlider>(find.byType(GCNSlider));
+        expect(sliderWidget.value, 250.0);
       });
     });
   });

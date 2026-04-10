@@ -7,8 +7,6 @@ import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockDataModel extends Mock implements DataModel {}
-
 class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
     implements SimulatorBloc {}
 
@@ -36,7 +34,7 @@ CatalogItemContext _context(
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(dataModel ?? _MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -131,37 +129,20 @@ void main() {
     testWidgets('writes selectedOption to data model on selector tap', (
       tester,
     ) async {
-      registerFallbackValue(DataPath.root);
-
-      final mockDataModel = _MockDataModel();
-      final capturedPaths = <DataPath>[];
-      final capturedValues = <Object?>[];
-
-      when(
-        () => mockDataModel.update(
-          any(that: isA<DataPath>()),
-          any<Object?>(),
-        ),
-      ).thenAnswer((invocation) {
-        capturedPaths.add(invocation.positionalArguments[0] as DataPath);
-        capturedValues.add(invocation.positionalArguments[1]);
-      });
-
+      final dataModel = InMemoryDataModel();
       await _pump(
         tester,
         _data(selectorOptions: ['1M', '3M', '6M'], selectedIndex: 0),
-        dataModel: mockDataModel,
+        dataModel: dataModel,
       );
 
-      // Tap the '3M' chip
       await tester.tap(find.text('3M'));
       await tester.pump();
 
       expect(
-        capturedPaths.any((p) => p.toString() == '/test/selectedOption'),
-        isTrue,
+        dataModel.getValue<String>(DataPath('/test/selectedOption')),
+        '3M',
       );
-      expect(capturedValues, contains('3M'));
     });
   });
 }

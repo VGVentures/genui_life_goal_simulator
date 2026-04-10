@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
@@ -39,11 +38,18 @@ final _schema = S.object(
   required: ['label', 'color'],
 );
 
-/// CatalogItem that renders a [CategoryFilterChip] with local state.
+void _seedChipIsSelectedIfNeeded(
+  CatalogItemContext ctx,
+  bool initialSelected,
+) {
+  final path = DataPath('/${ctx.id}/isSelected');
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  ctx.dataContext.update(path, initialSelected);
+}
+
+/// CatalogItem that renders a [CategoryFilterChip].
 ///
-/// The selected state is managed locally and written to the data model at
-/// `/<componentId>/isSelected` so it is available when the user triggers
-/// a subsequent action.
+/// The selected state is bound to `/<componentId>/isSelected` via [BoundBool].
 ///
 /// If an `action` is provided, it will be dispatched when the chip is toggled,
 /// allowing the LLM to regenerate content.
@@ -64,88 +70,42 @@ final categoryFilterChipItem = CatalogItem(
       orElse: () => FilterChipColor.aqua,
     );
 
-    return _StatefulCategoryFilterChip(
-      label: label,
-      color: color,
-      initialSelected: initialSelected,
-      isEnabled: isEnabled,
-      action: action,
+    _seedChipIsSelectedIfNeeded(ctx, initialSelected);
+
+    return BoundBool(
       dataContext: ctx.dataContext,
-      dispatchEvent: ctx.dispatchEvent,
-      componentId: ctx.id,
+      value: {'path': '/${ctx.id}/isSelected'},
+      builder: (context, isSelected) {
+        final selected = isSelected ?? false;
+        return CategoryFilterChip(
+          label: label,
+          color: color,
+          isSelected: selected,
+          isEnabled: isEnabled,
+          onTap: () {
+            ctx.dataContext.update(
+              DataPath('/${ctx.id}/isSelected'),
+              !selected,
+            );
+
+            if (action case {'event': final Map<String, Object?> event}) {
+              final dataModel = ctx.dataContext.dataModel
+                  .getValue<Map<String, Object?>>(DataPath.root);
+
+              ctx.dispatchEvent(
+                UserActionEvent(
+                  name: event['name']! as String,
+                  sourceComponentId: ctx.id,
+                  context: {
+                    ...event['context'] as Map<String, Object?>? ?? {},
+                    if (dataModel != null) ...dataModel,
+                  },
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   },
 );
-
-class _StatefulCategoryFilterChip extends StatefulWidget {
-  const _StatefulCategoryFilterChip({
-    required this.label,
-    required this.color,
-    required this.initialSelected,
-    required this.isEnabled,
-    required this.action,
-    required this.dataContext,
-    required this.dispatchEvent,
-    required this.componentId,
-  });
-
-  final String label;
-  final FilterChipColor color;
-  final bool initialSelected;
-  final bool isEnabled;
-  final Map<String, Object?>? action;
-  final DataContext dataContext;
-  final DispatchEventCallback dispatchEvent;
-  final String componentId;
-
-  @override
-  State<_StatefulCategoryFilterChip> createState() =>
-      _StatefulCategoryFilterChipState();
-}
-
-class _StatefulCategoryFilterChipState
-    extends State<_StatefulCategoryFilterChip> {
-  late bool _isSelected;
-
-  @override
-  void initState() {
-    super.initState();
-    _isSelected = widget.initialSelected;
-  }
-
-  void _onTap() {
-    setState(() => _isSelected = !_isSelected);
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/isSelected'),
-      _isSelected,
-    );
-
-    final action = widget.action;
-    if (action case {'event': final Map<String, Object?> event}) {
-      final dataModel = widget.dataContext.dataModel
-          .getValue<Map<String, Object?>>(DataPath.root);
-
-      widget.dispatchEvent(
-        UserActionEvent(
-          name: event['name']! as String,
-          sourceComponentId: widget.componentId,
-          context: {
-            ...event['context'] as Map<String, Object?>? ?? {},
-            if (dataModel != null) ...dataModel,
-          },
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CategoryFilterChip(
-      label: widget.label,
-      color: widget.color,
-      isSelected: _isSelected,
-      isEnabled: widget.isEnabled,
-      onTap: _onTap,
-    );
-  }
-}

@@ -62,10 +62,56 @@ enum EmojiCardSelectionMode {
   single,
 }
 
-/// CatalogItem that renders an [EmojiCardLayout] with local selection state.
+void _seedEmojiSelectedLabelsIfNeeded(
+  CatalogItemContext ctx,
+  List<Map<String, Object?>> cards,
+) {
+  final path = DataPath('/${ctx.id}/selectedLabels');
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  final initial = <String>[
+    for (final c in cards)
+      if (c['isSelected'] == true && c['label'] is String)
+        c['label']! as String,
+  ];
+  ctx.dataContext.update(path, initial);
+}
+
+void _toggleEmojiSelection({
+  required DataContext dataContext,
+  required String componentId,
+  required EmojiCardSelectionMode mode,
+  required List<String> currentList,
+  required String toggledLabel,
+}) {
+  if (toggledLabel.isEmpty) return;
+  final path = DataPath('/$componentId/selectedLabels');
+  if (mode == EmojiCardSelectionMode.single) {
+    final already = currentList.contains(toggledLabel);
+    dataContext.update(
+      path,
+      already ? <String>[] : <String>[toggledLabel],
+    );
+    return;
+  }
+  final next = List<String>.from(currentList);
+  if (next.contains(toggledLabel)) {
+    next.remove(toggledLabel);
+  } else {
+    next.add(toggledLabel);
+  }
+  dataContext.update(path, next);
+}
+
+List<String> _selectedLabelsFromRaw(List<Object?>? raw) {
+  return [
+    for (final e in raw ?? const <Object?>[])
+      if (e != null) e.toString(),
+  ];
+}
+
+/// CatalogItem that renders an [EmojiCardLayout].
 ///
-/// Selected labels are written to the data model at
-/// `/<componentId>/selectedLabels`.
+/// Selection is bound to `/<componentId>/selectedLabels` via [BoundList].
 final emojiCardItem = CatalogItem(
   name: 'EmojiCard',
   dataSchema: _schema,
@@ -78,7 +124,9 @@ final emojiCardItem = CatalogItem(
         ? EmojiCardSelectionMode.single
         : EmojiCardSelectionMode.multi;
 
-    return _StatefulEmojiCards(
+    _seedEmojiSelectedLabelsIfNeeded(ctx, cards);
+
+    return _EmojiCardSurface(
       cards: cards,
       callToAction: callToAction,
       selectionMode: selectionMode,
@@ -88,8 +136,8 @@ final emojiCardItem = CatalogItem(
   },
 );
 
-class _StatefulEmojiCards extends StatefulWidget {
-  const _StatefulEmojiCards({
+class _EmojiCardSurface extends StatelessWidget {
+  const _EmojiCardSurface({
     required this.cards,
     required this.callToAction,
     required this.selectionMode,
@@ -104,69 +152,38 @@ class _StatefulEmojiCards extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulEmojiCards> createState() => _StatefulEmojiCardsState();
-}
-
-class _StatefulEmojiCardsState extends State<_StatefulEmojiCards> {
-  late List<bool> _selected;
-
-  @override
-  void initState() {
-    super.initState();
-    _selected = widget.cards
-        .map((c) => c['isSelected'] as bool? ?? false)
-        .toList();
-  }
-
-  void _onTap(int index) {
-    setState(() {
-      if (widget.selectionMode == EmojiCardSelectionMode.single) {
-        final alreadySelected = _selected[index];
-        for (var i = 0; i < _selected.length; i++) {
-          _selected[i] = false;
-        }
-        _selected[index] = !alreadySelected;
-      } else {
-        _selected[index] = !_selected[index];
-      }
-    });
-    _writeToDataModel();
-  }
-
-  void _writeToDataModel() {
-    final selectedLabels = [
-      for (var i = 0; i < widget.cards.length; i++)
-        if (_selected[i]) widget.cards[i]['label']?.toString() ?? '',
-    ];
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedLabels'),
-      selectedLabels,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final layout = EmojiCardLayout(
-      cards: widget.cards.indexed.map((entry) {
-        final (index, c) = entry;
-        return _BoundEmojiCard(
-          key: ValueKey('emoji_card_$index'),
-          dataContext: widget.dataContext,
-          cardData: c,
-          isSelected: _selected[index],
-          onTap: () => _onTap(index),
+    final path = '/$componentId/selectedLabels';
+
+    final layout = BoundList(
+      dataContext: dataContext,
+      value: {'path': path},
+      builder: (context, rawSelected) {
+        final currentList = _selectedLabelsFromRaw(rawSelected);
+        return EmojiCardLayout(
+          cards: cards.indexed.map((entry) {
+            final (index, c) = entry;
+            return _BoundEmojiCard(
+              key: ValueKey('emoji_card_$index'),
+              dataContext: dataContext,
+              cardData: c,
+              selectedLabels: currentList,
+              selectionMode: selectionMode,
+              componentId: componentId,
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
 
-    if (widget.callToAction.isEmpty) return layout;
+    if (callToAction.isEmpty) return layout;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         MarkdownBody(
-          data: widget.callToAction,
+          data: callToAction,
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
             p: Theme.of(context).textTheme.bodyMedium,
           ),
@@ -182,15 +199,22 @@ class _BoundEmojiCard extends EmojiCard {
   const _BoundEmojiCard({
     required DataContext dataContext,
     required Map<String, Object?> cardData,
-    required super.isSelected,
-    required super.onTap,
+    required List<String> selectedLabels,
+    required EmojiCardSelectionMode selectionMode,
+    required String componentId,
     super.key,
   }) : _dataContext = dataContext,
        _cardData = cardData,
+       _selectedLabels = selectedLabels,
+       _selectionMode = selectionMode,
+       _componentId = componentId,
        super(emoji: '', label: '');
 
   final DataContext _dataContext;
   final Map<String, Object?> _cardData;
+  final List<String> _selectedLabels;
+  final EmojiCardSelectionMode _selectionMode;
+  final String _componentId;
 
   @override
   Widget build(BuildContext context) {
@@ -201,12 +225,25 @@ class _BoundEmojiCard extends EmojiCard {
         return BoundString(
           dataContext: _dataContext,
           value: _cardData['label'],
-          builder: (context, label) {
+          builder: (context, labelStr) {
+            final label = labelStr ?? '';
+            final isSelected =
+                label.isNotEmpty && _selectedLabels.contains(label);
             return EmojiCard(
               emoji: emoji ?? '',
-              label: label ?? '',
+              label: label,
               isSelected: isSelected,
-              onTap: onTap,
+              onTap: label.isEmpty
+                  ? null
+                  : () {
+                      _toggleEmojiSelection(
+                        dataContext: _dataContext,
+                        componentId: _componentId,
+                        mode: _selectionMode,
+                        currentList: _selectedLabels,
+                        toggledLabel: label,
+                      );
+                    },
             );
           },
         );

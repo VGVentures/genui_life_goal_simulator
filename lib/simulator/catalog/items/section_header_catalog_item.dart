@@ -46,15 +46,39 @@ final _schema = S.object(
   required: ['title', 'subtitle'],
 );
 
+void _seedSectionSelectedOptionIfNeeded(
+  CatalogItemContext ctx,
+  List<String> options,
+  int initialSelectedIndex,
+) {
+  final path = DataPath('/${ctx.id}/selectedOption');
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  if (options.isEmpty) return;
+  final i = initialSelectedIndex.clamp(0, options.length - 1);
+  ctx.dataContext.update(path, options[i]);
+}
+
+int _sectionSelectorIndex(
+  List<String> options,
+  String? selectedOption,
+  int initialSelectedIndex,
+) {
+  if (selectedOption != null) {
+    final idx = options.indexOf(selectedOption);
+    if (idx >= 0) return idx;
+  }
+  if (options.isEmpty) return 0;
+  return initialSelectedIndex.clamp(0, options.length - 1);
+}
+
 /// CatalogItem that renders a [SectionHeader] with an optional selector.
 ///
 /// The `title` and `subtitle` properties support data model bindings via
 /// `{"path": "..."}`, allowing them to reactively display values from input
 /// widgets like GCNSlider.
 ///
-/// When `selectorOptions` is provided, the selected option is written to the
-/// data model at `/<componentId>/selectedOption` so it is available when the
-/// user triggers a subsequent action.
+/// When `selectorOptions` is provided, the selection is bound to
+/// `/<componentId>/selectedOption`.
 ///
 /// If a `selectorAction` is provided, it will be dispatched when the selector
 /// changes, allowing the LLM to regenerate content for the new selection.
@@ -71,7 +95,11 @@ final sectionHeaderItem = CatalogItem(
     final selectedIndex = (json['selectedIndex'] as num?)?.toInt() ?? 0;
     final selectorAction = json['selectorAction'] as Map<String, Object?>?;
 
-    return _StatefulSectionHeader(
+    if (selectorOptions != null && selectorOptions.isNotEmpty) {
+      _seedSectionSelectedOptionIfNeeded(ctx, selectorOptions, selectedIndex);
+    }
+
+    return _ActionLockSectionHeader(
       titleValue: titleValue,
       subtitleValue: subtitleValue,
       selectorOptions: selectorOptions,
@@ -84,8 +112,8 @@ final sectionHeaderItem = CatalogItem(
   },
 );
 
-class _StatefulSectionHeader extends StatefulWidget {
-  const _StatefulSectionHeader({
+class _ActionLockSectionHeader extends StatefulWidget {
+  const _ActionLockSectionHeader({
     required this.titleValue,
     required this.subtitleValue,
     required this.selectorOptions,
@@ -106,27 +134,20 @@ class _StatefulSectionHeader extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulSectionHeader> createState() => _StatefulSectionHeaderState();
+  State<_ActionLockSectionHeader> createState() =>
+      _ActionLockSectionHeaderState();
 }
 
-class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
-  late int _selectedIndex;
+class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
   bool _tapped = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialSelectedIndex;
-  }
 
   void _onSelectorChanged(int index) {
     if (_tapped) return;
-    setState(() => _selectedIndex = index);
 
-    final selectedOption = widget.selectorOptions![index];
+    final options = widget.selectorOptions!;
     widget.dataContext.update(
       DataPath('/${widget.componentId}/selectedOption'),
-      selectedOption,
+      options[index],
     );
 
     final action = widget.selectorAction;
@@ -159,26 +180,69 @@ class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
         final isDisabled = _tapped || state.isLoading;
         final showThinking = _tapped;
 
+        Widget buildSectionHeader(
+          BuildContext context,
+          String? title,
+          String? subtitle, [
+          String? selectedOption,
+        ]) {
+          final options = widget.selectorOptions;
+          if (options == null || options.isEmpty) {
+            return SectionHeader(
+              title: title ?? '',
+              subtitle: subtitle ?? '',
+            );
+          }
+
+          final idx = _sectionSelectorIndex(
+            options,
+            selectedOption,
+            widget.initialSelectedIndex,
+          );
+
+          return SectionHeader(
+            title: title ?? '',
+            subtitle: subtitle ?? '',
+            selectorOptions: options,
+            selectedIndex: idx,
+            onSelectorChanged: isDisabled ? (_) {} : _onSelectorChanged,
+          );
+        }
+
+        Widget sectionHeaderWithTitle(BuildContext context, String? val) {
+          final title = val;
+          return BoundString(
+            dataContext: widget.dataContext,
+            value: widget.subtitleValue,
+            builder: (context, subtitle) {
+              final options = widget.selectorOptions;
+              if (options == null || options.isEmpty) {
+                return buildSectionHeader(
+                  context,
+                  title,
+                  subtitle,
+                );
+              }
+              return BoundString(
+                dataContext: widget.dataContext,
+                value: {'path': '/${widget.componentId}/selectedOption'},
+                builder: (context, selectedOption) {
+                  return buildSectionHeader(
+                    context,
+                    title,
+                    subtitle,
+                    selectedOption,
+                  );
+                },
+              );
+            },
+          );
+        }
+
         final sectionHeader = BoundString(
           dataContext: widget.dataContext,
           value: widget.titleValue,
-          builder: (context, title) {
-            return BoundString(
-              dataContext: widget.dataContext,
-              value: widget.subtitleValue,
-              builder: (context, subtitle) {
-                return SectionHeader(
-                  title: title ?? '',
-                  subtitle: subtitle ?? '',
-                  selectorOptions: widget.selectorOptions,
-                  selectedIndex: _selectedIndex,
-                  onSelectorChanged: widget.selectorOptions != null
-                      ? (isDisabled ? (_) {} : _onSelectorChanged)
-                      : null,
-                );
-              },
-            );
-          },
+          builder: sectionHeaderWithTitle,
         );
 
         if (!showThinking) return sectionHeader;

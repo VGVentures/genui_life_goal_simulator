@@ -34,11 +34,34 @@ final _schema = S.object(
   required: ['options', 'selectedIndex'],
 );
 
-/// CatalogItem that renders a [HeaderSelector] with local state.
+void _seedSelectedOptionIfNeeded(
+  CatalogItemContext ctx,
+  List<String> options,
+  int initialSelectedIndex,
+) {
+  final path = DataPath('/${ctx.id}/selectedOption');
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  if (options.isEmpty) return;
+  final i = initialSelectedIndex.clamp(0, options.length - 1);
+  ctx.dataContext.update(path, options[i]);
+}
+
+int _headerSelectedIndex(
+  List<String> options,
+  String? selectedOption,
+  int initialSelectedIndex,
+) {
+  if (selectedOption != null) {
+    final idx = options.indexOf(selectedOption);
+    if (idx >= 0) return idx;
+  }
+  if (options.isEmpty) return 0;
+  return initialSelectedIndex.clamp(0, options.length - 1);
+}
+
+/// CatalogItem that renders a [HeaderSelector].
 ///
-/// The selected index is managed locally and written to the data model at
-/// `/<componentId>/selectedOption` so it is available when the user triggers
-/// a subsequent action.
+/// The selection is bound to `/<componentId>/selectedOption` via [BoundString].
 ///
 /// If an `action` is provided, it will be dispatched when the selection
 /// changes, allowing the LLM to regenerate content for the new selection.
@@ -54,7 +77,9 @@ final headerSelectorItem = CatalogItem(
     final selectedIndex = (json['selectedIndex']! as num).toInt();
     final action = json['action'] as Map<String, Object?>?;
 
-    return _StatefulHeaderSelector(
+    _seedSelectedOptionIfNeeded(ctx, options, selectedIndex);
+
+    return _ActionLockHeaderSelector(
       options: options,
       initialSelectedIndex: selectedIndex,
       action: action,
@@ -65,8 +90,8 @@ final headerSelectorItem = CatalogItem(
   },
 );
 
-class _StatefulHeaderSelector extends StatefulWidget {
-  const _StatefulHeaderSelector({
+class _ActionLockHeaderSelector extends StatefulWidget {
+  const _ActionLockHeaderSelector({
     required this.options,
     required this.initialSelectedIndex,
     required this.action,
@@ -83,28 +108,19 @@ class _StatefulHeaderSelector extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulHeaderSelector> createState() =>
-      _StatefulHeaderSelectorState();
+  State<_ActionLockHeaderSelector> createState() =>
+      _ActionLockHeaderSelectorState();
 }
 
-class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
-  late int _selectedIndex;
+class _ActionLockHeaderSelectorState extends State<_ActionLockHeaderSelector> {
   bool _tapped = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialSelectedIndex;
-  }
 
   void _onChanged(int index) {
     if (_tapped) return;
-    setState(() => _selectedIndex = index);
 
-    final selectedOption = widget.options[index];
     widget.dataContext.update(
       DataPath('/${widget.componentId}/selectedOption'),
-      selectedOption,
+      widget.options[index],
     );
 
     final action = widget.action;
@@ -137,10 +153,24 @@ class _StatefulHeaderSelectorState extends State<_StatefulHeaderSelector> {
         final isDisabled = _tapped || state.isLoading;
         final showThinking = _tapped;
 
-        final selector = HeaderSelector(
-          options: widget.options,
-          selectedIndex: _selectedIndex,
-          onChanged: isDisabled ? (_) {} : _onChanged,
+        Widget selectorBuilder(BuildContext context, String? selectedOption) {
+          final idx = _headerSelectedIndex(
+            widget.options,
+            selectedOption,
+            widget.initialSelectedIndex,
+          );
+
+          return HeaderSelector(
+            options: widget.options,
+            selectedIndex: idx,
+            onChanged: isDisabled ? (_) {} : _onChanged,
+          );
+        }
+
+        final selector = BoundString(
+          dataContext: widget.dataContext,
+          value: {'path': '/${widget.componentId}/selectedOption'},
+          builder: selectorBuilder,
         );
 
         if (!showThinking) return selector;

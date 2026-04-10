@@ -171,7 +171,7 @@ Always include an "action" with an "event" for these — the app responds as soo
 
 ### Input widgets (local-only — no action needed)
 These do NOT dispatch actions. The user interacts freely and their choices are written to the data model automatically. Pair them with an AppButton so the user can confirm and proceed.
-- GCNSlider: adjusts a numeric value. Raw number written to /<componentId>/value, locale-formatted integer string (e.g. "$72,000") written to /<componentId>/formattedValue. Use formattedValue for display bindings.
+- GCNSlider: adjusts a numeric value. The `value` field may be a literal number, {"path": "..."} to a number in the model, or a function call; if omitted, the default storage path is /<componentId>/value. Only that raw number is written to the model. For a basic (non-divisions) slider, set `prefix` (e.g. "$") to show a live formatted amount at the top-right, or set `valueLabel` (literal or binding) to enable that row; the app always draws the amount from the current value + prefix + locale.
 - RadioCard: picks one option from a set. Selection written to /<componentId>/selectedLabel.
 - HeaderSelector: switches between views or time periods. Written to /<componentId>/selectedOption.
 - CategoryFilterChip: toggles a single filter. Written to /<componentId>/isSelected.
@@ -182,11 +182,11 @@ These do NOT dispatch actions. The user interacts freely and their choices are w
 Some string properties support reactive bindings to the data model via {"path": "..."}.
 CRITICAL RULES:
 - A binding MUST be the ENTIRE property value as a JSON object, NOT a string.
-- CORRECT: "subtitle": {"path": "/my_slider/formattedValue"}
+- CORRECT: "subtitle": {"path": "/my_slider/value"}
 - WRONG: "subtitle": "Current age: {\"path\": \"/my_slider/value\"} years"
 - WRONG: "valueLabel": "{\"path\": \"/my_slider/value\"}"
 - You CANNOT embed a binding inside a larger string. If you need surrounding text (e.g. "Current age: X years"), use a separate Text component for the static parts and bind only the dynamic component.
-- For GCNSlider display, bind to formattedValue (not value) to get a nicely formatted string.
+- For text that should track the slider amount, bind string fields to /<componentId>/value (the model stores a number; presentation may be a plain numeric string unless the target widget formats it).
 
 ''';
   }

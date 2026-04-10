@@ -27,11 +27,36 @@ final _schema = S.object(
   required: ['options'],
 );
 
-/// CatalogItem that renders a list of [RadioCard] widgets with local state.
+void _seedRadioSelectedLabelIfNeeded(
+  CatalogItemContext ctx,
+  List<Map<String, Object?>> options,
+) {
+  final path = DataPath('/${ctx.id}/selectedLabel');
+  if (ctx.dataContext.getValue<Object?>(path) != null) return;
+  final idx = options.indexWhere((o) => o['isSelected'] == true);
+  final i = idx >= 0 ? idx : 0;
+  final label = options[i]['label']! as String;
+  ctx.dataContext.update(path, label);
+}
+
+int _radioSelectedIndex(
+  List<Map<String, Object?>> options,
+  String? selectedLabel,
+) {
+  if (selectedLabel != null) {
+    final idx = options.indexWhere(
+      (o) => o['label']! as String == selectedLabel,
+    );
+    if (idx >= 0) return idx;
+  }
+  final fallback = options.indexWhere((o) => o['isSelected'] == true);
+  if (fallback >= 0) return fallback;
+  return 0;
+}
+
+/// CatalogItem that renders a list of [RadioCard] widgets.
 ///
-/// The selected option is managed locally and written to the data model at
-/// `/<componentId>/selectedLabel` so it is available when the user triggers a
-/// subsequent action (e.g. tapping a "Next" button).
+/// Selection is bound to `/<componentId>/selectedLabel` via [BoundString].
 final radioCardItem = CatalogItem(
   name: 'RadioCard',
   dataSchema: _schema,
@@ -40,63 +65,31 @@ final radioCardItem = CatalogItem(
     final rawOptions = json['options']! as List;
     final options = rawOptions.cast<Map<String, Object?>>();
 
-    return _StatefulRadioCards(
-      options: options,
+    _seedRadioSelectedLabelIfNeeded(ctx, options);
+
+    return BoundString(
       dataContext: ctx.dataContext,
-      componentId: ctx.id,
+      value: {'path': '/${ctx.id}/selectedLabel'},
+      builder: (context, selectedLabel) {
+        final index = _radioSelectedIndex(options, selectedLabel);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: Spacing.xl,
+          children: [
+            for (var i = 0; i < options.length; i++)
+              RadioCard(
+                label: options[i]['label']! as String,
+                isSelected: i == index,
+                onTap: () {
+                  ctx.dataContext.update(
+                    DataPath('/${ctx.id}/selectedLabel'),
+                    options[i]['label']! as String,
+                  );
+                },
+              ),
+          ],
+        );
+      },
     );
   },
 );
-
-class _StatefulRadioCards extends StatefulWidget {
-  const _StatefulRadioCards({
-    required this.options,
-    required this.dataContext,
-    required this.componentId,
-  });
-
-  final List<Map<String, Object?>> options;
-  final DataContext dataContext;
-  final String componentId;
-
-  @override
-  State<_StatefulRadioCards> createState() => _StatefulRadioCardsState();
-}
-
-class _StatefulRadioCardsState extends State<_StatefulRadioCards> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.options.indexWhere(
-      (o) => o['isSelected'] == true,
-    );
-    if (_selectedIndex == -1) _selectedIndex = 0;
-  }
-
-  void _onTap(int index) {
-    setState(() => _selectedIndex = index);
-    final label = widget.options[index]['label']! as String;
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedLabel'),
-      label,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      spacing: Spacing.xl,
-      children: [
-        for (var i = 0; i < widget.options.length; i++)
-          RadioCard(
-            label: widget.options[i]['label']! as String,
-            isSelected: i == _selectedIndex,
-            onTap: () => _onTap(i),
-          ),
-      ],
-    );
-  }
-}
