@@ -52,9 +52,8 @@ final _schema = S.object(
 /// `{"path": "..."}`, allowing them to reactively display values from input
 /// widgets like GCNSlider.
 ///
-/// When `selectorOptions` is provided, the selected option is written to the
-/// data model at `/<componentId>/selectedOption` so it is available when the
-/// user triggers a subsequent action.
+/// When `selectorOptions` is provided, the selection is bound to
+/// `/<componentId>/selectedOption`.
 ///
 /// If a `selectorAction` is provided, it will be dispatched when the selector
 /// changes, allowing the LLM to regenerate content for the new selection.
@@ -71,7 +70,7 @@ final sectionHeaderItem = CatalogItem(
     final selectedIndex = (json['selectedIndex'] as num?)?.toInt() ?? 0;
     final selectorAction = json['selectorAction'] as Map<String, Object?>?;
 
-    return _StatefulSectionHeader(
+    return _ActionLockSectionHeader(
       titleValue: titleValue,
       subtitleValue: subtitleValue,
       selectorOptions: selectorOptions,
@@ -84,8 +83,8 @@ final sectionHeaderItem = CatalogItem(
   },
 );
 
-class _StatefulSectionHeader extends StatefulWidget {
-  const _StatefulSectionHeader({
+class _ActionLockSectionHeader extends StatefulWidget {
+  const _ActionLockSectionHeader({
     required this.titleValue,
     required this.subtitleValue,
     required this.selectorOptions,
@@ -106,28 +105,44 @@ class _StatefulSectionHeader extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulSectionHeader> createState() => _StatefulSectionHeaderState();
+  State<_ActionLockSectionHeader> createState() =>
+      _ActionLockSectionHeaderState();
 }
 
-class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
-  late int _selectedIndex;
+class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
   bool _tapped = false;
+
+  DataPath get _path => DataPath('/${widget.componentId}/selectedOption');
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialSelectedIndex;
+    _seedIfNeeded();
+  }
+
+  void _seedIfNeeded() {
+    final options = widget.selectorOptions;
+    if (options == null || options.isEmpty) return;
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    final i = widget.initialSelectedIndex.clamp(0, options.length - 1);
+    widget.dataContext.update(_path, options[i]);
+  }
+
+  int _selectedIndex(String? selectedOption) {
+    final options = widget.selectorOptions!;
+    if (selectedOption != null) {
+      final idx = options.indexOf(selectedOption);
+      if (idx >= 0) return idx;
+    }
+    if (options.isEmpty) return 0;
+    return widget.initialSelectedIndex.clamp(0, options.length - 1);
   }
 
   void _onSelectorChanged(int index) {
     if (_tapped) return;
-    setState(() => _selectedIndex = index);
 
-    final selectedOption = widget.selectorOptions![index];
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedOption'),
-      selectedOption,
-    );
+    final options = widget.selectorOptions!;
+    widget.dataContext.update(_path, options[index]);
 
     final action = widget.selectorAction;
     if (action case {'event': final Map<String, Object?> event}) {
@@ -149,6 +164,31 @@ class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
     }
   }
 
+  Widget _buildSectionHeader({
+    required String? title,
+    required String? subtitle,
+    required bool isDisabled,
+    String? selectedOption,
+  }) {
+    final options = widget.selectorOptions;
+    if (options == null || options.isEmpty) {
+      return SectionHeader(
+        title: title ?? '',
+        subtitle: subtitle ?? '',
+      );
+    }
+
+    final idx = _selectedIndex(selectedOption);
+
+    return SectionHeader(
+      title: title ?? '',
+      subtitle: subtitle ?? '',
+      selectorOptions: options,
+      selectedIndex: idx,
+      onSelectorChanged: isDisabled ? (_) {} : _onSelectorChanged,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SimulatorBloc, SimulatorState>(
@@ -157,7 +197,8 @@ class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
       listener: (context, state) => setState(() => _tapped = false),
       builder: (context, state) {
         final isDisabled = _tapped || state.isLoading;
-        final showThinking = _tapped;
+        final options = widget.selectorOptions;
+        final hasSelector = options != null && options.isNotEmpty;
 
         final sectionHeader = BoundString(
           dataContext: widget.dataContext,
@@ -167,21 +208,31 @@ class _StatefulSectionHeaderState extends State<_StatefulSectionHeader> {
               dataContext: widget.dataContext,
               value: widget.subtitleValue,
               builder: (context, subtitle) {
-                return SectionHeader(
-                  title: title ?? '',
-                  subtitle: subtitle ?? '',
-                  selectorOptions: widget.selectorOptions,
-                  selectedIndex: _selectedIndex,
-                  onSelectorChanged: widget.selectorOptions != null
-                      ? (isDisabled ? (_) {} : _onSelectorChanged)
-                      : null,
+                if (!hasSelector) {
+                  return _buildSectionHeader(
+                    title: title,
+                    subtitle: subtitle,
+                    isDisabled: isDisabled,
+                  );
+                }
+                return BoundString(
+                  dataContext: widget.dataContext,
+                  value: {'path': _path.toString()},
+                  builder: (context, selectedOption) {
+                    return _buildSectionHeader(
+                      title: title,
+                      subtitle: subtitle,
+                      isDisabled: isDisabled,
+                      selectedOption: selectedOption,
+                    );
+                  },
                 );
               },
             );
           },
         );
 
-        if (!showThinking) return sectionHeader;
+        if (!_tapped) return sectionHeader;
 
         return Stack(
           children: [

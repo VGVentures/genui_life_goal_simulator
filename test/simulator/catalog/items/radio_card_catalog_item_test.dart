@@ -3,9 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/catalog/items/radio_card_catalog_item.dart';
-import 'package:mocktail/mocktail.dart';
-
-class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? options,
@@ -21,6 +18,7 @@ Map<String, Object?> _data({
 CatalogItemContext _context(
   BuildContext context,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
 }) {
   return CatalogItemContext(
@@ -30,7 +28,7 @@ CatalogItemContext _context(
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -41,6 +39,7 @@ CatalogItemContext _context(
 Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
 }) async {
   await tester.pumpWidget(
@@ -49,7 +48,12 @@ Future<void> _pump(
       home: Scaffold(
         body: Builder(
           builder: (context) => radioCardItem.widgetBuilder(
-            _context(context, data, dispatchEvent: dispatchEvent),
+            _context(
+              context,
+              data,
+              dataModel: dataModel,
+              dispatchEvent: dispatchEvent,
+            ),
           ),
         ),
       ),
@@ -99,15 +103,17 @@ void main() {
         expect(find.byType(RadioCard), findsOneWidget);
       });
 
-      testWidgets('toggles selection locally on tap', (tester) async {
-        await _pump(tester, _data());
+      testWidgets('updates data model when selection changes', (tester) async {
+        final dataModel = InMemoryDataModel();
+        await _pump(tester, _data(), dataModel: dataModel);
 
-        // Tap Optimizer — should become selected
         await tester.tap(find.text('Optimizer'));
         await tester.pump();
 
-        // Both RadioCard widgets should still be rendered
-        expect(find.byType(RadioCard), findsNWidgets(2));
+        expect(
+          dataModel.getValue<String>(DataPath('/test/selectedLabel')),
+          'Optimizer',
+        );
       });
     });
   });

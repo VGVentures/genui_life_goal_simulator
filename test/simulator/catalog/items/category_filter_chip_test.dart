@@ -3,9 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/catalog/items/category_filter_chip.dart';
-import 'package:mocktail/mocktail.dart';
-
-class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   String label = 'Dining',
@@ -19,7 +16,11 @@ Map<String, Object?> _data({
   'isEnabled': ?isEnabled,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  DataModel? dataModel,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
@@ -27,7 +28,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -37,15 +38,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  DataModel? dataModel,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              categoryFilterChipItem.widgetBuilder(_context(context, data)),
+          builder: (context) => categoryFilterChipItem.widgetBuilder(
+            _context(context, data, dataModel: dataModel),
+          ),
         ),
       ),
     ),
