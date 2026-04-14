@@ -95,8 +95,19 @@ class _OneTapAppButton extends StatefulWidget {
 
 class _OneTapAppButtonState extends State<_OneTapAppButton> {
   bool _tapped = false;
+  int? _lastPageIndex;
+  bool _prevBlocBusy = false;
 
   void _onPressed() {
+    // Handle back navigation directly through the bloc — no LLM call needed.
+    final action = widget.action;
+    if (action case {'event': final Map<String, Object?> event}) {
+      if (event['name'] == 'go_back') {
+        context.read<SimulatorBloc>().add(const SimulatorBackPressed());
+        return;
+      }
+    }
+
     if (_tapped) return;
     setState(() => _tapped = true);
 
@@ -105,8 +116,6 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
         const SimulatorLoadingOverlayRequested(),
       );
     }
-
-    final action = widget.action;
     if (action case {'event': final Map<String, Object?> event}) {
       final dataModel = widget.dataContext.dataModel
           .getValue<Map<String, Object?>>(DataPath.root);
@@ -127,6 +136,27 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<SimulatorBloc>().state;
+
+    // Re-enable the button when the page index changes (e.g. after back
+    // navigation) so users can tap Continue again on a revisited page.
+    final currentPageIndex = state.currentPageIndex;
+    if (_lastPageIndex != null && _lastPageIndex != currentPageIndex) {
+      _tapped = false;
+    }
+    _lastPageIndex = currentPageIndex;
+
+    final blocBusy = state.isLoading || state.isNavigatingBack;
+    // GenUI may reuse the same surface id for the next step (in-place update).
+    // Then currentPageIndex does not change and the page-index reset above
+    // never clears _tapped. Re-enable when the bloc finishes a busy period.
+    if (_prevBlocBusy && !blocBusy) {
+      _tapped = false;
+    }
+    _prevBlocBusy = blocBusy;
+
+    // Only show the thinking animation on the button that was actually
+    // tapped (i.e. the Continue button). The Back button never sets
+    // _tapped, so it stays as a plain disabled button during loading.
     final showThinking =
         _tapped && state.isLoading && !widget.showLoadingOverlay;
 
@@ -138,10 +168,10 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
           label: label ?? '',
           variant: widget.variant,
           size: widget.size,
-          onPressed: _tapped || state.isLoading ? null : _onPressed,
+          onPressed: _tapped || blocBusy ? null : _onPressed,
         );
 
-        return showThinking
+        final child = showThinking
             ? Stack(
                 children: [
                   Visibility(
@@ -155,6 +185,11 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
                 ],
               )
             : button;
+
+        return Padding(
+          padding: const EdgeInsets.only(top: Spacing.md),
+          child: child,
+        );
       },
     );
   }

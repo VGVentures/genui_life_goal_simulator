@@ -39,11 +39,9 @@ final _schema = S.object(
   required: ['label', 'color'],
 );
 
-/// CatalogItem that renders a [CategoryFilterChip] with local state.
+/// CatalogItem that renders a [CategoryFilterChip].
 ///
-/// The selected state is managed locally and written to the data model at
-/// `/<componentId>/isSelected` so it is available when the user triggers
-/// a subsequent action.
+/// The selected state is bound to `/<componentId>/isSelected` via [BoundBool].
 ///
 /// If an `action` is provided, it will be dispatched when the chip is toggled,
 /// allowing the LLM to regenerate content.
@@ -64,7 +62,7 @@ final categoryFilterChipItem = CatalogItem(
       orElse: () => FilterChipColor.aqua,
     );
 
-    return _StatefulCategoryFilterChip(
+    return _BoundCategoryFilterChip(
       label: label,
       color: color,
       initialSelected: initialSelected,
@@ -77,8 +75,8 @@ final categoryFilterChipItem = CatalogItem(
   },
 );
 
-class _StatefulCategoryFilterChip extends StatefulWidget {
-  const _StatefulCategoryFilterChip({
+class _BoundCategoryFilterChip extends StatefulWidget {
+  const _BoundCategoryFilterChip({
     required this.label,
     required this.color,
     required this.initialSelected,
@@ -99,53 +97,58 @@ class _StatefulCategoryFilterChip extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulCategoryFilterChip> createState() =>
-      _StatefulCategoryFilterChipState();
+  State<_BoundCategoryFilterChip> createState() =>
+      _BoundCategoryFilterChipState();
 }
 
-class _StatefulCategoryFilterChipState
-    extends State<_StatefulCategoryFilterChip> {
-  late bool _isSelected;
+class _BoundCategoryFilterChipState extends State<_BoundCategoryFilterChip> {
+  DataPath get _path => DataPath('/${widget.componentId}/isSelected');
 
   @override
   void initState() {
     super.initState();
-    _isSelected = widget.initialSelected;
+    _seedIfNeeded();
   }
 
-  void _onTap() {
-    setState(() => _isSelected = !_isSelected);
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/isSelected'),
-      _isSelected,
-    );
-
-    final action = widget.action;
-    if (action case {'event': final Map<String, Object?> event}) {
-      final dataModel = widget.dataContext.dataModel
-          .getValue<Map<String, Object?>>(DataPath.root);
-
-      widget.dispatchEvent(
-        UserActionEvent(
-          name: event['name']! as String,
-          sourceComponentId: widget.componentId,
-          context: {
-            ...event['context'] as Map<String, Object?>? ?? {},
-            if (dataModel != null) ...dataModel,
-          },
-        ),
-      );
-    }
+  void _seedIfNeeded() {
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    widget.dataContext.update(_path, widget.initialSelected);
   }
 
   @override
   Widget build(BuildContext context) {
-    return CategoryFilterChip(
-      label: widget.label,
-      color: widget.color,
-      isSelected: _isSelected,
-      isEnabled: widget.isEnabled,
-      onTap: _onTap,
+    return BoundBool(
+      dataContext: widget.dataContext,
+      value: {'path': _path.toString()},
+      builder: (context, isSelected) {
+        final selected = isSelected ?? false;
+        return CategoryFilterChip(
+          label: widget.label,
+          color: widget.color,
+          isSelected: selected,
+          isEnabled: widget.isEnabled,
+          onTap: () {
+            widget.dataContext.update(_path, !selected);
+
+            final action = widget.action;
+            if (action case {'event': final Map<String, Object?> event}) {
+              final dataModel = widget.dataContext.dataModel
+                  .getValue<Map<String, Object?>>(DataPath.root);
+
+              widget.dispatchEvent(
+                UserActionEvent(
+                  name: event['name']! as String,
+                  sourceComponentId: widget.componentId,
+                  context: {
+                    ...event['context'] as Map<String, Object?>? ?? {},
+                    if (dataModel != null) ...dataModel,
+                  },
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
 }

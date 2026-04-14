@@ -14,6 +14,8 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
       super(const SimulatorState()) {
     on<SimulatorStarted>(_onStarted);
     on<SimulatorMessageSent>(_onMessageSent);
+    on<SimulatorBackPressed>(_onBackPressed);
+    on<SimulatorForwardPagesTruncated>(_onForwardPagesTruncated);
     on<SimulatorSurfaceReceived>(_onSurfaceReceived);
     on<SimulatorContentReceived>(_onContentReceived);
     on<SimulatorLoading>(_onLoading);
@@ -57,6 +59,30 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     await _repository.sendMessage(initialMessage);
   }
 
+  void _onBackPressed(
+    SimulatorBackPressed event,
+    Emitter<SimulatorState> emit,
+  ) {
+    if (state.currentPageIndex > 0) {
+      final newIndex = state.currentPageIndex - 1;
+      _repository.currentStep = newIndex;
+      // Keep forward pages alive so the fade-out animation can play.
+      // Buttons are disabled via isNavigatingBack until the animation
+      // completes and SimulatorForwardPagesTruncated removes the pages.
+      emit(
+        state.copyWith(currentPageIndex: newIndex, isNavigatingBack: true),
+      );
+    }
+  }
+
+  void _onForwardPagesTruncated(
+    SimulatorForwardPagesTruncated event,
+    Emitter<SimulatorState> emit,
+  ) {
+    final pages = state.pages.sublist(0, state.currentPageIndex + 1);
+    emit(state.copyWith(pages: pages, isNavigatingBack: false));
+  }
+
   void _onSurfaceReceived(
     SimulatorSurfaceReceived event,
     Emitter<SimulatorState> emit,
@@ -68,6 +94,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     );
 
     if (existingPageIndex != -1) {
+      _repository.currentStep = existingPageIndex;
       emit(
         state.copyWith(
           currentPageIndex: existingPageIndex,
@@ -77,16 +104,30 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
       );
     } else {
       final message = AiSurfaceDisplayMessage(event.surfaceId);
+
+      // If forward pages still exist (e.g. the back-animation truncation
+      // hasn't fired yet), trim them before appending the new surface.
+      final base = state.currentPageIndex < state.pages.length - 1
+          ? state.pages.sublist(0, state.currentPageIndex + 1)
+          : state.pages;
+
       final pages = [
-        ...state.pages,
+        ...base,
         <DisplayMessage>[message],
       ];
       final newIndex = pages.length - 1;
+      _repository.currentStep = newIndex;
 
       // Defer navigation until loading finishes so the current page
       // stays visible with the thinking animation until content is ready.
       if (state.isLoading) {
-        emit(state.copyWith(pages: pages, pendingPageIndex: newIndex));
+        emit(
+          state.copyWith(
+            pages: pages,
+            pendingPageIndex: newIndex,
+            isNavigatingBack: false,
+          ),
+        );
       } else {
         emit(
           state.copyWith(
@@ -94,6 +135,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
             currentPageIndex: newIndex,
             pendingPageIndex: clearPendingPageIndex,
             showLoadingOverlay: false,
+            isNavigatingBack: false,
           ),
         );
       }
@@ -151,17 +193,21 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     SimulatorLoading event,
     Emitter<SimulatorState> emit,
   ) {
-    emit(state.copyWith(isLoading: event.isLoading));
+    final withLoading = state.copyWith(isLoading: event.isLoading);
+    emit(withLoading);
 
     // If loading just finished and there's a deferred page, navigate now.
-    if (!event.isLoading && state.hasPendingNavigation) {
-      emit(
-        state.copyWith(
-          currentPageIndex: state.pendingPageIndex,
-          pendingPageIndex: clearPendingPageIndex,
-          showLoadingOverlay: false,
-        ),
-      );
+    if (!event.isLoading && withLoading.hasPendingNavigation) {
+      final pending = withLoading.pendingPageIndex;
+      if (pending != null) {
+        emit(
+          withLoading.copyWith(
+            currentPageIndex: pending,
+            pendingPageIndex: clearPendingPageIndex,
+            showLoadingOverlay: false,
+          ),
+        );
+      }
     }
   }
 

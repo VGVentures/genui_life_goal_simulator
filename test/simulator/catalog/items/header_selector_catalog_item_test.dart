@@ -7,8 +7,6 @@ import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockDataModel extends Mock implements DataModel {}
-
 class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
     implements SimulatorBloc {}
 
@@ -17,7 +15,11 @@ Map<String, Object?> _data({
   int selectedIndex = 0,
 }) => {'options': options, 'selectedIndex': selectedIndex};
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  DataModel? dataModel,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
@@ -25,7 +27,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -36,6 +38,7 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   SimulatorState state = const SimulatorState(),
 }) async {
   final bloc = _MockSimulatorBloc();
@@ -47,8 +50,9 @@ Future<void> _pump(
         theme: AppTheme(LightThemeColors()).themeData,
         home: Scaffold(
           body: Builder(
-            builder: (context) =>
-                headerSelectorItem.widgetBuilder(_context(context, data)),
+            builder: (context) => headerSelectorItem.widgetBuilder(
+              _context(context, data, dataModel: dataModel),
+            ),
           ),
         ),
       ),
@@ -79,7 +83,9 @@ void main() {
       expect(find.text('6M'), findsOneWidget);
     });
 
-    testWidgets('passes correct selectedIndex', (tester) async {
+    testWidgets('passes correct selectedIndex from data model', (
+      tester,
+    ) async {
       await _pump(tester, _data(selectedIndex: 1));
 
       final widget = tester.widget<HeaderSelector>(

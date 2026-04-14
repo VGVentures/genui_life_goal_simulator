@@ -7,8 +7,6 @@ import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockDataModel extends Mock implements DataModel {}
-
 class _MockSimulatorBloc extends MockBloc<SimulatorEvent, SimulatorState>
     implements SimulatorBloc {}
 
@@ -26,6 +24,7 @@ Map<String, Object?> _data({
 CatalogItemContext _context(
   BuildContext context,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
 }) {
   return CatalogItemContext(
@@ -35,7 +34,7 @@ CatalogItemContext _context(
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
-    dataContext: DataContext(_MockDataModel(), DataPath.root),
+    dataContext: DataContext(dataModel ?? InMemoryDataModel(), DataPath.root),
     getComponent: (_) => null,
     getCatalogItem: (_) => null,
     surfaceId: 'surface',
@@ -46,6 +45,7 @@ CatalogItemContext _context(
 Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data, {
+  DataModel? dataModel,
   void Function(UiEvent)? dispatchEvent,
   SimulatorState state = const SimulatorState(),
 }) async {
@@ -59,7 +59,12 @@ Future<void> _pump(
         home: Scaffold(
           body: Builder(
             builder: (context) => filterBarItem.widgetBuilder(
-              _context(context, data, dispatchEvent: dispatchEvent),
+              _context(
+                context,
+                data,
+                dataModel: dataModel,
+                dispatchEvent: dispatchEvent,
+              ),
             ),
           ),
         ),
@@ -88,14 +93,12 @@ void main() {
 
         expect(find.text('Food'), findsOneWidget);
         expect(find.text('Shopping'), findsOneWidget);
-        // "All" chip is always rendered
         expect(find.text('All'), findsOneWidget);
       });
 
       testWidgets('selection summary', (tester) async {
         await _pump(tester, _data());
 
-        // 1 of 2 selected (Food is selected, Shopping is not)
         expect(find.text('1 of 2 categories selected'), findsOneWidget);
       });
 
@@ -112,21 +115,22 @@ void main() {
         expect(find.byType(FilterBar), findsOneWidget);
       });
 
-      testWidgets('toggles category selection locally', (tester) async {
-        await _pump(tester, _data());
+      testWidgets('updates data model when category toggled', (tester) async {
+        final dataModel = InMemoryDataModel();
+        await _pump(tester, _data(), dataModel: dataModel);
 
-        // Shopping starts unselected — tap to select
         await tester.tap(find.text('Shopping'));
         await tester.pump();
 
-        // Both should now be selected: "2 of 2"
-        expect(find.text('2 of 2 categories selected'), findsOneWidget);
+        final stored = dataModel.getValue<List<Object?>>(
+          DataPath('/test/selectedCategories'),
+        );
+        expect(stored, containsAll(['Food', 'Shopping']));
       });
 
       testWidgets('toggles all categories on All tap', (tester) async {
         await _pump(tester, _data());
 
-        // Tap "All" to select all
         await tester.tap(find.text('All'));
         await tester.pump();
 

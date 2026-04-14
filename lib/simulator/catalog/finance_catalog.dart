@@ -30,6 +30,7 @@ Use the AppButton widget to present clear calls-to-action, such as navigating to
 - variant: "filled" for primary actions, "outlined" for secondary actions.
 - size: "large" for prominent actions, "small" for inline or less prominent actions.
 - isLoading: Set to true only when an async operation is in progress.
+- For back navigation, use variant "outlined" with the exact action: {"event": {"name": "go_back"}}.
 
 Use the EmojiCard widget to display a set of categorized options or highlights as emoji-labelled cards in a responsive grid.
 
@@ -46,7 +47,7 @@ Use the FilterBar widget to let the user filter data by category (e.g. spending 
 
 IMPORTANT: When using FilterBar to filter charts or data, ALWAYS include an "action" so the LLM can regenerate content with the new filter selection.
 
-Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Set divisions and splitLabels for discrete steps.
+Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Provide `value` as a literal number or as {"path": "/..."} when sharing state across components. Set `formatter` to control the value label: "usd" for dollar amounts, "percentage" for percents, "integer" for plain numbers. Set divisions and splitLabels for discrete steps.
 
 Use the RankedTable widget to display items ranked from highest to lowest (e.g. top merchants by spend, biggest expense categories). Each item shows a rank number, title, amount, and percentage delta. Positive deltas appear green, negative deltas appear red.
 

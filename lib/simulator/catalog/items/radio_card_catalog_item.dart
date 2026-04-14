@@ -27,11 +27,9 @@ final _schema = S.object(
   required: ['options'],
 );
 
-/// CatalogItem that renders a list of [RadioCard] widgets with local state.
+/// CatalogItem that renders a list of [RadioCard] widgets.
 ///
-/// The selected option is managed locally and written to the data model at
-/// `/<componentId>/selectedLabel` so it is available when the user triggers a
-/// subsequent action (e.g. tapping a "Next" button).
+/// Selection is bound to `/<componentId>/selectedLabel` via [BoundString].
 final radioCardItem = CatalogItem(
   name: 'RadioCard',
   dataSchema: _schema,
@@ -40,7 +38,7 @@ final radioCardItem = CatalogItem(
     final rawOptions = json['options']! as List;
     final options = rawOptions.cast<Map<String, Object?>>();
 
-    return _StatefulRadioCards(
+    return _BoundRadioCards(
       options: options,
       dataContext: ctx.dataContext,
       componentId: ctx.id,
@@ -48,8 +46,8 @@ final radioCardItem = CatalogItem(
   },
 );
 
-class _StatefulRadioCards extends StatefulWidget {
-  const _StatefulRadioCards({
+class _BoundRadioCards extends StatefulWidget {
+  const _BoundRadioCards({
     required this.options,
     required this.dataContext,
     required this.componentId,
@@ -60,43 +58,63 @@ class _StatefulRadioCards extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulRadioCards> createState() => _StatefulRadioCardsState();
+  State<_BoundRadioCards> createState() => _BoundRadioCardsState();
 }
 
-class _StatefulRadioCardsState extends State<_StatefulRadioCards> {
-  late int _selectedIndex;
+class _BoundRadioCardsState extends State<_BoundRadioCards> {
+  DataPath get _path => DataPath('/${widget.componentId}/selectedLabel');
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.options.indexWhere(
-      (o) => o['isSelected'] == true,
-    );
-    if (_selectedIndex == -1) _selectedIndex = 0;
+    _seedIfNeeded();
   }
 
-  void _onTap(int index) {
-    setState(() => _selectedIndex = index);
-    final label = widget.options[index]['label']! as String;
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedLabel'),
-      label,
-    );
+  void _seedIfNeeded() {
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    final idx = widget.options.indexWhere((o) => o['isSelected'] == true);
+    final i = idx >= 0 ? idx : 0;
+    final label = widget.options[i]['label']! as String;
+    widget.dataContext.update(_path, label);
+  }
+
+  int _selectedIndex(String? selectedLabel) {
+    if (selectedLabel != null) {
+      final idx = widget.options.indexWhere(
+        (o) => o['label']! as String == selectedLabel,
+      );
+      if (idx >= 0) return idx;
+    }
+    final fallback = widget.options.indexWhere((o) => o['isSelected'] == true);
+    if (fallback >= 0) return fallback;
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      spacing: Spacing.xl,
-      children: [
-        for (var i = 0; i < widget.options.length; i++)
-          RadioCard(
-            label: widget.options[i]['label']! as String,
-            isSelected: i == _selectedIndex,
-            onTap: () => _onTap(i),
-          ),
-      ],
+    return BoundString(
+      dataContext: widget.dataContext,
+      value: {'path': _path.toString()},
+      builder: (context, selectedLabel) {
+        final index = _selectedIndex(selectedLabel);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: Spacing.xl,
+          children: [
+            for (var i = 0; i < widget.options.length; i++)
+              RadioCard(
+                label: widget.options[i]['label']! as String,
+                isSelected: i == index,
+                onTap: () {
+                  widget.dataContext.update(
+                    _path,
+                    widget.options[i]['label']! as String,
+                  );
+                },
+              ),
+          ],
+        );
+      },
     );
   }
 }

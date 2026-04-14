@@ -21,6 +21,7 @@ final class SimulatorState extends Equatable {
     this.pages = const [],
     this.currentPageIndex = 0,
     this.isLoading = false,
+    this.isNavigatingBack = false,
     this.pendingPageIndex,
     this.showLoadingOverlay = false,
     this.error,
@@ -36,6 +37,12 @@ final class SimulatorState extends Equatable {
 
   /// Whether the LLM is currently processing a request.
   final bool isLoading;
+
+  /// True while the back-navigation animation is in progress.
+  ///
+  /// Used to disable buttons so the user cannot tap Continue before the
+  /// forward pages have been truncated.
+  final bool isNavigatingBack;
 
   /// The index of a page whose navigation has been deferred until the LLM
   /// finishes loading. When non-null, the current page stays visible (with its
@@ -67,6 +74,7 @@ final class SimulatorState extends Equatable {
     List<List<DisplayMessage>>? pages,
     int? currentPageIndex,
     bool? isLoading,
+    bool? isNavigatingBack,
     int? pendingPageIndex,
     bool? showLoadingOverlay,
     String? error,
@@ -76,6 +84,7 @@ final class SimulatorState extends Equatable {
       pages: pages ?? this.pages,
       currentPageIndex: currentPageIndex ?? this.currentPageIndex,
       isLoading: isLoading ?? this.isLoading,
+      isNavigatingBack: isNavigatingBack ?? this.isNavigatingBack,
       pendingPageIndex: pendingPageIndex == clearPendingPageIndex
           ? null
           : pendingPageIndex ?? this.pendingPageIndex,

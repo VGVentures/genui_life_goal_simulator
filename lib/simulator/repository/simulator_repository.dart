@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
+import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
 import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart'
@@ -21,7 +21,7 @@ import 'package:genui_life_goal_simulator/simulator/repository/simulator_convers
 class SimulatorRepository {
   /// {@macro simulator_repository}
   SimulatorRepository({
-    required FirebaseAIChatModel chatModel,
+    required ChatModel chatModel,
     required ErrorReportingRepository errorReporting,
     required Catalog catalog,
     required SurfaceController surfaceController,
@@ -30,7 +30,7 @@ class SimulatorRepository {
        _catalog = catalog,
        _surfaceController = surfaceController;
 
-  final FirebaseAIChatModel _chatModel;
+  final ChatModel _chatModel;
   final ErrorReportingRepository _errorReporting;
   final Catalog _catalog;
   final SurfaceController _surfaceController;
@@ -38,6 +38,13 @@ class SimulatorRepository {
   StreamSubscription<ConversationEvent>? _eventSubscription;
   final List<ChatMessage> _history = [];
   late String _systemPrompt;
+
+  /// The current step index for history tracking.
+  ///
+  /// Set this when navigating between steps so that [_handleSend] can
+  /// truncate stale future history entries when continuing from a revisited
+  /// step.
+  int currentStep = 0;
 
   final _controller = StreamController<SimulatorConversationEvent>.broadcast();
 
@@ -108,6 +115,13 @@ class SimulatorRepository {
   }
 
   Future<void> _handleSend(ChatMessage message) async {
+    // If continuing from a revisited step, truncate future history so the
+    // LLM only sees the conversation up to the current step.
+    final expectedLength = (currentStep + 1) * 2;
+    if (_history.length > expectedLength) {
+      _history.removeRange(expectedLength, _history.length);
+    }
+
     _history.add(_convertDataPartsToText(message));
 
     final messages = [

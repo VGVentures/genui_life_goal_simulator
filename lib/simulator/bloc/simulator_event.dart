@@ -48,6 +48,16 @@ final class SimulatorLoading extends SimulatorEvent {
   final bool isLoading;
 }
 
+/// The user pressed the back button to return to the previous step.
+final class SimulatorBackPressed extends SimulatorEvent {
+  const SimulatorBackPressed();
+}
+
+/// The back-navigation animation has finished — remove forward pages.
+final class SimulatorForwardPagesTruncated extends SimulatorEvent {
+  const SimulatorForwardPagesTruncated();
+}
+
 /// Request to show/hide the full-screen loading overlay animation.
 final class SimulatorLoadingOverlayRequested extends SimulatorEvent {
   const SimulatorLoadingOverlayRequested();

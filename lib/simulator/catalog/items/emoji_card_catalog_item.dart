@@ -62,10 +62,9 @@ enum EmojiCardSelectionMode {
   single,
 }
 
-/// CatalogItem that renders an [EmojiCardLayout] with local selection state.
+/// CatalogItem that renders an [EmojiCardLayout].
 ///
-/// Selected labels are written to the data model at
-/// `/<componentId>/selectedLabels`.
+/// Selection is bound to `/<componentId>/selectedLabels` via [BoundList].
 final emojiCardItem = CatalogItem(
   name: 'EmojiCard',
   dataSchema: _schema,
@@ -78,7 +77,7 @@ final emojiCardItem = CatalogItem(
         ? EmojiCardSelectionMode.single
         : EmojiCardSelectionMode.multi;
 
-    return _StatefulEmojiCards(
+    return _EmojiCardSurface(
       cards: cards,
       callToAction: callToAction,
       selectionMode: selectionMode,
@@ -88,8 +87,8 @@ final emojiCardItem = CatalogItem(
   },
 );
 
-class _StatefulEmojiCards extends StatefulWidget {
-  const _StatefulEmojiCards({
+class _EmojiCardSurface extends StatefulWidget {
+  const _EmojiCardSurface({
     required this.cards,
     required this.callToAction,
     required this.selectionMode,
@@ -104,59 +103,52 @@ class _StatefulEmojiCards extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulEmojiCards> createState() => _StatefulEmojiCardsState();
+  State<_EmojiCardSurface> createState() => _EmojiCardSurfaceState();
 }
 
-class _StatefulEmojiCardsState extends State<_StatefulEmojiCards> {
-  late List<bool> _selected;
+class _EmojiCardSurfaceState extends State<_EmojiCardSurface> {
+  DataPath get _path => DataPath('/${widget.componentId}/selectedLabels');
 
   @override
   void initState() {
     super.initState();
-    _selected = widget.cards
-        .map((c) => c['isSelected'] as bool? ?? false)
-        .toList();
+    _seedIfNeeded();
   }
 
-  void _onTap(int index) {
-    setState(() {
-      if (widget.selectionMode == EmojiCardSelectionMode.single) {
-        final alreadySelected = _selected[index];
-        for (var i = 0; i < _selected.length; i++) {
-          _selected[i] = false;
-        }
-        _selected[index] = !alreadySelected;
-      } else {
-        _selected[index] = !_selected[index];
-      }
-    });
-    _writeToDataModel();
-  }
-
-  void _writeToDataModel() {
-    final selectedLabels = [
-      for (var i = 0; i < widget.cards.length; i++)
-        if (_selected[i]) widget.cards[i]['label']?.toString() ?? '',
+  void _seedIfNeeded() {
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    final initial = <String>[
+      for (final c in widget.cards)
+        if (c['isSelected'] == true && c['label'] is String)
+          c['label']! as String,
     ];
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedLabels'),
-      selectedLabels,
-    );
+    widget.dataContext.update(_path, initial);
   }
 
   @override
   Widget build(BuildContext context) {
-    final layout = EmojiCardLayout(
-      cards: widget.cards.indexed.map((entry) {
-        final (index, c) = entry;
-        return _BoundEmojiCard(
-          key: ValueKey('emoji_card_$index'),
-          dataContext: widget.dataContext,
-          cardData: c,
-          isSelected: _selected[index],
-          onTap: () => _onTap(index),
+    final layout = BoundList(
+      dataContext: widget.dataContext,
+      value: {'path': _path.toString()},
+      builder: (context, rawSelected) {
+        final currentList = [
+          for (final e in rawSelected ?? const <Object?>[])
+            if (e != null) e.toString(),
+        ];
+        return EmojiCardLayout(
+          cards: widget.cards.indexed.map((entry) {
+            final (index, c) = entry;
+            return _BoundEmojiCard(
+              key: ValueKey('emoji_card_$index'),
+              dataContext: widget.dataContext,
+              cardData: c,
+              selectedLabels: currentList,
+              selectionMode: widget.selectionMode,
+              componentId: widget.componentId,
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
 
     if (widget.callToAction.isEmpty) return layout;
@@ -178,35 +170,60 @@ class _StatefulEmojiCardsState extends State<_StatefulEmojiCards> {
   }
 }
 
-class _BoundEmojiCard extends EmojiCard {
+class _BoundEmojiCard extends StatelessWidget {
   const _BoundEmojiCard({
-    required DataContext dataContext,
-    required Map<String, Object?> cardData,
-    required super.isSelected,
-    required super.onTap,
+    required this.dataContext,
+    required this.cardData,
+    required this.selectedLabels,
+    required this.selectionMode,
+    required this.componentId,
     super.key,
-  }) : _dataContext = dataContext,
-       _cardData = cardData,
-       super(emoji: '', label: '');
+  });
 
-  final DataContext _dataContext;
-  final Map<String, Object?> _cardData;
+  final DataContext dataContext;
+  final Map<String, Object?> cardData;
+  final List<String> selectedLabels;
+  final EmojiCardSelectionMode selectionMode;
+  final String componentId;
+
+  void _toggleSelection(String label) {
+    if (label.isEmpty) return;
+    final path = DataPath('/$componentId/selectedLabels');
+    if (selectionMode == EmojiCardSelectionMode.single) {
+      final already = selectedLabels.contains(label);
+      dataContext.update(
+        path,
+        already ? <String>[] : <String>[label],
+      );
+      return;
+    }
+    final next = List<String>.from(selectedLabels);
+    if (next.contains(label)) {
+      next.remove(label);
+    } else {
+      next.add(label);
+    }
+    dataContext.update(path, next);
+  }
 
   @override
   Widget build(BuildContext context) {
     return BoundString(
-      dataContext: _dataContext,
-      value: _cardData['emoji'],
+      dataContext: dataContext,
+      value: cardData['emoji'],
       builder: (context, emoji) {
         return BoundString(
-          dataContext: _dataContext,
-          value: _cardData['label'],
-          builder: (context, label) {
+          dataContext: dataContext,
+          value: cardData['label'],
+          builder: (context, labelStr) {
+            final label = labelStr ?? '';
+            final isSelected =
+                label.isNotEmpty && selectedLabels.contains(label);
             return EmojiCard(
               emoji: emoji ?? '',
-              label: label ?? '',
+              label: label,
               isSelected: isSelected,
-              onTap: onTap,
+              onTap: label.isEmpty ? null : () => _toggleSelection(label),
             );
           },
         );

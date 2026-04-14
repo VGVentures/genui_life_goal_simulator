@@ -71,11 +71,9 @@ FilterChipColor _parseColor(String value) {
   };
 }
 
-/// CatalogItem that renders a [FilterBar] with local state.
+/// CatalogItem that renders a [FilterBar].
 ///
-/// The selected categories are managed locally and written to the data model at
-/// `/<componentId>/selectedCategories` so they are available when the user
-/// triggers a subsequent action.
+/// Selection is bound to `/<componentId>/selectedCategories` via [BoundList].
 ///
 /// If an `action` is provided, it will be dispatched when the filter selection
 /// changes, allowing the LLM to regenerate content for the new selection.
@@ -94,7 +92,7 @@ final filterBarItem = CatalogItem(
     }).toList();
     final action = json['action'] as Map<String, Object?>?;
 
-    return _StatefulFilterBar(
+    return _ActionLockFilterBar(
       categories: parsed,
       action: action,
       dataContext: ctx.dataContext,
@@ -104,8 +102,8 @@ final filterBarItem = CatalogItem(
   },
 );
 
-class _StatefulFilterBar extends StatefulWidget {
-  const _StatefulFilterBar({
+class _ActionLockFilterBar extends StatefulWidget {
+  const _ActionLockFilterBar({
     required this.categories,
     required this.action,
     required this.dataContext,
@@ -121,28 +119,27 @@ class _StatefulFilterBar extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_StatefulFilterBar> createState() => _StatefulFilterBarState();
+  State<_ActionLockFilterBar> createState() => _ActionLockFilterBarState();
 }
 
-class _StatefulFilterBarState extends State<_StatefulFilterBar> {
-  late List<bool> _selected;
+class _ActionLockFilterBarState extends State<_ActionLockFilterBar> {
   bool _tapped = false;
+
+  DataPath get _path => DataPath('/${widget.componentId}/selectedCategories');
 
   @override
   void initState() {
     super.initState();
-    _selected = widget.categories.map((c) => c.isSelected).toList();
+    _seedIfNeeded();
   }
 
-  void _writeToDataModel() {
-    final selectedLabels = [
-      for (var i = 0; i < widget.categories.length; i++)
-        if (_selected[i]) widget.categories[i].label,
+  void _seedIfNeeded() {
+    if (widget.dataContext.getValue<Object?>(_path) != null) return;
+    final labels = [
+      for (final c in widget.categories)
+        if (c.isSelected) c.label,
     ];
-    widget.dataContext.update(
-      DataPath('/${widget.componentId}/selectedCategories'),
-      selectedLabels,
-    );
+    widget.dataContext.update(_path, labels);
   }
 
   void _dispatchAction() {
@@ -166,7 +163,6 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
 
   void _onFilterChanged() {
     if (_tapped) return;
-    _writeToDataModel();
     if (widget.action != null) {
       setState(() => _tapped = true);
     }
@@ -183,32 +179,66 @@ class _StatefulFilterBarState extends State<_StatefulFilterBar> {
         final isDisabled = _tapped || state.isLoading;
         final showThinking = _tapped;
 
-        final categories = [
-          for (var i = 0; i < widget.categories.length; i++)
-            FilterCategory(
-              label: widget.categories[i].label,
-              color: widget.categories[i].color,
-              isSelected: _selected[i],
-              isEnabled: !isDisabled,
-            ),
-        ];
+        Widget listBuilder(
+          BuildContext context,
+          List<Object?>? rawSelected,
+        ) {
+          final currentList = [
+            for (final e in rawSelected ?? const <Object?>[])
+              if (e != null) e.toString(),
+          ];
+          final selectedSet = currentList.toSet();
 
-        final filterBar = FilterBar(
-          categories: categories,
-          isAllEnabled: !isDisabled,
-          onCategoryToggled: (index) {
-            setState(() => _selected[index] = !_selected[index]);
-            _onFilterChanged();
-          },
-          onAllToggled: () {
-            final allSelected = _selected.every((s) => s);
-            setState(() {
-              for (var i = 0; i < _selected.length; i++) {
-                _selected[i] = !allSelected;
+          final categories = [
+            for (var i = 0; i < widget.categories.length; i++)
+              FilterCategory(
+                label: widget.categories[i].label,
+                color: widget.categories[i].color,
+                isSelected: selectedSet.contains(widget.categories[i].label),
+                isEnabled: !isDisabled,
+              ),
+          ];
+
+          void writeList(List<String> next) {
+            widget.dataContext.update(_path, next);
+          }
+
+          return FilterBar(
+            categories: categories,
+            isAllEnabled: !isDisabled,
+            onCategoryToggled: (index) {
+              if (isDisabled) return;
+              final label = widget.categories[index].label;
+              final next = List<String>.from(currentList);
+              if (next.contains(label)) {
+                next.remove(label);
+              } else {
+                next.add(label);
               }
-            });
-            _onFilterChanged();
-          },
+              writeList(next);
+              _onFilterChanged();
+            },
+            onAllToggled: () {
+              if (isDisabled) return;
+              final allSelected = widget.categories.every(
+                (c) => selectedSet.contains(c.label),
+              );
+              if (allSelected) {
+                writeList([]);
+              } else {
+                writeList([
+                  for (final c in widget.categories) c.label,
+                ]);
+              }
+              _onFilterChanged();
+            },
+          );
+        }
+
+        final filterBar = BoundList(
+          dataContext: widget.dataContext,
+          value: {'path': _path.toString()},
+          builder: listBuilder,
         );
 
         if (!showThinking) return filterBar;

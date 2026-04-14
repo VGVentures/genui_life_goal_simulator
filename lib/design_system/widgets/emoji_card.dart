@@ -142,7 +142,7 @@ class EmojiCardLayout extends StatelessWidget {
   const EmojiCardLayout({required this.cards, super.key});
 
   /// Cards to display.
-  final List<EmojiCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +156,12 @@ class EmojiCardLayout extends StatelessWidget {
 class _DesktopEmojiCardLayout extends StatelessWidget {
   const _DesktopEmojiCardLayout({required this.cards});
 
-  final List<EmojiCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
     // Split cards into rows of max 4.
-    final rows = <List<EmojiCard>>[];
+    final rows = <List<Widget>>[];
     for (var i = 0; i < cards.length; i += 4) {
       rows.add(
         cards.sublist(i, i + 4 > cards.length ? cards.length : i + 4),
@@ -197,7 +197,7 @@ class _DesktopEmojiCardLayout extends StatelessWidget {
 class _MobileEmojiCardLayout extends StatelessWidget {
   const _MobileEmojiCardLayout({required this.cards});
 
-  final List<EmojiCard> cards;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
