@@ -29,7 +29,7 @@ dependencies:
   provider: ^6.1.2
   rive: ^0.14.4
   rxdart: ^0.28.0
-  shared_preferences: ^2.2.0
+  shared_preferences: ^2.5.5
   streaming_shared_preferences: ^2.0.0
 
 dev_dependencies:
