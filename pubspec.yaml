@@ -33,7 +33,7 @@ dependencies:
   streaming_shared_preferences: ^2.0.0
 
 dev_dependencies:
-  bloc_lint: ^0.4.0
+  bloc_lint: ^0.4.1
   bloc_test: ^10.0.0
   bloc_tools: ^0.1.0-dev.20
   build_runner: ^2.13.1
