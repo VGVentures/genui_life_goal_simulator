@@ -10,8 +10,7 @@ const financeCatalogId = 'com.vgv.finance_catalog';
 
 /// Usage guidance appended to the system prompt so the LLM knows when and how
 /// to use the finance-specific widgets beyond what the JSON schema describes.
-const _financeWidgetRules =
-    r'''
+const _financeWidgetRules = r'''
 Use the AppButton widget to present clear calls-to-action.
 - variant: "filled" for primary actions, "outlined" for secondary actions.
 - size: "large" for prominent actions, "small" for inline or less prominent actions.
