@@ -36,6 +36,7 @@ class LoadingOverlay extends StatefulWidget {
 
 class _LoadingOverlayState extends State<LoadingOverlay> {
   FileLoader? _fileLoader;
+  Future<void>? _loadFuture;
   Timer? _completionTimer;
   bool _completed = false;
 
@@ -48,10 +49,16 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
     _completionTimer = Timer(widget.animationDuration, _complete);
 
     try {
-      _fileLoader = FileLoader.fromAsset(
+      final loader = FileLoader.fromAsset(
         Assets.animations.loading,
         riveFactory: Factory.flutter,
       );
+      _fileLoader = loader;
+      // Track the in-flight load so dispose() can wait for it to settle.
+      // Rive's FileLoader.dispose() nulls its completer; if we dispose
+      // while the async load is still running, the completer's later
+      // .complete(file) call null-checks on the nulled completer and throws.
+      _loadFuture = loader.file().then<void>((_) {}, onError: (_) {});
     } on Object {
       // Rive native library not available — fallback timer will handle it.
     }
@@ -77,7 +84,15 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
   @override
   void dispose() {
     _completionTimer?.cancel();
-    _fileLoader?.dispose();
+    final loader = _fileLoader;
+    final loadFuture = _loadFuture;
+    if (loader != null) {
+      if (loadFuture != null) {
+        unawaited(loadFuture.whenComplete(loader.dispose));
+      } else {
+        loader.dispose();
+      }
+    }
     super.dispose();
   }
 
