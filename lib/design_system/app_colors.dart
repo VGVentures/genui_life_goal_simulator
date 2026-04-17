@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
+/// Convenience accessor for the [AppColors] theme extension.
+///
+/// Assumes the current [ThemeData] has [AppColors] registered as an
+/// extension. Throws if it's missing.
+extension AppColorsX on BuildContext {
+  /// The [AppColors] registered on the current theme.
+  AppColors get appColors => Theme.of(this).extension<AppColors>()!;
+}
+
 /// Design-system color tokens.
 ///
 /// Subclass and override getters to define light/dark theme palettes.
 ///
-/// Access from widgets via:
+/// Access from widgets via [AppColorsX.appColors] on [BuildContext]:
 /// ```dart
-/// Theme.of(context).extension<AppColors>()?.primary
+/// context.appColors.primary
 /// ```
 abstract class AppColors extends ThemeExtension<AppColors> {
   Brightness get brightness;

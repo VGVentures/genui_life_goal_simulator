@@ -55,10 +55,10 @@ class MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
-    final content = _MetricCardContent(
+    return _MetricCardContent(
       label: label,
       value: value,
       subtitle: subtitle,
@@ -67,17 +67,13 @@ class MetricCard extends StatelessWidget {
       textTheme: textTheme,
       colors: colors,
     );
-
-    return content;
   }
 
-  Color _deltaColor(AppColors? colors) {
+  Color _deltaColor(AppColors colors) {
     return switch (deltaDirection) {
-      MetricDeltaDirection.positive =>
-        colors?.success ?? _MetricCardColors.positive,
-      MetricDeltaDirection.negative =>
-        colors?.error ?? _MetricCardColors.negative,
-      null => colors?.onSurfaceMuted ?? _MetricCardColors.subtitle,
+      MetricDeltaDirection.positive => colors.success,
+      MetricDeltaDirection.negative => colors.error,
+      null => colors.onSurfaceMuted,
     };
   }
 }
@@ -99,14 +95,14 @@ class _MetricCardContent extends StatelessWidget {
   final String? delta;
   final Color deltaColor;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
-        color: colors?.surface ?? _MetricCardColors.background,
+        color: colors.surfaceVariant,
         borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
       ),
       child: Column(
@@ -145,14 +141,14 @@ class _MetricLabel extends StatelessWidget {
 
   final String label;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       label,
       style: textTheme.bodyMedium?.copyWith(
-        color: colors?.onSurfaceVariant ?? _MetricCardColors.label,
+        color: colors.onSurfaceVariant,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -173,7 +169,7 @@ class _MetricValueRow extends StatelessWidget {
   final String? delta;
   final Color deltaColor;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +183,7 @@ class _MetricValueRow extends StatelessWidget {
             value,
             style: textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: colors?.onSurface ?? _MetricCardColors.value,
+              color: colors.onSurface,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -216,14 +212,14 @@ class _MetricSubtitle extends StatelessWidget {
 
   final String subtitle;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       subtitle,
       style: textTheme.labelMedium?.copyWith(
-        color: colors?.onSurfaceMuted ?? _MetricCardColors.subtitle,
+        color: colors.onSurfaceMuted,
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
@@ -291,13 +287,4 @@ abstract final class _Dimensions {
   static const double borderRadius = 8;
   static const double deltaSpacing = 4;
   static const double subtitleTopSpacing = 2;
-}
-
-abstract final class _MetricCardColors {
-  static const Color background = Color(0xFFFFFFFF);
-  static const Color label = Color(0xFF616161);
-  static const Color value = Color(0xFF212121);
-  static const Color subtitle = Color(0xFF757575);
-  static const Color positive = Color(0xFF4CAF50);
-  static const Color negative = Color(0xFFF44336);
 }

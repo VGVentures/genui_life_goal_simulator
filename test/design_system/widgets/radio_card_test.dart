@@ -62,26 +62,6 @@ void main() {
         );
         expect(radioGroup.groupValue, isFalse);
       });
-
-      testWidgets(
-        'without $AppColors theme extension',
-        (tester) async {
-          await tester.pumpWidget(
-            MaterialApp(
-              home: Scaffold(
-                body: RadioCard(
-                  label: 'No Theme',
-                  isSelected: true,
-                  onTap: () {},
-                ),
-              ),
-            ),
-          );
-
-          expect(find.text('No Theme'), findsOneWidget);
-          expect(find.byType(RadioCard), findsOneWidget);
-        },
-      );
     });
 
     group('applies', () {
@@ -164,31 +144,5 @@ void main() {
       await tester.tap(find.text('Tappable'));
       expect(tapped, isTrue);
     });
-
-    testWidgets(
-      'falls back to transparent border color '
-      'when selected without $AppColors extension',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: RadioCard(
-                label: 'Fallback',
-                isSelected: true,
-                onTap: () {},
-              ),
-            ),
-          ),
-        );
-
-        final ink = tester.widget<Ink>(find.byType(Ink));
-        final decoration = ink.decoration! as BoxDecoration;
-
-        expect(
-          (decoration.border! as Border).top.color,
-          Colors.transparent,
-        );
-      },
-    );
   });
 }

@@ -16,7 +16,7 @@ class AiButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorExtension = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return Material(
       color: Colors.transparent,
@@ -27,13 +27,13 @@ class AiButton extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-            gradient: colorExtension?.geniusGradient,
+            gradient: colors.geniusGradient,
           ),
           child: Padding(
             padding: const EdgeInsets.all(_Dimensions.borderWidth),
             child: Ink(
               decoration: BoxDecoration(
-                color: colorExtension?.surfaceVariant,
+                color: colors.surfaceVariant,
                 borderRadius: BorderRadius.circular(
                   _Dimensions.borderRadius - _Dimensions.borderWidth,
                 ),
@@ -55,7 +55,7 @@ class AiButton extends StatelessWidget {
                     Text(
                       text,
                       style: AppTextStyles.labelLargeMobile.copyWith(
-                        color: colorExtension?.onSurface,
+                        color: colors.onSurface,
                       ),
                     ),
                   ],

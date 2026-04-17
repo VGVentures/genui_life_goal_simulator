@@ -180,7 +180,7 @@ class _BarChartState extends State<AppBarChart> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,10 +259,9 @@ class _BarChartState extends State<AppBarChart> {
                     : null;
 
                 final labelStyle = theme.textTheme.labelSmall?.copyWith(
-                  color: colors?.onSurfaceMuted ?? _BarChartColors.label,
+                  color: colors.onSurfaceMuted,
                 );
-                final gridColor =
-                    colors?.outlineVariant ?? _BarChartColors.grid;
+                final gridColor = colors.outlineVariant;
 
                 return BarChart(
                   BarChartData(
@@ -377,9 +376,7 @@ class _BarChartState extends State<AppBarChart> {
                       handleBuiltInTouches: true,
                       touchCallback: _handleTouch,
                       touchTooltipData: BarTouchTooltipData(
-                        getTooltipColor: (_) =>
-                            colors?.surfaceContainer ??
-                            _BarChartColors.tooltipBg,
+                        getTooltipColor: (_) => colors.surfaceContainer,
                         tooltipBorderRadius: BorderRadius.circular(
                           _BarChartDimensions.tooltipRadius,
                         ),
@@ -398,9 +395,7 @@ class _BarChartState extends State<AppBarChart> {
                             '${point.tooltipLabel}\n',
                             (theme.textTheme.bodySmall ?? const TextStyle())
                                 .copyWith(
-                                  color:
-                                      colors?.onSurfaceVariant ??
-                                      _BarChartColors.tooltipLabel,
+                                  color: colors.onSurfaceVariant,
                                 ),
                             children: [
                               TextSpan(
@@ -409,9 +404,7 @@ class _BarChartState extends State<AppBarChart> {
                                     (theme.textTheme.bodySmall ??
                                             const TextStyle())
                                         .copyWith(
-                                          color:
-                                              colors?.onSurface ??
-                                              _BarChartColors.tooltipText,
+                                          color: colors.onSurface,
                                         ),
                               ),
                             ],
@@ -439,7 +432,7 @@ class _LegendItem extends StatelessWidget {
 
   final BarChartSeries series;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -458,7 +451,7 @@ class _LegendItem extends StatelessWidget {
         Text(
           series.label,
           style: textTheme.bodyMedium?.copyWith(
-            color: colors?.onSurfaceVariant ?? _BarChartColors.label,
+            color: colors.onSurfaceVariant,
           ),
         ),
       ],
@@ -480,12 +473,4 @@ abstract final class _BarChartDimensions {
   static const double minGroupGap = 16;
   static const double legendDotSize = 8;
   static const double tooltipRadius = 8;
-}
-
-abstract final class _BarChartColors {
-  static const Color grid = Color(0xFFE2E2E2);
-  static const Color tooltipBg = Color(0xFFF0F1F1);
-  static const Color tooltipLabel = Color(0xFF5D5F5F);
-  static const Color tooltipText = Color(0xFF1A1C1C);
-  static const Color label = Color(0xFF909191);
 }

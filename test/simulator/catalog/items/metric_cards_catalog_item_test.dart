@@ -61,6 +61,7 @@ Future<void> _pump(
     BlocProvider<SimulatorBloc>.value(
       value: bloc,
       child: MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
         home: Scaffold(
           body: Builder(
             builder: (context) =>

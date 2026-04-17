@@ -74,28 +74,14 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
-    final primary = colors?.primary ?? _Colors.primary;
-    final onPrimary = colors?.onPrimary ?? _Colors.onPrimary;
-    final onSurface = colors?.onSurface ?? _Colors.onSurface;
-    final gradient = colors?.geniusGradient;
-
-    final style = _buttonStyle(
-      primary: primary,
-      onPrimary: onPrimary,
-      onSurface: onSurface,
-      gradient: gradient,
-    );
+    final style = _buttonStyle(colors: colors);
 
     // When loading, disable the button entirely.
     final effectiveOnPressed = isLoading ? null : onPressed;
 
-    final child = _buildChild(
-      context,
-      primary: primary,
-      onPrimary: onPrimary,
-    );
+    final child = _buildChild(context, colors: colors);
 
     return switch (variant) {
       AppButtonVariant.filled => FilledButton(
@@ -118,12 +104,9 @@ class AppButton extends StatelessWidget {
 
   Widget _buildChild(
     BuildContext context, {
-    required Color primary,
-    required Color onPrimary,
+    required AppColors colors,
   }) {
     if (isLoading) {
-      final colors = Theme.of(context).extension<AppColors>();
-      final indicatorColor = colors?.onSurfaceMuted ?? const Color(0xFF909191);
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -131,7 +114,7 @@ class AppButton extends StatelessWidget {
             dimension: _Dimensions.loadingIndicatorSize,
             child: CircularProgressIndicator(
               strokeWidth: _Dimensions.loadingStrokeWidth,
-              color: indicatorColor,
+              color: colors.onSurfaceMuted,
             ),
           ),
           const SizedBox(width: Spacing.xs),
@@ -156,12 +139,7 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  ButtonStyle _buttonStyle({
-    required Color primary,
-    required Color onPrimary,
-    required Color onSurface,
-    required LinearGradient? gradient,
-  }) {
+  ButtonStyle _buttonStyle({required AppColors colors}) {
     final height = size.height;
     final horizontalPadding = size == AppButtonSize.large
         ? _Dimensions.largePadding
@@ -170,44 +148,44 @@ class AppButton extends StatelessWidget {
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return _Colors.disabledBackground;
+          return colors.surfaceContainer;
         }
         return switch (variant) {
-          AppButtonVariant.filled => _resolveFilledBackground(states, primary),
+          AppButtonVariant.filled => _resolveFilledBackground(states, colors),
           AppButtonVariant.outlined => _resolveOutlinedBackground(
             states,
-            primary,
+            colors.primary,
           ),
           AppButtonVariant.gradient => Colors.transparent,
         };
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return _Colors.disabledText;
+          return colors.onSurfaceDisabled;
         }
         return switch (variant) {
-          AppButtonVariant.filled => onPrimary,
-          AppButtonVariant.outlined => onSurface,
-          AppButtonVariant.gradient => onPrimary,
+          AppButtonVariant.filled => colors.onPrimary,
+          AppButtonVariant.outlined => colors.onSurface,
+          AppButtonVariant.gradient => colors.onPrimary,
         };
       }),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       side: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.focused)) {
-          return const BorderSide(
-            color: _Colors.focusRing,
+          return BorderSide(
+            color: colors.onSurfaceVariant,
             width: _Dimensions.focusRingWidth,
           );
         }
         if (variant == AppButtonVariant.outlined) {
           if (states.contains(WidgetState.disabled)) {
-            return const BorderSide(
-              color: _Colors.disabledOutline,
+            return BorderSide(
+              color: colors.onSurfaceDisabled,
               width: _Dimensions.outlineBorderWidth,
             );
           }
           return BorderSide(
-            color: primary,
+            color: colors.primary,
             width: _Dimensions.outlineBorderWidth,
           );
         }
@@ -233,18 +211,19 @@ class AppButton extends StatelessWidget {
               final isHovered = states.contains(WidgetState.hovered);
               final isPressed = states.contains(WidgetState.pressed);
               final isFocused = states.contains(WidgetState.focused);
+              final overlay = colors.onPrimary;
 
               return DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: isDisabled ? null : gradient,
+                  gradient: isDisabled ? null : colors.geniusGradient,
                   borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
                 ),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: isPressed || isFocused
-                        ? Colors.black.withValues(alpha: 0.2)
+                        ? overlay.withValues(alpha: 0.2)
                         : isHovered
-                        ? Colors.black.withValues(alpha: 0.1)
+                        ? overlay.withValues(alpha: 0.1)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
                   ),
@@ -258,16 +237,18 @@ class AppButton extends StatelessWidget {
 
   static Color _resolveFilledBackground(
     Set<WidgetState> states,
-    Color primary,
+    AppColors colors,
   ) {
+    final primary = colors.primary;
+    final overlay = colors.onSurface;
     if (states.contains(WidgetState.pressed)) {
-      return Color.lerp(primary, Colors.black, 0.2)!;
+      return Color.lerp(primary, overlay, 0.2)!;
     }
     if (states.contains(WidgetState.focused)) {
-      return Color.lerp(primary, Colors.black, 0.2)!;
+      return Color.lerp(primary, overlay, 0.2)!;
     }
     if (states.contains(WidgetState.hovered)) {
-      return Color.lerp(primary, Colors.black, 0.1)!;
+      return Color.lerp(primary, overlay, 0.1)!;
     }
     return primary;
   }
@@ -306,14 +287,4 @@ abstract final class _Dimensions {
     height: 20 / 14,
     letterSpacing: -0.15,
   );
-}
-
-abstract final class _Colors {
-  static const Color primary = Color(0xFF6D92F5);
-  static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color onSurface = Color(0xFF1A1C1C);
-  static const Color disabledBackground = Color(0xFFF0F1F1);
-  static const Color disabledText = Color(0xFFAAABAB);
-  static const Color disabledOutline = Color(0xFFAAABAB);
-  static const Color focusRing = Color(0xFF6D6D6D);
 }

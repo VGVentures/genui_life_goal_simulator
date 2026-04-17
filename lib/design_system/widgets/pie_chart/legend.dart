@@ -64,7 +64,7 @@ class _LegendRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return InkWell(
       onTap: onTap,
@@ -78,7 +78,7 @@ class _LegendRow extends StatelessWidget {
             horizontal: Spacing.sm,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? colors?.surface : Colors.transparent,
+            color: isSelected ? colors.surfaceContainer : Colors.transparent,
             borderRadius: BorderRadius.circular(Spacing.xs),
           ),
           child: Row(
@@ -100,20 +100,20 @@ class _LegendRow extends StatelessWidget {
                 child: Text(
                   item.label,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colors?.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               ),
               Text(
                 item.amount,
                 style: textTheme.bodyMedium?.copyWith(
-                  color: colors?.onSurface,
+                  color: colors.onSurface,
                 ),
               ),
               Text(
                 percentage,
                 style: textTheme.labelMedium?.copyWith(
-                  color: colors?.onSurfaceMuted,
+                  color: colors.onSurfaceMuted,
                 ),
               ),
             ],

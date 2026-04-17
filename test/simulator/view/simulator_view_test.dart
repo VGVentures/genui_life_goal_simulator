@@ -27,6 +27,7 @@ extension on WidgetTester {
     addTearDown(view.resetDevicePixelRatio);
     return pumpWidget(
       MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SimulatorBloc>.value(

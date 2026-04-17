@@ -5,7 +5,10 @@ import 'package:genui_life_goal_simulator/dev_menu/dev_menu.dart';
 
 Future<void> _pumpPage(WidgetTester tester) {
   return tester.pumpWidget(
-    const MaterialApp(home: RadioCardCatalogPage()),
+    MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
+      home: const RadioCardCatalogPage(),
+    ),
   );
 }
 

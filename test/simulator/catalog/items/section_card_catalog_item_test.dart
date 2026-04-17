@@ -36,6 +36,7 @@ Future<void> _pump(
 }) async {
   await tester.pumpWidget(
     MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
           builder: (context) => sectionCardItem.widgetBuilder(

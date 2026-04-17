@@ -19,13 +19,12 @@ const _items = [
 Future<void> _pumpTable(
   WidgetTester tester, {
   List<ComparisonTableItem> items = _items,
-  bool withTheme = true,
 }) {
   return tester.pumpWidget(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: withTheme ? AppTheme(LightThemeColors()).themeData : null,
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: ComparisonTable(items: items),
       ),
@@ -125,12 +124,6 @@ void main() {
       );
 
       expect(find.text('\u2014'), findsOneWidget);
-    });
-
-    testWidgets('without $AppColors extension', (tester) async {
-      await _pumpTable(tester, withTheme: false);
-
-      expect(find.byType(ComparisonTable), findsOneWidget);
     });
 
     testWidgets('empty list without error', (tester) async {

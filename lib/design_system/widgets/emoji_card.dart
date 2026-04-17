@@ -77,23 +77,23 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     final backgroundColor = widget.isSelected
-        ? (colors?.primaryContainer ?? _EmojiCardColors.selectedBackground)
+        ? colors.primaryContainer
         : _isHovered
         ? Color.alphaBlend(
-            colors?.primary.withValues(alpha: 0.05) ?? Colors.transparent,
-            colors?.surfaceVariant ?? Colors.white,
+            colors.primary.withValues(alpha: 0.05),
+            colors.surfaceVariant,
           )
-        : (colors?.surfaceVariant ?? _EmojiCardColors.background);
+        : colors.surfaceVariant;
 
     final borderColor = widget.isSelected
-        ? (colors?.primary ?? _EmojiCardColors.selectedBorder)
+        ? colors.primary
         : _isHovered
-        ? (colors?.outlineVariant ?? _EmojiCardColors.border)
-        : _EmojiCardColors.border;
+        ? colors.outlineVariant
+        : Colors.transparent;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -120,7 +120,7 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
             Text(
               widget.label,
               style: textTheme.labelLarge?.copyWith(
-                color: colors?.onSurface ?? _EmojiCardColors.label,
+                color: colors.onSurface,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -214,12 +214,4 @@ abstract final class _Dimensions {
   static const double borderRadius = 8;
   static const double borderWidth = 2;
   static const double emojiSize = 32;
-}
-
-abstract final class _EmojiCardColors {
-  static const Color background = Color(0xFFF7F6F7);
-  static const Color border = Colors.transparent;
-  static const Color selectedBackground = Color(0xFFF3F6FF);
-  static const Color selectedBorder = Color(0xFF6D92F5);
-  static const Color label = Color(0xFF1A1C1C);
 }

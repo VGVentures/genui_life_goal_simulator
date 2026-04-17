@@ -40,7 +40,7 @@ class ComparisonTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -55,7 +55,7 @@ class ComparisonTable extends StatelessWidget {
           ),
           Divider(
             height: 1,
-            color: colors?.outlineVariant ?? Colors.transparent,
+            color: colors.outlineVariant,
           ),
         ],
       ],
@@ -71,7 +71,7 @@ class _ComparisonTableRow extends StatelessWidget {
   });
 
   final ComparisonTableItem item;
-  final AppColors? colors;
+  final AppColors colors;
   final TextTheme textTheme;
 
   String _formatAmount(double value) =>
@@ -95,10 +95,10 @@ class _ComparisonTableRow extends StatelessWidget {
     final l10n = context.l10n;
     final variation = _calculateVariation();
     final variationColor = item.lastMonthAmount == 0
-        ? colors?.onSurfaceMuted
+        ? colors.onSurfaceMuted
         : _isNegative
-        ? colors?.error
-        : colors?.success;
+        ? colors.error
+        : colors.success;
 
     return Row(
       spacing: Spacing.md,
@@ -108,7 +108,7 @@ class _ComparisonTableRow extends StatelessWidget {
           child: Text(
             item.label,
             style: textTheme.bodyMedium?.copyWith(
-              color: colors?.onSurface ?? Colors.transparent,
+              color: colors.onSurface,
             ),
             overflow: TextOverflow.visible,
           ),
@@ -147,7 +147,7 @@ class _AmountColumn extends StatelessWidget {
 
   final String label;
   final String amount;
-  final AppColors? colors;
+  final AppColors colors;
   final TextTheme textTheme;
 
   @override
@@ -158,13 +158,13 @@ class _AmountColumn extends StatelessWidget {
         Text(
           label,
           style: textTheme.bodySmall?.copyWith(
-            color: colors?.onSurfaceMuted ?? Colors.transparent,
+            color: colors.onSurfaceMuted,
           ),
         ),
         Text(
           amount,
           style: textTheme.bodyMedium?.copyWith(
-            color: colors?.onSurface ?? Colors.transparent,
+            color: colors.onSurface,
           ),
         ),
       ],

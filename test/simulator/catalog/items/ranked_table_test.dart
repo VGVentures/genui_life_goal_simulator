@@ -39,6 +39,7 @@ Future<void> _pump(
 ) async {
   await tester.pumpWidget(
     MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: SingleChildScrollView(
           child: Builder(

@@ -5,8 +5,9 @@ import 'package:genui_life_goal_simulator/dev_menu/view/horizontal_bar_catalog_p
 
 Future<void> _pump(WidgetTester tester) {
   return tester.pumpWidget(
-    const MaterialApp(
-      home: HorizontalBarCatalogPage(),
+    MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
+      home: const HorizontalBarCatalogPage(),
     ),
   );
 }

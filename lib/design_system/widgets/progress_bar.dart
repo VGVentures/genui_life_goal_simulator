@@ -60,7 +60,7 @@ class ProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>()!;
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final fmt = formatValue ?? _defaultFormat;
 

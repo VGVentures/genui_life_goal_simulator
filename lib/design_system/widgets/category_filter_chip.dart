@@ -32,7 +32,7 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>()!;
+    final colors = context.appColors;
     final baseColor = widget.color.toColor(colors);
     final isDisabled = !widget.isEnabled;
 

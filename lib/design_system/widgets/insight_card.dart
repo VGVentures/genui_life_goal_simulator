@@ -54,31 +54,27 @@ class InsightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     final backgroundColor = switch (variant) {
-      InsightCardVariant.neutral =>
-        colors?.surfaceVariant ?? const Color(0xFFFFFFFF),
-      InsightCardVariant.success =>
-        colors?.successContainer ?? const Color(0xFFC2FFD1),
-      InsightCardVariant.warning =>
-        colors?.warningContainer ?? const Color(0xFFFFEEE1),
-      InsightCardVariant.error =>
-        colors?.errorContainer ?? const Color(0xFFFFDAD5),
+      InsightCardVariant.neutral => colors.surfaceVariant,
+      InsightCardVariant.success => colors.successContainer,
+      InsightCardVariant.warning => colors.warningContainer,
+      InsightCardVariant.error => colors.errorContainer,
     };
 
     final borderColor = switch (variant) {
       InsightCardVariant.neutral => Colors.transparent,
-      InsightCardVariant.success => colors?.success ?? const Color(0xFF00A65F),
-      InsightCardVariant.warning => colors?.warning ?? const Color(0xFFF69426),
-      InsightCardVariant.error => colors?.error ?? const Color(0xFFFF5446),
+      InsightCardVariant.success => colors.success,
+      InsightCardVariant.warning => colors.warning,
+      InsightCardVariant.error => colors.error,
     };
 
-    const badgeColor = Colors.white;
+    final badgeColor = colors.surfaceVariant;
 
     final badgeBorderColor = variant == InsightCardVariant.neutral
-        ? colors?.outline ?? const Color(0xFFF0F1F1)
+        ? colors.outline
         : Colors.transparent;
 
     final resolvedEmoji = switch (variant) {
@@ -124,14 +120,14 @@ class InsightCard extends StatelessWidget {
           Text(
             title,
             style: textTheme.headlineSmall?.copyWith(
-              color: colors?.onSurface,
+              color: colors.onSurface,
             ),
           ),
           const SizedBox(height: Spacing.xs),
           Text(
             description,
             style: textTheme.bodyMedium?.copyWith(
-              color: colors?.onSurfaceVariant,
+              color: colors.onSurfaceVariant,
             ),
           ),
         ],

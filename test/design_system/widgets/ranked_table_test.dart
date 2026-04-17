@@ -20,13 +20,13 @@ const _items = [
   ),
 ];
 
-Future<void> _pumpTable(WidgetTester tester, {bool withTheme = true}) {
+Future<void> _pumpTable(WidgetTester tester) {
   const widget = Scaffold(
     body: RankedTable(items: _items),
   );
   return tester.pumpWidget(
     MaterialApp(
-      theme: withTheme ? AppTheme(LightThemeColors()).themeData : null,
+      theme: AppTheme(LightThemeColors()).themeData,
       home: widget,
     ),
   );
@@ -103,12 +103,6 @@ void main() {
       final text = tester.widget<Text>(find.text('-5%'));
       final expectedColor = LightThemeColors().error;
       expect(text.style?.color, expectedColor);
-    });
-
-    testWidgets('without $AppColors extension', (tester) async {
-      await _pumpTable(tester, withTheme: false);
-
-      expect(find.byType(RankedTable), findsOneWidget);
     });
 
     testWidgets('empty list without error', (tester) async {

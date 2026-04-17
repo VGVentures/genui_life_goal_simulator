@@ -261,23 +261,6 @@ void main() {
       });
     });
 
-    testWidgets('renders without error without AppColors extension', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: AppAccordion(
-              title: 'Accordion Title',
-              content: content,
-            ),
-          ),
-        ),
-      );
-
-      expect(find.text('Accordion Title'), findsOneWidget);
-    });
-
     testWidgets('updates when isExpanded prop changes', (tester) async {
       var isExpanded = false;
 

@@ -38,7 +38,7 @@ class RankedTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -54,7 +54,7 @@ class RankedTable extends StatelessWidget {
           ),
           Divider(
             height: 1,
-            color: colors?.outlineVariant ?? Colors.transparent,
+            color: colors.outlineVariant,
           ),
         ],
       ],
@@ -72,15 +72,13 @@ class _RankedTableRow extends StatelessWidget {
 
   final int rank;
   final RankedTableItem item;
-  final AppColors? colors;
+  final AppColors colors;
   final TextTheme textTheme;
 
   @override
   Widget build(BuildContext context) {
     final isNegative = item.delta.startsWith('-');
-    final deltaColor = isNegative
-        ? (colors?.error ?? Colors.transparent)
-        : (colors?.success ?? Colors.transparent);
+    final deltaColor = isNegative ? colors.error : colors.success;
 
     return Row(
       spacing: Spacing.md,
@@ -91,7 +89,7 @@ class _RankedTableRow extends StatelessWidget {
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: colors?.surfaceContainer ?? Colors.transparent,
+              color: colors.surfaceContainer,
               borderRadius: BorderRadius.circular(Spacing.xs),
             ),
             child: SizedBox(
@@ -102,7 +100,7 @@ class _RankedTableRow extends StatelessWidget {
                   '$rank',
                   textAlign: TextAlign.center,
                   style: textTheme.labelLarge?.copyWith(
-                    color: colors?.onSurface ?? Colors.transparent,
+                    color: colors.onSurface,
                   ),
                 ),
               ),
@@ -117,7 +115,7 @@ class _RankedTableRow extends StatelessWidget {
             child: Text(
               item.title,
               style: textTheme.titleSmall?.copyWith(
-                color: colors?.onSurface ?? Colors.transparent,
+                color: colors.onSurface,
               ),
             ),
           ),
@@ -130,7 +128,7 @@ class _RankedTableRow extends StatelessWidget {
             item.amount,
             textAlign: TextAlign.end,
             style: textTheme.bodyLarge?.copyWith(
-              color: colors?.onSurface ?? Colors.transparent,
+              color: colors.onSurface,
             ),
           ),
         ),

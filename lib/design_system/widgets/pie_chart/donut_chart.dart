@@ -27,7 +27,7 @@ class DonutChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return SizedBox(
       width: _Dimensions.donutSize,
@@ -56,19 +56,19 @@ class DonutChart extends StatelessWidget {
                 Text(
                   label,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colors?.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               Text(
                 amount,
                 style: textTheme.headlineMedium?.copyWith(
-                  color: colors?.onSurface,
+                  color: colors.onSurface,
                 ),
               ),
               Text(
                 percentage ?? label,
                 style: textTheme.bodySmall?.copyWith(
-                  color: colors?.onSurfaceVariant,
+                  color: colors.onSurfaceVariant,
                 ),
               ),
             ],

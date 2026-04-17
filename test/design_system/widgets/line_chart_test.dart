@@ -2,19 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui_life_goal_simulator/design_system/widgets/line_chart.dart';
-import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 
-extension _PumpApp on WidgetTester {
-  Future<void> pumpApp(Widget widget) {
-    return pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: widget,
-      ),
-    );
-  }
-}
+import '../../helpers/helpers.dart';
 
 const _yLabels = [r'$0.0k', r'$1.5k', r'$3.0k', r'$4.5k', r'$6.0k'];
 

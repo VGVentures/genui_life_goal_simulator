@@ -44,7 +44,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -60,7 +60,7 @@ class TransactionList extends StatelessWidget {
           if (i < items.length)
             Divider(
               height: 1,
-              color: colors?.outlineVariant,
+              color: colors.outlineVariant,
             ),
         ],
       ],
@@ -76,7 +76,7 @@ class _TransactionListRow extends StatelessWidget {
   });
 
   final TransactionListItem item;
-  final AppColors? colors;
+  final AppColors colors;
   final TextTheme textTheme;
 
   @override
@@ -97,13 +97,13 @@ class _TransactionListRow extends StatelessWidget {
                 Text(
                   item.title,
                   style: textTheme.titleSmall?.copyWith(
-                    color: colors?.onSurface,
+                    color: colors.onSurface,
                   ),
                 ),
                 Text(
                   item.description,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colors?.onSurfaceMuted,
+                    color: colors.onSurfaceMuted,
                   ),
                 ),
               ],
@@ -112,7 +112,7 @@ class _TransactionListRow extends StatelessWidget {
           Text(
             item.amount,
             style: textTheme.bodyLarge?.copyWith(
-              color: colors?.onSurface,
+              color: colors.onSurface,
             ),
           ),
           if (item.onViewDetails != null) ...[

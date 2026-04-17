@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_page.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_view.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/widgets/profile_card.dart';
@@ -70,7 +71,7 @@ void main() {
       expect(find.byType(ProfileCard), findsNWidgets(2));
     });
 
-    testWidgets('has grey background', (tester) async {
+    testWidgets('has tinted background from theme', (tester) async {
       tester.view.physicalSize = const Size(400, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -78,7 +79,7 @@ void main() {
       await tester.pumpApp(const PickProfilePage());
 
       final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
-      expect(scaffold.backgroundColor, Colors.grey.shade200);
+      expect(scaffold.backgroundColor, LightThemeColors().surfaceTinted);
     });
   });
 }
