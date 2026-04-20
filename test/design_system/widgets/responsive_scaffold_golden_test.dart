@@ -27,6 +27,7 @@ void main() {
             GoldenTestScenario(
               name: 'mobile width',
               child: themedApp(
+                appTheme: AppThemes.light,
                 child: SizedBox(
                   width: 400,
                   height: 80,
@@ -46,6 +47,7 @@ void main() {
             GoldenTestScenario(
               name: 'desktop width',
               child: themedApp(
+                appTheme: AppThemes.light,
                 child: SizedBox(
                   width: 900,
                   height: 80,

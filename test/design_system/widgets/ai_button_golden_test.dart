@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(AiButton, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'ai_button_${themeType.name}',
+          'renders - $name',
+          fileName: 'ai_button_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 320),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'default',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AiButton(
                     text: 'Ask the AI',
                     onTap: () {},

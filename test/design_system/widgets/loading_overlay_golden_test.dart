@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(LoadingOverlay, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'loading_overlay_${themeType.name}',
+          'renders - $name',
+          fileName: 'loading_overlay_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 420),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'default background',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SizedBox(
                     width: 360,
                     height: 240,

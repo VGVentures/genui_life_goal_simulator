@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(EmojiCard, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'emoji_card_${themeType.name}',
+          'renders - $name',
+          fileName: 'emoji_card_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 360),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'unselected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: EmojiCard(
                     emoji: '📊',
                     label: 'Fixed costs',
@@ -32,7 +33,7 @@ void main() {
               GoldenTestScenario(
                 name: 'selected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: EmojiCard(
                     emoji: '💰',
                     label: '% of income',
@@ -44,7 +45,7 @@ void main() {
               GoldenTestScenario(
                 name: 'layout',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: EmojiCardLayout(
                     cards: [
                       EmojiCard(

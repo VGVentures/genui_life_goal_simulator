@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(SparklineCard, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'sparkline_card_${themeType.name}',
+          'renders - $name',
+          fileName: 'sparkline_card_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'positive trend',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SparklineCard(
                     label: 'Savings',
                     amount: r'$12,500',
@@ -32,7 +33,7 @@ void main() {
               GoldenTestScenario(
                 name: 'negative trend',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SparklineCard(
                     label: 'Spending',
                     amount: r'$3,200',
@@ -43,7 +44,7 @@ void main() {
               GoldenTestScenario(
                 name: 'stable trend',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SparklineCard(
                     label: 'Dining',
                     amount: r'$421',
@@ -54,7 +55,7 @@ void main() {
               GoldenTestScenario(
                 name: 'layout',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SparklineCardsLayout(
                     cards: [
                       SparklineCard(

@@ -29,11 +29,12 @@ void main() {
       ],
     );
 
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders states - ${themeType.name}',
-          fileName: 'accordion_${themeType.name}',
+          'renders states - $name',
+          fileName: 'accordion_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -41,7 +42,7 @@ void main() {
               GoldenTestScenario(
                 name: 'collapsed',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppAccordion(
                     title: 'Spending breakdown',
                     content: content,
@@ -51,7 +52,7 @@ void main() {
               GoldenTestScenario(
                 name: 'expanded',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppAccordion(
                     title: 'Spending breakdown',
                     content: content,

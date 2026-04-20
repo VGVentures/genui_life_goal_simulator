@@ -74,11 +74,12 @@ const _series = [
 
 void main() {
   group(AppBarChart, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'bar_chart_${themeType.name}',
+          'renders - $name',
+          fileName: 'bar_chart_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 640),
@@ -86,7 +87,7 @@ void main() {
               GoldenTestScenario(
                 name: 'grouped series',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SizedBox(
                     width: 600,
                     height: 280,
@@ -102,7 +103,7 @@ void main() {
               GoldenTestScenario(
                 name: 'empty series',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SizedBox(
                     width: 600,
                     height: 280,

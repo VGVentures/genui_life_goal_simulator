@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(AppButton, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders all variants - ${themeType.name}',
-          fileName: 'app_button_${themeType.name}',
+          'renders all variants - $name',
+          fileName: 'app_button_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 320),
@@ -21,28 +22,28 @@ void main() {
               GoldenTestScenario(
                 name: 'filled enabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppButton(label: 'Continue', onPressed: () {}),
                 ),
               ),
               GoldenTestScenario(
                 name: 'filled disabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const AppButton(label: 'Continue'),
                 ),
               ),
               GoldenTestScenario(
                 name: 'filled loading',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const AppButton(label: 'Continue', isLoading: true),
                 ),
               ),
               GoldenTestScenario(
                 name: 'filled with icons',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppButton(
                     label: 'Next',
                     leadingIcon: const Icon(Icons.add),
@@ -54,7 +55,7 @@ void main() {
               GoldenTestScenario(
                 name: 'outlined enabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppButton(
                     label: 'Cancel',
                     variant: AppButtonVariant.outlined,
@@ -65,7 +66,7 @@ void main() {
               GoldenTestScenario(
                 name: 'outlined disabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const AppButton(
                     label: 'Cancel',
                     variant: AppButtonVariant.outlined,
@@ -75,7 +76,7 @@ void main() {
               GoldenTestScenario(
                 name: 'gradient enabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppButton(
                     label: 'Get started',
                     variant: AppButtonVariant.gradient,
@@ -86,7 +87,7 @@ void main() {
               GoldenTestScenario(
                 name: 'small filled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: AppButton(
                     label: 'Small',
                     size: AppButtonSize.small,

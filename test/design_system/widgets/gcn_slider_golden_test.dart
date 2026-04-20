@@ -11,11 +11,12 @@ void main() {
   group(GCNSlider, () {
     const size = Size(520, 220);
 
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'gcn_slider_${themeType.name}',
+          'renders - $name',
+          fileName: 'gcn_slider_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: BoxConstraints.tight(size),
@@ -23,7 +24,7 @@ void main() {
               GoldenTestScenario(
                 name: 'continuous',
                 child: themedAppWithOverlay(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   size: size,
                   child: GCNSlider(
                     title: 'Monthly budget',
@@ -39,7 +40,7 @@ void main() {
               GoldenTestScenario(
                 name: 'discrete with splits',
                 child: themedAppWithOverlay(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   size: size,
                   child: GCNSlider(
                     title: 'Time horizon',

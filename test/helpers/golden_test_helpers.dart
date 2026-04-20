@@ -16,12 +16,11 @@ import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 /// [themedAppWithOverlay] instead.
 Widget themedApp({
   required Widget child,
-  ThemeType themeType = ThemeType.light,
+  required AppThemes appTheme,
   EdgeInsets padding = const EdgeInsets.all(16),
   Size mediaQuerySize = Size.zero,
 }) {
-  final appTheme = AppThemes.getAppTheme(themeType).themeData;
-  final themeData = appTheme.themeData;
+  final themeData = appTheme.themeData.themeData;
   return Directionality(
     textDirection: TextDirection.ltr,
     child: Theme(
@@ -56,11 +55,10 @@ Widget themedApp({
 Widget themedAppWithOverlay({
   required Widget child,
   required Size size,
-  ThemeType themeType = ThemeType.light,
+  required AppThemes appTheme,
   EdgeInsets padding = const EdgeInsets.all(16),
 }) {
-  final appTheme = AppThemes.getAppTheme(themeType).themeData;
-  final themeData = appTheme.themeData;
+  final themeData = appTheme.themeData.themeData;
   return SizedBox.fromSize(
     size: size,
     child: Directionality(

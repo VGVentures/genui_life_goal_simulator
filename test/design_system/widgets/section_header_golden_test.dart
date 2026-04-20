@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(SectionHeader, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'section_header_${themeType.name}',
+          'renders - $name',
+          fileName: 'section_header_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'title and subtitle only',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SectionHeader(
                     title: 'Your spending this month',
                     subtitle: 'February 2026 • 19 days tracked',
@@ -31,7 +32,7 @@ void main() {
               GoldenTestScenario(
                 name: 'with selector',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: SectionHeader(
                     title: 'Spending trends',
                     subtitle: 'Last 6 months',

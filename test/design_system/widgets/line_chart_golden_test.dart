@@ -48,11 +48,12 @@ const _points = [
 
 void main() {
   group(LineChart, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'line_chart_${themeType.name}',
+          'renders - $name',
+          fileName: 'line_chart_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 700),
@@ -60,7 +61,7 @@ void main() {
               GoldenTestScenario(
                 name: 'six months',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const SizedBox(
                     width: 660,
                     height: 240,

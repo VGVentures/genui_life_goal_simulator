@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(RadioCard, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'radio_card_${themeType.name}',
+          'renders - $name',
+          fileName: 'radio_card_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 360),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'unselected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: RadioCard(
                     label: 'Aggressive growth',
                     isSelected: false,
@@ -32,7 +33,7 @@ void main() {
               GoldenTestScenario(
                 name: 'selected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: RadioCard(
                     label: 'Balanced',
                     isSelected: true,

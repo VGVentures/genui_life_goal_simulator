@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(ActionItem, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders variants - ${themeType.name}',
-          fileName: 'action_item_${themeType.name}',
+          'renders variants - $name',
+          fileName: 'action_item_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'simple',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const ActionItem(
                     title: 'Restaurant',
                     subtitle: 'Dining • Feb 18',
@@ -32,7 +33,7 @@ void main() {
               GoldenTestScenario(
                 name: 'with delta',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const ActionItem(
                     title: 'Restaurant',
                     subtitle: 'Dining • Feb 18',
@@ -44,7 +45,7 @@ void main() {
               GoldenTestScenario(
                 name: 'with trailing',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: ActionItem(
                     title: 'Netflix',
                     subtitle: 'Subscriptions • Feb 15',
@@ -62,11 +63,12 @@ void main() {
       );
     }
 
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders list - ${themeType.name}',
-          fileName: 'action_items_group_${themeType.name}',
+          'renders list - $name',
+          fileName: 'action_items_group_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -74,7 +76,7 @@ void main() {
               GoldenTestScenario(
                 name: 'multiple items',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: ActionItemsGroup(
                     items: [
                       ActionItem(

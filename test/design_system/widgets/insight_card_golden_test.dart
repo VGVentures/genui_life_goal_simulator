@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(InsightCard, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'insight_card_${themeType.name}',
+          'renders - $name',
+          fileName: 'insight_card_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 420),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'neutral',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const InsightCard(
                     title: 'You spent less this week',
                     description: 'Weekly dining down 12% vs 3mo average.',
@@ -31,7 +32,7 @@ void main() {
               GoldenTestScenario(
                 name: 'neutral with custom emoji',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const InsightCard(
                     emoji: '📈',
                     title: 'Savings on track',
@@ -42,7 +43,7 @@ void main() {
               GoldenTestScenario(
                 name: 'success',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const InsightCard(
                     variant: InsightCardVariant.success,
                     title: 'Goal reached',
@@ -53,7 +54,7 @@ void main() {
               GoldenTestScenario(
                 name: 'warning',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const InsightCard(
                     variant: InsightCardVariant.warning,
                     title: 'Spending trending up',
@@ -64,7 +65,7 @@ void main() {
               GoldenTestScenario(
                 name: 'error',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const InsightCard(
                     variant: InsightCardVariant.error,
                     title: 'Over budget',

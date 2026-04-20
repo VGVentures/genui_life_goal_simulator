@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(MetricCard, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'metric_card_${themeType.name}',
+          'renders - $name',
+          fileName: 'metric_card_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 520),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'plain',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const MetricCard(
                     label: 'Fixed costs',
                     value: r'$4,319',
@@ -31,7 +32,7 @@ void main() {
               GoldenTestScenario(
                 name: 'positive delta',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const MetricCard(
                     label: 'Negotiable',
                     value: r'$645',
@@ -44,7 +45,7 @@ void main() {
               GoldenTestScenario(
                 name: 'negative delta',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const MetricCard(
                     label: 'Discretionary',
                     value: r'$312',
@@ -57,7 +58,7 @@ void main() {
               GoldenTestScenario(
                 name: 'layout',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const MetricCardsLayout(
                     cards: [
                       MetricCard(label: 'Fixed costs', value: r'$4,319'),

@@ -9,11 +9,12 @@ import '../../helpers/helpers.dart';
 
 void main() {
   group(CategoryFilterChip, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'category_filter_chip_${themeType.name}',
+          'renders - $name',
+          fileName: 'category_filter_chip_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 340),
@@ -21,7 +22,7 @@ void main() {
               GoldenTestScenario(
                 name: 'all colors selected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -40,7 +41,7 @@ void main() {
               GoldenTestScenario(
                 name: 'unselected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -59,7 +60,7 @@ void main() {
               GoldenTestScenario(
                 name: 'disabled',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   child: const CategoryFilterChip(
                     color: FilterChipColor.pink,
                     label: 'Disabled',

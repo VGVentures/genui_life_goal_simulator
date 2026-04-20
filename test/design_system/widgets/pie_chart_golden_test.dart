@@ -36,11 +36,12 @@ const _items = [
 
 void main() {
   group(PieChartComponent, () {
-    for (final themeType in ThemeType.values) {
+    for (final appTheme in AppThemes.values) {
+      final name = appTheme.name;
       unawaited(
         goldenTest(
-          'renders - ${themeType.name}',
-          fileName: 'pie_chart_${themeType.name}',
+          'renders - $name',
+          fileName: 'pie_chart_$name',
           pumpBeforeTest: pumpOnce,
           builder: () => GoldenTestGroup(
             scenarioConstraints: const BoxConstraints(maxWidth: 720),
@@ -48,7 +49,7 @@ void main() {
               GoldenTestScenario(
                 name: 'none selected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   mediaQuerySize: const Size(1200, 800),
                   child: const SizedBox(
                     width: 680,
@@ -64,7 +65,7 @@ void main() {
               GoldenTestScenario(
                 name: 'first selected',
                 child: themedApp(
-                  themeType: themeType,
+                  appTheme: appTheme,
                   mediaQuerySize: const Size(1200, 800),
                   child: const SizedBox(
                     width: 680,
