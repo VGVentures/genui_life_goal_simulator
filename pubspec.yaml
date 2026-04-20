@@ -40,7 +40,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.13.0
   flutter_test:
     sdk: flutter
-  mocktail: ^1.0.4
+  mocktail: ^1.0.5
   very_good_analysis: ^10.2.0
   very_good_cli: ^1.1.1
 
