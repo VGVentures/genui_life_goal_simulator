@@ -8,54 +8,66 @@ class AiButton extends StatelessWidget {
   const AiButton({
     required this.text,
     required this.onTap,
+    this.borderRadius = 100,
+    this.borderWidth = 2,
+    this.iconSize = 18,
     super.key,
   });
 
   final String text;
   final VoidCallback onTap;
 
+  /// Corner radius of the pill-shaped button.
+  final double borderRadius;
+
+  /// Thickness of the gradient border drawn around the button.
+  final double borderWidth;
+
+  /// Size of the leading star icon.
+  final double iconSize;
+
   @override
   Widget build(BuildContext context) {
-    final colorExtension = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
-            gradient: colorExtension?.geniusGradient,
+            borderRadius: BorderRadius.circular(borderRadius),
+            gradient: colors.geniusGradient,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(_Dimensions.borderWidth),
+            padding: EdgeInsets.all(borderWidth),
             child: Ink(
               decoration: BoxDecoration(
-                color: colorExtension?.surfaceVariant,
+                color: colors.surfaceVariant,
                 borderRadius: BorderRadius.circular(
-                  _Dimensions.borderRadius - _Dimensions.borderWidth,
+                  borderRadius - borderWidth,
                 ),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: Spacing.xxxl,
-                  vertical: _Dimensions.verticalPadding,
+                  vertical: Spacing.xs,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SvgPicture.asset(
                       'assets/images/onboarding/soft_star.svg',
-                      width: _Dimensions.iconSize,
-                      height: _Dimensions.iconSize,
+                      width: iconSize,
+                      height: iconSize,
                     ),
                     const SizedBox(width: Spacing.xs),
                     Text(
                       text,
                       style: AppTextStyles.labelLargeMobile.copyWith(
-                        color: colorExtension?.onSurface,
+                        color: colors.onSurface,
                       ),
                     ),
                   ],
@@ -67,11 +79,4 @@ class AiButton extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 100;
-  static const double borderWidth = 2;
-  static const double iconSize = 18;
-  static const double verticalPadding = 8;
 }

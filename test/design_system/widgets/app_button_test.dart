@@ -243,21 +243,5 @@ void main() {
         },
       );
     });
-
-    testWidgets('renders without error without AppColors extension', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: AppButton(label: 'Fallback', onPressed: () {}),
-          ),
-        ),
-      );
-
-      expect(find.text('Fallback'), findsOneWidget);
-    });
   });
 }

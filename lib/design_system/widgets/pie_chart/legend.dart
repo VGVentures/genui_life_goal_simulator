@@ -9,6 +9,9 @@ class Legend extends StatelessWidget {
     required this.onItemHover,
     required this.onHoverExit,
     required this.onItemTap,
+    this.indicatorSize = 12,
+    this.indicatorRadius = 2,
+    this.rowVerticalPadding = 6,
     super.key,
   });
 
@@ -18,6 +21,15 @@ class Legend extends StatelessWidget {
   final ValueChanged<int> onItemHover;
   final VoidCallback onHoverExit;
   final ValueChanged<int> onItemTap;
+
+  /// Side length of the colored square indicator in each row.
+  final double indicatorSize;
+
+  /// Corner radius of the colored indicator.
+  final double indicatorRadius;
+
+  /// Vertical padding around each legend row's content.
+  final double rowVerticalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +48,9 @@ class Legend extends StatelessWidget {
             onHover: () => onItemHover(i),
             onHoverExit: onHoverExit,
             onTap: () => onItemTap(i),
+            indicatorSize: indicatorSize,
+            indicatorRadius: indicatorRadius,
+            verticalPadding: rowVerticalPadding,
           ),
       ],
     );
@@ -51,6 +66,9 @@ class _LegendRow extends StatelessWidget {
     required this.onHover,
     required this.onHoverExit,
     required this.onTap,
+    required this.indicatorSize,
+    required this.indicatorRadius,
+    required this.verticalPadding,
   });
 
   final PieChartItem item;
@@ -60,11 +78,14 @@ class _LegendRow extends StatelessWidget {
   final VoidCallback onHover;
   final VoidCallback onHoverExit;
   final VoidCallback onTap;
+  final double indicatorSize;
+  final double indicatorRadius;
+  final double verticalPadding;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return InkWell(
       onTap: onTap,
@@ -73,12 +94,12 @@ class _LegendRow extends StatelessWidget {
         opacity: isDimmed ? 0.4 : 1.0,
         duration: const Duration(milliseconds: 200),
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: _Dimensions.containerVerticalPadding,
+          padding: EdgeInsets.symmetric(
+            vertical: verticalPadding,
             horizontal: Spacing.sm,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? colors?.surface : Colors.transparent,
+            color: isSelected ? colors.surfaceContainer : Colors.transparent,
             borderRadius: BorderRadius.circular(Spacing.xs),
           ),
           child: Row(
@@ -87,33 +108,31 @@ class _LegendRow extends StatelessWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: item.color,
-                  borderRadius: BorderRadius.circular(
-                    _Dimensions.indicatorRadius,
-                  ),
+                  borderRadius: BorderRadius.circular(indicatorRadius),
                 ),
-                child: const SizedBox(
-                  width: _Dimensions.indicatorSize,
-                  height: _Dimensions.indicatorSize,
+                child: SizedBox(
+                  width: indicatorSize,
+                  height: indicatorSize,
                 ),
               ),
               Expanded(
                 child: Text(
                   item.label,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colors?.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               ),
               Text(
                 item.amount,
                 style: textTheme.bodyMedium?.copyWith(
-                  color: colors?.onSurface,
+                  color: colors.onSurface,
                 ),
               ),
               Text(
                 percentage,
                 style: textTheme.labelMedium?.copyWith(
-                  color: colors?.onSurfaceMuted,
+                  color: colors.onSurfaceMuted,
                 ),
               ),
             ],
@@ -122,10 +141,4 @@ class _LegendRow extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double indicatorSize = 12;
-  static const double indicatorRadius = 2;
-  static const double containerVerticalPadding = 6;
 }

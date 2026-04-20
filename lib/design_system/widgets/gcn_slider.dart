@@ -65,15 +65,12 @@ class GCNSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
+    final sliderTheme = context.gcnSliderTheme;
 
-    final gradient =
-        colors?.geniusGradient ??
-        const LinearGradient(
-          colors: [_SliderColors.fillStart, _SliderColors.fillEnd],
-        );
-    final trackColor = colors?.surfaceContainer ?? _SliderColors.track;
-    final thumbColor = colors?.primary ?? _SliderColors.thumb;
+    final gradient = colors.geniusGradient;
+    final trackColor = colors.surfaceContainer;
+    final thumbColor = colors.primary;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -85,21 +82,21 @@ class GCNSlider extends StatelessWidget {
             Text(
               title,
               style: textTheme.titleSmall?.copyWith(
-                color: colors?.onSurface,
+                color: colors.onSurface,
               ),
             ),
             if (valueLabel != null)
               Text(
                 valueLabel!,
                 style: textTheme.bodyLarge?.copyWith(
-                  color: colors?.onSurface,
+                  color: colors.onSurface,
                 ),
               ),
           ],
         ),
         Text(
           subtitle,
-          style: textTheme.bodyMedium?.copyWith(color: colors?.onSurfaceMuted),
+          style: textTheme.bodyMedium?.copyWith(color: colors.onSurfaceMuted),
         ),
         const SizedBox(height: Spacing.sm),
         SliderTheme(
@@ -113,10 +110,14 @@ class GCNSlider extends StatelessWidget {
               gradient: gradient,
               trackColor: trackColor,
             ),
-            thumbShape: _RingThumbShape(gradient: gradient),
+            thumbShape: _RingThumbShape(
+              gradient: gradient,
+              ringColor: sliderTheme.thumbRingColor,
+              shadowColor: sliderTheme.thumbShadowColor,
+            ),
             tickMarkShape: divisions != null
                 ? _VerticalTickMarkShape(
-                    color: colors?.outlineStrong ?? const Color(0xFFAAABAB),
+                    color: colors.outlineStrong,
                   )
                 : SliderTickMarkShape.noTickMark,
             showValueIndicator: ShowValueIndicator.never,
@@ -162,7 +163,7 @@ class _RangeLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
 
     if (minLabel == null && maxLabel == null) return const SizedBox.shrink();
 
@@ -172,13 +173,13 @@ class _RangeLabels extends StatelessWidget {
         Text(
           minLabel ?? '',
           style: textTheme.bodyMedium?.copyWith(
-            color: colors?.onSurfaceMuted,
+            color: colors.onSurfaceMuted,
           ),
         ),
         Text(
           maxLabel ?? '',
           style: textTheme.bodyMedium?.copyWith(
-            color: colors?.onSurfaceMuted,
+            color: colors.onSurfaceMuted,
           ),
         ),
       ],
@@ -211,7 +212,7 @@ class _SplitLabels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
 
     final selected = _selectedIndex;
 
@@ -241,8 +242,8 @@ class _SplitLabels extends StatelessWidget {
                       labels[i],
                       style: textStyle?.copyWith(
                         color: i == selected
-                            ? colors?.onSurface
-                            : colors?.onSurfaceMuted,
+                            ? colors.onSurface
+                            : colors.onSurfaceMuted,
                       ),
                     ),
                   ),
@@ -329,9 +330,15 @@ class _GradientTrackShape extends SliderTrackShape with BaseSliderTrackShape {
 }
 
 class _RingThumbShape extends SliderComponentShape {
-  const _RingThumbShape({required this.gradient});
+  const _RingThumbShape({
+    required this.gradient,
+    required this.ringColor,
+    required this.shadowColor,
+  });
 
   final LinearGradient gradient;
+  final Color ringColor;
+  final Color shadowColor;
 
   static const double _radius = 7;
   static const double _ringWidth = 4;
@@ -361,10 +368,10 @@ class _RingThumbShape extends SliderComponentShape {
         center,
         _radius + _ringWidth + 2,
         Paint()
-          ..color = Colors.black.withValues(alpha: 0.12)
+          ..color = shadowColor.withValues(alpha: 0.12)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
       )
-      ..drawCircle(center, _radius + _ringWidth, Paint()..color = Colors.white)
+      ..drawCircle(center, _radius + _ringWidth, Paint()..color = ringColor)
       ..drawCircle(
         center,
         _radius,
@@ -407,11 +414,4 @@ class _VerticalTickMarkShape extends SliderTickMarkShape {
         ..strokeWidth = 1.0,
     );
   }
-}
-
-abstract final class _SliderColors {
-  static const fillStart = Color(0xFF2461EB);
-  static const fillEnd = Color(0xFFD4C6FB);
-  static const track = Color(0xFFE2E8F9);
-  static const thumb = Color(0xFF7C8FF5);
 }

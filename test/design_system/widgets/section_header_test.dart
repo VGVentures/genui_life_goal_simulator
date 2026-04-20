@@ -66,25 +66,6 @@ void main() {
 
         expect(find.byType(HeaderSelector), findsNothing);
       });
-
-      testWidgets('without $AppColors theme extension', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: SectionHeader(
-                title: 'Test Title',
-                subtitle: 'Test Subtitle',
-                selectorOptions: const ['1M', '3M'],
-                onSelectorChanged: (_) {},
-              ),
-            ),
-          ),
-        );
-
-        expect(find.byType(SectionHeader), findsOneWidget);
-        expect(find.text('Test Title'), findsOneWidget);
-        expect(find.text('Test Subtitle'), findsOneWidget);
-      });
     });
 
     group('styling', () {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/l10n/gen/app_localizations.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
@@ -62,6 +63,7 @@ Future<void> _pump(
     BlocProvider<SimulatorBloc>.value(
       value: bloc,
       child: MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -333,6 +335,7 @@ Future<void> _pumpWithBloc(
     BlocProvider<SimulatorBloc>.value(
       value: bloc,
       child: MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

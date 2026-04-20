@@ -30,11 +30,10 @@ Future<void> _pumpChart(
   List<PieChartItem> items = _items,
   int? selectedIndex,
   ValueChanged<int?>? onSelectedIndexChanged,
-  bool withTheme = true,
 }) {
   return tester.pumpWidget(
     MaterialApp(
-      theme: withTheme ? AppTheme(LightThemeColors()).themeData : null,
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: PieChartComponent(
           items: items,
@@ -227,12 +226,6 @@ void main() {
 
         expect(find.byType(PieChartComponent), findsOneWidget);
         expect(find.text('0%'), findsOneWidget);
-      });
-
-      testWidgets('renders without $AppColors extension', (tester) async {
-        await _pumpChart(tester, withTheme: false);
-
-        expect(find.byType(PieChartComponent), findsOneWidget);
       });
 
       testWidgets('selectedIndex out of range shows total', (tester) async {

@@ -39,7 +39,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorExtension = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final isDesktop = !Breakpoints.isMobile(MediaQuery.sizeOf(context).width);
 
@@ -47,14 +47,14 @@ class SectionHeader extends StatelessWidget {
       title,
       style: textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.w600,
-        color: colorExtension?.onSurface ?? _DefaultColors.title,
+        color: colors.onSurface,
       ),
     );
 
     final subtitleText = Text(
       subtitle,
       style: textTheme.bodyMedium?.copyWith(
-        color: colorExtension?.onSurfaceVariant ?? _DefaultColors.subtitle,
+        color: colors.onSurfaceVariant,
       ),
     );
 
@@ -105,9 +105,4 @@ class SectionHeader extends StatelessWidget {
       child: content,
     );
   }
-}
-
-abstract final class _DefaultColors {
-  static const Color title = Color(0xFF1A1C1C);
-  static const Color subtitle = Color(0xFF5D5F5F);
 }

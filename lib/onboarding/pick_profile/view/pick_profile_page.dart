@@ -12,12 +12,10 @@ class PickProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorExtensions = Theme.of(context).extension<AppColors>();
-
     return BlocProvider(
       create: (_) => PickProfileCubit(),
       child: Scaffold(
-        backgroundColor: colorExtensions?.surfaceTinted ?? Colors.grey.shade200,
+        backgroundColor: context.appColors.surfaceTinted,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(

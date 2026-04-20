@@ -113,19 +113,18 @@ class _LineChartState extends State<LineChart> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
 
     final yLabelStyle = theme.textTheme.labelSmall?.copyWith(
-      color: colors?.onSurfaceMuted ?? _LineChartColors.label,
+      color: colors.onSurfaceMuted,
     );
     final xLabelStyle = theme.textTheme.labelSmall?.copyWith(
-      color: colors?.onSurfaceMuted ?? _LineChartColors.label,
+      color: colors.onSurfaceMuted,
     );
 
-    final gradient = colors?.geniusGradient ?? _LineChartColors.lineGradient;
-    final gridColor = colors?.outlineVariant ?? _LineChartColors.grid;
-    final indicatorColor =
-        colors?.onSurfaceVariant ?? _LineChartColors.indicator;
+    final gradient = colors.geniusGradient;
+    final gridColor = colors.outlineVariant;
+    final indicatorColor = colors.onSurfaceVariant;
 
     final spots = widget.points
         .asMap()
@@ -330,7 +329,7 @@ class _TooltipCard extends StatelessWidget {
   final double selectedY;
   final double chartWidth;
   final double chartHeight;
-  final AppColors? colors;
+  final AppColors colors;
   final TextTheme textTheme;
 
   @override
@@ -348,10 +347,10 @@ class _TooltipCard extends StatelessWidget {
     );
 
     final monthStyle = textTheme.bodySmall?.copyWith(
-      color: colors?.onSurfaceVariant ?? _LineChartColors.indicator,
+      color: colors.onSurfaceVariant,
     );
     final spendStyle = textTheme.bodySmall?.copyWith(
-      color: colors?.onSurface ?? _LineChartColors.tooltipText,
+      color: colors.onSurface,
     );
 
     return Positioned(
@@ -365,7 +364,7 @@ class _TooltipCard extends StatelessWidget {
             vertical: Spacing.xs,
           ),
           decoration: BoxDecoration(
-            color: colors?.surfaceContainer ?? _LineChartColors.tooltipBg,
+            color: colors.surfaceContainer,
             borderRadius: BorderRadius.circular(
               _LineChartDimensions.tooltipRadius,
             ),
@@ -391,17 +390,6 @@ abstract final class _LineChartDimensions {
   static const double tooltipRadius = 8;
   static const double tooltipOffsetX = Spacing.xs;
   static const double tooltipOffsetY = Spacing.xs;
-}
-
-abstract final class _LineChartColors {
-  static const LinearGradient lineGradient = LinearGradient(
-    colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
-  );
-  static const Color grid = Color(0xFFE2E2E2);
-  static const Color indicator = Color(0xFF5D5F5F);
-  static const Color tooltipBg = Color(0xFFF0F1F1);
-  static const Color tooltipText = Color(0xFF1A1C1C);
-  static const Color label = Color(0xFF909191);
 }
 
 class _GradientDotPainter extends fl.FlDotPainter {

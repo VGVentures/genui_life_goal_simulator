@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genui_life_goal_simulator/design_system/app_colors.dart';
 import 'package:genui_life_goal_simulator/design_system/app_text_styles.dart';
 import 'package:genui_life_goal_simulator/design_system/filter_chip_color.dart';
+import 'package:genui_life_goal_simulator/design_system/spacing.dart';
 
 export 'package:genui_life_goal_simulator/design_system/filter_chip_color.dart';
 
@@ -12,6 +13,8 @@ class CategoryFilterChip extends StatefulWidget {
     required this.isSelected,
     this.onTap,
     this.isEnabled = true,
+    this.borderRadius = 32,
+    this.hoveredOpacity = 0.15,
     super.key,
   });
 
@@ -23,6 +26,12 @@ class CategoryFilterChip extends StatefulWidget {
   final VoidCallback? onTap;
   final bool isEnabled;
 
+  /// Corner radius of the pill-shaped chip.
+  final double borderRadius;
+
+  /// Background alpha applied to the base color while hovered.
+  final double hoveredOpacity;
+
   @override
   State<CategoryFilterChip> createState() => _CategoryFilterChipState();
 }
@@ -32,7 +41,7 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>()!;
+    final colors = context.appColors;
     final baseColor = widget.color.toColor(colors);
     final isDisabled = !widget.isEnabled;
 
@@ -60,7 +69,7 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
     } else {
       if (_isHovered) {
         backgroundColor = baseColor.withValues(
-          alpha: _Dimensions.hoveredOpacity,
+          alpha: widget.hoveredOpacity,
         );
       } else {
         backgroundColor = colors.surfaceVariant;
@@ -76,12 +85,12 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
         onTap: isDisabled ? null : widget.onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: _Dimensions.horizontalPadding,
-            vertical: _Dimensions.verticalPadding,
+            horizontal: Spacing.md,
+            vertical: Spacing.xs,
           ),
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             border: border,
           ),
           child: Text(
@@ -95,11 +104,4 @@ class _CategoryFilterChipState extends State<CategoryFilterChip> {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 32;
-  static const double horizontalPadding = 16;
-  static const double verticalPadding = 8;
-  static const double hoveredOpacity = 0.15;
 }

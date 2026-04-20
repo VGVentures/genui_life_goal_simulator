@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
 import 'package:genui_life_goal_simulator/onboarding/want_to_focus/models/focus_option.dart';
@@ -37,6 +38,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme(LightThemeColors()).themeData,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SimulatorPage(

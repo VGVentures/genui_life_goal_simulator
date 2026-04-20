@@ -35,22 +35,6 @@ void main() {
           expect(find.byType(SvgPicture), findsOneWidget);
         });
       }
-
-      testWidgets('without $AppColors extension', (tester) async {
-        await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: SparklineCard(
-                label: 'Test',
-                amount: r'$0',
-                trend: TrendType.negative,
-              ),
-            ),
-          ),
-        );
-
-        expect(find.byType(SparklineCard), findsOneWidget);
-      });
     });
   });
 

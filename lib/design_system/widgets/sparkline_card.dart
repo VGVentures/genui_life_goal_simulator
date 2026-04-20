@@ -38,7 +38,7 @@ class SparklineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeOf = Theme.of(context);
-    final colors = themeOf.extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = themeOf.textTheme;
 
     final trendLine = switch (trend) {
@@ -49,7 +49,7 @@ class SparklineCard extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colors?.surface,
+        color: colors.surfaceVariant,
         borderRadius: BorderRadius.circular(Spacing.xs),
       ),
       child: Padding(
@@ -64,13 +64,13 @@ class SparklineCard extends StatelessWidget {
                   Text(
                     label,
                     style: textTheme.bodySmall?.copyWith(
-                      color: colors?.onSurfaceVariant,
+                      color: colors.onSurfaceVariant,
                     ),
                   ),
                   Text(
                     amount,
                     style: textTheme.headlineSmall?.copyWith(
-                      color: colors?.onSurface,
+                      color: colors.onSurface,
                     ),
                   ),
                 ],

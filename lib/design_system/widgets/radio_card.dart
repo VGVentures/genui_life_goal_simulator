@@ -61,24 +61,24 @@ class _RadioCardContentState extends State<_RadioCardContent> {
   @override
   Widget build(BuildContext context) {
     final themeOf = Theme.of(context);
-    final colorExtension = themeOf.extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = themeOf.textTheme;
 
     final Color backgroundColor;
     final Color borderColor;
 
     if (widget.isSelected) {
-      backgroundColor = colorExtension?.primaryContainer ?? Colors.transparent;
-      borderColor = colorExtension?.primary ?? Colors.transparent;
+      backgroundColor = colors.primaryContainer;
+      borderColor = colors.primary;
     } else if (_isHovered) {
       backgroundColor = Color.alphaBlend(
-        colorExtension?.primary.withValues(alpha: 0.05) ?? Colors.transparent,
-        colorExtension?.surfaceVariant ?? Colors.white,
+        colors.primary.withValues(alpha: 0.05),
+        colors.surfaceVariant,
       );
-      borderColor = colorExtension?.outlineVariant ?? Colors.transparent;
+      borderColor = colors.outlineVariant;
     } else {
-      backgroundColor = colorExtension?.surfaceVariant ?? Colors.transparent;
-      borderColor = colorExtension?.surfaceVariant ?? Colors.transparent;
+      backgroundColor = colors.surfaceVariant;
+      borderColor = colors.surfaceVariant;
     }
 
     return MouseRegion(
@@ -108,7 +108,7 @@ class _RadioCardContentState extends State<_RadioCardContent> {
                   Text(
                     widget.label,
                     style: textTheme.labelLarge?.copyWith(
-                      color: colorExtension?.onSurface,
+                      color: colors.onSurface,
                     ),
                   ),
                   const SizedBox(height: Spacing.md),

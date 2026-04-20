@@ -97,15 +97,15 @@ class _AppAccordionState extends State<AppAccordion>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: colors?.surfaceVariant ?? _AccordionColors.surface,
+        color: colors.surfaceVariant,
         borderRadius: BorderRadius.circular(_AccordionDimensions.borderRadius),
         border: Border.all(
-          color: colors?.outlineVariant ?? _AccordionColors.border,
+          color: colors.outlineVariant,
         ),
       ),
       child: Column(
@@ -155,7 +155,7 @@ class _AccordionHeader extends StatelessWidget {
   final Animation<double> iconRotation;
   final VoidCallback onToggle;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +171,7 @@ class _AccordionHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: textTheme.titleSmall?.copyWith(
-                  color: colors?.onSurface ?? _AccordionColors.title,
+                  color: colors.onSurface,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -181,7 +181,7 @@ class _AccordionHeader extends StatelessWidget {
               turns: iconRotation,
               child: Icon(
                 Icons.keyboard_arrow_down,
-                color: colors?.onSurface ?? _AccordionColors.icon,
+                color: colors.onSurfaceVariant,
                 size: _AccordionDimensions.iconSize,
               ),
             ),
@@ -217,11 +217,4 @@ abstract final class _AccordionDimensions {
   static const double borderRadius = 16;
   static const double iconSize = 24;
   static const Duration animationDuration = Duration(milliseconds: 300);
-}
-
-abstract final class _AccordionColors {
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color border = Color(0xFFF0F1F1);
-  static const Color title = Color(0xFF1A1C1C);
-  static const Color icon = Color(0xFF5D5F5F);
 }

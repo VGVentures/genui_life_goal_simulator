@@ -88,6 +88,7 @@ void main() {
       var tapped = false;
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme(LightThemeColors()).themeData,
           home: SelectableOptionCard(
             label: 'Option 1',
             isSelected: false,

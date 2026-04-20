@@ -1,28 +1,17 @@
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
-class AppThemes {
-  static AppThemeMode get light => LightTheme();
+/// Predefined app themes.
+enum AppThemes {
+  light,
+  dark
+  ;
 
-  static AppThemeMode get dark => DarkTheme();
+  /// The [AppColors] for this theme.
+  AppColors get colors => switch (this) {
+    AppThemes.light => LightThemeColors(),
+    AppThemes.dark => DarkThemeColors(),
+  };
 
-  static AppThemeMode getAppTheme(ThemeType themeType) {
-    return switch (themeType) {
-      ThemeType.light => light,
-      ThemeType.dark => dark,
-    };
-  }
-}
-
-class LightTheme extends AppThemeMode {
-  LightTheme()
-    : super(
-        themeData: AppTheme(LightThemeColors()),
-      );
-}
-
-class DarkTheme extends AppThemeMode {
-  DarkTheme()
-    : super(
-        themeData: AppTheme(DarkThemeColors()),
-      );
+  /// The [AppTheme] for this theme.
+  AppTheme get themeData => AppTheme(colors);
 }

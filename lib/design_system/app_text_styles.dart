@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genui_life_goal_simulator/design_system/breakpoints.dart';
 import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
 
 /// Typography system based on Figma specs.
@@ -321,7 +322,10 @@ abstract class AppTextStyles {
   /// Returns the appropriate TextTheme based on screen width.
   /// Uses 600px as the breakpoint (same as ResponsiveScaffold).
   static TextTheme getResponsiveTextTheme(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    return width >= 600 ? desktopTextTheme : mobileTextTheme;
+    return responsiveValue(
+      context,
+      desktop: desktopTextTheme,
+      mobile: mobileTextTheme,
+    );
   }
 }

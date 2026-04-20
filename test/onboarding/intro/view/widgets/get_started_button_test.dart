@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/widgets/get_started_button.dart';
 
 Future<void> _pump(
@@ -10,6 +11,7 @@ Future<void> _pump(
 }) {
   return tester.pumpWidget(
     MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: GetStartedButton(
           label: label,

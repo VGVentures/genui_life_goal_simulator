@@ -36,6 +36,10 @@ class InsightCard extends StatelessWidget {
     required this.description,
     this.emoji,
     this.variant = InsightCardVariant.neutral,
+    this.cardBorderRadius = 12,
+    this.badgeBorderRadius = 8,
+    this.borderWidth = 1.5,
+    this.emojiSize = 20,
     super.key,
   });
 
@@ -52,33 +56,41 @@ class InsightCard extends StatelessWidget {
   /// Visual variant controlling colours and border.
   final InsightCardVariant variant;
 
+  /// Corner radius of the card container.
+  final double cardBorderRadius;
+
+  /// Corner radius of the emoji badge.
+  final double badgeBorderRadius;
+
+  /// Thickness of the card's border.
+  final double borderWidth;
+
+  /// Font size applied to the emoji glyph.
+  final double emojiSize;
+
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     final backgroundColor = switch (variant) {
-      InsightCardVariant.neutral =>
-        colors?.surfaceVariant ?? const Color(0xFFFFFFFF),
-      InsightCardVariant.success =>
-        colors?.successContainer ?? const Color(0xFFC2FFD1),
-      InsightCardVariant.warning =>
-        colors?.warningContainer ?? const Color(0xFFFFEEE1),
-      InsightCardVariant.error =>
-        colors?.errorContainer ?? const Color(0xFFFFDAD5),
+      InsightCardVariant.neutral => colors.surfaceVariant,
+      InsightCardVariant.success => colors.successContainer,
+      InsightCardVariant.warning => colors.warningContainer,
+      InsightCardVariant.error => colors.errorContainer,
     };
 
     final borderColor = switch (variant) {
       InsightCardVariant.neutral => Colors.transparent,
-      InsightCardVariant.success => colors?.success ?? const Color(0xFF00A65F),
-      InsightCardVariant.warning => colors?.warning ?? const Color(0xFFF69426),
-      InsightCardVariant.error => colors?.error ?? const Color(0xFFFF5446),
+      InsightCardVariant.success => colors.success,
+      InsightCardVariant.warning => colors.warning,
+      InsightCardVariant.error => colors.error,
     };
 
-    const badgeColor = Colors.white;
+    final badgeColor = colors.surfaceVariant;
 
     final badgeBorderColor = variant == InsightCardVariant.neutral
-        ? colors?.outline ?? const Color(0xFFF0F1F1)
+        ? colors.outline
         : Colors.transparent;
 
     final resolvedEmoji = switch (variant) {
@@ -93,10 +105,10 @@ class InsightCard extends StatelessWidget {
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(_Dimensions.cardBorderRadius),
+        borderRadius: BorderRadius.circular(cardBorderRadius),
         border: Border.all(
           color: borderColor,
-          width: _Dimensions.borderWidth,
+          width: borderWidth,
         ),
       ),
       child: Column(
@@ -107,15 +119,13 @@ class InsightCard extends StatelessWidget {
             padding: const EdgeInsets.all(Spacing.xs),
             decoration: BoxDecoration(
               color: badgeColor,
-              borderRadius: BorderRadius.circular(
-                _Dimensions.badgeBorderRadius,
-              ),
+              borderRadius: BorderRadius.circular(badgeBorderRadius),
               border: Border.all(color: badgeBorderColor),
             ),
             child: Text(
               resolvedEmoji,
-              style: const TextStyle(
-                fontSize: _Dimensions.emojiSize,
+              style: TextStyle(
+                fontSize: emojiSize,
                 height: 1,
               ),
             ),
@@ -124,25 +134,18 @@ class InsightCard extends StatelessWidget {
           Text(
             title,
             style: textTheme.headlineSmall?.copyWith(
-              color: colors?.onSurface,
+              color: colors.onSurface,
             ),
           ),
           const SizedBox(height: Spacing.xs),
           Text(
             description,
             style: textTheme.bodyMedium?.copyWith(
-              color: colors?.onSurfaceVariant,
+              color: colors.onSurfaceVariant,
             ),
           ),
         ],
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double cardBorderRadius = 12;
-  static const double badgeBorderRadius = 8;
-  static const double borderWidth = 1.5;
-  static const double emojiSize = 20;
 }

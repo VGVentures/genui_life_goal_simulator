@@ -12,6 +12,12 @@ class DonutChart extends StatelessWidget {
     required this.amount,
     required this.label,
     required this.percentage,
+    this.donutSize = 210,
+    this.strokeWidth = 41,
+    this.selectedStrokeExtra = Spacing.xs,
+    this.sectionsSpace = 2,
+    this.startDegreeOffset = 270,
+    this.dimmedOpacity = 0.4,
     super.key,
   });
 
@@ -24,23 +30,43 @@ class DonutChart extends StatelessWidget {
   final String label;
   final String? percentage;
 
+  /// Outer diameter of the donut chart.
+  final double donutSize;
+
+  /// Radial thickness of each segment.
+  final double strokeWidth;
+
+  /// Extra radial thickness added to the currently selected segment.
+  final double selectedStrokeExtra;
+
+  /// Gap between adjacent segments.
+  final double sectionsSpace;
+
+  /// Angle (degrees) at which the first segment starts.
+  final double startDegreeOffset;
+
+  /// Alpha multiplier applied to unselected segments when a selection exists.
+  final double dimmedOpacity;
+
+  double get _centerSpaceRadius => donutSize / 2 - strokeWidth;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return SizedBox(
-      width: _Dimensions.donutSize,
-      height: _Dimensions.donutSize,
+      width: donutSize,
+      height: donutSize,
       child: Stack(
         alignment: Alignment.center,
         children: [
           PieChart(
             PieChartData(
               sections: _buildSections(),
-              centerSpaceRadius: _Dimensions.centerSpaceRadius,
-              sectionsSpace: _Dimensions.sectionsSpace,
-              startDegreeOffset: _Dimensions.startDegreeOffset,
+              centerSpaceRadius: _centerSpaceRadius,
+              sectionsSpace: sectionsSpace,
+              startDegreeOffset: startDegreeOffset,
               pieTouchData: PieTouchData(
                 enabled: true,
                 touchCallback: _handleTouch,
@@ -56,19 +82,19 @@ class DonutChart extends StatelessWidget {
                 Text(
                   label,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colors?.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               Text(
                 amount,
                 style: textTheme.headlineMedium?.copyWith(
-                  color: colors?.onSurface,
+                  color: colors.onSurface,
                 ),
               ),
               Text(
                 percentage ?? label,
                 style: textTheme.bodySmall?.copyWith(
-                  color: colors?.onSurfaceVariant,
+                  color: colors.onSurfaceVariant,
                 ),
               ),
             ],
@@ -85,11 +111,11 @@ class DonutChart extends StatelessWidget {
         PieChartSectionData(
           value: items[i].value,
           color: hasSelection && i != selectedIndex
-              ? items[i].color?.withValues(alpha: _Dimensions.dimmedOpacity)
+              ? items[i].color?.withValues(alpha: dimmedOpacity)
               : items[i].color,
           radius: i == selectedIndex
-              ? _Dimensions.strokeWidth + _Dimensions.selectedStrokeExtra
-              : _Dimensions.strokeWidth,
+              ? strokeWidth + selectedStrokeExtra
+              : strokeWidth,
           showTitle: false,
         ),
     ];
@@ -112,14 +138,4 @@ class DonutChart extends StatelessWidget {
       onHoverExit();
     }
   }
-}
-
-abstract final class _Dimensions {
-  static const double dimmedOpacity = 0.4;
-  static const double donutSize = 210;
-  static const double strokeWidth = 41;
-  static const double selectedStrokeExtra = 8;
-  static const double sectionsSpace = 2;
-  static const double startDegreeOffset = 270;
-  static const double centerSpaceRadius = donutSize / 2 - strokeWidth;
 }

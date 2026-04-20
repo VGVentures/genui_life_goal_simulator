@@ -21,7 +21,7 @@ const _items = [
   ),
 ];
 
-Future<void> _pumpList(WidgetTester tester, {bool withTheme = true}) {
+Future<void> _pumpList(WidgetTester tester) {
   const widget = Scaffold(
     body: TransactionList(items: _items),
   );
@@ -29,7 +29,7 @@ Future<void> _pumpList(WidgetTester tester, {bool withTheme = true}) {
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: withTheme ? AppTheme(LightThemeColors()).themeData : null,
+      theme: AppTheme(LightThemeColors()).themeData,
       home: widget,
     ),
   );
@@ -66,12 +66,6 @@ void main() {
         await _pumpList(tester);
 
         expect(find.byType(Divider), findsNWidgets(_items.length));
-      });
-
-      testWidgets('without $AppColors extension', (tester) async {
-        await _pumpList(tester, withTheme: false);
-
-        expect(find.byType(TransactionList), findsOneWidget);
       });
 
       testWidgets('empty list without error', (tester) async {

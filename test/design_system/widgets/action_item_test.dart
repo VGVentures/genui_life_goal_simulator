@@ -118,24 +118,6 @@ void main() {
         expect(deltaText.style?.color, const Color(0xFF00A65F));
       });
     });
-
-    testWidgets('renders without error without AppColors extension', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: ActionItem(
-              title: 'Restaurant',
-              subtitle: 'Dining • Feb 18',
-              amount: r'$87',
-            ),
-          ),
-        ),
-      );
-
-      expect(find.text('Restaurant'), findsOneWidget);
-    });
   });
 
   group('ActionItemsGroup', () {

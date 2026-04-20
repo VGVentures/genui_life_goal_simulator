@@ -30,25 +30,6 @@ void main() {
           expect(find.text(label), findsOneWidget);
         }
       });
-
-      testWidgets('without $AppColors theme extension', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: HeaderSelector(
-                options: options,
-                selectedIndex: 0,
-                onChanged: (_) {},
-              ),
-            ),
-          ),
-        );
-
-        expect(find.byType(HeaderSelector), findsOneWidget);
-        for (final label in options) {
-          expect(find.text(label), findsOneWidget);
-        }
-      });
     });
 
     group('applies', () {

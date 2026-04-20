@@ -38,7 +38,7 @@ class ActionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -70,7 +70,7 @@ class ActionItem extends StatelessWidget {
         Divider(
           height: 1,
           thickness: 1,
-          color: colors?.outlineVariant ?? _ActionItemColors.divider,
+          color: colors.outlineVariant,
         ),
       ],
     );
@@ -88,7 +88,7 @@ class _ActionItemInfo extends StatelessWidget {
   final String title;
   final String subtitle;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +99,14 @@ class _ActionItemInfo extends StatelessWidget {
         Text(
           title,
           style: textTheme.titleSmall?.copyWith(
-            color: colors?.onSurface ?? _ActionItemColors.title,
+            color: colors.onSurface,
           ),
         ),
         const SizedBox(height: _ActionItemDimensions.titleSubtitleGap),
         Text(
           subtitle,
           style: textTheme.bodyMedium?.copyWith(
-            color: colors?.onSurfaceVariant ?? _ActionItemColors.subtitle,
+            color: colors.onSurfaceVariant,
           ),
         ),
       ],
@@ -127,7 +127,7 @@ class _ActionItemTrailing extends StatelessWidget {
   final String? delta;
   final Widget? trailing;
   final TextTheme textTheme;
-  final AppColors? colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,7 @@ class _ActionItemTrailing extends StatelessWidget {
         Text(
           amount,
           style: textTheme.bodyLarge?.copyWith(
-            color: colors?.onSurface ?? _ActionItemColors.title,
+            color: colors.onSurface,
           ),
         ),
         if (delta != null) ...[
@@ -147,7 +147,7 @@ class _ActionItemTrailing extends StatelessWidget {
           Text(
             delta!,
             style: textTheme.labelMedium?.copyWith(
-              color: colors?.success ?? _ActionItemColors.delta,
+              color: colors.success,
             ),
           ),
         ],
@@ -180,7 +180,7 @@ class _ActionItemTrailing extends StatelessWidget {
             Text(
               amount,
               style: textTheme.bodyLarge?.copyWith(
-                color: colors?.onSurface ?? _ActionItemColors.title,
+                color: colors.onSurface,
               ),
             ),
             const SizedBox(width: Spacing.md),
@@ -192,7 +192,7 @@ class _ActionItemTrailing extends StatelessWidget {
           Text(
             delta!,
             style: textTheme.labelMedium?.copyWith(
-              color: colors?.success ?? _ActionItemColors.delta,
+              color: colors.success,
             ),
           ),
         ],
@@ -224,11 +224,4 @@ class ActionItemsGroup extends StatelessWidget {
 
 abstract final class _ActionItemDimensions {
   static const double titleSubtitleGap = 2;
-}
-
-abstract final class _ActionItemColors {
-  static const Color title = Color(0xFF1A1C1C);
-  static const Color subtitle = Color(0xFF5D5F5F);
-  static const Color divider = Color(0xFFF0F1F1);
-  static const Color delta = Color(0xFF00A65F);
 }

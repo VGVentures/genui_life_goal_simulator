@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
-import 'package:genui_life_goal_simulator/design_system/widgets/horizontal_bar.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/simulator/catalog/items/horizontal_bar_catalog_item.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -42,6 +42,7 @@ Future<void> _pump(
 ) async {
   await tester.pumpWidget(
     MaterialApp(
+      theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: SingleChildScrollView(
           child: Builder(

@@ -52,6 +52,7 @@ Future<_MockSimulatorBloc> _pump(
     BlocProvider<SimulatorBloc>.value(
       value: bloc,
       child: MaterialApp(
+        theme: AppTheme(LightThemeColors()).themeData,
         home: Scaffold(
           body: Builder(
             builder: (context) => nextStepsBarItem.widgetBuilder(

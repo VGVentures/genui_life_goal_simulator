@@ -19,6 +19,9 @@ class EmojiCard extends StatelessWidget {
     required this.label,
     this.isSelected = false,
     this.onTap,
+    this.borderRadius = 8,
+    this.borderWidth = 2,
+    this.emojiSize = 32,
     super.key,
   });
 
@@ -34,23 +37,35 @@ class EmojiCard extends StatelessWidget {
   /// Optional tap callback.
   final VoidCallback? onTap;
 
+  /// Corner radius of the card.
+  final double borderRadius;
+
+  /// Thickness of the card's border.
+  final double borderWidth;
+
+  /// Font size applied to the emoji glyph.
+  final double emojiSize;
+
   @override
   Widget build(BuildContext context) {
     final content = _EmojiCardContent(
       emoji: emoji,
       label: label,
       isSelected: isSelected,
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      emojiSize: emojiSize,
     );
 
     if (onTap == null) return content;
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius),
         child: content,
       ),
     );
@@ -62,11 +77,17 @@ class _EmojiCardContent extends StatefulWidget {
     required this.emoji,
     required this.label,
     required this.isSelected,
+    required this.borderRadius,
+    required this.borderWidth,
+    required this.emojiSize,
   });
 
   final String emoji;
   final String label;
   final bool isSelected;
+  final double borderRadius;
+  final double borderWidth;
+  final double emojiSize;
 
   @override
   State<_EmojiCardContent> createState() => _EmojiCardContentState();
@@ -77,23 +98,23 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
 
     final backgroundColor = widget.isSelected
-        ? (colors?.primaryContainer ?? _EmojiCardColors.selectedBackground)
+        ? colors.primaryContainer
         : _isHovered
         ? Color.alphaBlend(
-            colors?.primary.withValues(alpha: 0.05) ?? Colors.transparent,
-            colors?.surfaceVariant ?? Colors.white,
+            colors.primary.withValues(alpha: 0.05),
+            colors.surfaceVariant,
           )
-        : (colors?.surfaceVariant ?? _EmojiCardColors.background);
+        : colors.surfaceVariant;
 
     final borderColor = widget.isSelected
-        ? (colors?.primary ?? _EmojiCardColors.selectedBorder)
+        ? colors.primary
         : _isHovered
-        ? (colors?.outlineVariant ?? _EmojiCardColors.border)
-        : _EmojiCardColors.border;
+        ? colors.outlineVariant
+        : Colors.transparent;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -102,10 +123,10 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
         padding: const EdgeInsets.all(Spacing.md),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           border: Border.all(
             color: borderColor,
-            width: _Dimensions.borderWidth,
+            width: widget.borderWidth,
           ),
         ),
         child: Column(
@@ -114,13 +135,13 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
           children: [
             Text(
               widget.emoji,
-              style: const TextStyle(fontSize: _Dimensions.emojiSize),
+              style: TextStyle(fontSize: widget.emojiSize),
             ),
             const SizedBox(height: Spacing.xs),
             Text(
               widget.label,
               style: textTheme.labelLarge?.copyWith(
-                color: colors?.onSurface ?? _EmojiCardColors.label,
+                color: colors.onSurface,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -208,18 +229,4 @@ class _MobileEmojiCardLayout extends StatelessWidget {
             ..removeLast(),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 8;
-  static const double borderWidth = 2;
-  static const double emojiSize = 32;
-}
-
-abstract final class _EmojiCardColors {
-  static const Color background = Color(0xFFF7F6F7);
-  static const Color border = Colors.transparent;
-  static const Color selectedBackground = Color(0xFFF3F6FF);
-  static const Color selectedBorder = Color(0xFF6D92F5);
-  static const Color label = Color(0xFF1A1C1C);
 }

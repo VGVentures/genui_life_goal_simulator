@@ -18,16 +18,22 @@ enum AppButtonVariant {
 /// Size variant for [AppButton].
 enum AppButtonSize {
   /// Large: 48px height, 16px horizontal padding.
-  large(height: 48),
+  large(height: 48, horizontalPadding: Spacing.md),
 
   /// Small: 40px height, 12px horizontal padding.
-  small(height: 40)
+  small(height: 40, horizontalPadding: Spacing.sm)
   ;
 
-  const AppButtonSize({required this.height});
+  const AppButtonSize({
+    required this.height,
+    required this.horizontalPadding,
+  });
 
   /// The fixed height for this button size.
   final double height;
+
+  /// The horizontal padding applied to the button at this size.
+  final double horizontalPadding;
 }
 
 /// {@template app_button}
@@ -47,6 +53,12 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.leadingIcon,
     this.trailingIcon,
+    this.pillRadius = 100,
+    this.minWidth = 72,
+    this.outlineBorderWidth = 1.5,
+    this.focusRingWidth = 3,
+    this.loadingIndicatorSize = Spacing.md,
+    this.loadingStrokeWidth = 2,
     super.key,
   });
 
@@ -72,30 +84,34 @@ class AppButton extends StatelessWidget {
   /// Optional icon displayed after the label.
   final Widget? trailingIcon;
 
+  /// Corner radius used for the pill-shaped border.
+  final double pillRadius;
+
+  /// Minimum width of the button.
+  final double minWidth;
+
+  /// Border width for the outlined variant.
+  final double outlineBorderWidth;
+
+  /// Border width drawn when the button is focused.
+  final double focusRingWidth;
+
+  /// Size of the loading indicator shown when [isLoading] is `true`.
+  final double loadingIndicatorSize;
+
+  /// Stroke width of the loading indicator.
+  final double loadingStrokeWidth;
+
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
-    final primary = colors?.primary ?? _Colors.primary;
-    final onPrimary = colors?.onPrimary ?? _Colors.onPrimary;
-    final onSurface = colors?.onSurface ?? _Colors.onSurface;
-    final gradient = colors?.geniusGradient;
-
-    final style = _buttonStyle(
-      primary: primary,
-      onPrimary: onPrimary,
-      onSurface: onSurface,
-      gradient: gradient,
-    );
+    final style = _buttonStyle(colors: colors);
 
     // When loading, disable the button entirely.
     final effectiveOnPressed = isLoading ? null : onPressed;
 
-    final child = _buildChild(
-      context,
-      primary: primary,
-      onPrimary: onPrimary,
-    );
+    final child = _buildChild(context, colors: colors);
 
     return switch (variant) {
       AppButtonVariant.filled => FilledButton(
@@ -118,20 +134,17 @@ class AppButton extends StatelessWidget {
 
   Widget _buildChild(
     BuildContext context, {
-    required Color primary,
-    required Color onPrimary,
+    required AppColors colors,
   }) {
     if (isLoading) {
-      final colors = Theme.of(context).extension<AppColors>();
-      final indicatorColor = colors?.onSurfaceMuted ?? const Color(0xFF909191);
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox.square(
-            dimension: _Dimensions.loadingIndicatorSize,
+            dimension: loadingIndicatorSize,
             child: CircularProgressIndicator(
-              strokeWidth: _Dimensions.loadingStrokeWidth,
-              color: indicatorColor,
+              strokeWidth: loadingStrokeWidth,
+              color: colors.onSurfaceMuted,
             ),
           ),
           const SizedBox(width: Spacing.xs),
@@ -156,76 +169,66 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  ButtonStyle _buttonStyle({
-    required Color primary,
-    required Color onPrimary,
-    required Color onSurface,
-    required LinearGradient? gradient,
-  }) {
-    final height = size.height;
-    final horizontalPadding = size == AppButtonSize.large
-        ? _Dimensions.largePadding
-        : _Dimensions.smallPadding;
-
+  ButtonStyle _buttonStyle({required AppColors colors}) {
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return _Colors.disabledBackground;
+          return colors.surfaceContainer;
         }
         return switch (variant) {
-          AppButtonVariant.filled => _resolveFilledBackground(states, primary),
+          AppButtonVariant.filled => _resolveFilledBackground(states, colors),
           AppButtonVariant.outlined => _resolveOutlinedBackground(
             states,
-            primary,
+            colors.primary,
           ),
           AppButtonVariant.gradient => Colors.transparent,
         };
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return _Colors.disabledText;
+          return colors.onSurfaceDisabled;
         }
         return switch (variant) {
-          AppButtonVariant.filled => onPrimary,
-          AppButtonVariant.outlined => onSurface,
-          AppButtonVariant.gradient => onPrimary,
+          AppButtonVariant.filled => colors.onPrimary,
+          AppButtonVariant.outlined => colors.onSurface,
+          AppButtonVariant.gradient => colors.onPrimary,
         };
       }),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       side: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.focused)) {
-          return const BorderSide(
-            color: _Colors.focusRing,
-            width: _Dimensions.focusRingWidth,
+          return BorderSide(
+            color: colors.onSurfaceVariant,
+            width: focusRingWidth,
           );
         }
         if (variant == AppButtonVariant.outlined) {
           if (states.contains(WidgetState.disabled)) {
-            return const BorderSide(
-              color: _Colors.disabledOutline,
-              width: _Dimensions.outlineBorderWidth,
+            return BorderSide(
+              color: colors.onSurfaceDisabled,
+              width: outlineBorderWidth,
             );
           }
           return BorderSide(
-            color: primary,
-            width: _Dimensions.outlineBorderWidth,
+            color: colors.primary,
+            width: outlineBorderWidth,
           );
         }
         return BorderSide.none;
       }),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+          borderRadius: BorderRadius.circular(pillRadius),
         ),
       ),
       padding: WidgetStateProperty.all(
-        EdgeInsets.symmetric(horizontal: horizontalPadding),
+        EdgeInsets.symmetric(horizontal: size.horizontalPadding),
       ),
       minimumSize: WidgetStateProperty.all(
-        Size(_Dimensions.minWidth, height),
+        Size(minWidth, size.height),
       ),
       tapTargetSize: MaterialTapTargetSize.padded,
-      textStyle: WidgetStateProperty.all(_Dimensions.labelTextStyle),
+      textStyle: WidgetStateProperty.all(_labelTextStyle),
       elevation: WidgetStateProperty.all(0),
       backgroundBuilder: variant == AppButtonVariant.gradient
           ? (context, states, child) {
@@ -233,20 +236,21 @@ class AppButton extends StatelessWidget {
               final isHovered = states.contains(WidgetState.hovered);
               final isPressed = states.contains(WidgetState.pressed);
               final isFocused = states.contains(WidgetState.focused);
+              final overlay = colors.onPrimary;
 
               return DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: isDisabled ? null : gradient,
-                  borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                  gradient: isDisabled ? null : colors.geniusGradient,
+                  borderRadius: BorderRadius.circular(pillRadius),
                 ),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: isPressed || isFocused
-                        ? Colors.black.withValues(alpha: 0.2)
+                        ? overlay.withValues(alpha: 0.2)
                         : isHovered
-                        ? Colors.black.withValues(alpha: 0.1)
+                        ? overlay.withValues(alpha: 0.1)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                    borderRadius: BorderRadius.circular(pillRadius),
                   ),
                   child: child,
                 ),
@@ -258,16 +262,18 @@ class AppButton extends StatelessWidget {
 
   static Color _resolveFilledBackground(
     Set<WidgetState> states,
-    Color primary,
+    AppColors colors,
   ) {
+    final primary = colors.primary;
+    final overlay = colors.onSurface;
     if (states.contains(WidgetState.pressed)) {
-      return Color.lerp(primary, Colors.black, 0.2)!;
+      return Color.lerp(primary, overlay, 0.2)!;
     }
     if (states.contains(WidgetState.focused)) {
-      return Color.lerp(primary, Colors.black, 0.2)!;
+      return Color.lerp(primary, overlay, 0.2)!;
     }
     if (states.contains(WidgetState.hovered)) {
-      return Color.lerp(primary, Colors.black, 0.1)!;
+      return Color.lerp(primary, overlay, 0.1)!;
     }
     return primary;
   }
@@ -289,31 +295,10 @@ class AppButton extends StatelessWidget {
   }
 }
 
-abstract final class _Dimensions {
-  static const double largePadding = 16;
-  static const double smallPadding = 12;
-  static const double pillRadius = 100;
-  static const double minWidth = 72;
-  static const double outlineBorderWidth = 1.5;
-  static const double focusRingWidth = 3;
-  static const double loadingIndicatorSize = 16;
-  static const double loadingStrokeWidth = 2;
-
-  static const TextStyle labelTextStyle = TextStyle(
-    fontFamily: FontFamily.poppins,
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 20 / 14,
-    letterSpacing: -0.15,
-  );
-}
-
-abstract final class _Colors {
-  static const Color primary = Color(0xFF6D92F5);
-  static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color onSurface = Color(0xFF1A1C1C);
-  static const Color disabledBackground = Color(0xFFF0F1F1);
-  static const Color disabledText = Color(0xFFAAABAB);
-  static const Color disabledOutline = Color(0xFFAAABAB);
-  static const Color focusRing = Color(0xFF6D6D6D);
-}
+const _labelTextStyle = TextStyle(
+  fontFamily: FontFamily.poppins,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20 / 14,
+  letterSpacing: -0.15,
+);

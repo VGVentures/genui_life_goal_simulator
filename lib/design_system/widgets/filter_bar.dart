@@ -70,7 +70,7 @@ class FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>();
+    final colors = context.appColors;
 
     return SizedBox(
       width: double.infinity,
@@ -83,7 +83,7 @@ class FilterBar extends StatelessWidget {
           Text(
             '$_selectedCount of ${categories.length} categories selected',
             style: AppTextStyles.bodyMediumDesktop.copyWith(
-              color: colors?.onSurfaceMuted,
+              color: colors.onSurfaceMuted,
             ),
           ),
         ],

@@ -2,15 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/design_system/radio_theme.dart';
 
-abstract class AppThemeMode {
-  AppThemeMode({required this.themeData}) {
-    colors = themeData.colorScheme;
-  }
-
-  final AppTheme themeData;
-  late ColorScheme colors;
-}
-
 /// App theme configuration
 class AppTheme {
   const AppTheme(this.colors);
@@ -51,13 +42,17 @@ class AppTheme {
   ThemeData getThemeData(BuildContext context) =>
       _buildThemeData(AppTextStyles.getResponsiveTextTheme(context));
 
+  GCNSliderTheme get _gcnSliderTheme => colors.brightness == Brightness.dark
+      ? darkGCNSliderTheme
+      : lightGCNSliderTheme;
+
   ThemeData _buildThemeData(TextTheme textTheme) =>
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
         textTheme: textTheme,
       ).copyWith(
-        extensions: [colors],
+        extensions: [colors, _gcnSliderTheme],
         appBarTheme: AppBarTheme(
           backgroundColor: colorScheme.primary,
           centerTitle: true,

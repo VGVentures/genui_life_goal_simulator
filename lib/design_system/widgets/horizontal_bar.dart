@@ -35,22 +35,13 @@ class HorizontalBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.extension<AppColors>();
+    final colors = context.appColors;
 
     final isNegative = comparisonValue.startsWith('-');
-    final positiveColor = colors?.success ?? _HorizontalBarColors.positive;
-    final negativeColor = colors?.error ?? _HorizontalBarColors.negative;
-    final comparisonColor = isNegative ? negativeColor : positiveColor;
+    final comparisonColor = isNegative ? colors.error : colors.success;
 
-    final barGradient =
-        colors?.geniusGradient ??
-        const LinearGradient(
-          colors: [
-            _HorizontalBarColors.barFillStart,
-            _HorizontalBarColors.barFillEnd,
-          ],
-        );
-    final trackColor = colors?.outlineVariant ?? _HorizontalBarColors.track;
+    final barGradient = colors.geniusGradient;
+    final trackColor = colors.outlineVariant;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -63,13 +54,13 @@ class HorizontalBar extends StatelessWidget {
             Text(
               category,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors?.onSurface,
+                color: colors.onSurface,
               ),
             ),
             Text(
               amount,
               style: theme.textTheme.titleSmall?.copyWith(
-                color: colors?.onSurface,
+                color: colors.onSurface,
               ),
             ),
           ],
@@ -85,7 +76,7 @@ class HorizontalBar extends StatelessWidget {
             Text(
               comparisonLabel,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors?.onSurfaceMuted,
+                color: colors.onSurfaceMuted,
               ),
             ),
             Text(
@@ -137,12 +128,4 @@ class _HorizontalProgressBar extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _HorizontalBarColors {
-  static const Color barFillStart = Color(0xFF2461EB);
-  static const Color barFillEnd = Color(0xFFD4C6FB);
-  static const Color track = Color(0xFFE2E8F9);
-  static const Color positive = Color(0xFF4CAF50);
-  static const Color negative = Color(0xFFF0524D);
 }

@@ -38,6 +38,8 @@ class PieChartComponent extends StatefulWidget {
     required this.totalAmount,
     this.selectedIndex,
     this.onSelectedIndexChanged,
+    this.columnSpacing = 46,
+    this.rowSpacing = 40,
     super.key,
   });
 
@@ -59,6 +61,12 @@ class PieChartComponent extends StatefulWidget {
 
   /// Called when selection changes.
   final ValueChanged<int?>? onSelectedIndexChanged;
+
+  /// Vertical gap between the donut and the legend in the mobile layout.
+  final double columnSpacing;
+
+  /// Horizontal gap between the donut and the legend in the desktop layout.
+  final double rowSpacing;
 
   @override
   State<PieChartComponent> createState() => _PieChartComponentState();
@@ -148,7 +156,7 @@ class _PieChartComponentState extends State<PieChartComponent> {
 
     return ResponsiveScaffold(
       mobile: Column(
-        spacing: _Dimensions.columnSpacing,
+        spacing: widget.columnSpacing,
         mainAxisSize: MainAxisSize.min,
         children: [
           donut,
@@ -157,7 +165,7 @@ class _PieChartComponentState extends State<PieChartComponent> {
       ),
       desktop: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: _Dimensions.rowSpacing,
+        spacing: widget.rowSpacing,
         children: [
           donut,
           Expanded(child: legend),
@@ -165,9 +173,4 @@ class _PieChartComponentState extends State<PieChartComponent> {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double columnSpacing = 46;
-  static const double rowSpacing = 40;
 }
