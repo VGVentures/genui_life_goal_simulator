@@ -130,3 +130,11 @@ firebase.json
 **/android/app/google-services.json
 **/ios/**/GoogleService-Info.plist
 **/macos/**/GoogleService-Info.plist
+
+# Platform-specific golden baselines. Only the CI baselines are committed.
+**/goldens/*/
+!**/goldens/ci/
+!**/goldens/ci/**
+
+# Diff artifacts written by flutter_test when a golden comparison fails.
+**/failures/
