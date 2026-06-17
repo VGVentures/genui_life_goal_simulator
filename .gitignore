@@ -130,3 +130,8 @@ firebase.json
 **/android/app/google-services.json
 **/ios/**/GoogleService-Info.plist
 **/macos/**/GoogleService-Info.plist
+
+# Model benchmark harness: API keys and run outputs
+benchmark/keys.env
+benchmark/results/
+benchmark/report.html*
