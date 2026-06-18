@@ -211,6 +211,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GenUI Model Benchmarks · Very Good Ventures</title>
+  ${_faviconTag()}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -249,6 +250,8 @@ String _buildHtml(List<_ModelSummary> summaries) {
       color: var(--blue-light);
       margin: 0 0 0.6rem;
     }
+    .logo { margin: 0 0 1.25rem; }
+    .logo svg { height: 34px; width: auto; display: block; }
     h1 {
       font-size: clamp(1.8rem, 4vw, 2.6rem);
       font-weight: 700;
@@ -360,7 +363,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
 <body>
   <header class="hero">
     <div class="hero-inner">
-      <p class="label">Very Good Ventures · GenUI</p>
+      ${_logoVgv()}
       <h1>GenUI Model Benchmarks</h1>
       <p>Average over all timed round trips, sorted fastest-first by total
       round-trip time. Latency stats exclude failed turns; the error rate counts
@@ -427,3 +430,25 @@ $rows
 
 String _escape(String s) =>
     s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+/// The VGV wordmark inlined as SVG in the hero. Falls back to a text label if
+/// the asset isn't found.
+String _logoVgv() {
+  final file = File('tool/assets/vgv_logo.svg');
+  if (!file.existsSync()) {
+    return '<p class="label">Very Good Ventures · GenUI</p>';
+  }
+  return '<div class="logo" role="img" aria-label="Very Good Ventures">'
+      '${file.readAsStringSync()}</div>';
+}
+
+/// The VGV favicon (the app's `web/favicon.png`) inlined as a base64 data URI so
+/// the report stays a single self-contained artifact. Returns an empty string
+/// if the file isn't found.
+String _faviconTag() {
+  final file = File('web/favicon.png');
+  if (!file.existsSync()) return '';
+  final base64 = base64Encode(file.readAsBytesSync());
+  return '<link rel="icon" type="image/png" '
+      'href="data:image/png;base64,$base64">';
+}
