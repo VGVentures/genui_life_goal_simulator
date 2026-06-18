@@ -75,6 +75,7 @@ class _ModelSummary {
     required this.avgPerIterationMs,
     required this.avgChunks,
     required this.avgTokens,
+    required this.failureReasons,
   });
 
   factory _ModelSummary.fromJson(Map<String, dynamic> json) {
@@ -124,6 +125,13 @@ class _ModelSummary {
           (perIteration[iter] ?? 0) + (t['totalMs'] as num).toDouble();
     }
 
+    // Tally the sharpened failure reasons for the error-rate tooltip.
+    final failureReasons = <String, int>{};
+    for (final t in turns.where(isFailure)) {
+      final reason = (t['failureReason'] as String?) ?? 'unclassified';
+      failureReasons[reason] = (failureReasons[reason] ?? 0) + 1;
+    }
+
     return _ModelSummary(
       modelId: modelId,
       iterations: iterations,
@@ -135,6 +143,7 @@ class _ModelSummary {
       avgPerIterationMs: _avg(perIteration.values.toList()),
       avgChunks: _avg(chunks),
       avgTokens: _avg(tokens),
+      failureReasons: failureReasons,
     );
   }
 
@@ -149,7 +158,19 @@ class _ModelSummary {
   final double? avgChunks;
   final double? avgTokens;
 
+  /// Sharpened failure reasons → count, for the error-rate tooltip.
+  final Map<String, int> failureReasons;
+
   double get errorRate => totalTurns == 0 ? 0 : failedTurns / totalTurns;
+
+  /// Multi-line breakdown of failure reasons (most common first), or null when
+  /// there were no failures.
+  String? get failureTooltip {
+    if (failureReasons.isEmpty) return null;
+    final entries = failureReasons.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    return entries.map((e) => '${e.value}× ${e.key}').join('\n');
+  }
 }
 
 double? _avg(List<double> values) {
@@ -184,6 +205,8 @@ String _buildHtml(List<_ModelSummary> summaries) {
         ? 0
         : ((s.avgTotalMs! / maxTotal) * 100).round();
     final errClass = s.errorRate > 0 ? 'err' : 'ok';
+    final errTooltip = s.failureTooltip;
+    final errAttr = errTooltip == null ? '' : ' title="${_attr(errTooltip)}"';
     final fastest = i == 0 && s.avgTotalMs != null ? ' class="fastest"' : '';
     final turnsPerIter = (s.totalTurns / (s.iterations == 0 ? 1 : s.iterations))
         .toStringAsFixed(0);
@@ -197,7 +220,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
         <td class="num">${_ms(s.avgTtfcMs)}</td>
         <td class="num">${_ms(s.p95TtfcMs)}</td>
         <td class="num">${_ms(s.avgPerIterationMs)}</td>
-        <td class="num $errClass">${_pct(s.errorRate)}</td>
+        <td class="num $errClass"$errAttr>${_pct(s.errorRate)}</td>
         <td class="num">${_num(s.avgChunks)}</td>
         <td class="num">${_num(s.avgTokens)}</td>
         <td class="num muted">$turnsPerIter × ${s.iterations}</td>
@@ -310,6 +333,11 @@ String _buildHtml(List<_ModelSummary> summaries) {
     }
     td.err { color: var(--vgv-pink); font-weight: 600; }
     td.ok { color: var(--gray-deep); }
+    td.err[title] {
+      cursor: help;
+      text-decoration: underline dotted;
+      text-underline-offset: 3px;
+    }
     thead th[title] {
       cursor: help;
       text-decoration: underline dotted rgba(131, 137, 152, 0.55);
@@ -430,6 +458,9 @@ $rows
 
 String _escape(String s) =>
     s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+/// Escapes a string for use inside a double-quoted HTML attribute.
+String _attr(String s) => _escape(s).replaceAll('"', '&quot;');
 
 /// The VGV wordmark inlined as SVG in the hero. Falls back to a text label if
 /// the asset isn't found.

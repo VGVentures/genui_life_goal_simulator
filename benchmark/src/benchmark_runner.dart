@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 // genui also exports a PromptBuilder; hide it so the app's PromptBuilder wins.
@@ -142,7 +143,12 @@ Future<void> _runIteration({
           : 'Continue to the next step.';
 
       await repository.sendMessage(message);
-      await _drainParser();
+      // Wait for the async A2UI parser to emit its surface/error events. Poll
+      // until they stop arriving (or a cap) rather than a fixed delay, so a
+      // slightly-late surface event isn't missed and counted as a failure.
+      await _awaitSettled(
+        () => surfaceIds.length + eventErrors.length + tally.count,
+      );
 
       final producedSurface = surfaceIds.length > surfacesBefore;
       final timing = lastTiming;
@@ -154,6 +160,13 @@ Future<void> _runIteration({
         ...tally.messages.skip(asyncErrorsBefore),
       ];
       final hadError = turnErrors.isNotEmpty;
+      final failed = hadError || !producedSurface;
+      final failureReason = failed
+          ? _classifyFailure(
+              output: timing?.outputText ?? '',
+              errors: turnErrors,
+            )
+          : null;
 
       recorder.recordTurn(
         totalMs: timing?.totalMs ?? 0,
@@ -164,12 +177,16 @@ Future<void> _runIteration({
         responseTokens: timing?.responseTokens,
         totalTokens: timing?.totalTokens,
         error: hadError ? _firstLine(turnErrors.first) : timing?.errorMessage,
+        failureReason: failureReason,
         errorDetails: turnErrors,
         outputText: timing?.outputText ?? '',
       );
 
       if (!producedSurface) {
-        log?.call('    turn ${t + 1}: no valid surface; stopping pass.');
+        log?.call(
+          '    turn ${t + 1}: ${failureReason ?? 'no surface'}; '
+          'stopping pass.',
+        );
         break;
       }
     }
@@ -178,17 +195,130 @@ Future<void> _runIteration({
     await repository.dispose();
     // Let any post-dispose async noise settle inside this iteration's scope so
     // it isn't misattributed to the next turn.
-    await _drainParser();
+    await Future<void>.delayed(const Duration(milliseconds: 150));
   }
 }
 
-/// The A2UI parser processes streamed text on an async pipeline, so surface and
-/// error events arrive shortly after `sendMessage` returns. Yield to the event
-/// loop long enough for them to flush.
-Future<void> _drainParser() async {
-  for (var i = 0; i < 15; i++) {
-    await Future<void>.delayed(const Duration(milliseconds: 20));
+/// Waits for the async A2UI parser to finish emitting events for a turn.
+///
+/// [probe] returns a running count of observed events (surfaces + errors).
+/// Returns once that count has been stable for a short quiet window, or after a
+/// hard cap. Turns that legitimately produce nothing (e.g. an
+/// `updateComponents` buffered awaiting a `createSurface`) return quickly via
+/// the quiet window.
+Future<void> _awaitSettled(int Function() probe) async {
+  const quietMs = 250;
+  const maxWaitMs = 8000;
+  final stopwatch = Stopwatch()..start();
+  var last = probe();
+  var lastChangeMs = 0;
+  while (stopwatch.elapsedMilliseconds < maxWaitMs) {
+    await Future<void>.delayed(const Duration(milliseconds: 25));
+    final now = probe();
+    if (now != last) {
+      last = now;
+      lastChangeMs = stopwatch.elapsedMilliseconds;
+    } else if (stopwatch.elapsedMilliseconds - lastChangeMs >= quietMs) {
+      break;
+    }
   }
+}
+
+/// Produces a sharp, human-readable reason a turn failed, by re-parsing the
+/// model's raw [output] into A2UI messages and checking it against the protocol
+/// (genui requires `version: "v0.9"` and `updateComponents: {surfaceId,
+/// components}`, and a surface must be created before it can be updated).
+String _classifyFailure({
+  required String output,
+  required List<String> errors,
+}) {
+  // Any non-GenUI error is a transport/API failure (e.g. rate limit, auth).
+  final transport = errors.firstWhere(
+    (e) => !e.contains('A2uiValidationException'),
+    orElse: () => '',
+  );
+  if (transport.isNotEmpty) {
+    return 'transport/API error: ${_firstLine(transport)}';
+  }
+
+  final objects = _extractJsonObjects(output);
+  final a2ui = objects
+      .where(
+        (o) =>
+            o.containsKey('createSurface') ||
+            o.containsKey('updateComponents') ||
+            o.containsKey('updateDataModel') ||
+            o.containsKey('deleteSurface'),
+      )
+      .toList();
+
+  if (a2ui.isEmpty) {
+    final hasComponents = objects.any((o) => o.containsKey('component'));
+    return hasComponents
+        ? 'component fragments without an A2UI envelope '
+              '(no createSurface/updateComponents)'
+        : 'no A2UI messages found in output';
+  }
+
+  if (a2ui.any((o) => o['updateComponents'] is List)) {
+    return 'malformed updateComponents (array, expected {surfaceId, '
+        'components})';
+  }
+  if (a2ui.any((o) => o['version'] != 'v0.9')) {
+    return 'wrong or missing version (expected "v0.9")';
+  }
+
+  final hasCreate = a2ui.any((o) => o['createSurface'] is Map);
+  final hasUpdate = a2ui.any((o) => o.containsKey('updateComponents'));
+  if (hasUpdate && !hasCreate) {
+    return 'updateComponents without createSurface (surface never created)';
+  }
+  if (!hasCreate) {
+    return 'no createSurface emitted';
+  }
+  return 'createSurface present but no surface rendered';
+}
+
+/// Extracts top-level JSON objects from [text], tolerating surrounding prose,
+/// markdown fences, and multiple concatenated objects. String contents are
+/// skipped so braces inside values don't break brace-matching.
+List<Map<String, Object?>> _extractJsonObjects(String text) {
+  final objects = <Map<String, Object?>>[];
+  var depth = 0;
+  var start = -1;
+  var inString = false;
+  var escaped = false;
+  for (var i = 0; i < text.length; i++) {
+    final ch = text[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch == r'\') {
+        escaped = true;
+      } else if (ch == '"') {
+        inString = false;
+      }
+      continue;
+    }
+    if (ch == '"') {
+      inString = true;
+    } else if (ch == '{') {
+      if (depth == 0) start = i;
+      depth++;
+    } else if (ch == '}' && depth > 0) {
+      depth--;
+      if (depth == 0 && start >= 0) {
+        try {
+          final decoded = jsonDecode(text.substring(start, i + 1));
+          if (decoded is Map<String, Object?>) objects.add(decoded);
+        } on FormatException {
+          // Not valid JSON; ignore this brace span.
+        }
+        start = -1;
+      }
+    }
+  }
+  return objects;
 }
 
 /// Swallows errors during benchmarking — failures are already recorded as turn

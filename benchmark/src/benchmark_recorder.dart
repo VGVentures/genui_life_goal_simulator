@@ -13,6 +13,7 @@ class TurnMetric {
     this.responseTokens,
     this.totalTokens,
     this.error,
+    this.failureReason,
   });
 
   final int iteration;
@@ -33,6 +34,10 @@ class TurnMetric {
   /// Transport or GenUI error string, otherwise null.
   final String? error;
 
+  /// A short, sharpened classification of why the turn failed (e.g.
+  /// `missing createSurface`), or null for a successful turn.
+  final String? failureReason;
+
   /// A turn counts as a failure if it errored or produced no valid surface.
   bool get isFailure => error != null || !surfaceProduced;
 
@@ -47,6 +52,7 @@ class TurnMetric {
     'responseTokens': responseTokens,
     'totalTokens': totalTokens,
     'error': error,
+    'failureReason': failureReason,
   };
 }
 
@@ -56,6 +62,7 @@ class TurnFailure {
     required this.iteration,
     required this.turnIndex,
     required this.reason,
+    required this.classification,
     required this.errors,
     required this.outputText,
   });
@@ -63,8 +70,11 @@ class TurnFailure {
   final int iteration;
   final int turnIndex;
 
-  /// Short reason: `error`, `no surface`, or `error + no surface`.
+  /// Mechanical reason: `error`, `no surface`, or `error + no surface`.
   final String reason;
+
+  /// Sharpened, human-friendly classification (e.g. `missing createSurface`).
+  final String classification;
 
   /// Every error string seen during the turn (transport + GenUI parser).
   final List<String> errors;
@@ -109,9 +119,14 @@ class BenchmarkRecorder {
     int? responseTokens,
     int? totalTokens,
     String? error,
+    String? failureReason,
     List<String> errorDetails = const [],
     String outputText = '',
   }) {
+    final failedOnError = error != null;
+    final isFailure = failedOnError || !surfaceProduced;
+    final reason = failureReason ?? (isFailure ? 'unclassified' : null);
+
     _turns.add(
       TurnMetric(
         iteration: _iteration,
@@ -124,11 +139,11 @@ class BenchmarkRecorder {
         responseTokens: responseTokens,
         totalTokens: totalTokens,
         error: error,
+        failureReason: isFailure ? reason : null,
       ),
     );
 
-    final failedOnError = error != null;
-    if (failedOnError || !surfaceProduced) {
+    if (isFailure) {
       _failures.add(
         TurnFailure(
           iteration: _iteration,
@@ -137,6 +152,7 @@ class BenchmarkRecorder {
             if (failedOnError) 'error',
             if (!surfaceProduced) 'no surface',
           ].join(' + '),
+          classification: reason ?? 'unclassified',
           errors: errorDetails.isNotEmpty ? errorDetails : [?error],
           outputText: outputText,
         ),
@@ -164,7 +180,7 @@ class BenchmarkRecorder {
         ..writeln()
         ..writeln(
           '[iteration ${f.iteration}, turn ${f.turnIndex}] '
-          '(${f.reason})',
+          '${f.classification} (${f.reason})',
         )
         ..writeln('errors:');
       if (f.errors.isEmpty) {
