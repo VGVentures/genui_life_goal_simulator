@@ -207,23 +207,22 @@ String _buildHtml(List<_ModelSummary> summaries) {
     final errClass = s.errorRate > 0 ? 'err' : 'ok';
     final errTooltip = s.failureTooltip;
     final errAttr = errTooltip == null ? '' : ' title="${_attr(errTooltip)}"';
-    final fastest = i == 0 && s.avgTotalMs != null ? ' class="fastest"' : '';
     final turnsPerIter = (s.totalTurns / (s.iterations == 0 ? 1 : s.iterations))
         .toStringAsFixed(0);
     rows.writeln('''
-      <tr$fastest>
-        <td class="model">${_escape(s.modelId)}</td>
-        <td class="num">
+      <tr>
+        <td class="model" data-sort="${_attr(s.modelId)}">${_escape(s.modelId)}</td>
+        <td class="num" data-sort="${_ds(s.avgTotalMs)}">
           <div class="bar-wrap"><div class="bar" style="width:$barWidth%"></div></div>
           <span>${_ms(s.avgTotalMs)}</span>
         </td>
-        <td class="num">${_ms(s.avgTtfcMs)}</td>
-        <td class="num">${_ms(s.p95TtfcMs)}</td>
-        <td class="num">${_ms(s.avgPerIterationMs)}</td>
-        <td class="num $errClass"$errAttr>${_pct(s.errorRate)}</td>
-        <td class="num">${_num(s.avgChunks)}</td>
-        <td class="num">${_num(s.avgTokens)}</td>
-        <td class="num muted">$turnsPerIter × ${s.iterations}</td>
+        <td class="num" data-sort="${_ds(s.avgTtfcMs)}">${_ms(s.avgTtfcMs)}</td>
+        <td class="num" data-sort="${_ds(s.p95TtfcMs)}">${_ms(s.p95TtfcMs)}</td>
+        <td class="num" data-sort="${_ds(s.avgPerIterationMs)}">${_ms(s.avgPerIterationMs)}</td>
+        <td class="num $errClass" data-sort="${s.errorRate}"$errAttr>${_pct(s.errorRate)}</td>
+        <td class="num" data-sort="${_ds(s.avgChunks)}">${_num(s.avgChunks)}</td>
+        <td class="num" data-sort="${_ds(s.avgTokens)}">${_num(s.avgTokens)}</td>
+        <td class="num muted" data-sort="${s.totalTurns}">$turnsPerIter × ${s.iterations}</td>
       </tr>''');
   }
 
@@ -311,11 +310,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
     td.num { font-variant-numeric: tabular-nums; }
     td.muted { color: var(--gray-deep); }
     tbody tr:last-child td { border-bottom: none; }
-    tr.fastest td { background: var(--pale-blue); }
-    tr.fastest td.model {
-      box-shadow: inset 3px 0 0 var(--vgv-blue);
-      border-radius: 8px 0 0 8px;
-    }
+    tbody tr:nth-child(even) td { background: rgba(10, 21, 48, 0.03); }
     .bar-wrap {
       display: inline-block;
       width: 120px;
@@ -339,10 +334,28 @@ String _buildHtml(List<_ModelSummary> summaries) {
       text-underline-offset: 3px;
     }
     thead th[title] {
-      cursor: help;
       text-decoration: underline dotted rgba(131, 137, 152, 0.55);
       text-underline-offset: 4px;
     }
+    thead th[data-sortable] {
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th[data-sortable]:hover { color: var(--vgv-blue); }
+    /* Reserve the arrow's space on every sortable header (transparent when
+       inactive) so sorting only recolors/flips it in place — no layout shift. */
+    thead th[data-sortable]::after {
+      content: '▼';
+      /* inline-block keeps the parent's dotted underline from drawing under
+         the (transparent, space-reserving) arrow. */
+      display: inline-block;
+      font-size: 0.7em;
+      margin-left: 0.3rem;
+      color: transparent;
+    }
+    thead th[data-dir]::after { color: var(--vgv-blue); }
+    thead th[data-dir='asc']::after { content: '▲'; }
+    thead th[data-dir='desc']::after { content: '▼'; }
     .glossary-title {
       max-width: 80ch;
       margin: 2.25rem 0 0.6rem;
@@ -407,15 +420,15 @@ String _buildHtml(List<_ModelSummary> summaries) {
       <table>
         <thead>
           <tr>
-            <th title="Model id. A -no-thinking row is the same model with thinking disabled.">Model</th>
-            <th title="Mean wall-clock time per turn (request sent until the stream completes), over successful turns. Comparable across providers.">Avg round-trip</th>
-            <th title="Time to first chunk: request sent until the first non-empty streamed chunk. Compare within a provider only.">Avg TTFC †</th>
-            <th title="95th-percentile time to first chunk (tail latency). Compare within a provider only.">p95 TTFC †</th>
-            <th title="Mean time to complete one full pass — all turns in an iteration summed. Comparable across providers.">Avg per pass</th>
-            <th title="Share of turns that errored or produced no valid GenUI surface.">Error rate</th>
-            <th title="Mean non-empty streamed chunks per turn. Reflects each provider's streaming granularity.">Avg chunks †</th>
-            <th title="Mean completion tokens per turn (excludes the prompt). Includes reasoning tokens for thinking models.">Avg output tokens</th>
-            <th title="Turns per iteration × iteration count behind each average.">Turns × iters</th>
+            <th data-sortable data-type="text" title="Model id. A -no-thinking row is the same model with thinking disabled.">Model</th>
+            <th data-sortable data-dir="asc" title="Mean wall-clock time per turn (request sent until the stream completes), over successful turns. Comparable across providers.">Avg round-trip</th>
+            <th data-sortable title="Time to first chunk: request sent until the first non-empty streamed chunk. Compare within a provider only.">Avg TTFC †</th>
+            <th data-sortable title="95th-percentile time to first chunk (tail latency). Compare within a provider only.">p95 TTFC †</th>
+            <th data-sortable title="Mean time to complete one full pass — all turns in an iteration summed. Comparable across providers.">Avg per pass</th>
+            <th data-sortable title="Share of turns that errored or produced no valid GenUI surface.">Error rate</th>
+            <th data-sortable title="Mean non-empty streamed chunks per turn. Reflects each provider's streaming granularity.">Avg chunks †</th>
+            <th data-sortable title="Mean completion tokens per turn (excludes the prompt). Includes reasoning tokens for thinking models.">Avg output tokens</th>
+            <th data-sortable title="Turns per iteration × iteration count behind each average.">Turns × iters</th>
           </tr>
         </thead>
         <tbody>
@@ -426,7 +439,7 @@ $rows
     <p class="glossary-title">Column glossary (hover any header for a tooltip)</p>
     <ul class="glossary">
       <li><strong>Model</strong> — the model id. A <code>-no-thinking</code> row
-      is the same model with thinking disabled. The fastest row is highlighted.</li>
+      is the same model with thinking disabled. Rows are sorted fastest-first.</li>
       <li><strong>Avg round-trip</strong> — mean wall-clock time per turn, from
       request sent to stream complete, over successful turns. Comparable across
       providers; this is the headline metric.</li>
@@ -451,6 +464,39 @@ $rows
     larger chunks — so compare them only within a provider, not across. Latency
     and token stats are shown only when the provider reports them.</p>
   </main>
+  <script>
+(function () {
+  function sortBy(th) {
+    var table = th.closest('table');
+    var tbody = table.tBodies[0];
+    var idx = th.cellIndex;
+    var type = th.getAttribute('data-type') || 'number';
+    var asc = th.getAttribute('data-dir') !== 'asc';
+    table.querySelectorAll('th[data-dir]').forEach(function (h) {
+      if (h !== th) h.removeAttribute('data-dir');
+    });
+    th.setAttribute('data-dir', asc ? 'asc' : 'desc');
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function (a, b) {
+      var av = a.cells[idx].getAttribute('data-sort');
+      var bv = b.cells[idx].getAttribute('data-sort');
+      var aEmpty = av === null || av === '';
+      var bEmpty = bv === null || bv === '';
+      if (aEmpty && bEmpty) return 0;
+      if (aEmpty) return 1; // missing values always sort last
+      if (bEmpty) return -1;
+      var cmp = type === 'text'
+        ? av.localeCompare(bv)
+        : parseFloat(av) - parseFloat(bv);
+      return asc ? cmp : -cmp;
+    });
+    rows.forEach(function (r) { tbody.appendChild(r); });
+  }
+  document.querySelectorAll('th[data-sortable]').forEach(function (th) {
+    th.addEventListener('click', function () { sortBy(th); });
+  });
+})();
+  </script>
 </body>
 </html>
 ''';
@@ -461,6 +507,10 @@ String _escape(String s) =>
 
 /// Escapes a string for use inside a double-quoted HTML attribute.
 String _attr(String s) => _escape(s).replaceAll('"', '&quot;');
+
+/// A numeric sort key for a cell, or empty string for a missing value (which
+/// the client-side sorter pushes to the bottom regardless of direction).
+String _ds(num? v) => v?.toString() ?? '';
 
 /// The VGV wordmark inlined as SVG in the hero. Falls back to a text label if
 /// the asset isn't found.
