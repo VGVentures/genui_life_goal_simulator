@@ -25,16 +25,14 @@ import 'src/benchmark_runner.dart';
 ///
 /// Override the shape with `--dart-define=BENCHMARK_ITERATIONS=1` etc.:
 /// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3),
-/// BENCHMARK_COOLDOWN_SECONDS (fixed delay before each request, default 3).
+/// BENCHMARK_COOLDOWN_SECONDS (fixed delay before each request, default 0 —
+/// round-robin interleaving already spaces providers).
 const _iterations = int.fromEnvironment(
   'BENCHMARK_ITERATIONS',
   defaultValue: 5,
 );
 const _turns = int.fromEnvironment('BENCHMARK_TURNS', defaultValue: 3);
-const _stepDelaySeconds = int.fromEnvironment(
-  'BENCHMARK_COOLDOWN_SECONDS',
-  defaultValue: 3,
-);
+const _stepDelaySeconds = int.fromEnvironment('BENCHMARK_COOLDOWN_SECONDS');
 
 void main() {
   setUpAll(() {

@@ -20,7 +20,7 @@
 // any one model from being penalized by running late.
 //
 // Environment overrides: FLUTTER (default "fvm flutter"), KEYS_FILE,
-// BENCHMARK_ITERATIONS (default 15), BENCHMARK_TURNS (default 1),
+// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3),
 // BENCHMARK_COOLDOWN_SECONDS (default 0 — fixed delay before each request;
 // interleaving already spaces providers, so raise this only if one still
 // rate-limits).
@@ -41,7 +41,7 @@ Future<void> main() async {
   final keysFile = env['KEYS_FILE'] ?? 'benchmark/keys.env';
   final iterations = env['BENCHMARK_ITERATIONS'] ?? '5';
   final turns = env['BENCHMARK_TURNS'] ?? '3';
-  final cooldown = env['BENCHMARK_COOLDOWN_SECONDS'] ?? '3';
+  final cooldown = env['BENCHMARK_COOLDOWN_SECONDS'] ?? '0';
 
   if (!File(keysFile).existsSync()) {
     stderr.writeln(

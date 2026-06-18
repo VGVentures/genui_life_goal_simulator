@@ -45,8 +45,9 @@ after every iteration, so an interrupted run (e.g. running out of provider
 tokens mid-sweep) still leaves partial data for every model.
 
 Tune with env vars: `BENCHMARK_ITERATIONS` (default 5), `BENCHMARK_TURNS`
-(default 3), `BENCHMARK_COOLDOWN_SECONDS` (default 3 — a fixed delay before each
-request; interleaving already spaces providers, so you can lower it to 0).
+(default 3), `BENCHMARK_COOLDOWN_SECONDS` (default 0 — a fixed delay before each
+request; interleaving already spaces providers, so raise it only if one still
+rate-limits).
 
 ### Debugging failures
 
