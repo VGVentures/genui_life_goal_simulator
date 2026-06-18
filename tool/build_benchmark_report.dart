@@ -425,7 +425,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
             <th data-sortable title="Time to first chunk: request sent until the first non-empty streamed chunk. Compare within a provider only.">Avg TTFC †</th>
             <th data-sortable title="95th-percentile time to first chunk (tail latency). Compare within a provider only.">p95 TTFC †</th>
             <th data-sortable title="Mean time to complete one full pass — all turns in an iteration summed. Comparable across providers.">Avg per pass</th>
-            <th data-sortable title="Share of turns that errored or produced no valid GenUI surface.">Error rate</th>
+            <th data-sortable title="Share of turns that errored, produced no valid GenUI surface, or whose components didn't conform to the catalog item schemas.">Error rate</th>
             <th data-sortable title="Mean non-empty streamed chunks per turn. Reflects each provider's streaming granularity.">Avg chunks †</th>
             <th data-sortable title="Mean completion tokens per turn (excludes the prompt). Includes reasoning tokens for thinking models.">Avg output tokens</th>
             <th data-sortable title="Turns per iteration × iteration count behind each average.">Turns × iters</th>
@@ -449,8 +449,10 @@ $rows
       tail latency.</li>
       <li><strong>Avg per pass</strong> — mean time to complete one full pass
       (all turns in an iteration summed). Comparable across providers.</li>
-      <li><strong>Error rate</strong> — share of turns that errored or produced
-      no valid GenUI surface.</li>
+      <li><strong>Error rate</strong> — share of turns that errored, produced
+      no valid GenUI surface, or whose components didn't conform to the catalog
+      item JSON schemas (props or component type). Hover the value for the
+      breakdown.</li>
       <li><strong>Avg chunks †</strong> — mean number of non-empty streamed
       chunks per turn.</li>
       <li><strong>Avg output tokens</strong> — mean completion tokens per turn
