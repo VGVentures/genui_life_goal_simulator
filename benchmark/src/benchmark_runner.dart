@@ -11,6 +11,7 @@ import 'package:genui_life_goal_simulator/simulator/catalog/finance_catalog.dart
 import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_repository.dart';
+import 'package:json_schema_builder/json_schema_builder.dart';
 
 import 'benchmark_models.dart';
 import 'benchmark_recorder.dart';
@@ -58,6 +59,12 @@ Future<void> runRoundRobin({
   final tally = _AsyncErrorTally();
   final stepDelay = Duration(seconds: stepDelaySeconds);
 
+  // Per-component JSON schemas from the catalog, used to validate that the
+  // model's output conforms to each catalog item's props.
+  final componentSchemas = <String, Schema>{
+    for (final item in buildFinanceCatalog().items) item.name: item.dataSchema,
+  };
+
   await runZonedGuarded(
     () async {
       for (var i = 0; i < iterations; i++) {
@@ -73,6 +80,7 @@ Future<void> runRoundRobin({
             turns: turns,
             recorder: recorder,
             tally: tally,
+            componentSchemas: componentSchemas,
             log: log,
           );
           onIterationComplete?.call(model, recorder);
@@ -90,6 +98,7 @@ Future<void> _runIteration({
   required int turns,
   required BenchmarkRecorder recorder,
   required _AsyncErrorTally tally,
+  required Map<String, Schema> componentSchemas,
   void Function(String message)? log,
 }) async {
   recorder.startIteration();
@@ -159,12 +168,22 @@ Future<void> _runIteration({
         ...eventErrors.skip(eventErrorsBefore),
         ...tally.messages.skip(asyncErrorsBefore),
       ];
+      // Validate the model's emitted components against the catalog schemas.
+      // genui validates these too but swallows the failures (it just logs them
+      // and tells the model), so we check here to count them in the error rate.
+      final schemaViolations = await _validateComponents(
+        timing?.outputText ?? '',
+        componentSchemas,
+      );
+
       final hadError = turnErrors.isNotEmpty;
-      final failed = hadError || !producedSurface;
+      final failed =
+          hadError || !producedSurface || schemaViolations.isNotEmpty;
       final failureReason = failed
           ? _classifyFailure(
               output: timing?.outputText ?? '',
               errors: turnErrors,
+              schemaViolations: schemaViolations,
             )
           : null;
 
@@ -178,7 +197,7 @@ Future<void> _runIteration({
         totalTokens: timing?.totalTokens,
         error: hadError ? _firstLine(turnErrors.first) : timing?.errorMessage,
         failureReason: failureReason,
-        errorDetails: turnErrors,
+        errorDetails: [...turnErrors, ...schemaViolations],
         outputText: timing?.outputText ?? '',
       );
 
@@ -231,6 +250,7 @@ Future<void> _awaitSettled(int Function() probe) async {
 String _classifyFailure({
   required String output,
   required List<String> errors,
+  required List<String> schemaViolations,
 }) {
   // Any non-GenUI error is a transport/API failure (e.g. rate limit, auth).
   final transport = errors.firstWhere(
@@ -268,6 +288,13 @@ String _classifyFailure({
     return 'wrong or missing version (expected "v0.9")';
   }
 
+  // Props that don't conform to a catalog item's schema. Kept as a stable
+  // category so the report tooltip aggregates cleanly; specifics live in the
+  // per-turn errorDetails (and the failures.txt report).
+  if (schemaViolations.isNotEmpty) {
+    return 'component schema violation';
+  }
+
   final hasCreate = a2ui.any((o) => o['createSurface'] is Map);
   final hasUpdate = a2ui.any((o) => o.containsKey('updateComponents'));
   if (hasUpdate && !hasCreate) {
@@ -277,6 +304,45 @@ String _classifyFailure({
     return 'no createSurface emitted';
   }
   return 'createSurface present but no surface rendered';
+}
+
+/// Validates the model's emitted components against the catalog [schemas].
+///
+/// Parses `updateComponents` messages from the raw [output] and checks each
+/// component's props against its catalog item's JSON schema (with `id` and
+/// `component` stripped, since those aren't part of the props schema). Returns
+/// one human-readable string per violation; empty means everything conformed.
+Future<List<String>> _validateComponents(
+  String output,
+  Map<String, Schema> schemas,
+) async {
+  final violations = <String>[];
+  for (final message in _extractJsonObjects(output)) {
+    final update = message['updateComponents'];
+    if (update is! Map) continue; // array/other forms handled elsewhere
+    final components = update['components'];
+    if (components is! List) continue;
+    for (final raw in components) {
+      if (raw is! Map) continue;
+      final component = raw.cast<String, Object?>();
+      final type = component['component'];
+      if (type is! String) continue;
+      final id = component['id'];
+      final label = id is String ? '$type#$id' : type;
+      final schema = schemas[type];
+      if (schema == null) {
+        violations.add('$label: unknown component "$type" (not in catalog)');
+        continue;
+      }
+      // The catalog dataSchema describes the whole component object (it pins
+      // `component` to a const and includes `id`), so validate it as-is.
+      final errors = await schema.validate(component);
+      if (errors.isNotEmpty) {
+        violations.add('$label: ${errors.first.toErrorString()}');
+      }
+    }
+  }
+  return violations;
 }
 
 /// Extracts top-level JSON objects from [text], tolerating surrounding prose,
