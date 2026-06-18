@@ -240,7 +240,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
       color: #fff;
       padding: 3.5rem 1.5rem 3rem;
     }
-    .hero-inner, main { max-width: 1040px; margin: 0 auto; }
+    /* Full-width: the table fills the window; padding on .hero/main insets it. */
     .label {
       text-transform: uppercase;
       letter-spacing: 0.2em;
@@ -273,7 +273,6 @@ String _buildHtml(List<_ModelSummary> summaries) {
       border-bottom: 1px solid rgba(10, 21, 48, 0.08);
       white-space: nowrap;
     }
-    thead th { border-bottom: 2px solid rgba(10, 21, 48, 0.12); }
     th {
       font-size: 0.68rem;
       font-weight: 600;
@@ -308,11 +307,46 @@ String _buildHtml(List<_ModelSummary> summaries) {
     }
     td.err { color: var(--vgv-pink); font-weight: 600; }
     td.ok { color: var(--gray-deep); }
-    .notes {
+    thead th[title] {
+      cursor: help;
+      text-decoration: underline dotted rgba(131, 137, 152, 0.55);
+      text-underline-offset: 4px;
+    }
+    .glossary-title {
       max-width: 80ch;
-      margin: 1.75rem auto 0;
+      margin: 2.25rem 0 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gray-deep);
+    }
+    .glossary {
+      max-width: 80ch;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.88rem;
+      color: rgba(22, 22, 29, 0.7);
+    }
+    .glossary li {
+      padding: 0.45rem 0;
+      border-top: 1px solid rgba(10, 21, 48, 0.06);
+    }
+    .glossary li:first-child { border-top: none; }
+    .glossary strong { color: var(--eigengrau); font-weight: 600; }
+    .glossary code {
+      font-size: 0.85em;
+      background: rgba(10, 21, 48, 0.06);
+      padding: 0.05rem 0.3rem;
+      border-radius: 4px;
+    }
+    .footnote {
+      max-width: 80ch;
+      margin: 1.25rem 0 0;
       color: rgba(22, 22, 29, 0.55);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      line-height: 1.6;
     }
     @keyframes rise {
       from { opacity: 0; transform: translateY(16px); }
@@ -321,6 +355,17 @@ String _buildHtml(List<_ModelSummary> summaries) {
     @media (prefers-reduced-motion: reduce) {
       .card { animation: none; }
     }
+    .caveat {
+      max-width: 80ch;
+      margin: 1.5rem 0 0;
+      padding: 0.9rem 1.1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--blue-light);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .caveat strong { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -331,6 +376,9 @@ String _buildHtml(List<_ModelSummary> summaries) {
       <p>Average over all timed round trips, sorted fastest-first by total
       round-trip time. Latency stats exclude failed turns; the error rate counts
       them.</p>
+      <p class="caveat"><strong>Speed is only one dimension.</strong> The
+      quality of the experience matters just as much, and these benchmarks
+      cannot measure that.</p>
     </div>
   </header>
   <main>
@@ -338,15 +386,15 @@ String _buildHtml(List<_ModelSummary> summaries) {
       <table>
         <thead>
           <tr>
-            <th>Model</th>
-            <th>Avg round-trip</th>
-            <th>Avg TTFC †</th>
-            <th>p95 TTFC †</th>
-            <th>Avg per pass</th>
-            <th>Error rate</th>
-            <th>Avg chunks †</th>
-            <th>Avg output tokens</th>
-            <th>Turns × iters</th>
+            <th title="Model id. A -no-thinking row is the same model with thinking disabled.">Model</th>
+            <th title="Mean wall-clock time per turn (request sent until the stream completes), over successful turns. Comparable across providers.">Avg round-trip</th>
+            <th title="Time to first chunk: request sent until the first non-empty streamed chunk. Compare within a provider only.">Avg TTFC †</th>
+            <th title="95th-percentile time to first chunk (tail latency). Compare within a provider only.">p95 TTFC †</th>
+            <th title="Mean time to complete one full pass — all turns in an iteration summed. Comparable across providers.">Avg per pass</th>
+            <th title="Share of turns that errored or produced no valid GenUI surface.">Error rate</th>
+            <th title="Mean non-empty streamed chunks per turn. Reflects each provider's streaming granularity.">Avg chunks †</th>
+            <th title="Mean completion tokens per turn (excludes the prompt). Includes reasoning tokens for thinking models.">Avg output tokens</th>
+            <th title="Turns per iteration × iteration count behind each average.">Turns × iters</th>
           </tr>
         </thead>
         <tbody>
@@ -354,14 +402,33 @@ $rows
         </tbody>
       </table>
     </div>
-    <p class="notes">Avg round-trip and avg per pass are wall-clock and
-    comparable across providers. <strong>† TTFC and chunk counts reflect each
-    provider's streaming granularity</strong> (OpenAI streams token-by-token;
-    Google/others send fewer, larger chunks), so compare them only within a
-    provider, not across. Avg output tokens counts completion tokens only (for
-    reasoning models this includes thinking tokens). "Avg per pass" = mean total
-    time to traverse one full set of turns. Token and TTFC stats are shown only
-    when the provider reports them.</p>
+    <p class="glossary-title">Column glossary (hover any header for a tooltip)</p>
+    <ul class="glossary">
+      <li><strong>Model</strong> — the model id. A <code>-no-thinking</code> row
+      is the same model with thinking disabled. The fastest row is highlighted.</li>
+      <li><strong>Avg round-trip</strong> — mean wall-clock time per turn, from
+      request sent to stream complete, over successful turns. Comparable across
+      providers; this is the headline metric.</li>
+      <li><strong>Avg TTFC †</strong> — time to first chunk: request sent until
+      the first non-empty streamed chunk.</li>
+      <li><strong>p95 TTFC †</strong> — 95th-percentile time to first chunk, i.e.
+      tail latency.</li>
+      <li><strong>Avg per pass</strong> — mean time to complete one full pass
+      (all turns in an iteration summed). Comparable across providers.</li>
+      <li><strong>Error rate</strong> — share of turns that errored or produced
+      no valid GenUI surface.</li>
+      <li><strong>Avg chunks †</strong> — mean number of non-empty streamed
+      chunks per turn.</li>
+      <li><strong>Avg output tokens</strong> — mean completion tokens per turn
+      (excludes the prompt). Includes reasoning tokens for thinking models, so it
+      drops on <code>-no-thinking</code> rows.</li>
+      <li><strong>Turns × iters</strong> — turns per iteration × iteration count
+      behind each average.</li>
+    </ul>
+    <p class="footnote">† TTFC and chunk counts reflect each provider's streaming
+    granularity — OpenAI streams token-by-token, Google and others send fewer,
+    larger chunks — so compare them only within a provider, not across. Latency
+    and token stats are shown only when the provider reports them.</p>
   </main>
 </body>
 </html>
