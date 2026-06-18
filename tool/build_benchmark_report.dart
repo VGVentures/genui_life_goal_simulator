@@ -210,7 +210,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Model Benchmark Report · Very Good Ventures</title>
+  <title>GenUI Model Benchmarks · Very Good Ventures</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -361,7 +361,7 @@ String _buildHtml(List<_ModelSummary> summaries) {
   <header class="hero">
     <div class="hero-inner">
       <p class="label">Very Good Ventures · GenUI</p>
-      <h1>Model Benchmark Report</h1>
+      <h1>GenUI Model Benchmarks</h1>
       <p>Average over all timed round trips, sorted fastest-first by total
       round-trip time. Latency stats exclude failed turns; the error rate counts
       them.</p>
