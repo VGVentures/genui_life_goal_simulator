@@ -106,9 +106,13 @@ class _ModelSummary {
     final chunks = successful
         .map((t) => (t['chunkCount'] as num).toDouble())
         .toList();
+    // Output (completion) tokens, not total — total is dominated by the large
+    // fixed system prompt re-sent every turn, so it's the same for every model
+    // and tells us nothing. For reasoning models the completion count includes
+    // thinking tokens, so this also reflects thinking cost.
     final tokens = successful
-        .where((t) => t['totalTokens'] != null)
-        .map((t) => (t['totalTokens'] as num).toDouble())
+        .where((t) => t['responseTokens'] != null)
+        .map((t) => (t['responseTokens'] as num).toDouble())
         .toList();
 
     // Total time to traverse a full pass: sum the successful turns per
@@ -336,12 +340,12 @@ String _buildHtml(List<_ModelSummary> summaries) {
           <tr>
             <th>Model</th>
             <th>Avg round-trip</th>
-            <th>Avg TTFC</th>
-            <th>p95 TTFC</th>
+            <th>Avg TTFC †</th>
+            <th>p95 TTFC †</th>
             <th>Avg per pass</th>
             <th>Error rate</th>
-            <th>Avg chunks</th>
-            <th>Avg tokens</th>
+            <th>Avg chunks †</th>
+            <th>Avg output tokens</th>
             <th>Turns × iters</th>
           </tr>
         </thead>
@@ -350,9 +354,14 @@ $rows
         </tbody>
       </table>
     </div>
-    <p class="notes">TTFC = time to first chunk. "Avg per pass" = mean total
-    time to traverse one full set of turns. Tokens shown only when the provider
-    reports usage.</p>
+    <p class="notes">Avg round-trip and avg per pass are wall-clock and
+    comparable across providers. <strong>† TTFC and chunk counts reflect each
+    provider's streaming granularity</strong> (OpenAI streams token-by-token;
+    Google/others send fewer, larger chunks), so compare them only within a
+    provider, not across. Avg output tokens counts completion tokens only (for
+    reasoning models this includes thinking tokens). "Avg per pass" = mean total
+    time to traverse one full set of turns. Token and TTFC stats are shown only
+    when the provider reports them.</p>
   </main>
 </body>
 </html>

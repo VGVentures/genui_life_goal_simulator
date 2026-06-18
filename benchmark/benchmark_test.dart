@@ -1,4 +1,4 @@
-@Timeout(Duration(minutes: 30))
+@Timeout(Duration(hours: 6))
 library;
 
 import 'dart:io';
@@ -10,19 +10,31 @@ import 'src/benchmark_models.dart';
 import 'src/benchmark_runner.dart';
 
 /// Headless model benchmark. Drives the real simulator repository (same
-/// composed system prompt and GenUI parser) against each configured model and
-/// writes per-model metrics to `benchmark/results/<id>.json`.
+/// composed system prompt and GenUI parser) against every configured model
+/// round-robin, writing per-model metrics to `benchmark/results/<id>.json` and
+/// failure detail to `benchmark/results/<id>.failures.txt`.
+///
+/// This is a single driver test rather than one test per model: `flutter test`
+/// is used only as a headless Flutter runtime (the app code it drives needs
+/// `dart:ui`); the scheduling (round-robin order, partial-result writes) is
+/// ours.
 ///
 /// Run it explicitly — it lives outside `test/`, so the normal suite ignores it:
 ///   flutter test benchmark/benchmark_test.dart \
 ///     --dart-define-from-file=benchmark/keys.env
 ///
-/// Override the shape with `--dart-define=BENCHMARK_ITERATIONS=1` etc.
+/// Override the shape with `--dart-define=BENCHMARK_ITERATIONS=1` etc.:
+/// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3),
+/// BENCHMARK_COOLDOWN_SECONDS (fixed delay before each request, default 3).
 const _iterations = int.fromEnvironment(
   'BENCHMARK_ITERATIONS',
   defaultValue: 5,
 );
 const _turns = int.fromEnvironment('BENCHMARK_TURNS', defaultValue: 3);
+const _stepDelaySeconds = int.fromEnvironment(
+  'BENCHMARK_COOLDOWN_SECONDS',
+  defaultValue: 3,
+);
 
 void main() {
   setUpAll(() {
@@ -31,34 +43,53 @@ void main() {
     HttpOverrides.global = null;
   });
 
-  for (final model in benchmarkModels) {
-    test(
-      model.id,
-      () async {
-        debugPrint(
-          'Benchmarking ${model.id} '
-          '($_iterations iterations x $_turns turns)',
-        );
-
-        final recorder = await runBenchmarkForModel(
-          model: model,
-          iterations: _iterations,
-          turns: _turns,
-          log: debugPrint,
-        );
-
-        final resultsDir = Directory('benchmark/results')
-          ..createSync(recursive: true);
-        final file = File('${resultsDir.path}/${model.id}.json')
-          ..writeAsStringSync(recorder.toJsonString());
-        debugPrint('Wrote ${file.path}');
-
-        expect(recorder.turns, isNotEmpty);
-      },
-      skip: model.hasKey
-          ? false
-          : 'No API key configured for ${model.id} '
-                '(set it in benchmark/keys.env).',
+  test('benchmark', () async {
+    final models = [
+      for (final model in benchmarkModels)
+        if (model.hasKey) model,
+    ];
+    for (final model in benchmarkModels) {
+      if (!model.hasKey) {
+        debugPrint('Skipping ${model.id}: no API key configured.');
+      }
+    }
+    expect(
+      models,
+      isNotEmpty,
+      reason: 'No models had API keys; set them in benchmark/keys.env.',
     );
-  }
+
+    final resultsDir = Directory('benchmark/results')
+      ..createSync(recursive: true);
+
+    debugPrint(
+      'Benchmarking ${models.length} model(s) round-robin '
+      '($_iterations iterations x $_turns turns each).',
+    );
+
+    await runRoundRobin(
+      models: models,
+      iterations: _iterations,
+      turns: _turns,
+      stepDelaySeconds: _stepDelaySeconds,
+      log: debugPrint,
+      // Persist after every iteration so partial progress survives an
+      // interrupted run (e.g. running out of provider tokens mid-sweep).
+      onIterationComplete: (model, recorder) {
+        File(
+          '${resultsDir.path}/${model.id}.json',
+        ).writeAsStringSync(recorder.toJsonString());
+
+        final failureFile = File('${resultsDir.path}/${model.id}.failures.txt');
+        final report = recorder.failureReport();
+        if (report != null) {
+          failureFile.writeAsStringSync(report);
+        } else if (failureFile.existsSync()) {
+          failureFile.deleteSync();
+        }
+      },
+    );
+
+    debugPrint('Done.');
+  });
 }

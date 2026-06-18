@@ -37,6 +37,34 @@ fvm flutter test benchmark/benchmark_test.dart --dart-define-from-file=benchmark
 fvm dart run tool/build_benchmark_report.dart
 ```
 
+Models run **round-robin**: one iteration of each model per cycle, with the
+order re-shuffled each cycle. This spreads every provider's requests across the
+whole run instead of firing them in a burst, so a provider's rate/token limits
+aren't tripped and no model is penalized by running late. Results are written
+after every iteration, so an interrupted run (e.g. running out of provider
+tokens mid-sweep) still leaves partial data for every model.
+
+Tune with env vars: `BENCHMARK_ITERATIONS` (default 5), `BENCHMARK_TURNS`
+(default 3), `BENCHMARK_COOLDOWN_SECONDS` (default 3 — a fixed delay before each
+request; interleaving already spaces providers, so you can lower it to 0).
+
+### Debugging failures
+
+When a turn fails (a transport error, or output the GenUI parser rejects), the
+full detail is written to `benchmark/results/<id>.failures.txt`: the error(s) in
+full plus the raw model output for that turn — usually the quickest way to see
+exactly what a model emitted that broke parsing.
+
+### Reading the report
+
+- **Avg round-trip** and **avg per pass** are wall-clock and comparable across
+  providers — these are the headline numbers.
+- **TTFC** and **avg chunks** (marked †) reflect each provider's streaming
+  granularity (OpenAI streams token-by-token; Google and others send fewer,
+  larger chunks), so only compare them within a provider.
+- **Avg output tokens** is completion tokens only; for reasoning models this
+  includes thinking tokens, so it drops on the `-no-thinking` variants.
+
 ## Run on CI
 
 `.github/workflows/benchmark.yaml` runs the full suite on an Ubuntu runner

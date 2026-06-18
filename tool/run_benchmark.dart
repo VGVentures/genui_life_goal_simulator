@@ -14,8 +14,16 @@
 // In CI (plain flutter on PATH):
 //   FLUTTER=flutter dart run tool/run_benchmark.dart
 //
+// Models run round-robin (one iteration of each model per cycle, re-shuffled
+// each cycle), so each provider's requests are spread across the whole run
+// instead of fired in a burst. That avoids tripping rate/token limits and keeps
+// any one model from being penalized by running late.
+//
 // Environment overrides: FLUTTER (default "fvm flutter"), KEYS_FILE,
-// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3).
+// BENCHMARK_ITERATIONS (default 15), BENCHMARK_TURNS (default 1),
+// BENCHMARK_COOLDOWN_SECONDS (default 0 — fixed delay before each request;
+// interleaving already spaces providers, so raise this only if one still
+// rate-limits).
 
 import 'dart:io';
 
@@ -33,6 +41,7 @@ Future<void> main() async {
   final keysFile = env['KEYS_FILE'] ?? 'benchmark/keys.env';
   final iterations = env['BENCHMARK_ITERATIONS'] ?? '5';
   final turns = env['BENCHMARK_TURNS'] ?? '3';
+  final cooldown = env['BENCHMARK_COOLDOWN_SECONDS'] ?? '3';
 
   if (!File(keysFile).existsSync()) {
     stderr.writeln(
@@ -60,6 +69,7 @@ Future<void> main() async {
     '--dart-define-from-file=$keysFile',
     '--dart-define=BENCHMARK_ITERATIONS=$iterations',
     '--dart-define=BENCHMARK_TURNS=$turns',
+    '--dart-define=BENCHMARK_COOLDOWN_SECONDS=$cooldown',
   ], mode: ProcessStartMode.inheritStdio);
 
   final code = await process.exitCode;

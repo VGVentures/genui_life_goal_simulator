@@ -22,47 +22,66 @@ import 'timing_chat_model.dart';
 /// async errors rather than reaching the conversation's event stream. We
 /// capture them here and attribute them to the in-flight turn.
 class _AsyncErrorTally {
-  int count = 0;
-  String? lastMessage;
+  final List<String> messages = [];
+  int get count => messages.length;
 }
 
-/// Runs the benchmark for a single model: [iterations] passes, each driving
-/// [turns] real model round trips through the actual [SimulatorRepository] —
-/// same composed system prompt, same GenUI parser. The parser doubles as the
-/// schema validator: a turn that yields no surface (or errors) is a failure.
-Future<BenchmarkRecorder> runBenchmarkForModel({
-  required BenchmarkModel model,
+String _firstLine(String s) => s.split('\n').first.trim();
+
+/// Runs every model in [models] round-robin: one iteration of each model per
+/// cycle, re-shuffling the order each cycle. Each iteration drives [turns] real
+/// round trips through the actual [SimulatorRepository] (same composed system
+/// prompt, same GenUI parser, which doubles as the schema validator: a turn
+/// that yields no surface, or errors, is a failure).
+///
+/// Interleaving spreads each provider's requests across the whole run so bursts
+/// don't trip rate/token limits, and no model is penalized by running late.
+/// [onIterationComplete] fires after each model finishes an iteration so
+/// callers can persist partial results as the run progresses.
+///
+/// The whole sweep runs inside one guarded zone so a malformed-output error (or
+/// a genui teardown race) is recorded as a turn failure instead of aborting the
+/// benchmark.
+Future<void> runRoundRobin({
+  required List<BenchmarkModel> models,
   required int iterations,
   required int turns,
+  required int stepDelaySeconds,
   void Function(String message)? log,
+  void Function(BenchmarkModel model, BenchmarkRecorder recorder)?
+  onIterationComplete,
 }) async {
-  final recorder = BenchmarkRecorder(model.id);
+  final recorders = {
+    for (final model in models) model.id: BenchmarkRecorder(model.id),
+  };
   final tally = _AsyncErrorTally();
+  final stepDelay = Duration(seconds: stepDelaySeconds);
 
-  // Run inside a guarded zone so a malformed-output error (or a teardown race
-  // in genui) is recorded as a turn failure instead of aborting the benchmark.
   await runZonedGuarded(
     () async {
       for (var i = 0; i < iterations; i++) {
-        recorder.startIteration();
-        log?.call('  iteration ${i + 1}/$iterations');
-        await _runIteration(
-          model: model,
-          turns: turns,
-          recorder: recorder,
-          tally: tally,
-          log: log,
-        );
+        final order = [...models]..shuffle();
+        for (final model in order) {
+          if (stepDelay > Duration.zero) {
+            await Future<void>.delayed(stepDelay);
+          }
+          log?.call('iteration ${i + 1}/$iterations — ${model.id}');
+          final recorder = recorders[model.id]!;
+          await _runIteration(
+            model: model,
+            turns: turns,
+            recorder: recorder,
+            tally: tally,
+            log: log,
+          );
+          onIterationComplete?.call(model, recorder);
+        }
       }
     },
     (error, stack) {
-      tally
-        ..count += 1
-        ..lastMessage = error.toString().split('\n').first;
+      tally.messages.add(error.toString());
     },
   );
-
-  return recorder;
 }
 
 Future<void> _runIteration({
@@ -72,6 +91,7 @@ Future<void> _runIteration({
   required _AsyncErrorTally tally,
   void Function(String message)? log,
 }) async {
+  recorder.startIteration();
   final catalog = buildFinanceCatalog();
   final surfaceController = SurfaceController(catalogs: [catalog]);
 
@@ -89,15 +109,13 @@ Future<void> _runIteration({
   );
 
   final surfaceIds = <String>{};
-  var errorCount = 0;
-  String? lastError;
+  final eventErrors = <String>[];
   final subscription = repository.events.listen((event) {
     switch (event) {
       case SimulatorConversationSurfaceAdded(:final surfaceId):
         surfaceIds.add(surfaceId);
       case SimulatorConversationError(:final message):
-        errorCount += 1;
-        lastError = message;
+        eventErrors.add(message);
       case _:
         break;
     }
@@ -109,7 +127,7 @@ Future<void> _runIteration({
     for (var t = 0; t < turns; t++) {
       lastTiming = null;
       final surfacesBefore = surfaceIds.length;
-      final errorsBefore = errorCount;
+      final eventErrorsBefore = eventErrors.length;
       final asyncErrorsBefore = tally.count;
 
       // Mirror the bloc's step tracking so history isn't truncated between
@@ -127,10 +145,15 @@ Future<void> _runIteration({
       await _drainParser();
 
       final producedSurface = surfaceIds.length > surfacesBefore;
-      final eventError = errorCount > errorsBefore;
-      final asyncError = tally.count > asyncErrorsBefore;
-      final hadError = eventError || asyncError;
       final timing = lastTiming;
+
+      // All error strings seen during this turn (event stream + the parser's
+      // uncaught async errors), kept in full for the failure report.
+      final turnErrors = [
+        ...eventErrors.skip(eventErrorsBefore),
+        ...tally.messages.skip(asyncErrorsBefore),
+      ];
+      final hadError = turnErrors.isNotEmpty;
 
       recorder.recordTurn(
         totalMs: timing?.totalMs ?? 0,
@@ -140,9 +163,9 @@ Future<void> _runIteration({
         promptTokens: timing?.promptTokens,
         responseTokens: timing?.responseTokens,
         totalTokens: timing?.totalTokens,
-        error: hadError
-            ? (lastError ?? tally.lastMessage ?? 'genui error')
-            : timing?.errorMessage,
+        error: hadError ? _firstLine(turnErrors.first) : timing?.errorMessage,
+        errorDetails: turnErrors,
+        outputText: timing?.outputText ?? '',
       );
 
       if (!producedSurface) {

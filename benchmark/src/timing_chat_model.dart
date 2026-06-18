@@ -5,6 +5,7 @@ class TurnTiming {
   TurnTiming({
     required this.totalMs,
     required this.chunkCount,
+    required this.outputText,
     this.timeToFirstChunkMs,
     this.promptTokens,
     this.responseTokens,
@@ -14,6 +15,11 @@ class TurnTiming {
 
   final int totalMs;
   final int chunkCount;
+
+  /// The full concatenated model output for this turn, kept for debugging
+  /// failures (e.g. output that the GenUI parser rejected).
+  final String outputText;
+
   final int? timeToFirstChunkMs;
   final int? promptTokens;
   final int? responseTokens;
@@ -52,6 +58,7 @@ class TimingChatModel extends ChatModel<ChatModelOptions> {
     Schema? outputSchema,
   }) async* {
     final stopwatch = Stopwatch()..start();
+    final buffer = StringBuffer();
     var chunkCount = 0;
     int? timeToFirstChunkMs;
     int? promptTokens;
@@ -63,9 +70,11 @@ class TimingChatModel extends ChatModel<ChatModelOptions> {
         messages,
         outputSchema: outputSchema,
       )) {
-        if (result.output.text.isNotEmpty) {
+        final text = result.output.text;
+        if (text.isNotEmpty) {
           chunkCount += 1;
           timeToFirstChunkMs ??= stopwatch.elapsedMilliseconds;
+          buffer.write(text);
         }
         final usage = result.usage;
         if (usage != null) {
@@ -80,6 +89,7 @@ class TimingChatModel extends ChatModel<ChatModelOptions> {
         TurnTiming(
           totalMs: stopwatch.elapsedMilliseconds,
           chunkCount: chunkCount,
+          outputText: buffer.toString(),
           timeToFirstChunkMs: timeToFirstChunkMs,
           promptTokens: promptTokens,
           responseTokens: responseTokens,
@@ -92,6 +102,7 @@ class TimingChatModel extends ChatModel<ChatModelOptions> {
         TurnTiming(
           totalMs: stopwatch.elapsedMilliseconds,
           chunkCount: chunkCount,
+          outputText: buffer.toString(),
           timeToFirstChunkMs: timeToFirstChunkMs,
           promptTokens: promptTokens,
           responseTokens: responseTokens,

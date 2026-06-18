@@ -50,6 +50,30 @@ class TurnMetric {
   };
 }
 
+/// Full detail for a failed turn, kept for offline debugging.
+class TurnFailure {
+  TurnFailure({
+    required this.iteration,
+    required this.turnIndex,
+    required this.reason,
+    required this.errors,
+    required this.outputText,
+  });
+
+  final int iteration;
+  final int turnIndex;
+
+  /// Short reason: `error`, `no surface`, or `error + no surface`.
+  final String reason;
+
+  /// Every error string seen during the turn (transport + GenUI parser).
+  final List<String> errors;
+
+  /// The raw model output for the turn — usually the most useful clue, e.g. the
+  /// JSON the GenUI parser rejected.
+  final String outputText;
+}
+
 /// Accumulates [TurnMetric]s across iterations for a single model.
 class BenchmarkRecorder {
   BenchmarkRecorder(this.modelId);
@@ -58,10 +82,12 @@ class BenchmarkRecorder {
   final String modelId;
 
   final List<TurnMetric> _turns = [];
+  final List<TurnFailure> _failures = [];
   int _iteration = 0;
   int _turnIndex = 0;
 
   List<TurnMetric> get turns => List.unmodifiable(_turns);
+  List<TurnFailure> get failures => List.unmodifiable(_failures);
 
   /// Begins a new iteration. Call once per pass through the journey.
   void startIteration() {
@@ -70,6 +96,10 @@ class BenchmarkRecorder {
   }
 
   /// Records one completed (or failed) round trip, stamping iteration/turn.
+  ///
+  /// When the turn failed, pass [errorDetails] (all error strings seen) and
+  /// [outputText] (the raw model output) so a [TurnFailure] is captured for the
+  /// debug report.
   void recordTurn({
     required int totalMs,
     required int chunkCount,
@@ -79,6 +109,8 @@ class BenchmarkRecorder {
     int? responseTokens,
     int? totalTokens,
     String? error,
+    List<String> errorDetails = const [],
+    String outputText = '',
   }) {
     _turns.add(
       TurnMetric(
@@ -94,6 +126,23 @@ class BenchmarkRecorder {
         error: error,
       ),
     );
+
+    final failedOnError = error != null;
+    if (failedOnError || !surfaceProduced) {
+      _failures.add(
+        TurnFailure(
+          iteration: _iteration,
+          turnIndex: _turnIndex,
+          reason: [
+            if (failedOnError) 'error',
+            if (!surfaceProduced) 'no surface',
+          ].join(' + '),
+          errors: errorDetails.isNotEmpty ? errorDetails : [?error],
+          outputText: outputText,
+        ),
+      );
+    }
+
     _turnIndex += 1;
   }
 
@@ -104,4 +153,32 @@ class BenchmarkRecorder {
   };
 
   String toJsonString() => const JsonEncoder.withIndent('  ').convert(toJson());
+
+  /// A human-readable dump of every failed turn, or null if there were none.
+  String? failureReport() {
+    if (_failures.isEmpty) return null;
+    final buffer = StringBuffer()
+      ..writeln('=== $modelId — ${_failures.length} failed turn(s) ===');
+    for (final f in _failures) {
+      buffer
+        ..writeln()
+        ..writeln(
+          '[iteration ${f.iteration}, turn ${f.turnIndex}] '
+          '(${f.reason})',
+        )
+        ..writeln('errors:');
+      if (f.errors.isEmpty) {
+        buffer.writeln('  (none captured)');
+      } else {
+        for (final e in f.errors) {
+          buffer.writeln('  - $e');
+        }
+      }
+      buffer
+        ..writeln('raw output:')
+        ..writeln(f.outputText.isEmpty ? '  (empty)' : f.outputText)
+        ..writeln('-' * 72);
+    }
+    return buffer.toString();
+  }
 }

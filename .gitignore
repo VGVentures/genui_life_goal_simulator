@@ -134,4 +134,4 @@ firebase.json
 # Model benchmark harness: API keys and run outputs
 benchmark/keys.env
 benchmark/results/
-benchmark/report.html*
+benchmark/report*.html*
