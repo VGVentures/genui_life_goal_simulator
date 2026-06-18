@@ -365,9 +365,10 @@ String _buildHtml(List<_ModelSummary> summaries) {
       <p>Average over all timed round trips, sorted fastest-first by total
       round-trip time. Latency stats exclude failed turns; the error rate counts
       them.</p>
-      <p><strong>Speed is only one dimension.</strong> The quality of the
-      experience matters just as much, and these benchmarks cannot measure
-      that.</p>
+      <br />
+      <p><strong>Speed is only one dimension of a good experience.</strong> How 
+      well a model builds content and catalog items that address the user's 
+      needs is crucial, and these benchmarks cannot measure that.</p>
     </div>
   </header>
   <main>
