@@ -355,17 +355,6 @@ String _buildHtml(List<_ModelSummary> summaries) {
     @media (prefers-reduced-motion: reduce) {
       .card { animation: none; }
     }
-    .caveat {
-      max-width: 80ch;
-      margin: 1.5rem 0 0;
-      padding: 0.9rem 1.1rem;
-      background: rgba(255, 255, 255, 0.08);
-      border-left: 3px solid var(--blue-light);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.95rem;
-    }
-    .caveat strong { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -376,9 +365,9 @@ String _buildHtml(List<_ModelSummary> summaries) {
       <p>Average over all timed round trips, sorted fastest-first by total
       round-trip time. Latency stats exclude failed turns; the error rate counts
       them.</p>
-      <p class="caveat"><strong>Speed is only one dimension.</strong> The
-      quality of the experience matters just as much, and these benchmarks
-      cannot measure that.</p>
+      <p><strong>Speed is only one dimension.</strong> The quality of the
+      experience matters just as much, and these benchmarks cannot measure
+      that.</p>
     </div>
   </header>
   <main>
