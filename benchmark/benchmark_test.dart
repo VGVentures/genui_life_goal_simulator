@@ -26,13 +26,16 @@ import 'src/benchmark_runner.dart';
 /// Override the shape with `--dart-define=BENCHMARK_ITERATIONS=1` etc.:
 /// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3),
 /// BENCHMARK_COOLDOWN_SECONDS (fixed delay before each request, default 0 —
-/// round-robin interleaving already spaces providers).
+/// round-robin interleaving already spaces providers), BENCHMARK_MODELS
+/// (comma-separated model ids to run; empty = all). Models not run keep their
+/// existing `benchmark/results/<id>.json`.
 const _iterations = int.fromEnvironment(
   'BENCHMARK_ITERATIONS',
   defaultValue: 5,
 );
 const _turns = int.fromEnvironment('BENCHMARK_TURNS', defaultValue: 3);
 const _stepDelaySeconds = int.fromEnvironment('BENCHMARK_COOLDOWN_SECONDS');
+const _modelsFilter = String.fromEnvironment('BENCHMARK_MODELS');
 
 void main() {
   setUpAll(() {
@@ -42,19 +45,35 @@ void main() {
   });
 
   test('benchmark', () async {
+    // Optional subset to run (e.g. only the previously-failed models). Models
+    // left out keep their existing result JSON.
+    final filterIds = _modelsFilter.isEmpty
+        ? null
+        : _modelsFilter
+              .split(',')
+              .map((s) => s.trim())
+              .where((s) => s.isNotEmpty)
+              .toSet();
+
     final models = [
       for (final model in benchmarkModels)
-        if (model.hasKey) model,
+        if (model.hasKey && (filterIds == null || filterIds.contains(model.id)))
+          model,
     ];
     for (final model in benchmarkModels) {
       if (!model.hasKey) {
         debugPrint('Skipping ${model.id}: no API key configured.');
       }
     }
+    if (filterIds != null) {
+      debugPrint('Model filter active — running: ${models.map((m) => m.id)}');
+    }
     expect(
       models,
       isNotEmpty,
-      reason: 'No models had API keys; set them in benchmark/keys.env.',
+      reason: filterIds != null
+          ? 'No keyed models matched BENCHMARK_MODELS=$_modelsFilter.'
+          : 'No models had API keys; set them in benchmark/keys.env.',
     );
 
     final resultsDir = Directory('benchmark/results')
