@@ -1,0 +1,67 @@
+name: Model Benchmark
+
+# Runs the headless model benchmark (real system prompt + GenUI parser, no UI)
+# against every provider that has an API key secret, then publishes the HTML
+# report as a build artifact.
+#
+# Triggered manually, or weekly. Not run on PRs — it makes real, paid API calls.
+
+on:
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: 'Iterations per model'
+        required: false
+        default: '5'
+      turns:
+        description: 'Round trips per iteration'
+        required: false
+        default: '3'
+  schedule:
+    # Mondays at 06:00 UTC.
+    - cron: '0 6 * * 1'
+
+jobs:
+  benchmark:
+    name: Run benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+
+      - id: read_fvm
+        name: Extract Flutter version from .fvmrc
+        run: echo "version=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.read_fvm.outputs.version }}
+
+      - run: flutter pub get
+
+      - name: Write API keys
+        run: |
+          cat > benchmark/keys.env <<EOF
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          KIMI_API_KEY=${{ secrets.KIMI_API_KEY }}
+          DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}
+          EOF
+
+      - name: Run benchmark and build report
+        env:
+          FLUTTER: flutter
+          BENCHMARK_ITERATIONS: ${{ github.event.inputs.iterations || '5' }}
+          BENCHMARK_TURNS: ${{ github.event.inputs.turns || '3' }}
+        run: dart run tool/run_benchmark.dart
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: |
+            benchmark/report.html
+            benchmark/results/
+          if-no-files-found: warn
