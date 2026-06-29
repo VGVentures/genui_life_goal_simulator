@@ -7,6 +7,8 @@
 //
 // Usage:
 //   fvm dart run tool/run_benchmark.dart                # all keyed models
+//   fvm dart run tool/run_benchmark.dart --only-new     # only models without a
+//     result file yet (fills in newly added models, keeps the rest)
 //   fvm dart run tool/run_benchmark.dart --rerun-failed # only models that
 //     had a failed turn in the last run
 //   fvm dart run tool/run_benchmark.dart --models=gpt-5.4-mini,kimi-k2.7-code
@@ -82,6 +84,11 @@ Future<void> main(List<String> args) async {
     models = env['BENCHMARK_MODELS'];
   }
 
+  // Only run models that don't already have a result file. Lets a run fill in
+  // newly added models while leaving existing results in place.
+  final onlyNew = args.contains('--only-new');
+  if (onlyNew) stdout.writeln('Only running models without existing results.');
+
   stdout.writeln(
     'Running headless benchmark '
     '($iterations iterations x $turns turns per model)...',
@@ -101,6 +108,7 @@ Future<void> main(List<String> args) async {
     '--dart-define=BENCHMARK_TURNS=$turns',
     '--dart-define=BENCHMARK_COOLDOWN_SECONDS=$cooldown',
     if (models != null) '--dart-define=BENCHMARK_MODELS=$models',
+    if (onlyNew) '--dart-define=BENCHMARK_ONLY_NEW=true',
   ], mode: ProcessStartMode.inheritStdio);
 
   final code = await process.exitCode;

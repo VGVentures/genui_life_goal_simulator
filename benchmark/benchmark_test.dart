@@ -27,8 +27,9 @@ import 'src/benchmark_runner.dart';
 /// BENCHMARK_ITERATIONS (default 5), BENCHMARK_TURNS (default 3),
 /// BENCHMARK_COOLDOWN_SECONDS (fixed delay before each request, default 0 —
 /// round-robin interleaving already spaces providers), BENCHMARK_MODELS
-/// (comma-separated model ids to run; empty = all). Models not run keep their
-/// existing `benchmark/results/<id>.json`.
+/// (comma-separated model ids to run; empty = all), BENCHMARK_ONLY_NEW (when
+/// true, skip models that already have a `benchmark/results/<id>.json`). Models
+/// not run keep their existing result file.
 const _iterations = int.fromEnvironment(
   'BENCHMARK_ITERATIONS',
   defaultValue: 5,
@@ -36,6 +37,7 @@ const _iterations = int.fromEnvironment(
 const _turns = int.fromEnvironment('BENCHMARK_TURNS', defaultValue: 3);
 const _stepDelaySeconds = int.fromEnvironment('BENCHMARK_COOLDOWN_SECONDS');
 const _modelsFilter = String.fromEnvironment('BENCHMARK_MODELS');
+const _onlyNew = bool.fromEnvironment('BENCHMARK_ONLY_NEW');
 
 void main() {
   setUpAll(() {
@@ -45,8 +47,10 @@ void main() {
   });
 
   test('benchmark', () async {
-    // Optional subset to run (e.g. only the previously-failed models). Models
-    // left out keep their existing result JSON.
+    final resultsDir = Directory('benchmark/results')
+      ..createSync(recursive: true);
+
+    // Optional explicit id list (e.g. only the previously-failed models).
     final filterIds = _modelsFilter.isEmpty
         ? null
         : _modelsFilter
@@ -55,33 +59,47 @@ void main() {
               .where((s) => s.isNotEmpty)
               .toSet();
 
-    final models = [
+    // Models that have an API key configured. No key, no run.
+    final keyed = [
       for (final model in benchmarkModels)
-        if (model.hasKey && (filterIds == null || filterIds.contains(model.id)))
-          model,
+        if (model.hasKey) model,
     ];
     for (final model in benchmarkModels) {
       if (!model.hasKey) {
         debugPrint('Skipping ${model.id}: no API key configured.');
       }
     }
-    if (filterIds != null) {
-      debugPrint('Model filter active — running: ${models.map((m) => m.id)}');
-    }
     expect(
-      models,
+      keyed,
       isNotEmpty,
-      reason: filterIds != null
-          ? 'No keyed models matched BENCHMARK_MODELS=$_modelsFilter.'
-          : 'No models had API keys; set them in benchmark/keys.env.',
+      reason: 'No models had API keys; set them in benchmark/keys.env.',
     );
 
-    final resultsDir = Directory('benchmark/results')
-      ..createSync(recursive: true);
+    // Apply the filters: an explicit id list, and/or only-new (skip models that
+    // already have a result file, so a run only fills in what's missing).
+    bool alreadyRun(BenchmarkModel m) =>
+        File('${resultsDir.path}/${m.id}.json').existsSync();
+    final models = [
+      for (final model in keyed)
+        if ((filterIds == null || filterIds.contains(model.id)) &&
+            (!_onlyNew || !alreadyRun(model)))
+          model,
+    ];
+
+    if (models.isEmpty) {
+      debugPrint(
+        _onlyNew
+            ? 'No new models to run; every configured benchmark already has '
+                  'results.'
+            : 'No models matched BENCHMARK_MODELS=$_modelsFilter.',
+      );
+      return;
+    }
 
     debugPrint(
       'Benchmarking ${models.length} model(s) round-robin '
-      '($_iterations iterations x $_turns turns each).',
+      '($_iterations iterations x $_turns turns each): '
+      '${models.map((m) => m.id)}',
     );
 
     await runRoundRobin(

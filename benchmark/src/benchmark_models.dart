@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ abstract final class BenchmarkConfig {
   static const geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
   static const kimiApiKey = String.fromEnvironment('KIMI_API_KEY');
   static const deepSeekApiKey = String.fromEnvironment('DEEPSEEK_API_KEY');
+  static const inceptionApiKey = String.fromEnvironment('INCEPTION_API_KEY');
 }
 
 /// Builds a dartantic [ChatModel] for a benchmark model id.
@@ -47,6 +49,7 @@ final Uri _googleBaseUrl = Uri.parse(
 
 final Uri _moonshotBaseUrl = Uri.parse('https://api.moonshot.ai/v1');
 final Uri _deepSeekBaseUrl = Uri.parse('https://api.deepseek.com');
+final Uri _inceptionBaseUrl = Uri.parse('https://api.inceptionlabs.ai/v1');
 
 /// A model definition that may also describe a thinking-disabled variant.
 ///
@@ -266,6 +269,20 @@ final List<_ModelDef> _modelDefs = [
       }),
     ),
   ),
+
+  // --- Inception Labs / Mercury (OpenAI-compatible diffusion LLM) ---
+  _ModelDef(
+    id: 'mercury-2',
+    apiKey: BenchmarkConfig.inceptionApiKey,
+    build: () => _openAiCompatible(
+      name: 'mercury-2',
+      apiKey: BenchmarkConfig.inceptionApiKey,
+      baseUrl: _inceptionBaseUrl,
+      // dartantic's OpenAI client sends a non-UUID X-Request-ID, which
+      // Inception rejects with a 400. Rewrite it to a valid UUID per request.
+      client: _RequestIdClient(),
+    ),
+  ),
 ];
 
 /// All benchmarkable models, with each definition's optional thinking-disabled
@@ -316,4 +333,36 @@ class _JsonBodyInjector extends http.BaseClient {
 
   @override
   void close() => _inner.close();
+}
+
+/// An [http.Client] that sets a valid UUID `X-Request-ID` on every request.
+///
+/// dartantic's OpenAI client generates a `req_<timestamp>_<hex>` id, which
+/// Inception rejects with a 400. Providers that ignore the header are
+/// unaffected.
+class _RequestIdClient extends http.BaseClient {
+  _RequestIdClient() : _inner = http.Client();
+
+  final http.Client _inner;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['X-Request-ID'] = _uuidV4();
+    return _inner.send(request);
+  }
+
+  @override
+  void close() => _inner.close();
+}
+
+/// Generates a random RFC 4122 version 4 UUID.
+String _uuidV4() {
+  final random = Random();
+  final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  String hex(int i) => bytes[i].toRadixString(16).padLeft(2, '0');
+  return '${hex(0)}${hex(1)}${hex(2)}${hex(3)}-${hex(4)}${hex(5)}-'
+      '${hex(6)}${hex(7)}-${hex(8)}${hex(9)}-'
+      '${hex(10)}${hex(11)}${hex(12)}${hex(13)}${hex(14)}${hex(15)}';
 }
