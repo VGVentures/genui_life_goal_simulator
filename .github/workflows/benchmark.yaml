@@ -110,8 +110,14 @@ jobs:
       # app's Firebase config, so we write a minimal firebase.json inline that
       # names the target site directly. No FIREBASE_JSON/FIREBASERC secret is
       # involved — only the service account and project ID, which already exist.
+      #
+      # Deploy only on a manual run (workflow_dispatch), never on the weekly
+      # schedule: scheduled runs still benchmark and upload the artifact, but
+      # publishing to the live site is an explicit, human-triggered action.
+      # workflow_dispatch already requires write access to the repo, so only
+      # maintainers can trigger a deploy.
       - name: Prepare report for hosting
-        if: always()
+        if: always() && github.event_name == 'workflow_dispatch'
         id: prep_report
         run: |
           if [ -f benchmark/report.html ]; then
@@ -125,7 +131,7 @@ jobs:
           fi
 
       - name: Deploy report to Firebase Hosting
-        if: always() && steps.prep_report.outputs.ready == 'true'
+        if: always() && github.event_name == 'workflow_dispatch' && steps.prep_report.outputs.ready == 'true'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
