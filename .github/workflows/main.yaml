@@ -124,10 +124,17 @@ jobs:
       # "supplied version is the current active version" (FAILED_PRECONDITION).
       # This is especially likely for PRs that don't change the web build (the
       # release becomes a no-op), so don't let it block the PR.
+      #
+      # `continue-on-error` keeps the job green, but it is not enough on its own:
+      # when a repoToken is supplied the action posts its OWN check run named
+      # "Deploy Preview" and marks it failed independently of the job, which
+      # bypasses continue-on-error and blocks the PR. We omit repoToken so the
+      # action never creates that separate check (it only does so when a token is
+      # present). The trade-off is no auto-posted preview-URL comment; the URL is
+      # still printed in the job logs.
       - uses: FirebaseExtended/action-hosting-deploy@v0
         continue-on-error: true
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           target: production
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
