@@ -117,7 +117,15 @@ jobs:
           cat firebase.json
       - run: flutter pub get
       - run: flutter build web --wasm --no-strip-wasm --source-maps --target lib/main_production.dart --dart-define=APP_CHECK_DEBUG_TOKEN=${{ secrets.DEPLOY_PREVIEW_APP_CHECK_DEBUG_TOKEN }} --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+      # The preview deploy is advisory: it only publishes a per-PR preview URL.
+      # action-hosting-deploy can spuriously fail after the release actually
+      # succeeds: a premature-close network error makes firebase-tools retry the
+      # non-idempotent release POST, and the retry returns
+      # "supplied version is the current active version" (FAILED_PRECONDITION).
+      # This is especially likely for PRs that don't change the web build (the
+      # release becomes a no-op), so don't let it block the PR.
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        continue-on-error: true
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
