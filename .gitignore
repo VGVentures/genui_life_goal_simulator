@@ -135,3 +135,4 @@ firebase.json
 benchmark/keys.env
 benchmark/results/
 benchmark/report*.html*
+benchmark/public/

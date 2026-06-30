@@ -103,3 +103,32 @@ jobs:
             benchmark/report.html
             benchmark/results/
           if-no-files-found: warn
+
+      # Publish the freshly built report to its own Firebase Hosting site
+      # (genui-benchmarks.web.app). This is intentionally decoupled from the
+      # Flutter app's deploy in main.yaml: a static report needs none of the
+      # app's Firebase config, so we write a minimal firebase.json inline that
+      # names the target site directly. No FIREBASE_JSON/FIREBASERC secret is
+      # involved — only the service account and project ID, which already exist.
+      - name: Prepare report for hosting
+        if: always()
+        id: prep_report
+        run: |
+          if [ -f benchmark/report.html ]; then
+            mkdir -p benchmark/public
+            cp benchmark/report.html benchmark/public/index.html
+            printf '%s' '{"hosting":{"site":"genui-benchmarks","public":"benchmark/public","ignore":["firebase.json","**/.*","**/node_modules/**"]}}' > firebase.json
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No benchmark/report.html was produced; skipping deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy report to Firebase Hosting
+        if: always() && steps.prep_report.outputs.ready == 'true'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
