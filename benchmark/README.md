@@ -74,9 +74,11 @@ exactly what a model emitted that broke parsing.
 
 ## Run on CI
 
-`.github/workflows/benchmark.yaml` runs on an Ubuntu runner (manual
-`workflow_dispatch`, plus a weekly schedule). It reads keys from repository
-secrets, runs the headless benchmark, builds the report, and uploads
+`.github/workflows/benchmark.yaml` runs on an Ubuntu runner. It is
+**manual-only** (`workflow_dispatch`) — it makes real, paid API calls, so it
+never runs on a schedule. `workflow_dispatch` requires write access to the
+repo, so only maintainers can start it. It reads keys from repository secrets,
+runs the headless benchmark, builds the report, and uploads
 `benchmark/report.html` + the raw results as a workflow artifact.
 
 Runs are **incremental by default**: each run first restores the previous
@@ -85,15 +87,12 @@ the default) benchmarks only models without a result yet, so newly added
 models get filled in without re-paying for the rest. Set `only_new` to false
 to re-benchmark every model from scratch.
 
-On a manual run (`workflow_dispatch`), the built report is published to its own
-Firebase Hosting site (`genui-benchmarks.web.app`). Scheduled runs still
-benchmark and upload the report artifact but do not publish — deploying to the
-live site is an explicit, human-triggered action, and `workflow_dispatch`
-already requires write access to the repo. This deploy is decoupled from the
-Flutter app's deploy in `main.yaml`: the static report needs none of the app's
-Firebase config, so the workflow writes a minimal `firebase.json` inline and
-deploys with the `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID` secrets
-only (no `FIREBASE_JSON`/`FIREBASERC` secret involved).
+Each run also publishes the built report to its own Firebase Hosting site
+(`genui-benchmarks.web.app`). This deploy is decoupled from the Flutter app's
+deploy in `main.yaml`: the static report needs none of the app's Firebase
+config, so the workflow writes a minimal `firebase.json` inline and deploys
+with the `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID` secrets only (no
+`FIREBASE_JSON`/`FIREBASERC` secret involved).
 
 Required repository secrets (omit any provider you don't want):
 `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `KIMI_API_KEY`,
