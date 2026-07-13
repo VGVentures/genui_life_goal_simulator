@@ -9,17 +9,23 @@ name: Model Benchmark
 # workflow_dispatch requires write access to the repo, so only maintainers can.
 #
 # Incremental by default: each run restores the previous run's results, then
-# (when only_new is true) benchmarks only models that don't have a result yet,
-# so newly added models get filled in without re-paying for the rest. Set
-# only_new to false to re-benchmark every model from scratch.
+# the `mode` input decides what to run. `new-and-failed` (default) benchmarks
+# models that have no result yet AND re-runs any whose restored result had a
+# failed turn, while leaving cleanly-passed models untouched — so failures get
+# retried and successes are never re-paid for. `new` fills only missing models;
+# `all` re-benchmarks everything from scratch.
 
 on:
   workflow_dispatch:
     inputs:
-      only_new:
-        description: 'Only benchmark models without an existing result'
-        type: boolean
-        default: true
+      mode:
+        description: 'Which models to benchmark'
+        type: choice
+        default: new-and-failed
+        options:
+          - new-and-failed # new models + retry failures; keep clean passes
+          - new # only models without a result yet
+          - all # re-benchmark every model from scratch
       iterations:
         description: 'Iterations per model'
         required: false
@@ -85,13 +91,18 @@ jobs:
           FLUTTER: flutter
           BENCHMARK_ITERATIONS: ${{ github.event.inputs.iterations || '5' }}
           BENCHMARK_TURNS: ${{ github.event.inputs.turns || '3' }}
-          ONLY_NEW: ${{ github.event.inputs.only_new || 'true' }}
+          MODE: ${{ github.event.inputs.mode || 'new-and-failed' }}
         run: |
-          if [ "$ONLY_NEW" = "true" ]; then
-            dart run tool/run_benchmark.dart --only-new
-          else
-            dart run tool/run_benchmark.dart
-          fi
+          case "$MODE" in
+            new)
+              dart run tool/run_benchmark.dart --only-new ;;
+            new-and-failed)
+              dart run tool/run_benchmark.dart --only-new --rerun-failed ;;
+            all)
+              dart run tool/run_benchmark.dart ;;
+            *)
+              echo "Unknown mode: $MODE" >&2; exit 1 ;;
+          esac
 
       - name: Upload report
         if: always()

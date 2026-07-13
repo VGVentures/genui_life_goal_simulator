@@ -28,6 +28,8 @@ catalog — they change often.
 fvm dart run tool/run_benchmark.dart                 # full sweep, then report
 fvm dart run tool/run_benchmark.dart --only-new      # only models without a
                                                      # result file yet
+fvm dart run tool/run_benchmark.dart --only-new --rerun-failed  # + retry
+                                                     # models with a failure
 BENCHMARK_ITERATIONS=1 fvm dart run tool/run_benchmark.dart   # quick dry run
 open benchmark/report.html
 ```
@@ -35,6 +37,11 @@ open benchmark/report.html
 `--only-new` benchmarks only models that don't yet have a
 `benchmark/results/<id>.json`, leaving existing results in place. Handy after
 adding a new model so you fill in just the gap without re-paying for the rest.
+`--rerun-failed` additionally re-runs any model whose stored result has a failed
+turn (an error or a turn that produced no surface). The two compose: with both,
+a run fills in new models and retries failures while never touching a model that
+already passed cleanly — a re-run overwrites that model's result and deletes its
+`.failures.txt`, so a now-passing model's old failures are cleared.
 
 Or directly:
 
@@ -82,10 +89,14 @@ runs the headless benchmark, builds the report, and uploads
 `benchmark/report.html` + the raw results as a workflow artifact.
 
 Runs are **incremental by default**: each run first restores the previous
-successful run's results, then (when the `only_new` dispatch input is true,
-the default) benchmarks only models without a result yet, so newly added
-models get filled in without re-paying for the rest. Set `only_new` to false
-to re-benchmark every model from scratch.
+successful run's results, then the `mode` dispatch input decides what to run.
+`new-and-failed` (the default) benchmarks models without a result yet **and**
+re-runs any whose restored result had a failed turn, while leaving cleanly-passed
+models untouched — so failures are retried and successes are never re-paid for.
+`new` fills only missing models; `all` re-benchmarks everything from scratch.
+Restore only pulls from a run whose job concluded **success**, so a run must
+stay green to become the next run's baseline; recorded API/GenUI failures are
+data and keep the job green, so only a hard crash or timeout breaks the chain.
 
 Each run also publishes the built report to its own Firebase Hosting site
 (`genui-benchmarks.web.app`). This deploy is decoupled from the Flutter app's
