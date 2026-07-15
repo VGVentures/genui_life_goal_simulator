@@ -121,9 +121,16 @@ jobs:
       # we write a minimal firebase.json inline that names the target site
       # directly. No FIREBASE_JSON/FIREBASERC secret is involved — only the
       # service account and project ID, which already exist.
+      #
+      # This publish tail is `continue-on-error`: results + report are already
+      # uploaded as an artifact above (if: always()), and the incremental
+      # restore only reuses runs whose job concluded success. A publish failure
+      # must NOT fail the job, or it would break the restore chain and force a
+      # full (paid) re-benchmark next run. The failed step still shows in logs.
       - name: Prepare report for hosting
         if: always()
         id: prep_report
+        continue-on-error: true
         run: |
           if [ -f benchmark/report.html ]; then
             mkdir -p benchmark/public
@@ -137,6 +144,7 @@ jobs:
 
       - name: Deploy report to Firebase Hosting
         if: always() && steps.prep_report.outputs.ready == 'true'
+        continue-on-error: true
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
