@@ -175,6 +175,14 @@ final List<_ModelDef> _modelDefs = [
     ),
   ),
   _ModelDef(
+    id: 'claude-sonnet-5',
+    apiKey: BenchmarkConfig.anthropicApiKey,
+    build: () => AnthropicChatModel(
+      name: 'claude-sonnet-5',
+      apiKey: BenchmarkConfig.anthropicApiKey,
+    ),
+  ),
+  _ModelDef(
     id: 'claude-sonnet-4-6',
     apiKey: BenchmarkConfig.anthropicApiKey,
     build: () => AnthropicChatModel(
