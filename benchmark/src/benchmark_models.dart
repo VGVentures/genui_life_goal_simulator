@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ abstract final class BenchmarkConfig {
   static const geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
   static const kimiApiKey = String.fromEnvironment('KIMI_API_KEY');
   static const deepSeekApiKey = String.fromEnvironment('DEEPSEEK_API_KEY');
+  static const inceptionApiKey = String.fromEnvironment('INCEPTION_API_KEY');
 }
 
 /// Builds a dartantic [ChatModel] for a benchmark model id.
@@ -47,6 +49,7 @@ final Uri _googleBaseUrl = Uri.parse(
 
 final Uri _moonshotBaseUrl = Uri.parse('https://api.moonshot.ai/v1');
 final Uri _deepSeekBaseUrl = Uri.parse('https://api.deepseek.com');
+final Uri _inceptionBaseUrl = Uri.parse('https://api.inceptionlabs.ai/v1');
 
 /// A model definition that may also describe a thinking-disabled variant.
 ///
@@ -105,7 +108,10 @@ OpenAIChatModel _openAiCompatible({
     name: name,
     apiKey: apiKey,
     baseUrl: baseUrl,
-    client: client,
+    // Retry transient provider errors beneath dartantic so an occasional API
+    // blip never reaches the scoring layer as a model/GenUI failure. Wraps any
+    // provider-specific client (DeepSeek body injector, Inception request id).
+    client: _RetryingClient(client ?? http.Client()),
     defaultOptions: OpenAIChatOptions(
       streamOptions: const StreamOptions(includeUsage: true),
       reasoningEffort: reasoningEffort,
@@ -169,6 +175,14 @@ final List<_ModelDef> _modelDefs = [
     ),
   ),
   _ModelDef(
+    id: 'claude-sonnet-5',
+    apiKey: BenchmarkConfig.anthropicApiKey,
+    build: () => AnthropicChatModel(
+      name: 'claude-sonnet-5',
+      apiKey: BenchmarkConfig.anthropicApiKey,
+    ),
+  ),
+  _ModelDef(
     id: 'claude-sonnet-4-6',
     apiKey: BenchmarkConfig.anthropicApiKey,
     build: () => AnthropicChatModel(
@@ -186,6 +200,32 @@ final List<_ModelDef> _modelDefs = [
   ),
 
   // --- OpenAI (direct API) ---
+  _ModelDef(
+    id: 'gpt-5.6-terra',
+    apiKey: BenchmarkConfig.openAiApiKey,
+    build: () => _openAiCompatible(
+      name: 'gpt-5.6-terra',
+      apiKey: BenchmarkConfig.openAiApiKey,
+    ),
+    buildNoThinking: () => _openAiCompatible(
+      name: 'gpt-5.6-terra',
+      apiKey: BenchmarkConfig.openAiApiKey,
+      reasoningEffort: ReasoningEffort.low,
+    ),
+  ),
+  _ModelDef(
+    id: 'gpt-5.6-luna',
+    apiKey: BenchmarkConfig.openAiApiKey,
+    build: () => _openAiCompatible(
+      name: 'gpt-5.6-luna',
+      apiKey: BenchmarkConfig.openAiApiKey,
+    ),
+    buildNoThinking: () => _openAiCompatible(
+      name: 'gpt-5.6-luna',
+      apiKey: BenchmarkConfig.openAiApiKey,
+      reasoningEffort: ReasoningEffort.low,
+    ),
+  ),
   _ModelDef(
     id: 'gpt-5.5',
     apiKey: BenchmarkConfig.openAiApiKey,
@@ -266,6 +306,20 @@ final List<_ModelDef> _modelDefs = [
       }),
     ),
   ),
+
+  // --- Inception Labs / Mercury (OpenAI-compatible diffusion LLM) ---
+  _ModelDef(
+    id: 'mercury-2',
+    apiKey: BenchmarkConfig.inceptionApiKey,
+    build: () => _openAiCompatible(
+      name: 'mercury-2',
+      apiKey: BenchmarkConfig.inceptionApiKey,
+      baseUrl: _inceptionBaseUrl,
+      // dartantic's OpenAI client sends a non-UUID X-Request-ID, which
+      // Inception rejects with a 400. Rewrite it to a valid UUID per request.
+      client: _RequestIdClient(),
+    ),
+  ),
 ];
 
 /// All benchmarkable models, with each definition's optional thinking-disabled
@@ -316,4 +370,116 @@ class _JsonBodyInjector extends http.BaseClient {
 
   @override
   void close() => _inner.close();
+}
+
+/// An [http.Client] that retries transient provider failures with exponential
+/// backoff, so occasional API-side errors don't get recorded as model/GenUI
+/// failures. Covers rate limits (429), server errors (5xx), and the sporadic
+/// 401/403 "insufficient permissions" that brand-new OpenAI models return
+/// during rollout — verified transient: identical requests succeed on retry.
+///
+/// Only non-2xx responses are inspected; a request that has begun streaming a
+/// 2xx is passed through untouched, so no partial output is ever duplicated.
+/// The (small) error body is buffered to decide whether a 401/403 is the
+/// transient permissions flake or a real bad key, and to replay it unchanged
+/// when retries are exhausted.
+class _RetryingClient extends http.BaseClient {
+  _RetryingClient(this._inner);
+
+  final http.Client _inner;
+
+  /// Retries after a failure, so up to `maxRetries + 1` attempts per request.
+  /// At ~20% transient-failure rates this drives a turn's residual failure
+  /// probability below ~0.1%.
+  static const maxRetries = 4;
+
+  static const _retryableStatus = {408, 409, 425, 429, 500, 502, 503, 504};
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    // Buffer the body once: a finalized request stream is single-shot, but a
+    // retry needs to send the same bytes again.
+    final bodyBytes = await request.finalize().toBytes();
+    final random = Random();
+
+    for (var attempt = 0; ; attempt++) {
+      final response = await _inner.send(_replay(request, bodyBytes));
+      if (response.statusCode < 400) return response;
+
+      final errorBody = await response.stream.toBytes();
+      final canRetry =
+          attempt < maxRetries && _isTransient(response.statusCode, errorBody);
+      if (!canRetry) {
+        // Give up: hand back the buffered error response unchanged.
+        return http.StreamedResponse(
+          Stream.value(errorBody),
+          response.statusCode,
+          contentLength: errorBody.length,
+          request: response.request,
+          headers: response.headers,
+          reasonPhrase: response.reasonPhrase,
+        );
+      }
+
+      // Exponential backoff with jitter: ~0.5s, 1s, 2s, 4s.
+      final delayMs = 500 * (1 << attempt) + random.nextInt(250);
+      await Future<void>.delayed(Duration(milliseconds: delayMs));
+    }
+  }
+
+  bool _isTransient(int status, List<int> body) {
+    if (_retryableStatus.contains(status)) return true;
+    // New OpenAI models sporadically 401/403 with "insufficient permissions"
+    // on otherwise-valid requests. Retry that, but not a genuine bad key
+    // (which reports "invalid api key" / "invalid_api_key").
+    if (status == 401 || status == 403) {
+      final text = utf8.decode(body, allowMalformed: true).toLowerCase();
+      return text.contains('insufficient permissions');
+    }
+    return false;
+  }
+
+  http.Request _replay(http.BaseRequest original, List<int> bodyBytes) {
+    return http.Request(original.method, original.url)
+      ..followRedirects = original.followRedirects
+      ..maxRedirects = original.maxRedirects
+      ..persistentConnection = original.persistentConnection
+      ..headers.addAll(original.headers)
+      ..bodyBytes = bodyBytes;
+  }
+
+  @override
+  void close() => _inner.close();
+}
+
+/// An [http.Client] that sets a valid UUID `X-Request-ID` on every request.
+///
+/// dartantic's OpenAI client generates a `req_<timestamp>_<hex>` id, which
+/// Inception rejects with a 400. Providers that ignore the header are
+/// unaffected.
+class _RequestIdClient extends http.BaseClient {
+  _RequestIdClient() : _inner = http.Client();
+
+  final http.Client _inner;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['X-Request-ID'] = _uuidV4();
+    return _inner.send(request);
+  }
+
+  @override
+  void close() => _inner.close();
+}
+
+/// Generates a random RFC 4122 version 4 UUID.
+String _uuidV4() {
+  final random = Random();
+  final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  String hex(int i) => bytes[i].toRadixString(16).padLeft(2, '0');
+  return '${hex(0)}${hex(1)}${hex(2)}${hex(3)}-${hex(4)}${hex(5)}-'
+      '${hex(6)}${hex(7)}-${hex(8)}${hex(9)}-'
+      '${hex(10)}${hex(11)}${hex(12)}${hex(13)}${hex(14)}${hex(15)}';
 }

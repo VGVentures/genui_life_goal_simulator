@@ -4,11 +4,28 @@ name: Model Benchmark
 # against every provider that has an API key secret, then publishes the HTML
 # report as a build artifact.
 #
-# Triggered manually, or weekly. Not run on PRs — it makes real, paid API calls.
+# Triggered manually only (workflow_dispatch). It makes real, paid API calls,
+# so it never runs on a schedule or on PRs — only when a maintainer starts it.
+# workflow_dispatch requires write access to the repo, so only maintainers can.
+#
+# Incremental by default: each run restores the previous run's results, then
+# the `mode` input decides what to run. `new-and-failed` (default) benchmarks
+# models that have no result yet AND re-runs any whose restored result had a
+# failed turn, while leaving cleanly-passed models untouched — so failures get
+# retried and successes are never re-paid for. `new` fills only missing models;
+# `all` re-benchmarks everything from scratch.
 
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'Which models to benchmark'
+        type: choice
+        default: new-and-failed
+        options:
+          - new-and-failed # new models + retry failures; keep clean passes
+          - new # only models without a result yet
+          - all # re-benchmark every model from scratch
       iterations:
         description: 'Iterations per model'
         required: false
@@ -17,9 +34,10 @@ on:
         description: 'Round trips per iteration'
         required: false
         default: '3'
-  schedule:
-    # Mondays at 06:00 UTC.
-    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  actions: read # needed to list and download artifacts from previous runs
 
 jobs:
   benchmark:
@@ -47,14 +65,44 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           KIMI_API_KEY=${{ secrets.KIMI_API_KEY }}
           DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}
+          INCEPTION_API_KEY=${{ secrets.INCEPTION_API_KEY }}
           EOF
+
+      - name: Restore previous results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p benchmark/results
+          prev=$(gh run list --workflow benchmark.yaml --status success \
+            --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$prev" ]; then
+            echo "Restoring results from previous run $prev"
+            gh run download "$prev" --name benchmark-report --dir /tmp/prev || true
+            if [ -d /tmp/prev/results ]; then
+              cp -a /tmp/prev/results/. benchmark/results/ || true
+            fi
+            echo "Restored $(ls benchmark/results/*.json 2>/dev/null | wc -l) result file(s)."
+          else
+            echo "No previous successful run to restore from; starting fresh."
+          fi
 
       - name: Run benchmark and build report
         env:
           FLUTTER: flutter
           BENCHMARK_ITERATIONS: ${{ github.event.inputs.iterations || '5' }}
           BENCHMARK_TURNS: ${{ github.event.inputs.turns || '3' }}
-        run: dart run tool/run_benchmark.dart
+          MODE: ${{ github.event.inputs.mode || 'new-and-failed' }}
+        run: |
+          case "$MODE" in
+            new)
+              dart run tool/run_benchmark.dart --only-new ;;
+            new-and-failed)
+              dart run tool/run_benchmark.dart --only-new --rerun-failed ;;
+            all)
+              dart run tool/run_benchmark.dart ;;
+            *)
+              echo "Unknown mode: $MODE" >&2; exit 1 ;;
+          esac
 
       - name: Upload report
         if: always()
@@ -65,3 +113,41 @@ jobs:
             benchmark/report.html
             benchmark/results/
           if-no-files-found: warn
+
+      # Publish the freshly built report to its own Firebase Hosting site
+      # (genui-benchmarks.web.app). The whole workflow is manual-only, so this
+      # publishes on every run. Decoupled from the Flutter app's deploy in
+      # main.yaml: a static report needs none of the app's Firebase config, so
+      # we write a minimal firebase.json inline that names the target site
+      # directly. No FIREBASE_JSON/FIREBASERC secret is involved — only the
+      # service account and project ID, which already exist.
+      #
+      # This publish tail is `continue-on-error`: results + report are already
+      # uploaded as an artifact above (if: always()), and the incremental
+      # restore only reuses runs whose job concluded success. A publish failure
+      # must NOT fail the job, or it would break the restore chain and force a
+      # full (paid) re-benchmark next run. The failed step still shows in logs.
+      - name: Prepare report for hosting
+        if: always()
+        id: prep_report
+        continue-on-error: true
+        run: |
+          if [ -f benchmark/report.html ]; then
+            mkdir -p benchmark/public
+            cp benchmark/report.html benchmark/public/index.html
+            printf '%s' '{"hosting":{"site":"genui-benchmarks","public":"benchmark/public","ignore":["firebase.json","**/.*","**/node_modules/**"]}}' > firebase.json
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No benchmark/report.html was produced; skipping deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy report to Firebase Hosting
+        if: always() && steps.prep_report.outputs.ready == 'true'
+        continue-on-error: true
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}

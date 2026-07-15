@@ -26,9 +26,22 @@ catalog — they change often.
 
 ```sh
 fvm dart run tool/run_benchmark.dart                 # full sweep, then report
+fvm dart run tool/run_benchmark.dart --only-new      # only models without a
+                                                     # result file yet
+fvm dart run tool/run_benchmark.dart --only-new --rerun-failed  # + retry
+                                                     # models with a failure
 BENCHMARK_ITERATIONS=1 fvm dart run tool/run_benchmark.dart   # quick dry run
 open benchmark/report.html
 ```
+
+`--only-new` benchmarks only models that don't yet have a
+`benchmark/results/<id>.json`, leaving existing results in place. Handy after
+adding a new model so you fill in just the gap without re-paying for the rest.
+`--rerun-failed` additionally re-runs any model whose stored result has a failed
+turn (an error or a turn that produced no surface). The two compose: with both,
+a run fills in new models and retries failures while never touching a model that
+already passed cleanly — a re-run overwrites that model's result and deletes its
+`.failures.txt`, so a now-passing model's old failures are cleared.
 
 Or directly:
 
@@ -68,19 +81,40 @@ exactly what a model emitted that broke parsing.
 
 ## Run on CI
 
-`.github/workflows/benchmark.yaml` runs the full suite on an Ubuntu runner
-(manual `workflow_dispatch`, plus a weekly schedule). It reads keys from
-repository secrets, runs the headless benchmark, builds the report, and uploads
+`.github/workflows/benchmark.yaml` runs on an Ubuntu runner. It is
+**manual-only** (`workflow_dispatch`) — it makes real, paid API calls, so it
+never runs on a schedule. `workflow_dispatch` requires write access to the
+repo, so only maintainers can start it. It reads keys from repository secrets,
+runs the headless benchmark, builds the report, and uploads
 `benchmark/report.html` + the raw results as a workflow artifact.
+
+Runs are **incremental by default**: each run first restores the previous
+successful run's results, then the `mode` dispatch input decides what to run.
+`new-and-failed` (the default) benchmarks models without a result yet **and**
+re-runs any whose restored result had a failed turn, while leaving cleanly-passed
+models untouched — so failures are retried and successes are never re-paid for.
+`new` fills only missing models; `all` re-benchmarks everything from scratch.
+Restore only pulls from a run whose job concluded **success**, so a run must
+stay green to become the next run's baseline; recorded API/GenUI failures are
+data and keep the job green, so only a hard crash or timeout breaks the chain.
+
+Each run also publishes the built report to its own Firebase Hosting site
+(`genui-benchmarks.web.app`). This deploy is decoupled from the Flutter app's
+deploy in `main.yaml`: the static report needs none of the app's Firebase
+config, so the workflow writes a minimal `firebase.json` inline and deploys
+with the `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID` secrets only (no
+`FIREBASE_JSON`/`FIREBASERC` secret involved).
 
 Required repository secrets (omit any provider you don't want):
 `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `KIMI_API_KEY`,
-`DEEPSEEK_API_KEY`.
+`DEEPSEEK_API_KEY`, `INCEPTION_API_KEY`. The Firebase Hosting deploy also needs
+`FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`.
 
 ## How it works
 
 - `benchmark/src/benchmark_models.dart` — the model list (direct providers,
-  incl. Kimi/DeepSeek via OpenAI-compatible `baseUrl`). Edit to add models.
+  incl. Kimi/DeepSeek/Inception via OpenAI-compatible `baseUrl`). Edit to add
+  models.
 - `benchmark/src/timing_chat_model.dart` — wraps the model and times each round
   trip. The single latency-measurement point.
 - `benchmark/src/benchmark_runner.dart` — drives `SimulatorRepository` for
@@ -92,8 +126,8 @@ Required repository secrets (omit any provider you don't want):
 - `tool/build_benchmark_report.dart` — aggregates results into
   `benchmark/report.html`.
 
-`benchmark/keys.env`, `benchmark/results/`, and `benchmark/report.html` are
-gitignored.
+`benchmark/keys.env`, `benchmark/results/`, `benchmark/report.html`, and
+`benchmark/public/` (the staged Hosting output) are gitignored.
 
 ## Adding a model later (e.g. GLM)
 
