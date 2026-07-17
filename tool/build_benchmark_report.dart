@@ -1,11 +1,13 @@
-// Aggregates benchmark/results/*.json into a single benchmark/report.html.
+// Aggregates benchmark/results/*.json into benchmark/report.html (a
+// dependency-free HTML report) and benchmark/genui-benchmarks.json (the machine
+// data file the verygood.ventures site consumes).
 //
 // Run after tool/run_benchmark.sh:
 //   fvm dart run tool/build_benchmark_report.dart
 //
 // Each input file is the metrics map produced by the integration test
 // (modelId, iterations, turns[]). This script computes per-model aggregates
-// and writes a dependency-free HTML report.
+// from a single source ([ModelSummary]) and renders both artifacts from it.
 
 import 'dart:convert';
 import 'dart:io';
@@ -34,11 +36,11 @@ void main() {
     return;
   }
 
-  final summaries = <_ModelSummary>[];
+  final summaries = <ModelSummary>[];
   for (final file in files) {
     try {
       final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-      summaries.add(_ModelSummary.fromJson(data));
+      summaries.add(ModelSummary.fromJson(data));
     } on Object catch (e) {
       stderr.writeln('Skipping ${file.path}: $e');
     }
@@ -61,10 +63,19 @@ void main() {
   final html = _buildHtml(summaries);
   final out = File('benchmark/report.html')..writeAsStringSync(html);
   stdout.writeln('Wrote ${out.path} (${summaries.length} model(s)).');
+
+  // The machine data file for verygood.ventures. Stamped at build time, which
+  // is effectively the run's completion time.
+  final json = buildBenchmarksJson(summaries, DateTime.now());
+  final rows = (json['models']! as List).length;
+  final jsonOut = File(
+    'benchmark/genui-benchmarks.json',
+  )..writeAsStringSync('${const JsonEncoder.withIndent('  ').convert(json)}\n');
+  stdout.writeln('Wrote ${jsonOut.path} ($rows model row(s)).');
 }
 
-class _ModelSummary {
-  _ModelSummary({
+class ModelSummary {
+  ModelSummary({
     required this.modelId,
     required this.iterations,
     required this.totalTurns,
@@ -78,7 +89,7 @@ class _ModelSummary {
     required this.failureReasons,
   });
 
-  factory _ModelSummary.fromJson(Map<String, dynamic> json) {
+  factory ModelSummary.fromJson(Map<String, dynamic> json) {
     final modelId = (json['modelId'] ?? 'unknown') as String;
     final iterations = (json['iterations'] ?? 0) as int;
     final turns = (json['turns'] as List<dynamic>? ?? <dynamic>[])
@@ -132,7 +143,7 @@ class _ModelSummary {
       failureReasons[reason] = (failureReasons[reason] ?? 0) + 1;
     }
 
-    return _ModelSummary(
+    return ModelSummary(
       modelId: modelId,
       iterations: iterations,
       totalTurns: totalTurns,
@@ -164,13 +175,64 @@ class _ModelSummary {
   double get errorRate => totalTurns == 0 ? 0 : failedTurns / totalTurns;
 
   /// Multi-line breakdown of failure reasons (most common first), or null when
-  /// there were no failures.
-  String? get failureTooltip {
+  /// there were no failures. Used for the HTML report's error-rate tooltip.
+  String? get failureTooltip => _failureReasonSummary('\n');
+
+  /// Single-line breakdown of failure reasons (most common first) for the
+  /// website JSON's `errorNote`, or null when there were no failures. Same
+  /// tally as [failureTooltip] but joined with `; ` so it stays one line of
+  /// plain text (no HTML entities).
+  String? get errorNote => _failureReasonSummary('; ');
+
+  String? _failureReasonSummary(String separator) {
     if (failureReasons.isEmpty) return null;
     final entries = failureReasons.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    return entries.map((e) => '${e.value}× ${e.key}').join('\n');
+    return entries.map((e) => '${e.value}× ${e.key}').join(separator);
   }
+}
+
+/// Builds the website's `genui-benchmarks.json` payload from [summaries].
+///
+/// The shape is fixed by the zod schema in `VGVentures/vgv-website-claude`
+/// (`astro/src/lib/genui-benchmarks.ts`), which is `.strict()` and requires
+/// every numeric field to be a non-negative number — so latency/chunk/token
+/// stats that are absent (a model with no successful turns) are coerced to `0`,
+/// and the real signal lives in `errorRate`/`errorNote`. All formatting and
+/// sorting happen on the site; here we emit raw numbers only.
+///
+/// [generatedAt] is stamped as an ISO 8601 UTC timestamp (`generatedAt`); it is
+/// a parameter so callers can inject a fixed value in tests.
+Map<String, Object?> buildBenchmarksJson(
+  List<ModelSummary> summaries,
+  DateTime generatedAt,
+) {
+  final models = <Map<String, Object?>>[];
+  for (final s in summaries) {
+    // A row needs a positive iteration and turn count to satisfy the schema's
+    // `turnsPerIter`/`iterations` positive-integer constraints. Skip degenerate
+    // results (an empty file) that can't form a valid row.
+    if (s.iterations <= 0 || s.totalTurns <= 0) continue;
+    final turnsPerIter = (s.totalTurns / s.iterations).round();
+    models.add({
+      'model': s.modelId,
+      'avgRoundTripMs': s.avgTotalMs ?? 0,
+      'avgTtfcMs': s.avgTtfcMs ?? 0,
+      'p95TtfcMs': s.p95TtfcMs ?? 0,
+      'avgPerPassMs': s.avgPerIterationMs ?? 0,
+      'errorRate': s.errorRate,
+      'errorNote': s.errorNote,
+      'avgChunks': s.avgChunks ?? 0,
+      'avgOutputTokens': s.avgTokens ?? 0,
+      'turnsPerIter': turnsPerIter < 1 ? 1 : turnsPerIter,
+      'iterations': s.iterations,
+    });
+  }
+
+  return {
+    'generatedAt': generatedAt.toUtc().toIso8601String(),
+    'models': models,
+  };
 }
 
 double? _avg(List<double> values) {
@@ -193,7 +255,7 @@ String _ms(double? v) => v == null ? '—' : '${v.round()} ms';
 String _num(double? v) => v == null ? '—' : v.toStringAsFixed(1);
 String _pct(double v) => '${(v * 100).toStringAsFixed(1)}%';
 
-String _buildHtml(List<_ModelSummary> summaries) {
+String _buildHtml(List<ModelSummary> summaries) {
   final maxTotal = summaries
       .map((s) => s.avgTotalMs ?? 0)
       .fold<double>(0, (a, b) => a > b ? a : b);

@@ -105,10 +105,24 @@ config, so the workflow writes a minimal `firebase.json` inline and deploys
 with the `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID` secrets only (no
 `FIREBASE_JSON`/`FIREBASERC` secret involved).
 
+Finally, each run publishes the machine-readable `benchmark/genui-benchmarks.json`
+to verygood.ventures by opening (or updating) a PR on
+`VGVentures/vgv-website-claude`. It mirrors that repo's own `oss-stats` pattern:
+a fixed branch (`chore/update-genui-benchmarks`), force-pushed and reused, with
+one open PR at a time writing `astro/src/data/genui-benchmarks.json`. The push
+uses `WEBSITE_PR_TOKEN` — a fine-grained PAT with `contents:write` +
+`pull-requests:write` on the website repo, **not** this repo's `GITHUB_TOKEN` —
+so the website's CI (build + zod schema validation, spell check, preview deploy)
+runs on the PR and a malformed payload fails that build before it can ship. The
+JSON shape is fixed by `astro/src/lib/genui-benchmarks.ts` in the website repo.
+Like the Firebase deploy, this step is `continue-on-error`, so a publish failure
+never breaks the incremental-restore chain.
+
 Required repository secrets (omit any provider you don't want):
 `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `KIMI_API_KEY`,
 `DEEPSEEK_API_KEY`, `INCEPTION_API_KEY`. The Firebase Hosting deploy also needs
-`FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`.
+`FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`. The website PR needs
+`WEBSITE_PR_TOKEN`.
 
 ## How it works
 
@@ -124,10 +138,13 @@ Required repository secrets (omit any provider you don't want):
   skipped when its key is absent; writes `benchmark/results/<id>.json`.
 - `tool/run_benchmark.dart` — runs the test + report.
 - `tool/build_benchmark_report.dart` — aggregates results into
-  `benchmark/report.html`.
+  `benchmark/report.html` (the human report) and
+  `benchmark/genui-benchmarks.json` (the machine data file the website consumes,
+  whose shape is fixed by the website's zod schema).
 
-`benchmark/keys.env`, `benchmark/results/`, `benchmark/report.html`, and
-`benchmark/public/` (the staged Hosting output) are gitignored.
+`benchmark/keys.env`, `benchmark/results/`, `benchmark/report.html`,
+`benchmark/genui-benchmarks.json`, and `benchmark/public/` (the staged Hosting
+output) are gitignored.
 
 ## Adding a model later (e.g. GLM)
 
