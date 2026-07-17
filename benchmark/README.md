@@ -110,19 +110,22 @@ to verygood.ventures by opening (or updating) a PR on
 `VGVentures/vgv-website-claude`. It mirrors that repo's own `oss-stats` pattern:
 a fixed branch (`chore/update-genui-benchmarks`), force-pushed and reused, with
 one open PR at a time writing `astro/src/data/genui-benchmarks.json`. The push
-uses `WEBSITE_PR_TOKEN` — a fine-grained PAT with `contents:write` +
-`pull-requests:write` on the website repo, **not** this repo's `GITHUB_TOKEN` —
-so the website's CI (build + zod schema validation, spell check, preview deploy)
-runs on the PR and a malformed payload fails that build before it can ship. The
-JSON shape is fixed by `astro/src/lib/genui-benchmarks.ts` in the website repo.
-Like the Firebase deploy, this step is `continue-on-error`, so a publish failure
-never breaks the incremental-restore chain.
+authenticates with a GitHub App owned by the VGV org (`WEBSITE_APP_ID` +
+`WEBSITE_APP_PRIVATE_KEY`), installed on the website repo with `contents:write` +
+`pull-requests:write`; the workflow mints a short-lived installation token per
+run. Because that token is **not** this repo's `GITHUB_TOKEN`, the website's CI
+(build + zod schema validation, spell check, preview deploy) runs on the PR and a
+malformed payload fails that build before it can ship. The JSON shape is fixed by
+`astro/src/lib/genui-benchmarks.ts` in the website repo. Like the Firebase
+deploy, this step is `continue-on-error`, so a publish failure never breaks the
+incremental-restore chain.
 
 Required repository secrets (omit any provider you don't want):
 `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `KIMI_API_KEY`,
 `DEEPSEEK_API_KEY`, `INCEPTION_API_KEY`. The Firebase Hosting deploy also needs
 `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`. The website PR needs
-`WEBSITE_PR_TOKEN`.
+`WEBSITE_APP_ID` and `WEBSITE_APP_PRIVATE_KEY` (a GitHub App installed on the
+website repo with `contents:write` + `pull-requests:write`).
 
 ## How it works
 
