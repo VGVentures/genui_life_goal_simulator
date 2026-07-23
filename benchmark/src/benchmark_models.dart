@@ -134,6 +134,13 @@ OpenAIChatModel _openAiCompatible({
 final List<_ModelDef> _modelDefs = [
   // --- Google Gemini (direct API) ---
   _ModelDef(
+    id: 'gemini-3.6-flash',
+    apiKey: BenchmarkConfig.geminiApiKey,
+    build: () => _gemini('gemini-3.6-flash'),
+    buildNoThinking: () =>
+        _gemini('gemini-3.6-flash', thinkingLevel: GoogleThinkingLevel.minimal),
+  ),
+  _ModelDef(
     id: 'gemini-3.5-flash',
     apiKey: BenchmarkConfig.geminiApiKey,
     build: () => _gemini('gemini-3.5-flash'),
@@ -146,6 +153,15 @@ final List<_ModelDef> _modelDefs = [
     build: () => _gemini('gemini-3-flash-preview'),
     buildNoThinking: () => _gemini(
       'gemini-3-flash-preview',
+      thinkingLevel: GoogleThinkingLevel.minimal,
+    ),
+  ),
+  _ModelDef(
+    id: 'gemini-3.5-flash-lite',
+    apiKey: BenchmarkConfig.geminiApiKey,
+    build: () => _gemini('gemini-3.5-flash-lite'),
+    buildNoThinking: () => _gemini(
+      'gemini-3.5-flash-lite',
       thinkingLevel: GoogleThinkingLevel.minimal,
     ),
   ),
