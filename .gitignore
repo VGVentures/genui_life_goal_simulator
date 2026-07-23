@@ -135,4 +135,5 @@ firebase.json
 benchmark/keys.env
 benchmark/results/
 benchmark/report*.html*
+benchmark/genui-benchmarks.json
 benchmark/public/
