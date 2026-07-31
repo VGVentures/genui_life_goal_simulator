@@ -429,10 +429,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_ai
-      sha256: e90a2a140682b532949dadf26a845a6a5cbd1364af408926507802910ff4446b
+      sha256: "0469000e0a364750dc7007834ceb426a7e1868f9df2431e6f71fc9b9f0c011eb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.0"
+    version: "3.11.0"
   firebase_app_check:
     dependency: "direct main"
     description:
@@ -461,26 +461,26 @@ packages:
     dependency: transitive
     description:
       name: firebase_auth
-      sha256: "7421650001840aa63d3e7a59062bfa1a53febc52c7520e1effad0d325d6469cb"
+      sha256: b12cb1e2e87797d27e0041100b73ebf890dbafcff2e7e991d4593f5e8e309808
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.0"
+    version: "6.4.0"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
-      sha256: "4f9103fe33f5a8cbe7b9bdae7a76e01cb67026b3fcaac5cf603a23685213f7cf"
+      sha256: c71517b3c78480be42789b05316a7692d69296c17848bd6a9e798300abae1ec7
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.8"
+    version: "8.1.9"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
-      sha256: "4173bfa41a8b6f0a791af99c61bead53fca819e32237c9336b84ebfbce44d7ae"
+      sha256: "52b0224eb46b09f387e99710707be2d3f48da67c74fe14202e4b942cbe8ce9fd"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.4"
+    version: "6.1.5"
   firebase_core:
     dependency: "direct main"
     description:
@@ -1636,4 +1636,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.11.5 <4.0.0"
-  flutter: ">=3.41.7 <4.0.0"
+  flutter: ">=3.41.7"
