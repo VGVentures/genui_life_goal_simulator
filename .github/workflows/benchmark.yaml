@@ -35,6 +35,13 @@ on:
         description: 'Round trips per iteration'
         required: false
         default: '3'
+      pr_number:
+        description: >-
+          Website PR number to update instead of auto-detecting the open PR
+          on chore/update-genui-benchmarks (e.g. if it was closed without
+          merging). Leave blank for the normal branch-based reuse.
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -188,6 +195,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ steps.website_app_token.outputs.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
         run: |
           set -euo pipefail
           if [ ! -f benchmark/genui-benchmarks.json ]; then
@@ -196,9 +204,26 @@ jobs:
           fi
 
           repo="VGVentures/vgv-website-claude"
-          branch="chore/update-genui-benchmarks"
           data_path="astro/src/data/genui-benchmarks.json"
           workdir="$RUNNER_TEMP/vgv-website"
+
+          # A pr_number input targets that specific PR by number instead of
+          # relying on auto-detecting the open PR on the fixed branch — an
+          # explicit override for when that lookup can't be trusted (e.g. the
+          # PR was manually closed without merging).
+          existing=""
+          branch="chore/update-genui-benchmarks"
+          if [ -n "$PR_NUMBER" ]; then
+            existing="$PR_NUMBER"
+            pr_json=$(gh pr view "$PR_NUMBER" --repo "$repo" \
+              --json state,headRefName)
+            pr_state=$(echo "$pr_json" | jq -r '.state')
+            if [ "$pr_state" = "MERGED" ]; then
+              echo "PR #$PR_NUMBER is already merged; cannot update it." >&2
+              exit 1
+            fi
+            branch=$(echo "$pr_json" | jq -r '.headRefName')
+          fi
 
           rm -rf "$workdir"
           git clone --depth 1 \
@@ -219,10 +244,15 @@ jobs:
           git commit -m "chore: update GenUI benchmarks"
           git push --force origin "$branch"
 
-          existing=$(gh pr list --repo "$repo" --head "$branch" --state open \
-            --json number --jq '.[0].number' 2>/dev/null || echo "")
           if [ -z "$existing" ]; then
-            gh pr create --repo "$repo" --base main --head "$branch" \
+            existing=$(gh pr list --repo "$repo" --head "$branch" --state open \
+              --json number --jq '.[0].number' 2>/dev/null || echo "")
+          fi
+          if [ -n "$PR_NUMBER" ] && [ "$pr_state" = "CLOSED" ]; then
+            gh pr reopen "$PR_NUMBER" --repo "$repo"
+          fi
+          if [ -z "$existing" ]; then
+            gh pr create --repo "$repo" --base main --head "$branch" --draft \
               --title "chore: update GenUI benchmarks" \
               --body "$(cat <<'EOF'
           Automated update of the GenUI model benchmarks from the

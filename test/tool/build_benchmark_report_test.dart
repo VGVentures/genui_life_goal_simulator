@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 
 // The report builder lives under tool/, not lib/, so import it by path.
@@ -198,6 +201,52 @@ void main() {
         },
       );
       expect(json.keys.toSet(), {'generatedAt', 'models'});
+    });
+  });
+
+  group('purgeStaleResults', () {
+    late Directory resultsDir;
+
+    setUp(() {
+      resultsDir = Directory.systemTemp.createTempSync(
+        'benchmark_results_test',
+      );
+    });
+
+    tearDown(() {
+      resultsDir.deleteSync(recursive: true);
+    });
+
+    test(
+      'deletes result files whose id is no longer in the valid set',
+      () {
+        File(
+          '${resultsDir.path}/kept-model.json',
+        ).writeAsStringSync(jsonEncode({'modelId': 'kept-model'}));
+        File(
+          '${resultsDir.path}/stale-model.json',
+        ).writeAsStringSync(jsonEncode({'modelId': 'stale-model'}));
+
+        final purged = purgeStaleResults(resultsDir, {'kept-model'});
+
+        expect(purged, ['stale-model']);
+        expect(File('${resultsDir.path}/kept-model.json').existsSync(), true);
+        expect(
+          File('${resultsDir.path}/stale-model.json').existsSync(),
+          false,
+        );
+      },
+    );
+
+    test('leaves the directory untouched when nothing is stale', () {
+      File(
+        '${resultsDir.path}/kept-model.json',
+      ).writeAsStringSync(jsonEncode({'modelId': 'kept-model'}));
+
+      final purged = purgeStaleResults(resultsDir, {'kept-model'});
+
+      expect(purged, isEmpty);
+      expect(File('${resultsDir.path}/kept-model.json').existsSync(), true);
     });
   });
 }

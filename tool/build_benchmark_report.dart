@@ -12,6 +12,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../benchmark/src/benchmark_models.dart';
+
 void main() {
   final resultsDir = Directory('benchmark/results');
   if (!resultsDir.existsSync()) {
@@ -20,6 +22,15 @@ void main() {
     );
     exitCode = 1;
     return;
+  }
+
+  final validIds = benchmarkModels.map((m) => m.id).toSet();
+  final purged = purgeStaleResults(resultsDir, validIds);
+  if (purged.isNotEmpty) {
+    stdout.writeln(
+      'Purged ${purged.length} stale result file(s) no longer in the '
+      'benchmark suite: ${purged.join(', ')}',
+    );
   }
 
   final files =
@@ -72,6 +83,25 @@ void main() {
     'benchmark/genui-benchmarks.json',
   )..writeAsStringSync('${const JsonEncoder.withIndent('  ').convert(json)}\n');
   stdout.writeln('Wrote ${jsonOut.path} ($rows model row(s)).');
+}
+
+/// Deletes any `<id>.json` file in [resultsDir] whose id isn't in
+/// [validIds], so a model dropped from the benchmark suite stops showing up
+/// in the report and its file doesn't survive into a future incremental
+/// restore. Returns the sorted ids of the files that were deleted.
+List<String> purgeStaleResults(Directory resultsDir, Set<String> validIds) {
+  final purged = <String>[];
+  for (final entry in resultsDir.listSync().whereType<File>()) {
+    final name = entry.uri.pathSegments.last;
+    if (!name.endsWith('.json')) continue;
+    final id = name.substring(0, name.length - '.json'.length);
+    if (!validIds.contains(id)) {
+      entry.deleteSync();
+      purged.add(id);
+    }
+  }
+  purged.sort();
+  return purged;
 }
 
 class ModelSummary {
