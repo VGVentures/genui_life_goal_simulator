@@ -131,21 +131,20 @@ OpenAIChatModel _openAiCompatible({
 /// - Kimi `kimi-k2.7-code`: thinking is permanently on and the `thinking`
 ///   param must NOT be sent, so it has no no-thinking variant.
 /// - Anthropic: thinking is off by default in dartantic, so no variant.
+/// - Gemini 3.7 & 3.8 flash: `thinkingLevel: minimal` is rejected/ignored on
+///   these two models, so no-thinking can never actually be achieved. No
+///   variant for either.
 final List<_ModelDef> _modelDefs = [
   // --- Google Gemini (direct API) ---
   _ModelDef(
     id: 'gemini-3.8-flash',
     apiKey: BenchmarkConfig.geminiApiKey,
     build: () => _gemini('gemini-3.8-flash'),
-    buildNoThinking: () =>
-        _gemini('gemini-3.8-flash', thinkingLevel: GoogleThinkingLevel.minimal),
   ),
   _ModelDef(
     id: 'gemini-3.7-flash',
     apiKey: BenchmarkConfig.geminiApiKey,
     build: () => _gemini('gemini-3.7-flash'),
-    buildNoThinking: () =>
-        _gemini('gemini-3.7-flash', thinkingLevel: GoogleThinkingLevel.minimal),
   ),
   _ModelDef(
     id: 'gemini-3.6-flash',
