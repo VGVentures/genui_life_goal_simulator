@@ -123,7 +123,7 @@ class AppButton extends StatelessWidget {
   }) {
     if (isLoading) {
       final colors = Theme.of(context).extension<AppColors>();
-      final indicatorColor = colors?.onSurfaceMuted ?? const Color(0xFF909191);
+      final indicatorColor = colors?.onSurfaceMuted ?? const Color(0xFF8A93A6);
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -309,11 +309,11 @@ abstract final class _Dimensions {
 }
 
 abstract final class _Colors {
-  static const Color primary = Color(0xFF6D92F5);
+  static const Color primary = Color(0xFF2A48DE);
   static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color onSurface = Color(0xFF1A1C1C);
-  static const Color disabledBackground = Color(0xFFF0F1F1);
-  static const Color disabledText = Color(0xFFAAABAB);
-  static const Color disabledOutline = Color(0xFFAAABAB);
-  static const Color focusRing = Color(0xFF6D6D6D);
+  static const Color onSurface = Color(0xFF0C1430);
+  static const Color disabledBackground = Color(0xFFE6EBF4);
+  static const Color disabledText = Color(0xFFB6BDCC);
+  static const Color disabledOutline = Color(0xFFB6BDCC);
+  static const Color focusRing = Color(0xFF606A7E);
 }

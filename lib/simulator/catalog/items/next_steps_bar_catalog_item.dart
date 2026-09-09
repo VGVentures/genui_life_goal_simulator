@@ -156,7 +156,7 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
                       borderRadius: BorderRadius.circular(40),
                       boxShadow: const [
                         BoxShadow(
-                          color: Color(0x4D6D92F5),
+                          color: Color(0x4D2A48DE),
                           blurRadius: 40,
                           offset: Offset(0, 18),
                         ),

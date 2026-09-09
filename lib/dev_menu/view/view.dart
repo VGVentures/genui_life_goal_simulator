@@ -17,6 +17,7 @@ export 'pie_chart_catalog_page.dart';
 export 'progress_bar_catalog_page.dart';
 export 'radio_card_catalog_page.dart';
 export 'ranked_table_page.dart';
+export 'sample_dashboard_page.dart';
 export 'section_header_catalog_page.dart';
 export 'slider_catalog_page.dart';
 export 'thinking_animation_catalog_page.dart';

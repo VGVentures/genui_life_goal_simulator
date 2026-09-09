@@ -217,9 +217,9 @@ abstract final class _Dimensions {
 }
 
 abstract final class _EmojiCardColors {
-  static const Color background = Color(0xFFF7F6F7);
+  static const Color background = Color(0xFFEEF1F7);
   static const Color border = Colors.transparent;
-  static const Color selectedBackground = Color(0xFFF3F6FF);
-  static const Color selectedBorder = Color(0xFF6D92F5);
-  static const Color label = Color(0xFF1A1C1C);
+  static const Color selectedBackground = Color(0xFFEEF3FC);
+  static const Color selectedBorder = Color(0xFF2A48DE);
+  static const Color label = Color(0xFF0C1430);
 }

@@ -59,6 +59,34 @@ class DevMenuDrawer extends StatelessWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: Icon(
+                    Icons.dashboard_outlined,
+                    color: colors?.primary,
+                  ),
+                  title: Text(
+                    'Sample Dashboard (offline)',
+                    style: textTheme.titleSmall?.copyWith(
+                      color: colors?.primary,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Composed reskin preview — no AI backend needed',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colors?.onSurfaceVariant,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: colors?.primary,
+                  ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SampleDashboardPage(),
+                    ),
+                  ),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: Icon(
                     Icons.palette_outlined,
                     color: colors?.onSurface,
                   ),

@@ -108,6 +108,6 @@ class SectionHeader extends StatelessWidget {
 }
 
 abstract final class _DefaultColors {
-  static const Color title = Color(0xFF1A1C1C);
-  static const Color subtitle = Color(0xFF5D5F5F);
+  static const Color title = Color(0xFF0C1430);
+  static const Color subtitle = Color(0xFF606A7E);
 }

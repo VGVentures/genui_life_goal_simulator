@@ -295,9 +295,9 @@ abstract final class _Dimensions {
 
 abstract final class _MetricCardColors {
   static const Color background = Color(0xFFFFFFFF);
-  static const Color label = Color(0xFF616161);
-  static const Color value = Color(0xFF212121);
-  static const Color subtitle = Color(0xFF757575);
-  static const Color positive = Color(0xFF4CAF50);
-  static const Color negative = Color(0xFFF44336);
+  static const Color label = Color(0xFF606A7E);
+  static const Color value = Color(0xFF0C1430);
+  static const Color subtitle = Color(0xFF8A93A6);
+  static const Color positive = Color(0xFF00A65F);
+  static const Color negative = Color(0xFFFF5446);
 }

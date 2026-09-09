@@ -395,13 +395,13 @@ abstract final class _LineChartDimensions {
 
 abstract final class _LineChartColors {
   static const LinearGradient lineGradient = LinearGradient(
-    colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
+    colors: [Color(0xFF2A48DE), Color(0xFF9DB6F8)],
   );
-  static const Color grid = Color(0xFFE2E2E2);
-  static const Color indicator = Color(0xFF5D5F5F);
-  static const Color tooltipBg = Color(0xFFF0F1F1);
-  static const Color tooltipText = Color(0xFF1A1C1C);
-  static const Color label = Color(0xFF909191);
+  static const Color grid = Color(0xFFDDE3EE);
+  static const Color indicator = Color(0xFF606A7E);
+  static const Color tooltipBg = Color(0xFFE6EBF4);
+  static const Color tooltipText = Color(0xFF0C1430);
+  static const Color label = Color(0xFF8A93A6);
 }
 
 class _GradientDotPainter extends fl.FlDotPainter {

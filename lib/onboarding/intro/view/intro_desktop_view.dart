@@ -14,10 +14,10 @@ class IntroDesktopView extends StatelessWidget {
   /// Called when the "Get started" button is pressed.
   final VoidCallback? onGetStarted;
 
-  static const _backgroundColor = Color(0xFF020F30);
+  static const _backgroundColor = Color(0xFF050B1F);
 
   static const _vgvGradient = LinearGradient(
-    colors: [Color(0xFF93A0F5), Color(0xFFBBB7F9)],
+    colors: [Color(0xFF5E86FF), Color(0xFFC9D4FF)],
   );
 
   static const _titleStyle = TextStyle(

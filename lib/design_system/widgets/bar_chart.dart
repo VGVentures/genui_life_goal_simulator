@@ -483,9 +483,9 @@ abstract final class _BarChartDimensions {
 }
 
 abstract final class _BarChartColors {
-  static const Color grid = Color(0xFFE2E2E2);
-  static const Color tooltipBg = Color(0xFFF0F1F1);
-  static const Color tooltipLabel = Color(0xFF5D5F5F);
-  static const Color tooltipText = Color(0xFF1A1C1C);
-  static const Color label = Color(0xFF909191);
+  static const Color grid = Color(0xFFDDE3EE);
+  static const Color tooltipBg = Color(0xFFE6EBF4);
+  static const Color tooltipLabel = Color(0xFF606A7E);
+  static const Color tooltipText = Color(0xFF0C1430);
+  static const Color label = Color(0xFF8A93A6);
 }

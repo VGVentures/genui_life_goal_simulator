@@ -46,26 +46,36 @@ Future<void> bootstrap({
 
   await RiveNative.init();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // With the committed stub `firebase_options.dart` (real values are injected
+  // in CI via secrets), Firebase init throws. The intro, onboarding, and the
+  // dev-menu widget catalog don't touch Firebase, so we log and continue to
+  // keep those surfaces reviewable. The advisor chat still needs a real
+  // Firebase AI + App Check project (see README "Local setup notes").
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // App Check
-  const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
-  const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+    // App Check
+    const debugToken = String.fromEnvironment('APP_CHECK_DEBUG_TOKEN');
+    const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
 
-  if (debugToken.isNotEmpty) {
-    setAppCheckDebugToken(debugToken);
+    if (debugToken.isNotEmpty) {
+      setAppCheckDebugToken(debugToken);
+    }
+
+    await FirebaseAppCheck.instance.activate(
+      providerWeb: recaptchaSiteKey.isNotEmpty
+          ? ReCaptchaV3Provider(recaptchaSiteKey)
+          : null,
+      providerAndroid: debugToken.isNotEmpty
+          ? const AndroidDebugProvider(debugToken: debugToken)
+          : const AndroidPlayIntegrityProvider(),
+    );
+  } on Object catch (error, stackTrace) {
+    log('Firebase init failed; continuing without it (advisor chat '
+        'unavailable). $error\n$stackTrace');
   }
-
-  await FirebaseAppCheck.instance.activate(
-    providerWeb: recaptchaSiteKey.isNotEmpty
-        ? ReCaptchaV3Provider(recaptchaSiteKey)
-        : null,
-    providerAndroid: debugToken.isNotEmpty
-        ? const AndroidDebugProvider(debugToken: debugToken)
-        : const AndroidPlayIntegrityProvider(),
-  );
 
   // Feature Flags
   final streamingPrefs = await StreamingSharedPreferences.instance;

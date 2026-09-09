@@ -78,7 +78,7 @@ class InsightCard extends StatelessWidget {
     const badgeColor = Colors.white;
 
     final badgeBorderColor = variant == InsightCardVariant.neutral
-        ? colors?.outline ?? const Color(0xFFF0F1F1)
+        ? colors?.outline ?? const Color(0xFFE6EBF4)
         : Colors.transparent;
 
     final resolvedEmoji = switch (variant) {

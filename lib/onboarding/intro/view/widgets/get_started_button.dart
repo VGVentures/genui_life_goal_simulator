@@ -24,7 +24,7 @@ class GetStartedButton extends StatelessWidget {
   final double height;
 
   static const _gradient = LinearGradient(
-    colors: [Color.fromRGBO(36, 97, 235, 1), Color(0xFFD4C6FB)],
+    colors: [Color(0xFF2A48DE), Color(0xFF9DB6F8)],
   );
 
   @override

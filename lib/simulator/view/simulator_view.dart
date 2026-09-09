@@ -135,7 +135,7 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
     final gradient =
         colors?.geniusGradient ??
         const LinearGradient(
-          colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
+          colors: [Color(0xFF2A48DE), Color(0xFF9DB6F8)],
         );
     final isMobile = Breakpoints.isMobile(
       MediaQuery.sizeOf(context).width,
@@ -273,7 +273,7 @@ class _ErrorView extends StatelessWidget {
     final colors = Theme.of(context).extension<AppColors>();
     final textTheme = AppTextStyles.getResponsiveTextTheme(context);
     final onSurfaceVariant =
-        colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F);
+        colors?.onSurfaceVariant ?? const Color(0xFF606A7E);
 
     return Stack(
       children: [

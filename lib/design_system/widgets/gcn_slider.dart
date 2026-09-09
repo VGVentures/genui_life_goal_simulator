@@ -116,7 +116,7 @@ class GCNSlider extends StatelessWidget {
             thumbShape: _RingThumbShape(gradient: gradient),
             tickMarkShape: divisions != null
                 ? _VerticalTickMarkShape(
-                    color: colors?.outlineStrong ?? const Color(0xFFAAABAB),
+                    color: colors?.outlineStrong ?? const Color(0xFFB6BDCC),
                   )
                 : SliderTickMarkShape.noTickMark,
             showValueIndicator: ShowValueIndicator.never,
@@ -410,8 +410,8 @@ class _VerticalTickMarkShape extends SliderTickMarkShape {
 }
 
 abstract final class _SliderColors {
-  static const fillStart = Color(0xFF2461EB);
-  static const fillEnd = Color(0xFFD4C6FB);
-  static const track = Color(0xFFE2E8F9);
-  static const thumb = Color(0xFF7C8FF5);
+  static const fillStart = Color(0xFF2A48DE);
+  static const fillEnd = Color(0xFF9DB6F8);
+  static const track = Color(0xFFDEE7FB);
+  static const thumb = Color(0xFF2A48DE);
 }

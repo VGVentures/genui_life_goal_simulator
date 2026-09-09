@@ -221,7 +221,7 @@ abstract final class _AccordionDimensions {
 
 abstract final class _AccordionColors {
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color border = Color(0xFFF0F1F1);
-  static const Color title = Color(0xFF1A1C1C);
-  static const Color icon = Color(0xFF5D5F5F);
+  static const Color border = Color(0xFFE6EBF4);
+  static const Color title = Color(0xFF0C1430);
+  static const Color icon = Color(0xFF606A7E);
 }

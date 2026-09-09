@@ -132,9 +132,9 @@ abstract final class _Dimensions {
 }
 
 abstract final class _ChipColors {
-  static const Color selected = Color(0xFF6D92F5);
-  static const Color surface = Color(0xFFF7F6F7);
-  static const Color border = Color(0xFFE2E2E2);
-  static const Color hovered = Color(0xFFF3F6FF);
-  static const Color text = Color(0xFF5D5F5F);
+  static const Color selected = Color(0xFF2A48DE);
+  static const Color surface = Color(0xFFEEF1F7);
+  static const Color border = Color(0xFFDDE3EE);
+  static const Color hovered = Color(0xFFEEF3FC);
+  static const Color text = Color(0xFF606A7E);
 }

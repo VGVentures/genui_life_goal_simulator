@@ -140,9 +140,9 @@ class _HorizontalProgressBar extends StatelessWidget {
 }
 
 abstract final class _HorizontalBarColors {
-  static const Color barFillStart = Color(0xFF2461EB);
-  static const Color barFillEnd = Color(0xFFD4C6FB);
-  static const Color track = Color(0xFFE2E8F9);
-  static const Color positive = Color(0xFF4CAF50);
-  static const Color negative = Color(0xFFF0524D);
+  static const Color barFillStart = Color(0xFF2A48DE);
+  static const Color barFillEnd = Color(0xFF9DB6F8);
+  static const Color track = Color(0xFFDEE7FB);
+  static const Color positive = Color(0xFF00A65F);
+  static const Color negative = Color(0xFFFF5446);
 }

@@ -19,7 +19,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final beginnerColor = colorExtensions?.primary ?? const Color(0xFF6D92F5);
+    final beginnerColor = colorExtensions?.primary ?? const Color(0xFF2A48DE);
     final optimizerColor = colorExtensions?.pinkColor;
     final l10n = context.l10n;
     final isOptimizer = profileType == ProfileType.optimizer;
