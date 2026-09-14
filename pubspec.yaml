@@ -12,7 +12,7 @@ dependencies:
   dartantic_ai: ^3.4.0
   dartantic_firebase_ai: ^0.2.0
   equatable: ^2.0.8
-  firebase_ai: ^3.10.0
+  firebase_ai: ^3.11.0
   firebase_app_check: ^0.4.3
   firebase_core: ^4.7.0
   fl_chart: ^1.2.0
