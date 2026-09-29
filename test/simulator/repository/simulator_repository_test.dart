@@ -237,6 +237,116 @@ void main() {
       });
     });
 
+    group('unparsed A2UI payloads', () {
+      Future<List<SimulatorConversationEvent>> sendWithResponse(
+        String response,
+      ) async {
+        when(() => chatModel.sendStream(any())).thenAnswer(
+          (_) => Stream.fromIterable([
+            ChatResult(output: ChatMessage.model(response)),
+          ]),
+        );
+
+        await repository.startConversation();
+
+        final events = <SimulatorConversationEvent>[];
+        repository.events.listen(events.add);
+
+        await repository.sendMessage('hi');
+        await Future<void>.delayed(Duration.zero);
+        return events;
+      }
+
+      void verifyMalformedResponseReported() {
+        verify(
+          () => errorReporting.recordError(
+            any<dynamic>(that: isA<MalformedA2uiResponseException>()),
+            any<StackTrace?>(),
+            reason: 'Malformed A2UI response',
+          ),
+        ).called(1);
+      }
+
+      test(
+        'does not emit a fenced block with invalid JSON as text '
+        'and emits an error instead',
+        () async {
+          // Missing comma after "path", as seen in the wild.
+          const response =
+              '```json\n'
+              '{"version": "v0.9", "updateComponents": '
+              '{"surfaceId": "tax_bracket_step", "components": [ '
+              '{"id": "bracket_slider", "component": "GCNSlider", '
+              '"valueLabel": {"path": "/bracket_slider/formattedValue"\n'
+              '"formattedValue": "24%"}}]}}\n'
+              '```';
+
+          final events = await sendWithResponse(response);
+
+          expect(
+            events.whereType<SimulatorConversationTextReceived>(),
+            isEmpty,
+          );
+          final errors = events.whereType<SimulatorConversationError>();
+          expect(errors, hasLength(1));
+          expect(errors.first.message, contains('AI error'));
+          verifyMalformedResponseReported();
+        },
+      );
+
+      test(
+        'does not emit an unfenced JSON object with invalid JSON as text',
+        () async {
+          // Missing comma between "surfaceId" and "catalogId".
+          const response =
+              '{"version": "v0.9", "createSurface": '
+              '{"surfaceId": "s1" "catalogId": "$financeCatalogId"}}';
+
+          final events = await sendWithResponse(response);
+
+          expect(
+            events.whereType<SimulatorConversationTextReceived>(),
+            isEmpty,
+          );
+          expect(events.whereType<SimulatorConversationError>(), isNotEmpty);
+          verifyMalformedResponseReported();
+        },
+      );
+
+      test('still emits conversational text that mentions braces', () async {
+        final events = await sendWithResponse('Budget {approximately} 10%');
+
+        final texts = events.whereType<SimulatorConversationTextReceived>();
+        expect(texts, isNotEmpty);
+        expect(texts.first.text, startsWith('Budget'));
+        expect(events.whereType<SimulatorConversationError>(), isEmpty);
+        verifyNever(
+          () => errorReporting.recordError(
+            any<dynamic>(),
+            any<StackTrace?>(),
+            reason: 'Malformed A2UI response',
+          ),
+        );
+      });
+
+      test('emits valid A2UI messages as surfaces, not text', () async {
+        const response =
+            '```json\n'
+            '{"version": "v0.9", "createSurface": '
+            '{"surfaceId": "s1", "catalogId": "$financeCatalogId"}}\n'
+            '```';
+
+        final events = await sendWithResponse(response);
+
+        expect(
+          events.whereType<SimulatorConversationSurfaceAdded>(),
+          isNotEmpty,
+        );
+        expect(events.whereType<SimulatorConversationTextReceived>(), isEmpty);
+        expect(events.whereType<SimulatorConversationError>(), isEmpty);
+      });
+    });
+
     group('error handling', () {
       test(
         'reports sendStream errors to errorReporting '
