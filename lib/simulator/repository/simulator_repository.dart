@@ -8,6 +8,21 @@ import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart'
     as app_prompt;
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
 
+/// {@template malformed_a2ui_response_exception}
+/// Reported when the model returns a JSON block that could not be parsed
+/// into an A2UI message.
+/// {@endtemplate}
+class MalformedA2uiResponseException implements Exception {
+  /// {@macro malformed_a2ui_response_exception}
+  const MalformedA2uiResponseException(this.payload);
+
+  /// The raw text the parser handed back.
+  final String payload;
+
+  @override
+  String toString() => 'MalformedA2uiResponseException: $payload';
+}
+
 /// {@template simulator_repository}
 /// Repository that manages the AI life goal simulator conversation.
 ///
@@ -78,7 +93,25 @@ class SimulatorRepository {
               const SimulatorConversationWaiting(isWaiting: true),
             );
           case ConversationContentReceived(:final text):
-            _controller.add(SimulatorConversationTextReceived(text));
+            if (_isUnparsedA2uiPayload(text)) {
+              // The GenUI parser hands JSON it could not turn into an A2UI
+              // message back as plain text. Never render it as a chat
+              // bubble; surface an error so the user can retry instead.
+              unawaited(
+                _errorReporting.recordError(
+                  MalformedA2uiResponseException(text),
+                  null,
+                  reason: 'Malformed A2UI response',
+                ),
+              );
+              _controller.add(
+                const SimulatorConversationError(
+                  'AI error: malformed UI response',
+                ),
+              );
+            } else {
+              _controller.add(SimulatorConversationTextReceived(text));
+            }
           case ConversationSurfaceAdded(:final surfaceId):
             _controller.add(SimulatorConversationSurfaceAdded(surfaceId));
           case ConversationError(:final error):
@@ -154,6 +187,17 @@ class SimulatorRepository {
       await _errorReporting.recordError(e, st, reason: 'AI sendStream error');
       _controller.add(SimulatorConversationError('AI error: $e'));
     }
+  }
+
+  /// Whether [text] is a JSON block the GenUI parser failed to decode.
+  ///
+  /// The GenUI parser returns a fenced block or a bare JSON object as text
+  /// when it fails to decode it. The system prompt forbids any output outside
+  /// the JSON blocks, so such text is a broken A2UI message rather than
+  /// conversational text.
+  static bool _isUnparsedA2uiPayload(String text) {
+    final trimmed = text.trimLeft();
+    return trimmed.startsWith('```') || trimmed.startsWith('{');
   }
 
   ChatMessage _convertDataPartsToText(ChatMessage message) {
